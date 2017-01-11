@@ -1,0 +1,20 @@
+
+.fk-button > .fk-has-text .fk-icon.fk-left {
+    xmargin-right: 0.5em;
+}
+
+.fk-button > .fk-has-text .fk-icon.fk-right {
+}
+
+.fk-button > .fk-has-text .fk-icon.fk-top,
+.fk-button > .fk-has-text .fk-icon.fk-bottom {
+    display: block;
+}
+
+.fk-button > .btn-link.fk-has-icon.fk-has-text:hover {
+    text-decoration: none;
+}
+
+.fk-button > .btn-link.fk-has-icon.fk-has-text:hover > .fk-button-text {
+    text-decoration: underline;
+}

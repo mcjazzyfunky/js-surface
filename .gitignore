@@ -5,7 +5,8 @@
 /.codio
 /.settings
 /.grunt
+/nbproject
 /node_modules
 /build/*
 /dist/*
-/nbproject
+

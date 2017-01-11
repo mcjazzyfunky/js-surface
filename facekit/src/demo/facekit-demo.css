@@ -1,0 +1,21 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+.row {
+    margin-bottom: 10px;
+}
+
+#main-navigation li {
+    cursor: pointer;
+}
+
+#main-navigation .navbar-brand {
+    margin-top: 4px;
+    font-size: 28px;
+}
