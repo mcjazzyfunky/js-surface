@@ -1,7 +1,7 @@
-import createPropsAdjuster from '../helpers/createPropsAdjuster.js';
+import createPropsAdjuster from '../helper/createPropsAdjuster.js';
 
 import validateFunctionalComponentConfig
-	from '../validations/validateFunctionalComponentConfig.js';
+	from '../validation/validateFunctionalComponentConfig.js';
 
 export default function adaptFunctionalComponent(config, platformAdaption) {
 	const err = validateFunctionalComponentConfig(config);

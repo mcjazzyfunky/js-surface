@@ -1,12 +1,12 @@
-import Constraints from '../../../api/Constraints.js';
+import Spec from '../../../api/Spec.js';
 
 import shapeOfInitProcessResult
-	from '../shapes/shapeOfInitProcessResult.js';
+	from '../shape/shapeOfInitProcessResult.js';
 
 
 export default function validateInitProcessResult(initProcessResult, config) {
 	let error =
-		Constraints.hasShape(shapeOfInitProcessResult)(initProcessResult, '');
+		Spec.hasShape(shapeOfInitProcessResult)(initProcessResult, '');
 
 	if (error) {
 		error = Error(

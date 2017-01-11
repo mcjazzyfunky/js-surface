@@ -1,15 +1,15 @@
-import Constraints from '../../../api/Constraints.js';
+import Spec from '../../../api/Spec.js';
 
 import prettifyComponentConfigError
-	from '../helpers/prettifyComponentConfigError.js';
+	from '../helper/prettifyComponentConfigError.js';
 
 import shapeOfFunctionalComponentConfig
-	from '../shapes/shapeOfFunctionalComponentConfig.js';
+	from '../shape/shapeOfFunctionalComponentConfig.js';
 
 
 export default function validateFunctionalComponentConfig(config) {
 	const error =
-		Constraints.hasShape(shapeOfFunctionalComponentConfig)(config, '');
+		Spec.hasShape(shapeOfFunctionalComponentConfig)(config, '');
 
 	return error !== null
 		? prettifyComponentConfigError(error, config)

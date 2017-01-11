@@ -2,7 +2,8 @@ import {
 	hyperscript as dom,
 	defineStandardComponent,
 	render,
-	Component
+	Component,
+	Spec
 } from 'js-surface';
 
 
@@ -64,6 +65,7 @@ const SimpleCounter = defineStandardComponent({
 	properties: {
 		label: {
 			type: String,
+			assert: Spec.matches(/xxxxx/),
 			defaultValue: 'Counter:'
 		},
 		initialValue: {

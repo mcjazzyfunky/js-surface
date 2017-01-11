@@ -2,13 +2,16 @@ import defineStandardComponent from './api/defineStandardComponent.js';
 import defineAdvancedComponent from './api/defineAdvancedComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
-import Constraints from './api/Constraints.js';
+import Spec from './api/Spec.js';
 
 import adaptFunctionalComponent from
-	'./internal/component/adaptions/adaptFunctionalComponent.js';
+	'./internal/component/adaption/adaptFunctionalComponent.js';
 
 import adaptBasicComponent from
-	'./internal/component/adaptions/adaptBasicComponent.js';
+	'./internal/component/adaption/adaptBasicComponent.js';
+
+import enhanceWithComponentMeta from
+	'./internal/component/helper/enhanceWithComponentMeta.js';
 
 import { render as renderInferno } from 'inferno';
 import createInfernoElement from 'inferno-create-element';
@@ -24,7 +27,7 @@ export {
 	isElement,
 	render,
 	Component,
-	Constraints,
+	Spec,
 };
 
 function defineFunctionalComponent(config) {

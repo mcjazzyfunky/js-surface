@@ -1,6 +1,6 @@
 import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
-import Constraints from '../../../api/Constraints.js';
+import Spec from '../../../api/Spec.js';
 
 export default Object.assign({}, shapeOfPartialBaseConfig, {
-	initProcess: Constraints.isFunction
+	componentClass: Spec.isFunction
 });

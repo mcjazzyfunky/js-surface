@@ -8,7 +8,7 @@ import {
 	isElement,
 	render,
 	Component,
-	Constraints
+	Spec
 } from './js-surface-preact.js';
 
 export {
@@ -21,5 +21,5 @@ export {
 	isElement,
 	render,
 	Component,
-	Constraints
+	Spec
 };

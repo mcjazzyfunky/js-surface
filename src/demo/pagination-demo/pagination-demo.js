@@ -8,8 +8,8 @@ import {
 
 import { Seq } from 'js-prelude';
 
-import PaginationHelper from './helpers/PaginationHelper.js';
-import ComponentHelper from './helpers/ComponentHelper.js';
+import PaginationHelper from './helper/PaginationHelper.js';
+import ComponentHelper from './helper/ComponentHelper.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

@@ -1,4 +1,4 @@
-export default class ConstraintError  {
+export default class SpecError  {
 	constructor(message, shortMessage, path) {
 		this.__message = message;
 		this.__shortMessage = shortMessage;
@@ -18,6 +18,6 @@ export default class ConstraintError  {
 	}
 
 	toString() {
-		return 'ConstraintError: ' + this.message;
+		return 'SpecError: ' + this.message;
 	}
 }

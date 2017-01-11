@@ -1,6 +1,6 @@
-import ConstraintError from './ConstraintError.js';
+import SpecError from './SpecError.js';
 
-const Constraints = {
+const Spec = {
     isNull(it, path = null) {
         return it === null
             ? null
@@ -231,9 +231,9 @@ const Constraints = {
     }
 };
 
-Object.freeze(Constraints);
+Object.freeze(Spec);
 
-export default Constraints;
+export default Spec;
 
 // --- Local functions ----------------------------------------------
 
@@ -254,6 +254,6 @@ function createError(errMsg, path)  {
                 + (path ? ` at '${path}'` : '')
                 + `: ${errMsg}`;
 
-    return new ConstraintError(fullErrMsg, errMsg, path);
+    return new SpecError(fullErrMsg, errMsg, path);
 }
 

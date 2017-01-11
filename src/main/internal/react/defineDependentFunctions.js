@@ -1,8 +1,8 @@
 import adaptFunctionalComponent from
-	'../component/adaptions/adaptFunctionalComponent.js';
+	'../component/adaption/adaptFunctionalComponent.js';
 
 import adaptBasicComponent from
-	'../component/adaptions/adaptBasicComponent.js';
+	'../component/adaption/adaptBasicComponent.js';
 
 const fakeState = {};
 

@@ -3,7 +3,7 @@ import defineStandardComponent from './api/defineStandardComponent.js';
 import defineAdvancedComponent from './api/defineAdvancedComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
-import Constraints from './api/Constraints.js';
+import Spec from './api/Spec.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -29,7 +29,7 @@ export {
 	isElement,
 	render,
 	Component,
-	Constraints,
+	Spec,
 };
 
 const createElement = React.createElement;

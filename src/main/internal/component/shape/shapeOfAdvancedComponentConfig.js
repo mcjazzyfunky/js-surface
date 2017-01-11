@@ -1,10 +1,10 @@
 import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
-import Constraints from '../../../api/Constraints.js';
+import Spec from '../../../api/Spec.js';
 
-const isOptionalFunction = Constraints.optional(Constraints.isFunction);
+const isOptionalFunction = Spec.optional(Spec.isFunction);
 
 export default Object.assign({}, shapeOfPartialBaseConfig, {
-	render: Constraints.isFunction,
+	render: Spec.isFunction,
 	init: isOptionalFunction,
 	shouldUpdate: isOptionalFunction,
 	onWillReceiveProps: isOptionalFunction,

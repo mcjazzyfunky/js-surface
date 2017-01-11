@@ -1,12 +1,12 @@
 import { defineStandardComponent } from 'js-surface';
 
 import validateAdvancedComponentConfig
-	from '../internal/component/validations/validateAdvancedComponentConfig.js';
+	from '../internal/component/validation/validateAdvancedComponentConfig.js';
 
 import Component from '../api/Component.js';
-import Constraints from '../api/Constraints.js';
+import Spec from '../api/Spec.js';
 
-import shapeOfStore from '../internal/component/shapes/shapeOfStore.js';
+import shapeOfStore from '../internal/component/shape/shapeOfStore.js';
 
 export default function defineAdvancedComponent(config) {
 	const err = validateAdvancedComponentConfig(config);
@@ -55,7 +55,7 @@ class CustomComponent extends Component {
 
 
 			if (store != undefined && store !== null) {
-				const err = Constraints.hasShape(shapeOfStore, store);
+				const err = Spec.hasShape(shapeOfStore, store);
 
 				if (err) {
 					throw new Error(

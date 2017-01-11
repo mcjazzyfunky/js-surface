@@ -17,7 +17,7 @@ export default function createPropsAdjuster(config) {
         for (let key of  Object.keys(propertiesConfig)) {
             const
                 type = propertiesConfig[key].type,
-                constraint = propertiesConfig[key].constraint || null,
+                assert = propertiesConfig[key].assert || null,
                 defaultValue = propertiesConfig[key].defaultValue,
                 getDefaultValue = propertiesConfig[key].getDefaultValue,
 
@@ -30,7 +30,7 @@ export default function createPropsAdjuster(config) {
             validations.push([
             	key,
             	type,
-            	constraint,
+            	assert,
             	defaultValueProvider]);
 
 	       	if (getDefaultValue) {
@@ -82,7 +82,7 @@ function validateProps(props, validations) {
 	keysToBeChecked.delete('children');
 
     try {
-		for (let [propertyName, type, constraint, defaultValueProvider] of validations) {
+		for (let [propertyName, type, assert, defaultValueProvider] of validations) {
 			const defaultValue = defaultValueProvider
 				? defaultValueProvider() : undefined;
 
@@ -115,8 +115,8 @@ function validateProps(props, validations) {
 
 		        	errMsg = `The property '${propertyName}' must be `
 		        	    + type.name.toLowerCase();
-		        } else if (constraint) {
-		        	const checkResult =  constraint(prop);
+		        } else if (assert) {
+		        	const checkResult =  assert(prop);
 
 		        	if (checkResult instanceof Error) {
 		        		errMsg = `Invalid value for property '${propertyName}': `

@@ -3,7 +3,7 @@ import defineStandardComponent from './api/defineStandardComponent.js';
 import defineAdvancedComponent from './api/defineAdvancedComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
-import Constraints from './api/Constraints.js';
+import Spec from './api/Spec.js';
 
 import ReactLite from 'react-lite';
 
@@ -28,7 +28,7 @@ export {
 	isElement,
 	render,
 	Component,
-	Constraints,
+	Spec,
 };
 
 function render(content, targetNode) {

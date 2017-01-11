@@ -1,6 +1,6 @@
 export default function enhanceWithComponentMeta(componentFunc, config) {
 	componentFunc.displayName = config.name;
-
+/*
 	const properties = config.properties;
 
 	if (properties) {
@@ -23,4 +23,5 @@ export default function enhanceWithComponentMeta(componentFunc, config) {
 		}
 
 	}
+*/
 }
