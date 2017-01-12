@@ -40,29 +40,29 @@ export default function createPropsAdjuster(config) {
 	       	} else if (defaultValue !== undefined) {
            		defaults[key] = defaultValue;
 	       	}
-
-			ret = props	=> {
-			    const adjustedProps = hasDefaults
-			    	? Object.assign({}, defaults, props)
-			    	: props,
-
-					err = validateProps(adjustedProps, validations);
-
-			    if (err) {
-			    	const errMsg = "Error while validating props for "
-			    		+  `'${componentName}': ${err.message}`;
-
-			    	warn(errMsg);
-
-			    	warn(`Negatively validated props for '${componentName}':`,
-			    		props);
-
-			    	throw new Error(errMsg);
-			    }
-
-			    return adjustedProps;
-			};
         }
+
+		ret = props	=> {
+		    const adjustedProps = hasDefaults
+		    	? Object.assign({}, defaults, props)
+		    	: props,
+
+				err = validateProps(adjustedProps, validations);
+
+		    if (err) {
+		    	const errMsg = "Error while validating props for "
+		    		+  `'${componentName}': ${err.message}`;
+
+		    	warn(errMsg);
+
+		    	warn(`Negatively validated props for '${componentName}':`,
+		    		props);
+
+		    	throw new Error(errMsg);
+		    }
+
+		    return adjustedProps;
+        };
     }
 
     return ret;
@@ -118,8 +118,8 @@ function validateProps(props, validations) {
 		        } else if (assert) {
 		        	const checkResult =  assert(prop);
 
-		        	if (checkResult instanceof Error) {
-		        		errMsg = `Invalid value for property '${propertyName}': `
+		        	if (checkResult && typeof checkResult.message === 'string') {
+		        		errMsg = `Invalid value for property '${propertyName}' => `
 		        			+ checkResult.message;
 		        	} else if (checkResult && checkResult !== true) {
 		        		errMsg = `Invalid value for property '${propertyName}'`;

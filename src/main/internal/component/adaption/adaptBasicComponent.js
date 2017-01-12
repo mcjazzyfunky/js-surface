@@ -10,7 +10,7 @@ export default function adaptBasicComponentDefinition(config, platformAdaption) 
 	}
 
 	const propsAdjuster = createPropsAdjuster(config);
-
+	
 	const adjustedConfig = {
 		name: config.name,
 		properties: config.properties,

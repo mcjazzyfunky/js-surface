@@ -6,7 +6,7 @@ import shapeOfInitProcessResult
 
 export default function validateInitProcessResult(initProcessResult, config) {
 	let error =
-		Spec.hasShape(shapeOfInitProcessResult)(initProcessResult, '');
+		Spec.hasShapeOf(shapeOfInitProcessResult)(initProcessResult, '');
 
 	if (error) {
 		error = Error(

@@ -65,7 +65,6 @@ const SimpleCounter = defineStandardComponent({
 	properties: {
 		label: {
 			type: String,
-			assert: Spec.matches(/xxxxx/),
 			defaultValue: 'Counter:'
 		},
 		initialValue: {

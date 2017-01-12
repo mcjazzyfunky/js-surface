@@ -49,8 +49,8 @@ const Spec = {
           : createError('Must be a function', path);
     },
 
-    optional(constraint, path = null) {
-    	return it => it === undefined || it === null
+    optional(constraint) {
+    	return (it, path) => it === undefined || it === null
     		? null
     		: constraint(it);
     },
@@ -77,9 +77,12 @@ const Spec = {
 
     satisfies(condition, errMsg = null) {
 		return (it, path = null) => {
-			let ret = null;
+			let ret = null,
+			    result = condition(it);
 
-			if (!condition(it)) {
+            if (result instanceof SpecError) {
+                ret = createError(result.shortMessage, path);
+            } else if (result !== null && result !== undefined && !result) {
 				ret = createError(errMsg || 'Invalid value', path);
 			}
 
@@ -93,15 +96,15 @@ const Spec = {
           : createError('Must be instance of ' + type);
     },
 
-    isIterable(path = null) {
-        return (it, path) => it !== null
+    isIterable(it, path = null) {
+        return it !== null
             && typeof it === 'object'
             && typeof it[Symbol.iterator] === 'function'
             ? null
             : createError('Must be iterable', path);
     },
 
-    objectKeysOf(constraint) {
+    hasKeysOf(constraint) {
         return (it, path) => {
             let ret = null;
 
@@ -122,7 +125,7 @@ const Spec = {
         };
     },
 
-    objectValuesOf(constraint) {
+    hasValuesOf(constraint) {
         return (it, path) => {
             let ret = null;
 
@@ -148,7 +151,7 @@ const Spec = {
         };
     },
 
-    hasShape(shape, allowExtension = false) {
+    hasShapeOf(shape, allowExtension = false) {
         return (it, path) => {
             let ret = null;
 
@@ -174,7 +177,7 @@ const Spec = {
         return null;
     },
 
-    every(constraints) {
+    and(...constraints) {
         return (it, path = null) => {
             let ret = null;
 
@@ -191,7 +194,7 @@ const Spec = {
         };
     },
 
-    some(constraints, path = null) {
+    or(...constraints) {
         let ret = null;
 
         if (constraints && typeof constraints[Symbol.iterator] === 'function') {
@@ -228,8 +231,67 @@ const Spec = {
         }
 
         return ret;
+    },
+    
+    isIn(collection) {
+        return (it, path) => {
+            let ret = null;
+            
+            if (collection instanceof Set) {
+                if (!collection.has(it)) {
+                    ret = createError('Invalid value', path);
+                }
+            } else if (collection
+                && typeof collection[Symbol.iterator] === 'function') {
+                
+                let found = false;
+                
+                for (let item of collection) {
+                    if (item === it) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    ret = createError('Invalid value', path);
+                }
+            }
+            
+            return ret;
+        };
+    },
+
+    isNotIn(collection) {
+        return (it, path) => {
+            let ret = null;
+            
+            if (collection instanceof Set) {
+                if (collection.has(it)) {
+                    ret = createError('Invalid value', path);
+                }
+            } else if (collection
+                && typeof collection[Symbol.iterator] === 'function') {
+                
+                let found = false;
+                
+                for (let item of collection) {
+                    if (item === it) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (found) {
+                    ret = createError('Invalid value', path);
+                }
+            }
+            
+            return ret;
+        };
     }
 };
+
 
 Object.freeze(Spec);
 

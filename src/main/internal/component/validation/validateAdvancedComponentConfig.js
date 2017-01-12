@@ -9,7 +9,7 @@ import shapeOfAdvancedComponentConfig
 
 export default function validateFunctionalComponentConfig(config) {
 	const error =
-		Spec.hasShape(shapeOfAdvancedComponentConfig)(config, '');
+		Spec.hasShapeOf(shapeOfAdvancedComponentConfig)(config, '');
 
 	return error !== null
 		? prettifyComponentConfigError(error, config)
