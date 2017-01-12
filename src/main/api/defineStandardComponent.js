@@ -13,7 +13,7 @@ export default function defineStandardComponent(config) {
 	const
 	    propsAdjuster = createPropsAdjuster(config),
 
-		initProcess = onRender => {
+		initProcess = (onRender, onState) => {
 			let
 				component = null,
 				content = null,
@@ -35,6 +35,17 @@ export default function defineStandardComponent(config) {
 
 				if (!component) {
 					component = new config.componentClass(props);
+					
+					if (onState) {
+						onState(component.state);
+					}
+						
+					component.__onState = state => {
+						if (onState) {
+							onState(state);
+						}	
+					};
+					
 					let initialized = false;
 
 					component.__refresh = function (prevProps, prevState) {

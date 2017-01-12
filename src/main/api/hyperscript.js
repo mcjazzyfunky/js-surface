@@ -135,7 +135,7 @@ function hyperscript(tag, ...rest) {
 
 function applyCreateElement(tag, ...rest) {
    const snd = rest[0];
-console.log(snd)
+   
    return  snd === undefined || snd === null || typeof snd === 'object' && !snd[Symbol.iterator] && !isElement(snd)
         ? createElement(tag, snd || null, ...rest)
     	: createElement(tag, null, ...rest);

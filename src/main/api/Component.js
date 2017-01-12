@@ -2,6 +2,7 @@ export default class Component {
 	constructor(initialProps) {
 		this.__props = initialProps;
 		this.__state = null;
+		this.__onState = null;
 		this.__initialized = false;
 		this.__refresh = null;
 
@@ -27,6 +28,10 @@ export default class Component {
 		if (this.__initialized && this.shouldUpdate(this.props, currState)) {
 			this.onWillUpdate(this.props, nextState);
 			this.refresh();
+		}
+		
+		if (typeof this.__onState === 'function') {
+			this.__onState(this.__state);
 		}
 	}
 

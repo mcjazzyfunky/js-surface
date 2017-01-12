@@ -15,9 +15,9 @@ export default function adaptBasicComponentDefinition(config, platformAdaption) 
 		name: config.name,
 		properties: config.properties,
 
-		initProcess: onRender => {
+		initProcess: (onRender, onState = null) => {
 			const
-			    result = config.initProcess(onRender),
+			    result = config.initProcess(onRender, onState),
 			    err = validateInitProcessResult(result, config);
 
 			if (err) {

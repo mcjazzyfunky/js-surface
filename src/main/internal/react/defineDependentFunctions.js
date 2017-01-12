@@ -4,9 +4,7 @@ import adaptFunctionalComponent from
 import adaptBasicComponent from
 	'../component/adaption/adaptBasicComponent.js';
 
-const fakeState = {};
-
-Object.freeze(fakeState);
+const fakeState = Object.freeze({});
 
 export default function createDependentFunctions(
 	{ Component
@@ -80,6 +78,9 @@ export default function createDependentFunctions(
 							};
 						});
 
+					},
+					state => {
+						this.state = state;
 					});
 
 			this.__onProps = onProps;
