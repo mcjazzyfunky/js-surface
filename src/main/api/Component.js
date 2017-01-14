@@ -1,69 +1,69 @@
 export default class Component {
-	constructor(initialProps) {
-		this.__props = initialProps;
-		this.__state = null;
-		this.__onState = null;
-		this.__initialized = false;
-		this.__refresh = null;
+    constructor(initialProps) {
+        this.__props = initialProps;
+        this.__state = null;
+        this.__onState = null;
+        this.__initialized = false;
+        this.__refresh = null;
 
-		setTimeout(() => {
-			this.__initialized = true;
-		}, 0);
-	}
+        setTimeout(() => {
+            this.__initialized = true;
+        }, 0);
+    }
 
-	get props() {
-		return this.__props;
-	}
+    get props() {
+        return this.__props;
+    }
 
-	get state() {
-		return this.__state;
-	}
+    get state() {
+        return this.__state;
+    }
 
-	set state(nextState) {
-		const
-		    currState = this.state;
+    set state(nextState) {
+        const
+            currState = this.state;
 
-		this.__state = nextState;
+        this.__state = nextState;
 
-		if (this.__initialized && this.shouldUpdate(this.props, currState)) {
-			this.onWillUpdate(this.props, nextState);
-			this.refresh();
-		}
-		
-		if (typeof this.__onState === 'function') {
-			this.__onState(this.__state);
-		}
-	}
+        if (this.__initialized && this.shouldUpdate(this.props, currState)) {
+            this.onWillUpdate(this.props, nextState);
+            this.refresh();
+        }
+        
+        if (typeof this.__onState === 'function') {
+            this.__onState(this.__state);
+        }
+    }
 
-	shouldUpdate(params) {
-		return true;
-	}
+    shouldUpdate() {
+        return true;
+    }
 
-	onWillReceiveProps(params) {
-	}
+    onWillReceiveProps() {
+    }
 
-	onWillMount(params) {
-	}
+    onWillMount() {
+    }
 
-	onDidMount(param) {
-	}
+    onDidMount() {
+    }
 
-	onWillUpdate(params) {
-	}
+    onWillUpdate() {
+    }
 
-	onDidUpdate(params) {
-	}
+    onDidUpdate() {
+    }
 
-	onWillUnmount(params) {
-	}
+    onWillUnmount() {
+    }
 
-	render(params) {
-		return null;
-	}
+    render() {
+        return null;
+    }
 
-	refresh() {
-		if (this.__refresh) {
-			this.__refresh(this.props, this.state);
-		}
-	}
+    refresh() {
+        if (this.__refresh) {
+            this.__refresh(this.props, this.state);
+        }
+    }
 }
