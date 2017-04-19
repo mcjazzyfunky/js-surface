@@ -9,30 +9,30 @@ import React from 'react';
 import AppRegistry from 'react-native';
 
 const {
-	defineBasicComponent,
-	defineFunctionalComponent,
-	isElement
+    defineBasicComponent,
+    defineFunctionalComponent,
+    isElement
 } = defineDependentFunctions({
-	Component: React.Component,
-	createElement: React.createElement,
-	createFactory: React.createFactory,
-	isValidElement: React.isValidElement
+    Component: React.Component,
+    createElement: React.createElement,
+    createFactory: React.createFactory,
+    isValidElement: React.isValidElement
 });
 
 export {
-	createElement,
-	defineAdvancedComponent,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	defineBasicComponent,
-	isElement,
-	render,
-	Component,
-	Spec
+    createElement,
+    defineAdvancedComponent,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    defineBasicComponent,
+    isElement,
+    render,
+    Component,
+    Spec
 };
 
 const createElement = React.createElement;
 
 function render(Component) {
-	AppRegistry.registerComponent('AppMainComponent', () => Component);
+    AppRegistry.registerComponent('AppMainComponent', () => Component);
 }

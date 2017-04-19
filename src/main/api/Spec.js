@@ -50,9 +50,9 @@ const Spec = {
     },
 
     optional(constraint) {
-    	return (it, path) => it === undefined || it === null
-    		? null
-    		: constraint(it);
+        return (it, path) => it === undefined || it === null
+            ? null
+            : constraint(it);
     },
 
     isOneOf(items) {
@@ -76,18 +76,18 @@ const Spec = {
     },
 
     satisfies(condition, errMsg = null) {
-		return (it, path = null) => {
-			let ret = null,
-			    result = condition(it);
+        return (it, path = null) => {
+            let ret = null,
+                result = condition(it);
 
             if (result instanceof SpecError) {
                 ret = createError(result.shortMessage, path);
             } else if (result !== null && result !== undefined && !result) {
-				ret = createError(errMsg || 'Invalid value', path);
-			}
+                ret = createError(errMsg || 'Invalid value', path);
+            }
 
-			return ret;
-		};
+            return ret;
+        };
     },
 
     isInstanceOf(type) {
@@ -159,7 +159,7 @@ const Spec = {
                 ret = createError('Must be an object', path);
             } else {
                 for (const key of Object.keys(shape)) {
-                	 const subPath = buildSubPath(path, key);
+                     const subPath = buildSubPath(path, key);
 
                      ret = shape[key](it[key], subPath);
 
@@ -300,13 +300,13 @@ export default Spec;
 // --- Local functions ----------------------------------------------
 
 function buildSubPath(path, key) {
-	let ret = null;
+    let ret = null;
 
-	if (path !== undefined && path !== null) {
-    	ret = !path ? key : `${path}.${key}`;
-	}
+    if (path !== undefined && path !== null) {
+        ret = !path ? key : `${path}.${key}`;
+    }
 
-	return ret;
+    return ret;
 }
 
 function createError(errMsg, path)  {

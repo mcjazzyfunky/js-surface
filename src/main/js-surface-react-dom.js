@@ -9,27 +9,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const {
-	defineBasicComponent,
-	defineFunctionalComponent,
-	isElement
+    defineBasicComponent,
+    defineFunctionalComponent,
+    isElement
 } = defineDependentFunctions({
-	Component: React.Component,
-	createElement: createElement,
-	createFactory: React.createFactory,
-	isValidElement: React.isValidElement
+    Component: React.Component,
+    createElement: createElement,
+    createFactory: React.createFactory,
+    isValidElement: React.isValidElement
 });
 
 export {
-	createElement,
-	defineAdvancedComponent,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	defineBasicComponent,
-	hyperscript,
-	isElement,
-	render,
-	Component,
-	Spec,
+    createElement,
+    defineAdvancedComponent,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    defineBasicComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
 };
 
 const createElement = React.createElement;

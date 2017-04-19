@@ -8,27 +8,27 @@ import Spec from './api/Spec.js';
 import ReactLite from 'react-lite';
 
 const {
-	defineBasicComponent,
-	defineFunctionalComponent,
-	isElement
+    defineBasicComponent,
+    defineFunctionalComponent,
+    isElement
 } = defineDependentFunctions({
-	Component: ReactLite.Component,
-	createElement: createElement,
-	createFactory: ReactLite.createFactory,
-	isValidElement: ReactLite.isValidElement
+    Component: ReactLite.Component,
+    createElement: createElement,
+    createFactory: ReactLite.createFactory,
+    isValidElement: ReactLite.isValidElement
 });
 
 export {
-	createElement,
-	defineAdvancedComponent,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	defineBasicComponent,
-	hyperscript,
-	isElement,
-	render,
-	Component,
-	Spec,
+    createElement,
+    defineAdvancedComponent,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    defineBasicComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
 };
 
 function render(content, targetNode) {

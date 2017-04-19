@@ -1,17 +1,17 @@
 import Spec from '../../../api/Spec.js';
 
 import prettifyComponentConfigError
-	from '../helper/prettifyComponentConfigError.js';
+    from '../helper/prettifyComponentConfigError.js';
 
 import shapeOfStandardComponentConfig
-	from '../shape/shapeOfStandardComponentConfig.js';
+    from '../shape/shapeOfStandardComponentConfig.js';
 
 
 export default function validateFunctionalComponentConfig(config) {
-	const error =
-		Spec.hasShapeOf(shapeOfStandardComponentConfig)(config, '');
+    const error =
+        Spec.hasShapeOf(shapeOfStandardComponentConfig)(config, '');
 
-	return error !== null
-		? prettifyComponentConfigError(error, config)
-		: null;
+    return error !== null
+        ? prettifyComponentConfigError(error, config)
+        : null;
 }

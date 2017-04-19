@@ -1,9 +1,9 @@
 import {
-	defineFunctionalComponent,
-	defineStandardComponent,
-	createElement as dom,
-	render,
-	Component,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    createElement as dom,
+    render,
+    Component,
 }  from 'js-surface';
 
 const COLORS = ['red', 'yellow', 'orange'];

@@ -12,7 +12,7 @@ const
     tagRegex = new RegExp(`^${tagRegex}$`),
     hyperscriptRegex = new RegExp(`${fullPattern}`),
 
-	tagCache = {},
+    tagCache = {},
     tagIsSimpleMark = Symbol();
 
 function hyperscript(tag, ...rest) {
@@ -36,8 +36,8 @@ function hyperscript(tag, ...rest) {
         } else if (result === undefined || !tagCache.hasOwnProperty(tag)) {
             if (!tag.match(hyperscriptRegex)) {
                 throw new Error(
-                	"[hyperscript] First argument 'tag' "
-                	+ `is not a valid hyperscript tag string ('${tag}')`);
+                    "[hyperscript] First argument 'tag' "
+                    + `is not a valid hyperscript tag string ('${tag}')`);
             } else if (tag.match(tagRegex)) {
                 tagCache[tag] = tagIsSimpleMark;
 
@@ -71,18 +71,18 @@ function hyperscript(tag, ...rest) {
                 secondArg = arguments[1],
 
                 secondArgHasAttrs =
-                	secondArg === undefined || secondArg === null ||
-                	typeof secondArg === 'object' && !secondArg[Symbol.iterator] && !isElement(secondArg),
+                    secondArg === undefined || secondArg === null ||
+                    typeof secondArg === 'object' && !secondArg[Symbol.iterator] && !isElement(secondArg),
 
                 newArgs = [lastTag];
 
-			if (lastId) {
-				lastAttrs.id = lastId;
-			}
+            if (lastId) {
+                lastAttrs.id = lastId;
+            }
 
-			if (lastClassName) {
-				lastAttrs.className = lastClassName;
-			}
+            if (lastClassName) {
+                lastAttrs.className = lastClassName;
+            }
 
             if (secondArgHasAttrs) {
                 const
@@ -138,7 +138,7 @@ function applyCreateElement(tag, ...rest) {
    
    return  snd === undefined || snd === null || typeof snd === 'object' && !snd[Symbol.iterator] && !isElement(snd)
         ? createElement(tag, snd || null, ...rest)
-    	: createElement(tag, null, ...rest);
+        : createElement(tag, null, ...rest);
 }
 
 // Just temporary

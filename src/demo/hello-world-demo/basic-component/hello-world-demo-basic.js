@@ -1,26 +1,26 @@
 import {
-	createElement as dom,
-	defineBasicComponent,
-	render
+    createElement as dom,
+    defineBasicComponent,
+    render
 } from 'js-surface';
 
 const HelloWorld = defineBasicComponent({
-	name: 'HelloWorld',
+    name: 'HelloWorld',
 
-	properties: {
-		name: {
-			type: String,
-			defaultValue: 'World'
-		}
-	},
+    properties: {
+        name: {
+            type: String,
+            defaultValue: 'World'
+        }
+    },
 
-	initProcess(onNextContent) {
-		return {
-			onProps(props) {
-				onNextContent(dom('div', null, 'Hello ' + props.name + '!'));
-			}
-		};
-	}
+    initProcess(onNextContent) {
+        return {
+            onProps(props) {
+                onNextContent(dom('div', null, 'Hello ' + props.name + '!'));
+            }
+        };
+    }
 });
 
 render(HelloWorld(), 'main-content');

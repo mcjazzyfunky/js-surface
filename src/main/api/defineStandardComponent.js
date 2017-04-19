@@ -4,106 +4,106 @@ import validateStandardComponentConfig from '../internal/component/validation/va
 import { defineBasicComponent } from 'js-surface';
 
 export default function defineStandardComponent(config) {
-	const err = validateStandardComponentConfig(config);
+    const err = validateStandardComponentConfig(config);
 
-	if (err) {
-		throw err;
-	}
+    if (err) {
+        throw err;
+    }
 
-	const
-	    propsAdjuster = createPropsAdjuster(config),
+    const
+        propsAdjuster = createPropsAdjuster(config),
 
-		initProcess = (onRender, onState) => {
-			let
-				component = null,
-				content = null,
-				done = false;
+        initProcess = (onRender, onState) => {
+            let
+                component = null,
+                content = null,
+                done = false;
 
-			const onProps = origProps => {
-				if (done) {
-					return;
-				} else if (origProps === undefined) {
-					if (component) {
-						component.onWillUnmount();
-					}
+            const onProps = origProps => {
+                if (done) {
+                    return;
+                } else if (origProps === undefined) {
+                    if (component) {
+                        component.onWillUnmount();
+                    }
 
-					done = true;
-					return;
-				}
+                    done = true;
+                    return;
+                }
 
-				const props = propsAdjuster(origProps);
+                const props = propsAdjuster(origProps);
 
-				if (!component) {
-					component = new config.componentClass(props);
-					
-					if (onState) {
-						onState(component.state);
-					}
-						
-					component.__onState = state => {
-						if (onState) {
-							onState(state);
-						}	
-					};
-					
-					let initialized = false;
+                if (!component) {
+                    component = new config.componentClass(props);
+                    
+                    if (onState) {
+                        onState(component.state);
+                    }
+                        
+                    component.__onState = state => {
+                        if (onState) {
+                            onState(state);
+                        }    
+                    };
+                    
+                    let initialized = false;
 
-					component.__refresh = function (prevProps, prevState) {
-						content = component.render();
-						const renderingDonePromise = onRender(content);
+                    component.__refresh = function (prevProps, prevState) {
+                        content = component.render();
+                        const renderingDonePromise = onRender(content);
 
-						if (renderingDonePromise) {
-							renderingDonePromise.then(
-								successful => {
-									if (successful) {
-										if (!initialized) {
-											initialized = true;
-											component.onDidMount();
-										} else {
-											component.onDidUpdate(prevProps, prevState);
-										}
-									}
-								}
-							);
-						}
-					};
+                        if (renderingDonePromise) {
+                            renderingDonePromise.then(
+                                successful => {
+                                    if (successful) {
+                                        if (!initialized) {
+                                            initialized = true;
+                                            component.onDidMount();
+                                        } else {
+                                            component.onDidUpdate(prevProps, prevState);
+                                        }
+                                    }
+                                }
+                            );
+                        }
+                    };
 
-					component.onWillMount();
-					component.refresh(null, null);
-				} else {
-					component.onWillReceiveProps(props);
+                    component.onWillMount();
+                    component.refresh(null, null);
+                } else {
+                    component.onWillReceiveProps(props);
 
-					const shouldUpdate = component.shouldUpdate(props, component.state);
+                    const shouldUpdate = component.shouldUpdate(props, component.state);
 
-					if (shouldUpdate) {
-						component.onWillUpdate(props, component.state);
-					}
+                    if (shouldUpdate) {
+                        component.onWillUpdate(props, component.state);
+                    }
 
-					const prevProps = component.props;
+                    const prevProps = component.props;
 
-					// Sorry for that :-(
-					component.__props = props;
+                    // Sorry for that :-(
+                    component.__props = props;
 
-					if (shouldUpdate) {
-						component.refresh(prevProps, component.state);
-					}
-				}
-			};
+                    if (shouldUpdate) {
+                        component.refresh(prevProps, component.state);
+                    }
+                }
+            };
 
-			// TODO
-			const methods = {};
+            // TODO
+            const methods = {};
 
-			return {
-				onProps,
-				methods
-			};
-		},
+            return {
+                onProps,
+                methods
+            };
+        },
 
         adjustedConfig = {
-		    name: config.name,
-	        properties: config.properties,
-		    initProcess
-	    };
+            name: config.name,
+            properties: config.properties,
+            initProcess
+        };
 
-	return defineBasicComponent(adjustedConfig);
+    return defineBasicComponent(adjustedConfig);
 }

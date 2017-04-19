@@ -5,57 +5,57 @@ import Component from './api/Component.js';
 import Spec from './api/Spec.js';
 
 import adaptFunctionalComponent from
-	'./internal/component/adaption/adaptFunctionalComponent.js';
+    './internal/component/adaption/adaptFunctionalComponent.js';
 
 import adaptBasicComponent from
-	'./internal/component/adaption/adaptBasicComponent.js';
+    './internal/component/adaption/adaptBasicComponent.js';
 
 import enhanceWithComponentMeta from
-	'./internal/component/helper/enhanceWithComponentMeta.js';
+    './internal/component/helper/enhanceWithComponentMeta.js';
 
 import { render as renderInferno } from 'inferno';
 import createInfernoElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
 
 export {
-	createElement,
-	defineAdvancedComponent,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	defineBasicComponent,
-	hyperscript,
-	isElement,
-	render,
-	Component,
-	Spec,
+    createElement,
+    defineAdvancedComponent,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    defineBasicComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
 };
 
 function defineFunctionalComponent(config) {
-	return adaptFunctionalComponent(config, adjustedConfig => {
-		const ret = props => adjustedConfig.render(props);
+    return adaptFunctionalComponent(config, adjustedConfig => {
+        const ret = props => adjustedConfig.render(props);
 
-		ret.displayName = adjustedConfig.name;
+        ret.displayName = adjustedConfig.name;
 
-		return ret;
-	});
+        return ret;
+    });
 }
 
 function defineBasicComponent(config) {
-	return adaptBasicComponent(config, adjustedConfig => {
-		class ExtCustomComponent extends CustomComponent {
-			constructor(...args) {
-				super(args, adjustedConfig);
-			}
-		}
+    return adaptBasicComponent(config, adjustedConfig => {
+        class ExtCustomComponent extends CustomComponent {
+            constructor(...args) {
+                super(args, adjustedConfig);
+            }
+        }
 
-		ExtCustomComponent.displayName = adjustedConfig.name;
+        ExtCustomComponent.displayName = adjustedConfig.name;
 
-		enhanceWithComponentMeta(ExtCustomComponent, config);
+        enhanceWithComponentMeta(ExtCustomComponent, config);
 
-		return (...args) => {
-			return createElement(ExtCustomComponent, ...args);
-		};
-	});
+        return (...args) => {
+            return createElement(ExtCustomComponent, ...args);
+        };
+    });
 }
 
 function createElement(tag, props, ...children)  {
@@ -111,70 +111,70 @@ class CustomComponent extends InfernoComponent {
     constructor(superArgs, config) {
         super(...superArgs);
 
-		this.__viewToRender = null;
-		this.__resolveRenderingDone = null;
-		this.__needsUpdate = false;
+        this.__viewToRender = null;
+        this.__resolveRenderingDone = null;
+        this.__needsUpdate = false;
 
-		let initialized = false;
+        let initialized = false;
 
-		const
-			{ onProps, methods } = config.initProcess(
-				view => {
-					this.__viewToRender = view;
+        const
+            { onProps, methods } = config.initProcess(
+                view => {
+                    this.__viewToRender = view;
 
-					if (initialized) {
-						this.__needsUpdate = true;
-						this.setState(null);
-					} else {
-						initialized = true;
-					}
+                    if (initialized) {
+                        this.__needsUpdate = true;
+                        this.setState(null);
+                    } else {
+                        initialized = true;
+                    }
 
-					return new Promise(resolve => {
-						this.__resolveRenderingDone = () => {
-							this.__resolveRenderingDone = null;
-							resolve(true);
-						};
-					});
-				});
+                    return new Promise(resolve => {
+                        this.__resolveRenderingDone = () => {
+                            this.__resolveRenderingDone = null;
+                            resolve(true);
+                        };
+                    });
+                });
 
-		this.__onProps = onProps;
+        this.__onProps = onProps;
 
-		if (methods) {
-			Object.assign(this, methods);
-		}
+        if (methods) {
+            Object.assign(this, methods);
+        }
     }
 
     componentWillMount(node) {
-    	this.__onProps(this.props);
+        this.__onProps(this.props);
     }
 
     componentDidMount(node) {
-    	if (this.__resolveRenderingDone) {
-			this.__resolveRenderingDone();
-    	}
+        if (this.__resolveRenderingDone) {
+            this.__resolveRenderingDone();
+        }
     }
 
     componentDidUpdate() {
-    	if (this.__resolveRenderingDone) {
-			this.__resolveRenderingDone();
-    	}
+        if (this.__resolveRenderingDone) {
+            this.__resolveRenderingDone();
+        }
     }
 
     componentWillUnmount() {
-		this.__onProps(undefined);
+        this.__onProps(undefined);
     }
 
     componentWillReceiveProps(nextProps) {
-    	this.__onProps(nextProps);
+        this.__onProps(nextProps);
     }
 
     shouldComponentUpdate() {
-    	const ret = this.__needsUpdate;
-    	this.__needsUpdate = false;
-    	return ret;
+        const ret = this.__needsUpdate;
+        this.__needsUpdate = false;
+        return ret;
     }
 
     render() {
-    	return this.__viewToRender;
+        return this.__viewToRender;
     }
 }

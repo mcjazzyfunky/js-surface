@@ -1,8 +1,8 @@
 import {
-	createElement as dom,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	render,
+    createElement as dom,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    render,
 } from 'js-surface';
 
 const CounterInfo = defineFunctionalComponent({
@@ -16,12 +16,12 @@ const CounterInfo = defineFunctionalComponent({
 
     render(props) {
         return (
-        	dom(
-        		'label',
-        		null,
-        		dom('b',
-        			null,
-        			props.value)));
+            dom(
+                'label',
+                null,
+                dom('b',
+                    null,
+                    props.value)));
     }
 });
 
@@ -36,27 +36,27 @@ const Counter = defineStandardComponent({
             defaultValue: 0
         },
         onChange: {
-        	type: Function
+            type: Function
         }
     },
 
     publicMethods: {
-    	resetCounter(value = 0) {
-    		this.state = { counterValue: value };
-    	}
+        resetCounter(value = 0) {
+            this.state = { counterValue: value };
+        }
     },
 
     init() {
         this.state = { counterValue: this.props.initialValue };
     },
 
-	increaseCounter(delta) {
-    	this.state = { counterValue: this.state.counterValue + delta };
-	},
+    increaseCounter(delta) {
+        this.state = { counterValue: this.state.counterValue + delta };
+    },
 
     shouldUpdate() {
-    	console.log('[needsUpdate]', arguments);
-    	return true;
+        console.log('[needsUpdate]', arguments);
+        return true;
     },
 
     onWillReceiveProps(nextProps) {
@@ -71,10 +71,10 @@ const Counter = defineStandardComponent({
         console.log('[onDidChangeState]', arguments);
 
         if (this.props.onChange) {
-        	this.props.onChange({
-        		type: 'change',
-        		value: this.state.counterValue
-        	});
+            this.props.onChange({
+                type: 'change',
+                value: this.state.counterValue
+            });
         }
     },
 
@@ -127,14 +127,14 @@ const CounterCtrl = defineFunctionalComponent({
             dom('div',
                 { className: 'counter-ctrl' },
                 dom('button',
-                	{ onClick: () => counterInstance.resetCounter(0) },
-                	'Reset to 0'),
-                	' ',
-            		Counter({ ref: it => counterInstance = it }),
-                	' ',
-                	dom('button',
-                		{ onClick: () => counterInstance.resetCounter(100) },
-                		'Reset to 100')));
+                    { onClick: () => counterInstance.resetCounter(0) },
+                    'Reset to 0'),
+                    ' ',
+                    Counter({ ref: it => counterInstance = it }),
+                    ' ',
+                    dom('button',
+                        { onClick: () => counterInstance.resetCounter(100) },
+                        'Reset to 100')));
     }
 });
 

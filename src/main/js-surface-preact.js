@@ -8,38 +8,38 @@ import Spec from './api/Spec.js';
 import Preact from 'preact';
 
 const
-	 VNode = Preact.h('').constructor,
+     VNode = Preact.h('').constructor,
 
-	{	defineFunctionalComponent,
-		defineBasicComponent,
-		isElement
-	} = defineDependentFunctions({
-		Component: Preact.Component,
-		createElement,
-		createFactory,
-		isValidElement
-	});
+    {    defineFunctionalComponent,
+        defineBasicComponent,
+        isElement
+    } = defineDependentFunctions({
+        Component: Preact.Component,
+        createElement,
+        createFactory,
+        isValidElement
+    });
 
 export {
-	createElement,
-	defineAdvancedComponent,
-	defineStandardComponent,
-	defineFunctionalComponent,
-	defineBasicComponent,
-	hyperscript,
-	isElement,
-	render,
-	Component,
-	Spec
+    createElement,
+    defineAdvancedComponent,
+    defineStandardComponent,
+    defineFunctionalComponent,
+    defineBasicComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec
 };
 
 function createFactory(type) {
-	return createElement.bind(null, type);
+    return createElement.bind(null, type);
 }
 
 function isValidElement(it) {
-	return it !== undefined && it !== null
-		&& (typeof it !== 'object'|| it instanceof VNode);
+    return it !== undefined && it !== null
+        && (typeof it !== 'object'|| it instanceof VNode);
 }
 
 function render(content, targetNode) {

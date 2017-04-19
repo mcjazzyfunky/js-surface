@@ -19,16 +19,16 @@ function defineStore(config) {
         && (updateActions === null || typeof updateActions !== 'object')) {
 
         throw new Error('[defineStore] Configuration parameter '
-        	+ "'updateActions' must be an object");
+            + "'updateActions' must be an object");
     } else if (hasCommandActions
-    	&& (commandActions === null || typeof commandActions !== 'object')) {
+        && (commandActions === null || typeof commandActions !== 'object')) {
 
         throw new Error('[defineStore] Configuration parameter '
-        	+ "'commandActions' must be an object");
+            + "'commandActions' must be an object");
     }
 
     const storeClass = function (seed) {
-    	Store.apply(this);
+        Store.apply(this);
     };
 
     storeClass.protype = Object.create(Store.prototype);

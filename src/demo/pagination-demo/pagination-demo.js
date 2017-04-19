@@ -1,9 +1,9 @@
 import {
-	defineFunctionalComponent,
-	defineStandardComponent,
-	createElement as dom,
-	render,
-	Component,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    createElement as dom,
+    render,
+    Component,
 }  from 'js-surface';
 
 import { Seq } from 'js-prelude';
@@ -167,35 +167,35 @@ function buildLinkListItem(text, isActive, moveToPage) {
 }
 
 const DemoOfPagination = defineStandardComponent({
-	name: 'DemoOfPagination',
+    name: 'DemoOfPagination',
 
-	componentClass: class extends Component {
-		constructor(props) {
-			super(props);
+    componentClass: class extends Component {
+        constructor(props) {
+            super(props);
 
-			this.state = { pageIndex: 0 };
-		}
+            this.state = { pageIndex: 0 };
+        }
 
-		moveToPage(pageIndex) {
-			this.state = { pageIndex };
-		}
+        moveToPage(pageIndex) {
+            this.state = { pageIndex };
+        }
 
-	    render() {
-	        return (
-	            dom('div',
-	                {className: 'container-fluid'},
-	                Seq.range(1, number).map(_ =>
-	                   dom('div',
-	                        {className: 'row'},
-	                        Pagination({
-	                            className: "col-md-3",
-	                            pageIndex: this.state.pageIndex,
-	                            pageSize: pageSize,
-	                            totalItemCount: totalItemCount,
-	                            onChange: evt => this.moveToPage(evt.targetPage)}))))
-	            );
-	    }
-	}
+        render() {
+            return (
+                dom('div',
+                    {className: 'container-fluid'},
+                    Seq.range(1, number).map(_ =>
+                       dom('div',
+                            {className: 'row'},
+                            Pagination({
+                                className: "col-md-3",
+                                pageIndex: this.state.pageIndex,
+                                pageSize: pageSize,
+                                totalItemCount: totalItemCount,
+                                onChange: evt => this.moveToPage(evt.targetPage)}))))
+                );
+        }
+    }
 });
 
 // -----------------
