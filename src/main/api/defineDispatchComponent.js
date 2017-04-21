@@ -1,7 +1,7 @@
 import { defineClassComponent } from 'js-surface';
 
-import validateAdvancedComponentConfig
-    from '../internal/component/validation/validateAdvancedComponentConfig.js';
+import validateDispatchComponentConfig
+    from '../internal/component/validation/validateDispatchComponentConfig.js';
 
 import Component from '../api/Component.js';
 import Spec from '../api/Spec.js';
@@ -9,7 +9,7 @@ import Spec from '../api/Spec.js';
 import shapeOfStore from '../internal/component/shape/shapeOfStore.js';
 
 export default function defineDispatchComponent(config) {
-    const err = validateAdvancedComponentConfig(config);
+    const err = validateDispatchComponentConfig(config);
 
     if (err) {
         throw err;

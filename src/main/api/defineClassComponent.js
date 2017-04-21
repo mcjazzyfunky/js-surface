@@ -1,10 +1,10 @@
 import createPropsAdjuster from '../internal/component/helper/createPropsAdjuster.js';
-import validateStandardComponentConfig from '../internal/component/validation/validateStandardComponentConfig.js';
+import validateComponentClass from '../internal/component/validation/validateComponentClass.js';
 
 import { defineStandardComponent } from 'js-surface';
 
 export default function defineClassComponent(config) {
-    const err = validateStandardComponentConfig(config);
+    const err = validateComponentClass(config);
 
     if (err) {
         throw err;
@@ -34,7 +34,7 @@ export default function defineClassComponent(config) {
                 const props = propsAdjuster(origProps);
 
                 if (!component) {
-                    component = new config.componentClass(props);
+                    component = new config(props);
                     
                     if (onState) {
                         onState(component.state);

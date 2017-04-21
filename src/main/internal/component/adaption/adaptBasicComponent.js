@@ -1,5 +1,5 @@
 import createPropsAdjuster from '../helper/createPropsAdjuster.js';
-import validateConfigForBasicComponent from '../validation/validateBasicComponentConfig.js';
+import validateConfigForBasicComponent from '../validation/validateStandardComponentConfig.js';
 import validateInitProcessResult from '../validation/validateInitProcessResult.js';
 
 export default function adaptBasicComponentDefinition(config, platformAdaption) {

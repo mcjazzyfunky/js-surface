@@ -8,6 +8,23 @@ import {
 
 
 class SimpleCounterComponent extends Component {
+    static get displayName() {
+        return 'SimpleCounter';
+    }
+
+    static get properties() {
+        return {
+            label: {
+                type: String,
+                defaultValue: 'Counter:'
+            },
+            initialValue: {
+                type: Number,
+                defaultValue: 0
+            }
+        };
+    }
+
     constructor(props) {
         super(props);
 
@@ -59,21 +76,6 @@ class SimpleCounterComponent extends Component {
 }
 
 
-const SimpleCounter = defineClassComponent({
-    displayName:  'SimpleCounter',
-
-    properties: {
-        label: {
-            type: String,
-            defaultValue: 'Counter:'
-        },
-        initialValue: {
-            type: Number,
-            defaultValue: 0
-        }
-    },
-
-    componentClass: SimpleCounterComponent
-});
+const SimpleCounter = defineClassComponent(SimpleCounterComponent);
 
 render(SimpleCounter({ initialValue: 100 }), 'main-content');
