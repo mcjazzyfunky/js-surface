@@ -1,12 +1,12 @@
 import {
     createElement as dom,
-    defineStandardComponent,
+    defineClassComponent,
     defineFunctionalComponent,
     render,
 } from 'js-surface';
 
 const CounterInfo = defineFunctionalComponent({
-    name: 'CounterInfo',
+    displayName:  'CounterInfo',
 
     properties: {
         value: {
@@ -27,8 +27,8 @@ const CounterInfo = defineFunctionalComponent({
 
 // --------------------------------------------------------------------
 
-const Counter = defineStandardComponent({
-    name: 'Counter',
+const Counter = defineClassComponent({
+    displayName:  'Counter',
 
     properties: {
         initialValue: {
@@ -118,7 +118,7 @@ const Counter = defineStandardComponent({
 // --------------------------------------------------------------------
 
 const CounterCtrl = defineFunctionalComponent({
-    name: 'CounterCtrl',
+    displayName:  'CounterCtrl',
 
     render() {
         let counterInstance = null;

@@ -1,6 +1,6 @@
 import defineDependentFunctions from './internal/react/defineDependentFunctions.js';
-import defineStandardComponent from './api/defineStandardComponent.js';
-import defineAdvancedComponent from './api/defineAdvancedComponent.js';
+import defineClassComponent from './api/defineClassComponent.js';
+import defineDispatchComponent from './api/defineDispatchComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
 import Spec from './api/Spec.js';
@@ -11,7 +11,7 @@ const
      VNode = Preact.h('').constructor,
 
     {    defineFunctionalComponent,
-        defineBasicComponent,
+        defineStandardComponent,
         isElement
     } = defineDependentFunctions({
         Component: Preact.Component,
@@ -22,10 +22,10 @@ const
 
 export {
     createElement,
-    defineAdvancedComponent,
-    defineStandardComponent,
+    defineDispatchComponent,
+    defineClassComponent,
     defineFunctionalComponent,
-    defineBasicComponent,
+    defineStandardComponent,
     hyperscript,
     isElement,
     render,

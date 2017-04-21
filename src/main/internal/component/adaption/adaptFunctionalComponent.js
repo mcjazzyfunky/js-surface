@@ -14,7 +14,7 @@ export default function adaptFunctionalComponent(config, platformAdaption) {
         propsAdjuster = createPropsAdjuster(config),
 
         adjustedConfig = {
-            name: config.name,
+            displayName:  config.displayName,
             properties: config.properties,
             render: props => config.render(propsAdjuster(props))
         };

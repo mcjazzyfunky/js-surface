@@ -10,7 +10,7 @@ export default function validateInitProcessResult(initProcessResult, config) {
 
     if (error) {
         error = Error(
-            `Function 'initProcess' of general component '${config.name}' `
+            `Function 'initProcess' of standard component '${config.displayName}' `
             + `has returned an invalid value => ${error.message}`);
     }
 

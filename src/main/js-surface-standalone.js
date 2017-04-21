@@ -1,9 +1,9 @@
 import {
     createElement,
-    defineAdvancedComponent,
-    defineBasicComponent,
-    defineFunctionalComponent,
+    defineDispatchComponent,
     defineStandardComponent,
+    defineFunctionalComponent,
+    defineClassComponent,
     hyperscript,
     isElement,
     render,
@@ -13,10 +13,10 @@ import {
 
 export {
     createElement,
-    defineAdvancedComponent,
-    defineBasicComponent,
-    defineFunctionalComponent,
+    defineDispatchComponent,
     defineStandardComponent,
+    defineFunctionalComponent,
+    defineClassComponent,
     hyperscript,
     isElement,
     render,

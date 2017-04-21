@@ -1,5 +1,5 @@
 export default function enhanceWithComponentMeta(componentFunc, config) {
-    componentFunc.displayName = config.name;
+    componentFunc.displayName = config.displayName;
 /*
     const properties = config.properties;
 

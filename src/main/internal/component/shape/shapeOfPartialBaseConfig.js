@@ -4,7 +4,7 @@ import { REGEX_COMPONENT_NAME, REGEX_PROPERTY_NAME }
     from '../constant/constants.js';
 
 export default
-    { name:
+    { displayName: 
         Spec.matches(REGEX_COMPONENT_NAME)
 
     , properties:

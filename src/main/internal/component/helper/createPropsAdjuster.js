@@ -5,7 +5,7 @@ export default function createPropsAdjuster(config) {
 
     const
         propertiesConfig = config.properties,
-        componentName = config.name,
+        componentName = config.displayName,
         validations = [],
         defaults = {};
 

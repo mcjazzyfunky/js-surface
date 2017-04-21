@@ -2,5 +2,5 @@ import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
 import Spec from '../../../api/Spec.js';
 
 export default Object.assign({}, shapeOfPartialBaseConfig, {
-    initProcess: Spec.isFunction
+    componentClass: Spec.isFunction
 });

@@ -1,14 +1,14 @@
 import {
     createElement as dom,
-    defineBasicComponent,
+    defineStandardComponent,
     render
 } from 'js-surface';
 
-const HelloWorld = defineBasicComponent({
-    name: 'HelloWorld',
+const HelloWorld = defineStandardComponent({
+    displayName:  'HelloWorld',
 
     properties: {
-        name: {
+        displayName:  {
             type: String,
             defaultValue: 'World'
         }

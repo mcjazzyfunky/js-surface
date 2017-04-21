@@ -6,7 +6,7 @@ import {
 }  from 'js-surface';
 
 const StopWatch = defineClassBasedComponent({
-    name: 'StopWatch',
+    displayName:  'StopWatch',
 
     properties: {
     },

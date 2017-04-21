@@ -2,7 +2,7 @@ import {
     hyperscript as dom,
     defineFunctionalComponent,
     defineMessages,
-    defineStandardComponent,
+    defineClassComponent,
     defineStore,
     render
 } from 'js-surface';
@@ -117,8 +117,8 @@ const
 
     store = initStore(),
 
-    App = defineStandardComponent({
-        name: 'App',
+    App = defineClassComponent({
+        displayName:  'App',
 
         properties: {
             store: {
@@ -170,7 +170,7 @@ const
     }),
 
     AppHeader = defineFunctionalComponent({
-        name: 'AppHeader',
+        displayName:  'AppHeader',
 
         properties: {
             inputText: {
@@ -189,7 +189,7 @@ const
     }),
 
     AppBody = defineFunctionalComponent({
-        name: 'AppBody',
+        displayName:  'AppBody',
 
         properties: {
             todos: {
@@ -223,7 +223,7 @@ const
     }),
 
     AppFooter = defineFunctionalComponent({
-        name: 'AppFooter',
+        displayName:  'AppFooter',
 
         properties: {
             activeFilter: {

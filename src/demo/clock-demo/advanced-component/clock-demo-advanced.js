@@ -1,6 +1,6 @@
 import {
     createElement as dom,
-    defineAdvancedComponent,
+    defineDispatchComponent,
     defineStore,
 } from 'js-surface';
 
@@ -52,8 +52,8 @@ const Store = defineStore({
     }
 });
 
-export default defineAdvancedComponent({
-    name: "AdvancedClock",
+export default defineDispatchComponent({
+    displayName:  "AdvancedClock",
 
     properties: {
         label: {

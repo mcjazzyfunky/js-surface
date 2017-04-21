@@ -1,6 +1,6 @@
 import {
     hyperscript as dom,
-    defineStandardComponent,
+    defineClassComponent,
     render,
     Component,
     Spec
@@ -59,8 +59,8 @@ class SimpleCounterComponent extends Component {
 }
 
 
-const SimpleCounter = defineStandardComponent({
-    name: 'SimpleCounter',
+const SimpleCounter = defineClassComponent({
+    displayName:  'SimpleCounter',
 
     properties: {
         label: {

@@ -1,6 +1,6 @@
 import {
     defineFunctionalComponent,
-    defineStandardComponent,
+    defineClassComponent,
     createElement as dom,
     render,
     Component,
@@ -9,7 +9,7 @@ import {
 const COLORS = ['red', 'yellow', 'orange'];
 
 const Tile = defineFunctionalComponent({
-    name: 'Tile',
+    displayName:  'Tile',
     
     properties: {
         color: {
@@ -41,7 +41,7 @@ const Tile = defineFunctionalComponent({
 });
 
 const TileRow = defineFunctionalComponent(({
-    name: 'TileRow',
+    displayName:  'TileRow',
     
     properties: {
         tileWidth: {
@@ -70,8 +70,8 @@ const TileRow = defineFunctionalComponent(({
     }
 }));
 
-const App = defineStandardComponent({
-    name: 'App',
+const App = defineClassComponent({
+    displayName:  'App',
     
     properties: {
         columnCount: {

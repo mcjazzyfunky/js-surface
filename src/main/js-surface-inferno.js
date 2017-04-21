@@ -1,5 +1,5 @@
-import defineStandardComponent from './api/defineStandardComponent.js';
-import defineAdvancedComponent from './api/defineAdvancedComponent.js';
+import defineClassComponent from './api/defineClassComponent.js';
+import defineDispatchComponent from './api/defineDispatchComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
 import Spec from './api/Spec.js';
@@ -19,10 +19,10 @@ import InfernoComponent from 'inferno-component';
 
 export {
     createElement,
-    defineAdvancedComponent,
-    defineStandardComponent,
+    defineDispatchComponent,
+    defineClassComponent,
     defineFunctionalComponent,
-    defineBasicComponent,
+    defineStandardComponent,
     hyperscript,
     isElement,
     render,
@@ -34,13 +34,13 @@ function defineFunctionalComponent(config) {
     return adaptFunctionalComponent(config, adjustedConfig => {
         const ret = props => adjustedConfig.render(props);
 
-        ret.displayName = adjustedConfig.name;
+        ret.displayName = adjustedConfig.displayName;
 
         return ret;
     });
 }
 
-function defineBasicComponent(config) {
+function defineStandardComponent(config) {
     return adaptBasicComponent(config, adjustedConfig => {
         class ExtCustomComponent extends CustomComponent {
             constructor(...args) {
@@ -48,7 +48,7 @@ function defineBasicComponent(config) {
             }
         }
 
-        ExtCustomComponent.displayName = adjustedConfig.name;
+        ExtCustomComponent.displayName = adjustedConfig.displayName;
 
         enhanceWithComponentMeta(ExtCustomComponent, config);
 

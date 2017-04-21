@@ -1,4 +1,4 @@
-import { defineStandardComponent } from 'js-surface';
+import { defineClassComponent } from 'js-surface';
 
 import validateAdvancedComponentConfig
     from '../internal/component/validation/validateAdvancedComponentConfig.js';
@@ -8,7 +8,7 @@ import Spec from '../api/Spec.js';
 
 import shapeOfStore from '../internal/component/shape/shapeOfStore.js';
 
-export default function defineAdvancedComponent(config) {
+export default function defineDispatchComponent(config) {
     const err = validateAdvancedComponentConfig(config);
 
     if (err) {
@@ -21,8 +21,8 @@ export default function defineAdvancedComponent(config) {
         }
     }
 
-    return defineStandardComponent({
-        name: config.name,
+    return defineClassComponent({
+        displayName:  config.displayName,
         properties: config.properties,
         componentClass: ExtCustomComponent
     });
@@ -60,7 +60,7 @@ class CustomComponent extends Component {
                 if (err) {
                     throw new Error(
                         "The return value of the init function of component '"
-                        + this.__config.name
+                        + this.__config.displayName
                         + "' is invalid");
                 } else {
                     this.__dispatch = msg => store.dispatch(msg);
@@ -80,7 +80,7 @@ class CustomComponent extends Component {
                     if (typeof unsubscribe !== 'function') {
                         throw new Error(
                             "The return value of the subscribe method of the store of component '"
-                            + this.__config.name
+                            + this.__config.displayName
                             + "' is invalid");
                     } else {
                         this.__unsubscribe = unsubscribe;

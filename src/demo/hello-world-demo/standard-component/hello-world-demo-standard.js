@@ -1,6 +1,6 @@
 import {
     createElement as dom,
-    defineStandardComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
@@ -46,11 +46,11 @@ class HelloWorldComponent extends Component {
 }
 
 
-const HelloWorld = defineStandardComponent({
-    name: 'HelloWorld',
+const HelloWorld = defineClassComponent({
+    displayName:  'HelloWorld',
 
     properties: {
-        name: {
+        displayName:  {
             type: String,
             defaultValue: 'World'
         }

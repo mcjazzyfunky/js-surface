@@ -1,6 +1,6 @@
 import {
     defineFunctionalComponent,
-    defineStandardComponent,
+    defineClassComponent,
     createElement as dom,
     render,
     Component,
@@ -20,7 +20,7 @@ const
     totalItemCount = 1220;
 
 export const Pagination = defineFunctionalComponent({
-    name: 'Pagination',
+    displayName:  'Pagination',
 
     properties: {
         className: {
@@ -166,8 +166,8 @@ function buildLinkListItem(text, isActive, moveToPage) {
     );
 }
 
-const DemoOfPagination = defineStandardComponent({
-    name: 'DemoOfPagination',
+const DemoOfPagination = defineClassComponent({
+    displayName:  'DemoOfPagination',
 
     componentClass: class extends Component {
         constructor(props) {

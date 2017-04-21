@@ -1,6 +1,6 @@
 import {
     hyperscript as dom,
-    defineStandardComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
@@ -72,7 +72,7 @@ class DataTableComponent extends Component {
                     id = column.getString('id', null) || '__column' + nextColumnId++,
 
                      columnInfo = {
-                        name: column.getString('id', '__column' + nextColumnId++),
+                        displayName:  column.getString('id', '__column' + nextColumnId++),
                         title: column.getString('title', ''),
                         align: column.getString('align', 'left'),
                         sortable: column.getBoolean('align', false)
@@ -86,8 +86,8 @@ class DataTableComponent extends Component {
 }
 
 
-const DataTable = defineStandardComponent({
-    name: 'DataTable',
+const DataTable = defineClassComponent({
+    displayName:  'DataTable',
 
     properties: {
         columns: {

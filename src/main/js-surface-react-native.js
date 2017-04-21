@@ -1,6 +1,6 @@
 import defineDependentFunctions from './internal/react/defineDependentFunctions.js';
-import defineStandardComponent from './api/defineStandardComponent.js';
-import defineAdvancedComponent from './api/defineAdvancedComponent.js';
+import defineClassComponent from './api/defineClassComponent.js';
+import defineDispatchComponent from './api/defineDispatchComponent.js';
 import hyperscript from './api/hyperscript.js';
 import Component from './api/Component.js';
 import Spec from './api/Spec.js';
@@ -9,7 +9,7 @@ import React from 'react';
 import AppRegistry from 'react-native';
 
 const {
-    defineBasicComponent,
+    defineStandardComponent,
     defineFunctionalComponent,
     isElement
 } = defineDependentFunctions({
@@ -21,10 +21,10 @@ const {
 
 export {
     createElement,
-    defineAdvancedComponent,
-    defineStandardComponent,
+    defineDispatchComponent,
+    defineClassComponent,
     defineFunctionalComponent,
-    defineBasicComponent,
+    defineStandardComponent,
     isElement,
     render,
     Component,

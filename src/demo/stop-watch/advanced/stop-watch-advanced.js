@@ -46,7 +46,7 @@ const
 
 
 const StopWatch = defineDispatcherBasedComponent({
-    name: 'StopWatch',
+    displayName:  'StopWatch',
 
     properties: {
     },

@@ -18,13 +18,13 @@ export default function createDependentFunctions(
             return adaptFunctionalComponent(config, adjustedConfig => {
                 const ret = props => adjustedConfig.render(props);
 
-                ret.displayName = adjustedConfig.name;
+                ret.displayName = adjustedConfig.displayName;
 
                 return ret;
             });
         },
 
-        defineBasicComponent(config) {
+        defineStandardComponent(config) {
             return adaptBasicComponent(config, adjustedConfig => {
                 class ExtCustomComponent extends CustomComponent {
                     constructor(...args) {
@@ -32,7 +32,7 @@ export default function createDependentFunctions(
                     }
                 }
 
-                ExtCustomComponent.displayName = adjustedConfig.name;
+                ExtCustomComponent.displayName = adjustedConfig.displayName;
 
                 return createFactory(ExtCustomComponent);
             });

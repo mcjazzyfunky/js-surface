@@ -5,10 +5,10 @@ import {
 } from 'js-surface';
 
 const HelloWorld = defineFunctionalComponent({
-    name: 'HelloWorld',
+    displayName:  'HelloWorld',
 
     properties: {
-        name: {
+        displayName:  {
             type: String,
             defaultValue: 'World'
         }
@@ -22,4 +22,4 @@ const HelloWorld = defineFunctionalComponent({
     }
 });
 
-render(HelloWorld({ name: 'John Doe' }), 'main-content');
+render(HelloWorld({ displayName:  'John Doe' }), 'main-content');
