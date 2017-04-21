@@ -1,8 +1,5 @@
-import defineClassComponent from './api/defineClassComponent.js';
-import defineDispatchComponent from './api/defineDispatchComponent.js';
-import hyperscript from './api/hyperscript.js';
-import Component from './api/Component.js';
-import Spec from './api/Spec.js';
+import createExports from
+    './internal/module/createExports.js';
 
 import adaptFunctionalComponent from
     './internal/component/adaption/adaptFunctionalComponent.js';
@@ -17,20 +14,9 @@ import { render as renderInferno } from 'inferno';
 import createInfernoElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
 
-export {
-    createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
-    isElement,
-    render,
-    Component,
-    Spec,
-};
+const moduleConfig = {}; // Will be filled below
 
-function defineFunctionalComponent(config) {
+moduleConfig.defineFunctionalComponent = config => {
     return adaptFunctionalComponent(config, adjustedConfig => {
         const ret = props => adjustedConfig.render(props);
 
@@ -38,9 +24,9 @@ function defineFunctionalComponent(config) {
 
         return ret;
     });
-}
+};
 
-function defineStandardComponent(config) {
+moduleConfig.defineStandardComponent = config => {
     return adaptBasicComponent(config, adjustedConfig => {
         class ExtCustomComponent extends CustomComponent {
             constructor(...args) {
@@ -56,9 +42,9 @@ function defineStandardComponent(config) {
             return createElement(ExtCustomComponent, ...args);
         };
     });
-}
+};
 
-function createElement(tag, props, ...children)  {
+moduleConfig.createElement = (tag, props, ...children) => {
     // TODO: For performance reasons
     if (tag === undefined || tag === null) {
         throw new TypeError(
@@ -85,16 +71,16 @@ function createElement(tag, props, ...children)  {
     }
 
     return ret;
-}
+};
 
-function isElement(it) {
+moduleConfig.isElement = it => {
     return it !== undefined
         && it !== null
         && typeof it === 'object'
         && !!(it.flags & (28 | 3970 )); // 28: component, 3970: element
-}
+};
 
-function render(content, targetNode) {
+moduleConfig.render = (content, targetNode) => {
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");
@@ -105,7 +91,7 @@ function render(content, targetNode) {
         : targetNode;
 
     renderInferno(content, target);
-}
+};
 
 class CustomComponent extends InfernoComponent {
     constructor(superArgs, config) {
@@ -178,3 +164,29 @@ class CustomComponent extends InfernoComponent {
         return this.__viewToRender;
     }
 }
+
+const {
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
+} = createExports(moduleConfig);
+
+export {
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec
+};
