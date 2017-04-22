@@ -1,13 +1,21 @@
 export default [
     {
-        name: 'Stop Watch',
+        name: 'stop-watch',
+        displayName: 'Stop Watch',
         directory: 'stop-watch',
         files: ['stop-watch.js']
     },
     {
-        name: 'Simple counter (class based)',
+        name: 'simple-counter-class-based',
+        displayName: 'Simple Counter (class based)',
         directory: 'counter',
-        files: ['counter-class-based.js']
+        files: ['simple-counter-class-based.js']
+    },
+    {
+        name: 'complex-counter-class-based',
+        displayName: 'Complex Counter (class based)',
+        directory: 'counter',
+        files: ['complex-counter-class-based.js']
     }
 ];
 

@@ -16,7 +16,8 @@
   "globals": {
     "document": false,
     "navigator": false,
-    "window": false
+    "window": false,
+    "console": false
   },
 
   "extends": "eslint:recommended",
@@ -24,6 +25,7 @@
   "rules": {
     "indent": ["error", 4],
     "quotes": ["error", "single", { "avoidEscape": true }],
-    "semi": "error"
+    "semi": "error",
+    "no-console": ["off"]
   }
 }

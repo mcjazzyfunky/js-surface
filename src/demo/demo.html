@@ -97,7 +97,7 @@
                 for (let demo of availableDemos) {
                     const selected = demo.name === activeDemo.name ? 'selected' : '';
 
-                    content += `<option ${selected}>${demo.name}</option>`;
+                    content += `<option value="${demo.name}" ${selected}>${demo.displayName}</option>`;
                 }
 
                 content += '</select> '

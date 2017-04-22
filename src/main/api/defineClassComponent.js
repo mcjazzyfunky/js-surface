@@ -4,7 +4,9 @@ import validateComponentClass from '../internal/component/validation/validateCom
 import { defineStandardComponent } from 'js-surface';
 
 export default function defineClassComponent(config) {
-    const err = validateComponentClass(config);
+    const
+        err = validateComponentClass(config),
+        api = config.api || null;
 
     if (err) {
         throw err;
@@ -90,8 +92,15 @@ export default function defineClassComponent(config) {
                 }
             };
 
-            // TODO
-            const methods = {};
+            let methods = null;
+
+            if (api) {
+                methods = {};
+
+                for (let key of Object.keys(api)) {
+                    methods[key] = (...args) => api[key].apply(component, args);
+                }
+            }
 
             return {
                 onProps,
