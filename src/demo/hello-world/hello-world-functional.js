@@ -1,3 +1,4 @@
+
 import {
     createElement as dom,
     defineFunctionalComponent,
@@ -8,7 +9,7 @@ const HelloWorld = defineFunctionalComponent({
     displayName:  'HelloWorld',
 
     properties: {
-        displayName:  {
+        name:  {
             type: String,
             defaultValue: 'World'
         }
@@ -22,4 +23,4 @@ const HelloWorld = defineFunctionalComponent({
     }
 });
 
-render(HelloWorld({ displayName:  'John Doe' }), 'main-content');
+render(HelloWorld({ name:  'Joan Doe' }), 'main-content');

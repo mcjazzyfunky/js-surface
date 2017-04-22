@@ -3,6 +3,8 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+    
     <script type="text/javascript" src="../../../../node_modules/js-prelude/dist/js-prelude/polyfill.min.js"></script>
     <script type="text/javascript" src="../../../../node_modules/systemjs/dist/system.js"></script>
 
@@ -51,8 +53,14 @@
         System.config({
             baseURL: '../../../..',
             transpiler: 'plugin-babel',
+
             meta: {
                 '*.js': {
+ 		            presets: ['es2017']
+                },
+                '../../../node_modules/bootstrap/dist/js/bootstrap.js': {
+                    format: 'global',
+                    deps: ['jquery'],
  		            presets: ['es2017']
                 }
             },
@@ -83,7 +91,8 @@
                     activeDemo =  availableDemos[activeDemoIndex];
 
                 let content =
-                    '<label for="demo-selector">Demo:</label> '
+                    '<div class="well">'
+                    + '<label for="demo-selector">Demo:</label> '
                     + '<select id="demo-selector">';
 
                 for (let file of activeDemo.files) {
@@ -110,7 +119,7 @@
                     content += `<option ${selected}>${adapter.name}</option>`;
                 }
 
-                content += '</select><br/><br/><br/><div id="main-content"></div>';
+                content += '</select></div><br/><br/><br/><div id="main-content"></div>';
                 
                 document.body.innerHTML = content;
 

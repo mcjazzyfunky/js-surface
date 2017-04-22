@@ -86,12 +86,13 @@ class StopWatchComponent extends Component {
                 dom('div',
                     `Time: ${this.state.time} `),
                     dom('br'),
-                    dom('button',
-                        bind.startStopButton,
-                        this.state.running ? 'Stop' : 'Start'),
-                    dom('button',
-                        bind.resetButton,
-                        'Reset'))
+                    dom('div.btn-group',
+                        dom('button.btn.btn-primary',
+                            bind.startStopButton,
+                            this.state.running ? 'Stop' : 'Start'),
+                        dom('button.btn.btn-warning',
+                            bind.resetButton,
+                            'Reset')))
         );
     }
 }

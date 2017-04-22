@@ -1,3 +1,4 @@
+
 import {
     createElement as dom,
     defineClassComponent,
@@ -7,6 +8,19 @@ import {
 
 
 class HelloWorldComponent extends Component {
+    static get displayName() {
+        return 'HelloWorld';
+    }
+
+    static get properties() {
+        return {
+            name: {
+                type: String,
+                defaultValue: 'World'
+            }
+        };
+    }
+
     constructor(...args) {
         console.log('Constructor', ...args);
         super(...args);
@@ -45,18 +59,6 @@ class HelloWorldComponent extends Component {
     }
 }
 
+const HelloWorld = defineClassComponent(HelloWorldComponent);
 
-const HelloWorld = defineClassComponent({
-    displayName:  'HelloWorld',
-
-    properties: {
-        displayName:  {
-            type: String,
-            defaultValue: 'World'
-        }
-    },
-
-    componentClass: HelloWorldComponent
-});
-
-render(HelloWorld(), 'main-content');
+render(HelloWorld({ name: 'John Doe' }), 'main-content');

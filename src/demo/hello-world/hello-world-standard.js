@@ -1,3 +1,4 @@
+
 import {
     createElement as dom,
     defineStandardComponent,
@@ -8,7 +9,7 @@ const HelloWorld = defineStandardComponent({
     displayName:  'HelloWorld',
 
     properties: {
-        displayName:  {
+        name:  {
             type: String,
             defaultValue: 'World'
         }
@@ -23,4 +24,4 @@ const HelloWorld = defineStandardComponent({
     }
 });
 
-render(HelloWorld(), 'main-content');
+render(HelloWorld({ name: 'Jane Doe' }), 'main-content');

@@ -156,47 +156,49 @@ export const Pagination = defineFunctionalComponent({
 
 function buildLinkListItem(text, isActive, moveToPage) {
     return (
-        dom('li', {
+        dom('li',
+            {
                 className: isActive ? 'active' : '',
                 key: text !== '...' ? text + '-' + isActive : undefined
             },
             dom('a',
-                {onClick: moveToPage},
+                { onClick: moveToPage },
                 text))
     );
 }
 
-const DemoOfPagination = defineClassComponent({
-    displayName:  'DemoOfPagination',
-
-    componentClass: class extends Component {
-        constructor(props) {
-            super(props);
-
-            this.state = { pageIndex: 0 };
-        }
-
-        moveToPage(pageIndex) {
-            this.state = { pageIndex };
-        }
-
-        render() {
-            return (
-                dom('div',
-                    {className: 'container-fluid'},
-                    Seq.range(1, number).map(_ =>
-                       dom('div',
-                            {className: 'row'},
-                            Pagination({
-                                className: "col-md-3",
-                                pageIndex: this.state.pageIndex,
-                                pageSize: pageSize,
-                                totalItemCount: totalItemCount,
-                                onChange: evt => this.moveToPage(evt.targetPage)}))))
-                );
-        }
+class DemoOfPaginationComponent extends Component {
+    static get displayName() {
+        return 'DemoOfPagination';
     }
-});
+
+    constructor(props) {
+        super(props);
+
+        this.state = { pageIndex: 0 };
+    }
+
+    moveToPage(pageIndex) {
+        this.state = { pageIndex };
+    }
+
+    render() {
+        return (
+            dom('div',
+                {className: 'container-fluid'},
+                Seq.range(1, number).map(() =>
+                    dom('div',
+                        {className: 'row'},
+                        Pagination({
+                            className: 'col-md-3',
+                            pageIndex: this.state.pageIndex,
+                            pageSize: pageSize,
+                            totalItemCount: totalItemCount,
+                            onChange: evt => this.moveToPage(evt.targetPage)})))));
+    }
+}
+
+const DemoOfPagination = defineClassComponent(DemoOfPaginationComponent);
 
 // -----------------
 
@@ -302,7 +304,7 @@ class RDemoOfPaginationClass extends React.Component {
         return (
             React.createElement('div',
                     {className: 'container-fluid'},
-                    ...Seq.range(1, number).map(_ =>
+                    ...Seq.range(1, number).map(() =>
                         React.createElement('div',
                             {className: 'row'},
                             RPagination({
@@ -320,7 +322,6 @@ class RDemoOfPaginationClass extends React.Component {
 const
     RPagination = React.createFactory(RPaginationClass),
     RDemoOfPagination = React.createFactory(RDemoOfPaginationClass);
-
 
 if (0) {
     render(
