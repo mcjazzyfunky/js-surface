@@ -4,13 +4,55 @@ import defineDependentFunctions from './internal/react/defineDependentFunctions.
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+/*
+
+function createExportsForReactLike(config) {
+
+}
+
+const moduleConfig = {
+
+}
+
+const {
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
+} = createExportsForReactLike(moduleConfig);
+
+
+export {
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
+    hyperscript,
+    isElement,
+    render,
+    Component,
+    Spec,
+};
+
+*/
+
+
+// ------------------------
+
 const moduleConfig = defineDependentFunctions({
     Component: React.Component,
     createElement: createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement
 });
-alert(1)
+
 moduleConfig.createElement = React.createElement;
 
 moduleConfig.render = (content, targetNode) => {

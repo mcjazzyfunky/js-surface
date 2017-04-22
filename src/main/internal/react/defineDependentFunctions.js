@@ -6,7 +6,7 @@ import adaptBasicComponent from
 
 const fakeState = Object.freeze({});
 
-export default function createDependentFunctions(
+export default function defineDependentFunctions(
     { Component
     , createElement
     , createFactory
