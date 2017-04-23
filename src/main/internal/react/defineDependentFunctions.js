@@ -19,7 +19,11 @@ export default function defineDependentFunctions(
                 const ret = props => adjustedConfig.render(props);
 
                 ret.displayName = adjustedConfig.displayName;
-
+                
+                if (adjustedConfig.properties) {
+                    ret.properties = adjustedConfig.properties;
+                }
+                
                 return ret;
             });
         },

@@ -102,15 +102,15 @@ function hyperscript(tag, ...rest) {
                 for (let i = 2; i < arguments.length; ++i) {
                     newArgs.push(arguments[i]);
                 }
-
-                ret = createElement.apply(null, newArgs);
             } else {
+                newArgs.push(lastAttrs);
+                
                 for (let i = 1; i < arguments.length; ++i) {
                     newArgs.push(arguments[i]);
                 }
-
-                ret = applyCreateElement(...newArgs);
             }
+            
+            ret = createElement.apply(null, newArgs);
 
             for (let i = result.length - 2; i >= 0; --i) {
                 const
@@ -134,10 +134,10 @@ function hyperscript(tag, ...rest) {
 }
 
 function applyCreateElement(tag, ...rest) {
-   const snd = rest[0];
+    const snd = rest[0];
    
-   return  snd === undefined || snd === null || typeof snd === 'object' && !snd[Symbol.iterator] && !isElement(snd)
-        ? createElement(tag, snd || null, ...rest)
+    return  snd === undefined || snd === null || typeof snd === 'object' && !snd[Symbol.iterator] && !isElement(snd)
+        ? createElement(tag, ...rest)
         : createElement(tag, null, ...rest);
 }
 
