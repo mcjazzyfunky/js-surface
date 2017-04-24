@@ -5,7 +5,7 @@ import { defineComponent, createElement as htm, Types } from 'js-surface';
 import { Seq } from 'js-prelude';
 
 export default defineComponent({
-    name: 'PaginationBar',
+    displayName: 'PaginationBar',
 
     properties: {
         type: {

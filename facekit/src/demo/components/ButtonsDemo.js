@@ -1,6 +1,6 @@
 import {
-	defineFunctionComponent,
-	hyperscript as dom,
+    defineFunctionalComponent,
+    hyperscript as dom,
 } from 'js-surface';
 
 import { Seq } from 'js-prelude';
@@ -15,8 +15,8 @@ const
     iconPositions = ['left', 'top', 'right', 'bottom'];
 
 
-export default defineFunctionComponent({
-    name: 'DemoOfButtons',
+export default defineFunctionalComponent({
+    displayName: 'DemoOfButtons',
 
     render() {
         return (

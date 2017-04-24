@@ -21,9 +21,9 @@ const stateReducer = {
 }
 
 function render({ props, state,  send }) {
-	const onChange = ev => {
-		 send(Intents.setFirstName(ev.value))
-	};
+    const onChange = ev => {
+         send(Intents.setFirstName(ev.value))
+    };
 
 
     return (
@@ -48,17 +48,17 @@ export default defineComponent({
 
 
 const RandomLabel = defineComponent({
-	name: "RandomLabel",
-	initState() {
-		return null;
-	},
+    displayName: "RandomLabel",
+    initState() {
+        return null;
+    },
 
-	onDidUpdate() {
+    onDidUpdate() {
 
-	},
+    },
 
 
-	render() {
-		return htm('label', null, Math.random());
-	}
+    render() {
+        return htm('label', null, Math.random());
+    }
 });

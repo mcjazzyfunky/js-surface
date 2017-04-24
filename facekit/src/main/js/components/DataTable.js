@@ -2,7 +2,7 @@ import { defineComponent, createElement as htm, Types } from 'js-surface';
 import { Config, Seq } from 'js-prelude';
 
 export default defineComponent({
-    name: 'DataTable',
+    displayName: 'DataTable',
     
     properties: {
         columns: {

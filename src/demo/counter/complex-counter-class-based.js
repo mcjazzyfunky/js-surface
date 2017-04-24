@@ -1,5 +1,5 @@
 import {
-    createElement as dom,
+    hyperscript as dom,
     defineClassComponent,
     defineFunctionalComponent,
     render,
@@ -109,15 +109,14 @@ class CounterComponent extends Component {
 
     render() {
         return (
-            dom('span',
-                { className: 'counter' },
-                dom('button',
+            dom('span.counter',
+                dom('button.btn.btn-default',
                     { onClick: () => this.increaseCounter(-1) },
                     '-'),
-                dom('span',
-                    null,
+                dom('div',
+                    { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
                     CounterInfo({ value: this.state.counterValue })),
-                dom('button',
+                dom('button.btn.btn-default',
                     { onClick: () => this.increaseCounter(1) },
                     '+'))
         );
@@ -137,13 +136,13 @@ const CounterCtrl = defineFunctionalComponent({
         return (
             dom('div',
                 { className: 'counter-ctrl' },
-                dom('button',
+                dom('button.btn.btn-info',
                     { onClick: () => counterInstance.resetCounter(0) },
                     'Reset to 0'),
                     ' ',
                     Counter({ ref: it => counterInstance = it }),
                     ' ',
-                    dom('button',
+                    dom('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },
                         'Reset to 100')));
     }

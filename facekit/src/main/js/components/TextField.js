@@ -3,7 +3,7 @@
 import ComponentHelper from '../helpers/ComponentHelper.js';
 import PaginationHelper from '../helpers/PaginationHelper.js';
 
-import { defineComponent, defineIntents, createElement as htm, Types } from 'js-surface';
+import { defineComponent, createElement as dom } from 'js-surface';
 import { Seq, Strings } from 'js-prelude';
 
 const name = 'TextField';
@@ -12,42 +12,42 @@ let nextAutoId = 0;
 
 const properties = {
     className: {
-        type: Types.string,
+        type: String,
         defaultValue: null
     },
 
     defaultValue: {
-        type: Types.string,
+        type: String,
         defaultValue: null
     },
 
     disabled: {
-        type:Types.bool,
+        type: Boolean,
         defaultValue: false
     },
 
     id: {
-        type: Types.string,
+        type: String,
         defaultValue: ''
     },
 
     label: {
-        type: Types.string,
+        type: String,
         defaultValue: ''
     },
 
-	onChange: {
-		type: Types.func,
-		defaultValue: null
-	},
+    onChange: {
+        type: Function,
+        defaultValue: null
+    },
 
     readOnly: {
-        type: Types.bool,
+        type: Boolean,
         defaultValue: false
     },
 
     value: {
-        type: Types.string,
+        type: String,
         defaultValue: null
     }
 };
@@ -86,7 +86,7 @@ function initInteractor(send) {
 }
 
 function onNextProps({ props, nextProps, state, send }) {
-	console.log('onNextProps:', props.value, nextProps.value, state.value)
+    console.log('onNextProps:', props.value, nextProps.value, state.value)
     if (props.value !== null && nextProps.value !== state.value) {
         send(Intents.setValue(nextProps.value));
     }
@@ -115,10 +115,10 @@ console.log(event.target);
     }
 
     return (
-        htm('div',
+        dom('div',
             { className },
             label,(console.log(33333, state)),
-            htm('input',
+            dom('input',
                 { className: 'form-control'
                 , type: 'text'
                 , id: id
@@ -148,7 +148,7 @@ function createLabel(text, id) {
     if (typeof text !== 'string' || text.trim().length === 0) {
         ret = null;
     } else {
-        ret = htm('label', { htmlFor: id }, text.trim());
+        ret = dom('label', { htmlFor: id }, text.trim());
     }
 
     return ret;

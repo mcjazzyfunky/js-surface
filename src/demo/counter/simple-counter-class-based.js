@@ -60,14 +60,14 @@ class SimpleCounterComponent extends Component {
     render() {
         return (
             dom('div.simple-counter',
-                dom('label.simple-counter-label',
+                dom('label.simple-counter-label.btn',
                     this.props.label),
-                dom('button.simple-counter-decrease-button',
+                dom('button.simple-counter-decrease-button.btn.btn-default',
                     { onClick: () => this.incrementCounter(-1) },
                     '-'),
-                dom('label.simple-counter-value',
+                dom('div.simple-counter-value.btn',
                     this.state.counterValue),
-                dom('button.simple-counter-increase-button',
+                dom('button.simple-counter-increase-button.btn.btn-default',
                     { onClick: () => this.incrementCounter(1) },
                     '+'))
         );

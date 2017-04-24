@@ -5,7 +5,7 @@ import { Seq, Strings } from 'js-prelude';
 
 
 export default defineComponent({
-    name: 'FKTab',
+    displayName: 'FKTab',
 
     properties: {
         caption: {
