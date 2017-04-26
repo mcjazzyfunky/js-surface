@@ -12,10 +12,16 @@ export default [
         files: ['hello-world-standard.js']
     },
     {
-        name: 'hello-wold-class-based',
-        displayName: 'Hello World (class based)',
+        name: 'hello-wold-class',
+        displayName: 'Hello World (class component)',
         directory: 'hello-world',
-        files: ['hello-world-class-based.js']
+        files: ['hello-world-class.js']
+    },
+    {
+        name: 'hello-wold-dispatch',
+        displayName: 'Hello World (dispatch component)',
+        directory: 'hello-world',
+        files: ['hello-world-dispatch.js']
     },
     {
         name: 'speed-test',

@@ -21,11 +21,11 @@ export default function defineDispatchComponent(config) {
         }
     }
 
-    return defineClassComponent({
-        displayName:  config.displayName,
-        properties: config.properties,
-        componentClass: ExtCustomComponent
-    });
+    ExtCustomComponent.displayName = config.displayName;
+    ExtCustomComponent.properties = config.properties || null;
+    ExtCustomComponent.childContext = config.childContext || null;
+
+    return defineClassComponent(ExtCustomComponent);
 }
 
 class CustomComponent extends Component {
