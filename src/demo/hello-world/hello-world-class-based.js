@@ -16,7 +16,7 @@ class HelloWorldComponent extends Component {
         return {
             name: {
                 type: String,
-                defaultValue: 'World'
+                preset: 'World'
             }
         };
     }

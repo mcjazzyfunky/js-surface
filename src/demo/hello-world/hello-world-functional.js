@@ -11,7 +11,7 @@ const HelloWorld = defineFunctionalComponent({
     properties: {
         name:  {
             type: String,
-            defaultValue: 'World'
+            preset: 'World'
         }
     },
 

@@ -1,9 +1,9 @@
 import createPropsAdjuster from '../helper/createPropsAdjuster.js';
-import validateConfigForBasicComponent from '../validation/validateStandardComponentConfig.js';
-import validateInitProcessResult from '../validation/validateInitProcessResult.js';
+import validateConfigForStandardComponent from '../validation/validateStandardComponentConfig.js';
+import validateInitResult from '../validation/validateInitResult.js';
 
-export default function adaptBasicComponentDefinition(config, platformAdaption) {
-    const err = validateConfigForBasicComponent(config);
+export default function adaptStandardComponentDefinition(config, platformAdaption) {
+    const err = validateConfigForStandardComponent(config);
 
     if (err) {
         throw err;
@@ -15,10 +15,10 @@ export default function adaptBasicComponentDefinition(config, platformAdaption) 
         displayName:  config.displayName,
         properties: config.properties,
 
-        initProcess: (onRender, onState = null) => {
+        init: (onRender, onState = null) => {
             const
-                result = config.initProcess(onRender, onState),
-                err = validateInitProcessResult(result, config);
+                result = config.init(onRender, onState),
+                err = validateInitResult(result, config);
 
             if (err) {
                 throw err;

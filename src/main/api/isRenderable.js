@@ -26,3 +26,5 @@ export function isRenderable(it) {
 
     return ret;
 }
+
+isRenderable[Symbol.for('js-spec:validationText')] = 'Must be renderable';

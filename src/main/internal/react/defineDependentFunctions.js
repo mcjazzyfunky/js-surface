@@ -1,8 +1,8 @@
 import adaptFunctionalComponent from
     '../component/adaption/adaptFunctionalComponent.js';
 
-import adaptBasicComponent from
-    '../component/adaption/adaptBasicComponent.js';
+import adaptStandardComponent from
+    '../component/adaption/adaptStandardComponent.js';
 
 const fakeState = Object.freeze({});
 
@@ -29,7 +29,7 @@ export default function defineDependentFunctions(
         },
 
         defineStandardComponent(config) {
-            return adaptBasicComponent(config, adjustedConfig => {
+            return adaptStandardComponent(config, adjustedConfig => {
                 class ExtCustomComponent extends CustomComponent {
                     constructor(...args) {
                         super(args, adjustedConfig);
@@ -64,7 +64,7 @@ export default function defineDependentFunctions(
             let initialized = false;
 
             const
-                { onProps, methods } = config.initProcess(
+                { onProps, methods } = config.init(
                     view => {
                         this.__viewToRender = view;
 

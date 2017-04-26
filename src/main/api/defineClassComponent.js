@@ -15,7 +15,7 @@ export default function defineClassComponent(config) {
     const
         propsAdjuster = createPropsAdjuster(config),
 
-        initProcess = (onRender, onState) => {
+        init = (onRender, onState) => {
             let
                 component = null,
                 content = null,
@@ -111,7 +111,7 @@ export default function defineClassComponent(config) {
         adjustedConfig = {
             displayName:  config.displayName,
             properties: config.properties,
-            initProcess
+            init
         };
 
     return defineStandardComponent(adjustedConfig);

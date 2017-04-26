@@ -17,28 +17,28 @@ export default function createPropsAdjuster(config) {
         for (let key of  Object.keys(propertiesConfig)) {
             const
                 type = propertiesConfig[key].type,
-                assert = propertiesConfig[key].assert || null,
-                defaultValue = propertiesConfig[key].defaultValue,
-                getDefaultValue = propertiesConfig[key].getDefaultValue,
+                check = propertiesConfig[key].check || null,
+                preset = propertiesConfig[key].preset,
+                getPreset = propertiesConfig[key].getPreset,
 
-                defaultValueProvider = getDefaultValue
-                    ? getDefaultValue
-                    : (defaultValue !== undefined ? () => defaultValue : null);
+                presetProvider = getPreset
+                    ? getPreset
+                    : (preset !== undefined ? () => preset : null);
 
-            hasDefaults = hasDefaults || defaultValueProvider !== null;
+            hasDefaults = hasDefaults || presetProvider !== null;
 
             validations.push([
                 key,
                 type,
-                assert,
-                defaultValueProvider]);
+                check,
+                presetProvider]);
 
-               if (getDefaultValue) {
+               if (getPreset) {
                    Object.defineProperty(defaults, key, {
-                       get: getDefaultValue
+                       get: getPreset
                    });
-               } else if (defaultValue !== undefined) {
-                   defaults[key] = defaultValue;
+               } else if (preset !== undefined) {
+                   defaults[key] = preset;
                }
         }
 
@@ -50,7 +50,7 @@ export default function createPropsAdjuster(config) {
                 err = validateProps(adjustedProps, validations);
 
             if (err) {
-                const errMsg = "Error while validating props for "
+                const errMsg = 'Error while validating props for ' 
                     +  `'${componentName}': ${err.message}`;
 
                 warn(errMsg);
@@ -82,11 +82,11 @@ function validateProps(props, validations) {
     keysToBeChecked.delete('children');
 
     try {
-        for (let [propertyName, type, assert, defaultValueProvider] of validations) {
-            const defaultValue = defaultValueProvider
-                ? defaultValueProvider() : undefined;
+        for (let [propertyName, type, check, presetProvider] of validations) {
+            const preset = presetProvider
+                ? presetProvider() : undefined;
 
-            if (defaultValueProvider && defaultValue === undefined) {
+            if (presetProvider && preset === undefined) {
                 errMsg = 'Default prop provider must not return undefined';
                 break;
             } else {
@@ -94,9 +94,9 @@ function validateProps(props, validations) {
 
                 keysToBeChecked.delete(propertyName);
 
-                if (defaultValue !== undefined && prop === defaultValue) {
+                if (preset !== undefined && prop === preset) {
                     // everything fine
-                } else if (defaultValue === undefined && props[propertyName] === undefined) {
+                } else if (preset === undefined && props[propertyName] === undefined) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
                 } else if (type === Array) {
                     if (!Array.isArray(prop)) {
@@ -115,13 +115,16 @@ function validateProps(props, validations) {
 
                     errMsg = `The property '${propertyName}' must be `
                         + type.name.toLowerCase();
-                } else if (assert) {
-                    const checkResult =  assert(prop);
+                } else if (check) {
+                    const checkResult =  check(prop);
 
                     if (checkResult && typeof checkResult.message === 'string') {
                         errMsg = `Invalid value for property '${propertyName}' => `
                             + checkResult.message;
-                    } else if (checkResult && checkResult !== true) {
+                    } else if (checkResult !== undefined
+                        && checkResult !== null
+                        && checkResult !== true) {
+                    
                         errMsg = `Invalid value for property '${propertyName}'`;
                     }
                 }

@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         },
         babel: {
             options: {
-				presets: ["es2015", "es2016", "es2017"],
+                presets: ["es2015", "es2016", "es2017"],
                 retainLines: true,
                 moduleIds: false,
                 sourceMaps: true
@@ -39,64 +39,68 @@ module.exports = function (grunt) {
         },
         */
         browserify: {
+            jsSurfaceAdapter: {
+                src: 'build/src/main/js-surface-adapter.js',
+                dest: 'dist/adapter.js'
+            },
             jsSurfaceStandalone: {
                 src: 'build/src/main/js-surface-standalone.js',
                 dest: 'dist/standalone.js',
                 options: {
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-standalone.js'
-					}
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-standalone.js'
+                    }
                 }
             },
             jsSurfaceInferno: {
                 src: 'build/src/main/js-surface-inferno.js',
                 dest: 'dist/inferno.js',
-            	options: {
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-inferno.js'
-					},
-            		ignore: ['./node_modules/**']
-            	}
+                options: {
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-inferno.js'
+                    },
+                    ignore: ['./node_modules/**']
+                }
             },
             jsSurfaceReactDOM: {
-    	        src: 'build/src/main/js-surface-react-dom.js',
+                src: 'build/src/main/js-surface-react-dom.js',
                 dest: 'dist/react-dom.js',
-            	options: {
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-react-dom.js'
-					},
-            		ignore: ['./node_modules/**']
-            	}
+                options: {
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-react-dom.js'
+                    },
+                    ignore: ['./node_modules/**']
+                }
             },
             jsSurfaceReactNative: {
-    	        src: 'build/src/main/js-surface-react-native.js',
+                src: 'build/src/main/js-surface-react-native.js',
                 dest: 'dist/react-native.js',
-            	options: {
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-react-native.js'
-					},
-            		ignore: ['./node_modules/**']
-            	}
+                options: {
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-react-native.js'
+                    },
+                    ignore: ['./node_modules/**']
+                }
             },
             jsSurfaceReactLite: {
-    	        src: 'build/src/main/js-surface-react-lite.js',
+                src: 'build/src/main/js-surface-react-lite.js',
                 dest: 'dist/react-lite.js',
-            	options: {
-            		ignore: ['./node_modules/**'],
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-react-lite.js'
-					}
-            	}
+                options: {
+                    ignore: ['./node_modules/**'],
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-react-lite.js'
+                    }
+                }
             },
             jsSurfacePreact: {
-    	        src: 'build/src/main/js-surface-preact.js',
+                src: 'build/src/main/js-surface-preact.js',
                 dest: 'dist/preact.js',
-            	options: {
-            		ignore: ['./node_modules/**'],
-					alias: {
-				    	'js-surface': './build/src/main/js-surface-preact.js'
-					}
-            	}
+                options: {
+                    ignore: ['./node_modules/**'],
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-preact.js'
+                    }
+                }
             }
         },
         uglify: {
@@ -138,7 +142,7 @@ module.exports = function (grunt) {
             jsSurfaceStandalone: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/standalone.min.js'],
                 dest: 'dist/standalone.min.js.gz'
@@ -146,7 +150,7 @@ module.exports = function (grunt) {
             jsSurfaceInferno: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/inferno.min.js'],
                 dest: 'dist/inferno.min.js.gz'
@@ -154,7 +158,7 @@ module.exports = function (grunt) {
             jsSurfaceReactDOM: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/react-dom.min.js'],
                 dest: 'dist/react-dom.min.js.gz'
@@ -162,7 +166,7 @@ module.exports = function (grunt) {
             jsSurfaceReactNative: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/react-native.min.js'],
                 dest: 'dist/react-native.min.js.gz'
@@ -170,7 +174,7 @@ module.exports = function (grunt) {
             jsSurfaceReactLite: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/react-lite.min.js'],
                 dest: 'dist/react-lite.min.js.gz'
@@ -178,7 +182,7 @@ module.exports = function (grunt) {
             jsSurfacePreact: {
                 options: {
                     mode: 'gzip',
-            		level: 9
+                    level: 9
                 },
                 src: ['dist/preact.min.js'],
                 dest: 'dist/preact.min.js.gz'

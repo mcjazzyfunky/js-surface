@@ -194,12 +194,12 @@ const
         properties: {
             todos: {
                 type: Array,
-                defaultValue: []
+                preset: []
             },
 
             todoEditId: {
                 type: Number,
-                defaultValue: null
+                preset: null
             },
 
             todoEditText: {

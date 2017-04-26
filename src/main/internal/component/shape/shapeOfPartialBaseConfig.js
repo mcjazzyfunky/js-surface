@@ -21,7 +21,7 @@ export default
                         , assert:
                             Spec.optional(Spec.isFunction)
 
-                        , defaultValue:
+                        , preset:
                              Spec.any
 
                         , inject: Spec.satisfies(

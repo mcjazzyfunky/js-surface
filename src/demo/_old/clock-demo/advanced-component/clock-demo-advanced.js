@@ -58,7 +58,7 @@ export default defineDispatchComponent({
     properties: {
         label: {
             type: String,
-            defaultValue: 'Date/Time'
+            preset: 'Date/Time'
         }
     },
 

@@ -37,11 +37,11 @@ class CounterComponent extends Component {
         return {
             initialValue: {
                 type: Number,
-                defaultValue: 0
+                preset: 0
             },
             onChange: {
                 type: Function,
-                defaultValue: null
+                preset: null
             }
         };
     }

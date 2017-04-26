@@ -48,7 +48,7 @@ const Clock = defineClassComponent({
     properties: {
         label: {
             type: String,
-            defaultValue: 'Current time:'
+            preset: 'Current time:'
         }
     },
 

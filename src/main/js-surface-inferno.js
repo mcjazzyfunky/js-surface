@@ -4,8 +4,8 @@ import createExports from
 import adaptFunctionalComponent from
     './internal/component/adaption/adaptFunctionalComponent.js';
 
-import adaptBasicComponent from
-    './internal/component/adaption/adaptBasicComponent.js';
+import adaptStandardComponent from
+    './internal/component/adaption/adaptStandardComponent.js';
 
 import enhanceWithComponentMeta from
     './internal/component/helper/enhanceWithComponentMeta.js';
@@ -27,7 +27,7 @@ moduleConfig.defineFunctionalComponent = config => {
 };
 
 moduleConfig.defineStandardComponent = config => {
-    return adaptBasicComponent(config, adjustedConfig => {
+    return adaptStandardComponent(config, adjustedConfig => {
         class ExtCustomComponent extends CustomComponent {
             constructor(...args) {
                 super(args, adjustedConfig);
@@ -104,7 +104,7 @@ class CustomComponent extends InfernoComponent {
         let initialized = false;
 
         const
-            { onProps, methods } = config.initProcess(
+            { onProps, methods } = config.init(
                 view => {
                     this.__viewToRender = view;
 

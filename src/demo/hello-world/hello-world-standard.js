@@ -11,14 +11,14 @@ const HelloWorld = defineStandardComponent({
     properties: {
         name:  {
             type: String,
-            defaultValue: 'World'
+            preset: 'World'
         }
     },
 
-    initProcess(onNextContent) {
+    init(onContent) {
         return {
             onProps(props) {
-                onNextContent(dom('div', null, 'Hello ' + props.name + '!'));
+                onContent(dom('div', null, 'Hello ' + props.name + '!'));
             }
         };
     }
