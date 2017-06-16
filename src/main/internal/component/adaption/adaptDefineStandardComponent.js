@@ -28,7 +28,7 @@ export default function adaptDefineStandardComponent(config, platformAdaption) {
                 onProps(props) {
                     result.onProps(propsAdjuster(props));
                 },
-                methods: result.methods || null
+                api: result.api || null
             };
         }
     };

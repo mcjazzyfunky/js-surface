@@ -82,7 +82,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { onProps, methods } = config.init(
+                { onProps, api } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -107,8 +107,8 @@ function defineCustomComponent(ReactLikeComponent) {
 
             this.__onProps = onProps;
 
-            if (methods) {
-                Object.assign(this, methods);
+            if (api) {
+                Object.assign(this, api);
             }
         }
 

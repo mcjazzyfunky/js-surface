@@ -104,7 +104,7 @@ export default function defineClassComponent(config) {
 
             return {
                 onProps,
-                methods
+                api: methods 
             };
         },
 

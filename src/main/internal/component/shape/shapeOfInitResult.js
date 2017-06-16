@@ -5,7 +5,7 @@ export default
     { onProps:
         Spec.isFunction
         
-    , methods:
+    , api:
         Spec.optional(
             Spec.and(
                 Spec.hasKeysOf(
