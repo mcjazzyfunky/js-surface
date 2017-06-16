@@ -6,7 +6,7 @@ import shapeOfInitResult
 
 export default function validateInitResult(initResult, config) {
     let error =
-        Spec.hasShapeOf(shapeOfInitResult)(initResult, '');
+        Spec.shape(shapeOfInitResult)(initResult, '');
 
     if (error) {
         error = Error(

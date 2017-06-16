@@ -26,7 +26,7 @@ export default defineFunctionalComponent({
 
         type: {
             type: String,
-            constraint: Spec.isOneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
+            constraint: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
             defaultValue: 'default'
         },
 
@@ -37,13 +37,13 @@ export default defineFunctionalComponent({
 
         size: {
             type: String,
-            constraint: Spec.isOneOf(['normal', 'large', 'small']),
+            constraint: Spec.oneOf(['normal', 'large', 'small']),
             defaultValue: 'normal'
         },
 
         iconPosition: {
             type: String,
-            constraint: Spec.isOneOf(['top', 'bottom', 'left', 'right']),
+            constraint: Spec.oneOf(['top', 'bottom', 'left', 'right']),
             defaultValue: 'left'
         },
 

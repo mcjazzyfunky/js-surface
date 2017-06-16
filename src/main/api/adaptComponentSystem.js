@@ -10,7 +10,7 @@ import shapeOfAdaptComponentSystemConfig
     from './../internal/component/shape/shapeOfAdaptComponentSystemConfig.js';
 
 export default function adaptComponentSystem(config) {
-    const err = Spec.hasShapeOf(shapeOfAdaptComponentSystemConfig)(config);
+    const err = Spec.shape(shapeOfAdaptComponentSystemConfig)(config);
 
     if (err) {
         throw new Error(

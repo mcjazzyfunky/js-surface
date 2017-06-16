@@ -10,21 +10,21 @@ export default
     , properties:
         Spec.optional(
             Spec.and(
-                Spec.hasKeysOf(
+                Spec.keys(
                     Spec.matches(REGEX_PROPERTY_NAME)),
 
-                Spec.hasValuesOf(
-                    Spec.hasShapeOf(
+                Spec.values(
+                    Spec.shape(
                         { type:
-                            Spec.isFunction
+                            Spec.func
                             
                         , assert:
-                            Spec.optional(Spec.isFunction)
+                            Spec.optional(Spec.func)
 
                         , preset:
                              Spec.any
 
-                        , inject: Spec.satisfies(
+                        , inject: Spec.valid(
                             it => it === undefined || it === true || it === false,
                             'Must be undefined or boolean')
                         })))

@@ -2,10 +2,10 @@ import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
 
 import { Spec } from 'js-spec';
 
-const isOptionalFunction = Spec.optional(Spec.isFunction);
+const isOptionalFunction = Spec.optional(Spec.func);
 
 export default Object.assign({}, shapeOfPartialBaseConfig, {
-    render: Spec.isFunction,
+    render: Spec.func,
     init: isOptionalFunction,
     shouldUpdate: isOptionalFunction,
     onWillReceiveProps: isOptionalFunction,

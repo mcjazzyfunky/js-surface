@@ -3,14 +3,14 @@ import { Spec } from 'js-spec';
 
 export default
     { onProps:
-        Spec.isFunction
+        Spec.func
         
     , api:
         Spec.optional(
             Spec.and(
-                Spec.hasKeysOf(
+                Spec.keys(
                     Spec.and(
                         Spec.matches(REGEX_METHOD_NAME),
-                        Spec.isNotIn(FORBIDDEN_METHOD_NAMES))),
-                Spec.hasValuesOf(Spec.isFunction)))
+                        Spec.notIn(FORBIDDEN_METHOD_NAMES))),
+                Spec.values(Spec.func)))
     };

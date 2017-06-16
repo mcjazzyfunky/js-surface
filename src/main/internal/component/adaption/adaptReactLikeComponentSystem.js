@@ -13,7 +13,7 @@ import adaptDefineStandardComponent from
 const fakeState = Object.freeze({});
 
 export default function adaptReactLikeComponentSystem(reactLikeConfig) {
-    const err = Spec.hasShapeOf(shapeOfAdaptReactLikeComponentSystemConfig)(reactLikeConfig);
+    const err = Spec.shape(shapeOfAdaptReactLikeComponentSystemConfig)(reactLikeConfig);
 
     if (err) {
         throw new Error(

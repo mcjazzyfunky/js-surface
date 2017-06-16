@@ -14,7 +14,7 @@ export default function validateFunctionalComponentConfig(componentClass) {
     };
 
     const error =
-        Spec.hasShapeOf(shapeOfComponentClass)(config, '');
+        Spec.shape(shapeOfComponentClass)(config, '');
 
     return error !== null
         ? prettifyComponentConfigError(error, config)

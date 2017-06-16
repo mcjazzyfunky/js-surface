@@ -1,10 +1,10 @@
 import { Spec } from 'js-spec';
 
 export default  {
-    createElement: Spec.isFunction,
-    defineFunctionalComponent: Spec.isFunction,
-    defineStandardComponent: Spec.isFunction,
-    isBrowserBased: Spec.optional(Spec.isBoolean),
-    isElement: Spec.isFunction,
-    render: Spec.isFunction
+    createElement: Spec.func,
+    defineFunctionalComponent: Spec.func,
+    defineStandardComponent: Spec.func,
+    isBrowserBased: Spec.optional(Spec.boolean),
+    isElement: Spec.func,
+    render: Spec.func
 };

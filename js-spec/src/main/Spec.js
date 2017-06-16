@@ -1,49 +1,49 @@
 import SpecError from './SpecError.js';
 
 const Spec = {
-    isNull(it, path = null) {
+    null(it, path = null) {
         return it === null
             ? null
             : createError('Must be null', path);
     },
 
-    isUndefined(it, path = null) {
+    undefined(it, path = null) {
         return it === undefined
             ? null
             : createError('Must be undefined', path);
     },
 
-    isBoolean(it, path = null) {
+    boolean(it, path = null) {
         return typeof it === 'boolean'
           ? null
           : createError('Must be boolean', path);
     },
 
-    isNumber(it, path = null) {
+    number(it, path = null) {
         return typeof it === 'number'
           ? null
           : createError('Must be a number', path);
     },
 
-    isString(it, path = null) {
+    string(it, path = null) {
         return typeof it === 'string'
           ? null
           : createError('Must be a string', path);
     },
 
-    isObject(it, path = null) {
+    object(it, path = null) {
         return it !== null && typeof it === 'object'
           ? null
           : createError('Must be an object', path);
     },
 
-    isArray(it, path = null) {
+    array(it, path = null) {
         return Array.isArray(it)
           ? null
           : createError('Must be an array', path);
     },
 
-    isFunction(it, path = null) {
+    func(it, path = null) {
         return typeof it === 'function'
           ? null
           : createError('Must be a function', path);
@@ -55,7 +55,7 @@ const Spec = {
             : constraint(it);
     },
 
-    isOneOf(items) {
+    oneOf(items) {
         return (it, path) => !items.every(item => item !== it)
           ? null
           : createError('Must be one of: ' + items.join(', '));
@@ -75,7 +75,7 @@ const Spec = {
         };
     },
 
-    satisfies(condition, errMsg = null) {
+    valid(condition, errMsg = null) {
         return (it, path = null) => {
             let ret = null,
                 result = condition(it);
@@ -90,13 +90,13 @@ const Spec = {
         };
     },
 
-    isInstanceOf(type) {
+    instanceOf(type) {
         return (it, path = null) => it instanceof type
           ? null
           : createError('Must be instance of ' + type);
     },
 
-    isIterable(it, path = null) {
+    iterable(it, path = null) {
         return it !== null
             && typeof it === 'object'
             && typeof it[Symbol.iterator] === 'function'
@@ -104,7 +104,7 @@ const Spec = {
             : createError('Must be iterable', path);
     },
 
-    hasKeysOf(constraint) {
+    keys(constraint) {
         return (it, path) => {
             let ret = null;
 
@@ -125,7 +125,7 @@ const Spec = {
         };
     },
 
-    hasValuesOf(constraint) {
+    values(constraint) {
         return (it, path) => {
             let ret = null;
 
@@ -151,7 +151,7 @@ const Spec = {
         };
     },
 
-    hasShapeOf(shape, allowExtension = false) {
+    shape(shape, allowExtension = false) {
         return (it, path) => {
             let ret = null;
 
@@ -233,7 +233,7 @@ const Spec = {
         return ret;
     },
     
-    isIn(collection) {
+    in(collection) {
         return (it, path) => {
             let ret = null;
             
@@ -262,7 +262,7 @@ const Spec = {
         };
     },
 
-    isNotIn(collection) {
+    notIn(collection) {
         return (it, path) => {
             let ret = null;
             
