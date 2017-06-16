@@ -11,6 +11,7 @@ const {
     defineFunctionalComponent,
     defineStandardComponent,
     isElement,
+    isRenderable,
     render,
     Component
 } = adaptReactLikeComponentSystem({
@@ -28,6 +29,7 @@ export {
     defineFunctionalComponent,
     defineStandardComponent,
     isElement,
+    isRenderable,
     render,
     Component
 };

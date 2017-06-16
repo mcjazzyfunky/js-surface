@@ -12,6 +12,7 @@ const {
     defineFunctionalComponent,
     defineStandardComponent,
     isElement,
+    isRenderable,
     render,
     Component
 } = adaptComponentSystem({
@@ -29,6 +30,7 @@ export {
     defineFunctionalComponent,
     defineStandardComponent,
     isElement,
+    isRenderable,
     render,
     Component
 };
@@ -91,7 +93,7 @@ function customIsElement(it) {
         && it !== null
         && typeof it === 'object'
         && !!(it.flags & (28 | 3970 )); // 28: component, 3970: element
-};
+}
 
 function customRender(content, targetNode) {
     if (!isElement(content)) {
@@ -177,4 +179,3 @@ class CustomComponent extends InfernoComponent {
         return this.__viewToRender;
     }
 }
-

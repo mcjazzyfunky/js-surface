@@ -323,7 +323,7 @@ const
     RPagination = React.createFactory(RPaginationClass),
     RDemoOfPagination = React.createFactory(RDemoOfPaginationClass);
 
-if (0) {
+if (1) {
     render(
         DemoOfPagination(),
         'main-content',

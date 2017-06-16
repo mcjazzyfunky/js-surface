@@ -5,6 +5,7 @@ import {
     defineFunctionalComponent,
     defineClassComponent,
     isElement,
+    isRenderable,
     render,
     Component
 } from './js-surface-preact.js';
@@ -16,6 +17,7 @@ export {
     defineFunctionalComponent,
     defineClassComponent,
     isElement,
+    isRenderable,
     render,
     Component
 };
