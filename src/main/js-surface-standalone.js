@@ -4,11 +4,9 @@ import {
     defineStandardComponent,
     defineFunctionalComponent,
     defineClassComponent,
-    hyperscript,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 } from './js-surface-preact.js';
 
 export {
@@ -17,9 +15,7 @@ export {
     defineStandardComponent,
     defineFunctionalComponent,
     defineClassComponent,
-    hyperscript,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 };

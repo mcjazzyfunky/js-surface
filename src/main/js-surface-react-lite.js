@@ -10,8 +10,7 @@ const {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 } = adaptReactLikeComponentSystem({
     Component: ReactLite.Component,
     createElement: reactLiteCreateElement,
@@ -28,8 +27,7 @@ export {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 };
 
 function reactLiteRender(content, targetNode) {

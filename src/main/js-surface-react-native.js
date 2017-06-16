@@ -11,8 +11,7 @@ const {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 } = adaptReactLikeComponentSystem({
     createElement: React.createElement,
     createFactory: React.createFactory,
@@ -30,8 +29,7 @@ export {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 };
 
 

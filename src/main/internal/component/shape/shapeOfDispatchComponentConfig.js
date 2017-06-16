@@ -1,5 +1,6 @@
 import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
-import Spec from '../../../api/Spec.js';
+
+import { Spec } from 'js-spec';
 
 const isOptionalFunction = Spec.optional(Spec.isFunction);
 

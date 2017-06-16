@@ -4,7 +4,8 @@ import validateDispatchComponentConfig
     from '../internal/component/validation/validateDispatchComponentConfig.js';
 
 import Component from '../api/Component.js';
-import Spec from '../api/Spec.js';
+
+import { Spec } from 'js-spec';
 
 import shapeOfStore from '../internal/component/shape/shapeOfStore.js';
 

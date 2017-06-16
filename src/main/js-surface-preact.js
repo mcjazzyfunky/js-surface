@@ -12,8 +12,7 @@ const {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 } = adaptReactLikeComponentSystem({
     Component: Preact.Component,
     createElement: preactCreateElement,
@@ -30,8 +29,7 @@ export {
     defineStandardComponent,
     isElement,
     render,
-    Component,
-    Spec
+    Component
 };
 
 function preactCreateFactory(type) {

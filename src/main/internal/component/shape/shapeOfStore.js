@@ -1,4 +1,4 @@
-import Spec from '../../../api/Spec.js';
+import { Spec } from 'js-spec';
 
 export default {
     subscribe: Spec.isFunction,

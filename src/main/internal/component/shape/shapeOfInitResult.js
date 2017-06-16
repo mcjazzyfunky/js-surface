@@ -1,5 +1,5 @@
 import { REGEX_METHOD_NAME, FORBIDDEN_METHOD_NAMES } from '../constant/constants.js'; 
-import Spec from '../../../api/Spec.js';
+import { Spec } from 'js-spec';
 
 export default
     { onProps:

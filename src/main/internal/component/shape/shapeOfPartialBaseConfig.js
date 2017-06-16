@@ -1,4 +1,4 @@
-import Spec from '../../../api/Spec.js';
+import { Spec } from 'js-spec';
 
 import { REGEX_COMPONENT_NAME, REGEX_PROPERTY_NAME }
     from '../constant/constants.js';

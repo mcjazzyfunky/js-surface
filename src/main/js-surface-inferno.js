@@ -166,12 +166,9 @@ const {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
-    hyperscript,
     isElement,
     render,
-    Component,
-    Spec,
-    SpecError
+    Component
 } = adaptComponentSystem(moduleConfig);
 
 export {
@@ -180,10 +177,7 @@ export {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
-    hyperscript,
     isElement,
     render,
-    Component,
-    Spec,
-    SpecError
+    Component
 };

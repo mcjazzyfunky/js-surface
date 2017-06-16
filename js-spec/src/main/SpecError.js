@@ -1,4 +1,4 @@
-export default class SpecError  {
+export default class SpecError {
     constructor(message, shortMessage, path) {
         this.__message = message;
         this.__shortMessage = shortMessage;

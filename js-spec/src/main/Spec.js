@@ -318,4 +318,3 @@ function createError(errMsg, path)  {
 
     return new SpecError(fullErrMsg, errMsg, path);
 }
-

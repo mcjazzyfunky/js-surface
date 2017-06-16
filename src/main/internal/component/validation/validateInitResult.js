@@ -1,4 +1,4 @@
-import Spec from '../../../api/Spec.js';
+import { Spec } from 'js-spec';
 
 import shapeOfInitResult
     from '../shape/shapeOfInitResult.js';

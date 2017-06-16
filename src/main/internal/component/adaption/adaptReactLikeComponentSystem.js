@@ -1,6 +1,6 @@
-import Spec from '../../../api/Spec.js';
 import shapeOfAdaptReactLikeComponentSystemConfig from '../shape/shapeOfAdaptReactLikeComponentSystemConfig.js';
 
+import { Spec } from 'js-spec';
 
 import adaptComponentSystem from '../../../api/adaptComponentSystem.js';
 
