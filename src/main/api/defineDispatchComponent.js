@@ -1,4 +1,4 @@
-import { defineClassComponent } from 'js-surface';
+import defineClassComponent from './defineClassComponent.js';
 
 import validateDispatchComponentConfig
     from '../internal/component/validation/validateDispatchComponentConfig.js';

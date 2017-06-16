@@ -4,12 +4,6 @@ import { Spec } from 'js-spec';
 
 import adaptComponentSystem from '../../../api/adaptComponentSystem.js';
 
-import adaptDefineFunctionalComponent from
-    './adaptDefineFunctionalComponent.js';
-
-import adaptDefineStandardComponent from
-    './adaptDefineStandardComponent.js';
-
 const fakeState = Object.freeze({});
 
 export default function adaptReactLikeComponentSystem(reactLikeConfig) {
@@ -27,32 +21,24 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
     const newConfig = {
         isBrowserBased: reactLikeConfig.isBrowserBased !== false,
 
-        defineFunctionalComponent(config) {
-            return adaptDefineFunctionalComponent(config, adjustedConfig => {
-                const ret = props => adjustedConfig.render(props);
+        defineFunctionalComponent: config => {
+            const ret = props => config.render(props);
 
-                ret.displayName = adjustedConfig.displayName;
-                
-                if (adjustedConfig.properties) {
-                    ret.properties = adjustedConfig.properties;
-                }
-                
-                return ret;
-            });
+            ret.displayName = config.displayName;
+
+            return ret;
         },
 
-        defineStandardComponent(config) {
-            return adaptDefineStandardComponent(config, adjustedConfig => {
-                class ExtCustomComponent extends CustomComponent {
-                    constructor(...args) {
-                        super(args, adjustedConfig);
-                    }
+        defineStandardComponent: config => {
+            class ExtCustomComponent extends CustomComponent {
+                constructor(...args) {
+                    super(args, config);
                 }
+            }
 
-                ExtCustomComponent.displayName = adjustedConfig.displayName;
+            ExtCustomComponent.displayName = config.displayName;
 
-                return reactLikeConfig.createFactory(ExtCustomComponent);
-            });
+            return reactLikeConfig.createFactory(ExtCustomComponent);
         },
 
         createElement: reactLikeConfig.createElement,

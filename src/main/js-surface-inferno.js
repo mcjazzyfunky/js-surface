@@ -1,12 +1,6 @@
 import adaptComponentSystem from
     './api/adaptComponentSystem.js';
 
-import adaptDefineStandardComponent from 
-    './internal/component/adaption/adaptDefineStandardComponent.js';
-
-import enhanceWithComponentMeta from
-    './internal/component/helper/enhanceWithComponentMeta.js';
-
 import { render as renderInferno } from 'inferno';
 import createInfernoElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
@@ -50,21 +44,17 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
-    return adaptDefineStandardComponent(config, adjustedConfig => {
-        class ExtCustomComponent extends CustomComponent {
-            constructor(...args) {
-                super(args, adjustedConfig);
-            }
+    class ExtCustomComponent extends CustomComponent {
+        constructor(...args) {
+            super(args, config);
         }
+    }
 
-        ExtCustomComponent.displayName = adjustedConfig.displayName;
+    ExtCustomComponent.displayName = config.displayName;
 
-        enhanceWithComponentMeta(ExtCustomComponent, config);
-
-        return (...args) => {
-            return createElement(ExtCustomComponent, ...args);
-        };
-    });
+    return (...args) => {
+        return createElement(ExtCustomComponent, ...args);
+    };
 }
 
 function customCreateElement(tag, props, ...children) {
