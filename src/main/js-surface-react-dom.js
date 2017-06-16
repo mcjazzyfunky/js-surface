@@ -1,61 +1,9 @@
-import createExports from './internal/module/createExports.js';
-import defineDependentFunctions from './internal/react/defineDependentFunctions.js';
+import adaptReactLikeComponentSystem from './internal/component/adaption/adaptReactLikeComponentSystem.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-/*
-
-function createExportsForReactLike(config) {
-
-}
-
-const moduleConfig = {
-
-}
-
-const {
-    createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
-    isElement,
-    render,
-    Component,
-    Spec,
-} = createExportsForReactLike(moduleConfig);
-
-
-export {
-    createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
-    isElement,
-    render,
-    Component,
-    Spec,
-};
-
-*/
-
-
-// ------------------------
-
-const moduleConfig = defineDependentFunctions({
-    Component: React.Component,
-    createElement: createElement,
-    createFactory: React.createFactory,
-    isValidElement: React.isValidElement
-});
-
-moduleConfig.createElement = React.createElement;
-
-moduleConfig.render = (content, targetNode) => {
+function reactRender(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");
@@ -66,7 +14,7 @@ moduleConfig.render = (content, targetNode) => {
     }
 
     return ReactDOM.render(content, targetNode);
-};
+}
 
 const {
     createElement,
@@ -74,13 +22,17 @@ const {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
-    hyperscript,
     isElement,
     render,
     Component,
-    Spec,
-} = createExports(moduleConfig);
-
+    Spec
+} = adaptReactLikeComponentSystem({
+    createElement: React.createElement,
+    createFactory: React.createFactory,
+    isValidElement: React.isValidElement,
+    render: reactRender,
+    Component: React.Component
+});
 
 export {
     createElement,
@@ -88,9 +40,8 @@ export {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
-    hyperscript,
     isElement,
     render,
     Component,
-    Spec,
+    Spec
 };

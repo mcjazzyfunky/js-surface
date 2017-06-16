@@ -1,22 +1,25 @@
-import defineDependentFunctions from './internal/react/defineDependentFunctions.js';
-import defineClassComponent from './api/defineClassComponent.js';
-import defineDispatchComponent from './api/defineDispatchComponent.js';
-import hyperscript from './api/hyperscript.js';
-import Component from './api/Component.js';
-import Spec from './api/Spec.js';
+import adaptReactLikeComponentSystem from './internal/component/adaption/adaptReactLikeComponentSystem.js';
 
 import React from 'react';
 import AppRegistry from 'react-native';
 
 const {
-    defineStandardComponent,
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
     defineFunctionalComponent,
-    isElement
-} = defineDependentFunctions({
-    Component: React.Component,
+    defineStandardComponent,
+    isElement,
+    render,
+    Component,
+    Spec
+} = adaptReactLikeComponentSystem({
     createElement: React.createElement,
     createFactory: React.createFactory,
-    isValidElement: React.isValidElement
+    isValidElement: React.isValidElement,
+    render: reactNativeRender,
+    Component: React.Component,
+    isBrowserBased: false
 });
 
 export {
@@ -31,8 +34,7 @@ export {
     Spec
 };
 
-const createElement = React.createElement;
 
-function render(Component) {
+function reactNativeRender(Component) {
     AppRegistry.registerComponent('AppMainComponent', () => Component);
 }

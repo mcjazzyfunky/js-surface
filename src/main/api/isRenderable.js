@@ -1,30 +1,3 @@
-import { isElement } from 'js-surface';
-
-export function isRenderable(it) {
-    let ret;
-
-    const type = typeof it;
-
-    if (ret === null || ret === undefined) {
-        ret = true;
-    } else if (type === 'function') {
-        ret = false;
-    } else if (type !== 'object') {
-        if (it[Symbol.iterator]) {
-            ret = true;
-
-            for (const token of it) {
-                if (!isRenderable(token)) {
-                    ret = false;
-                    break;
-                }
-            }
-        } else {
-            ret = isElement(it);
-        }
-    }
-
-    return ret;
-}
-
-isRenderable[Symbol.for('js-spec:validationText')] = 'Must be renderable';
+// This file just exists for information about the actual API.
+// The function itself is defined and/or exported in the
+// file 'js-surface-{PLATFORM}.js'.

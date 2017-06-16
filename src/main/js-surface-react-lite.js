@@ -1,21 +1,23 @@
-import defineDependentFunctions from './internal/react/defineDependentFunctions.js';
-import defineClassComponent from './api/defineClassComponent.js';
-import defineDispatchComponent from './api/defineDispatchComponent.js';
-import hyperscript from './api/hyperscript.js';
-import Component from './api/Component.js';
-import Spec from './api/Spec.js';
+import adaptReactLikeComponentSystem from './internal/component/adaption/adaptReactLikeComponentSystem.js';
 
 import ReactLite from 'react-lite';
 
 const {
-    defineStandardComponent,
+    createElement,
+    defineDispatchComponent,
+    defineClassComponent,
     defineFunctionalComponent,
-    isElement
-} = defineDependentFunctions({
+    defineStandardComponent,
+    isElement,
+    render,
+    Component,
+    Spec
+} = adaptReactLikeComponentSystem({
     Component: ReactLite.Component,
-    createElement: createElement,
+    createElement: reactLiteCreateElement,
     createFactory: ReactLite.createFactory,
-    isValidElement: ReactLite.isValidElement
+    isValidElement: ReactLite.isValidElement,
+    render: reactLiteRender
 });
 
 export {
@@ -24,14 +26,13 @@ export {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
-    hyperscript,
     isElement,
     render,
     Component,
-    Spec,
+    Spec
 };
 
-function render(content, targetNode) {
+function reactLiteRender(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");
@@ -44,7 +45,7 @@ function render(content, targetNode) {
     return ReactLite.render(content, target);
 }
 
-function createElement(tag, props, ...children)  {
+function reactLiteCreateElement(tag, props, ...children)  {
     // TODO: For performance reasons
     if (tag === null || tag === undefined || typeof tag !== 'string' && !ReactLite.isValidElement(tag)) {
         throw new TypeError(

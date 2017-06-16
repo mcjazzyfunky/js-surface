@@ -1,6 +1,6 @@
 import {
     defineClassComponent,
-    hyperscript as dom,
+    createElement as dom,
     render,
     Component,
 }  from 'js-surface';

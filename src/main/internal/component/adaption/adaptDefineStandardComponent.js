@@ -2,7 +2,7 @@ import createPropsAdjuster from '../helper/createPropsAdjuster.js';
 import validateConfigForStandardComponent from '../validation/validateStandardComponentConfig.js';
 import validateInitResult from '../validation/validateInitResult.js';
 
-export default function adaptStandardComponentDefinition(config, platformAdaption) {
+export default function adaptDefineStandardComponent(config, platformAdaption) {
     const err = validateConfigForStandardComponent(config);
 
     if (err) {

@@ -1,5 +1,5 @@
 import {
-    hyperscript as dom,
+    createElement as dom,
     defineClassComponent,
     render,
     Component

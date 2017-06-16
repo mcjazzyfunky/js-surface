@@ -3,12 +3,12 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             build: {
-                src: ["build/*", "dist/*"],
+                src: ['build/*', 'dist/*'],
             }
         },
         babel: {
             options: {
-                presets: ["es2015", "es2016", "es2017"],
+                presets: ['es2015', 'es2016', 'es2017'],
                 retainLines: true,
                 moduleIds: false,
                 sourceMaps: true
@@ -39,9 +39,15 @@ module.exports = function (grunt) {
         },
         */
         browserify: {
-            jsSurfaceAdapter: {
-                src: 'build/src/main/js-surface-adapter.js',
-                dest: 'dist/adapter.js'
+            jsSurfaceAdapt: {
+                src: 'build/src/main/js-surface-adapt.js',
+                dest: 'dist/adapt.js',
+                options: {
+                    alias: {
+                        'js-surface': './build/src/main/js-surface-inferno.js'
+                    },
+                    ignore: ['./node_modules/**']
+                }
             },
             jsSurfaceStandalone: {
                 src: 'build/src/main/js-surface-standalone.js',
@@ -113,6 +119,10 @@ module.exports = function (grunt) {
                         + ' Licencse: New BSD License\n'
                         + '*/\n'
             },
+            jsSurfaceAdapt: {
+                src: ['dist/adapt.js'],
+                dest: 'dist/adapt.min.js'
+            },
             jsSurfaceStandalone: {
                 src: ['dist/standalone.js'],
                 dest: 'dist/standalone.min.js'
@@ -139,6 +149,14 @@ module.exports = function (grunt) {
             }
         },
         compress: {
+            jsSurfaceAdapt: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/adapt.min.js'],
+                dest: 'dist/adapt.min.js.gz'
+            },
             jsSurfaceStandalone: {
                 options: {
                     mode: 'gzip',

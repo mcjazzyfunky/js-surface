@@ -1,11 +1,8 @@
-import createExports from
-    './internal/module/createExports.js';
+import adaptComponentSystem from
+    './api/adaptComponentSystem.js';
 
-import adaptFunctionalComponent from
-    './internal/component/adaption/adaptFunctionalComponent.js';
-
-import adaptStandardComponent from
-    './internal/component/adaption/adaptStandardComponent.js';
+import adaptDefineStandardComponent from 
+    './internal/component/adaption/adaptDefineStandardComponent.js';
 
 import enhanceWithComponentMeta from
     './internal/component/helper/enhanceWithComponentMeta.js';
@@ -17,17 +14,15 @@ import InfernoComponent from 'inferno-component';
 const moduleConfig = {}; // Will be filled below
 
 moduleConfig.defineFunctionalComponent = config => {
-    return adaptFunctionalComponent(config, adjustedConfig => {
-        const ret = props => adjustedConfig.render(props);
+    const ret = props => config.render(props);
 
-        ret.displayName = adjustedConfig.displayName;
+    ret.displayName = config.displayName;
 
-        return ret;
-    });
+    return ret;
 };
 
 moduleConfig.defineStandardComponent = config => {
-    return adaptStandardComponent(config, adjustedConfig => {
+    return adaptDefineStandardComponent(config, adjustedConfig => {
         class ExtCustomComponent extends CustomComponent {
             constructor(...args) {
                 super(args, adjustedConfig);
@@ -130,11 +125,11 @@ class CustomComponent extends InfernoComponent {
         }
     }
 
-    componentWillMount(node) {
+    componentWillMount() {
         this.__onProps(this.props);
     }
 
-    componentDidMount(node) {
+    componentDidMount() {
         if (this.__resolveRenderingDone) {
             this.__resolveRenderingDone();
         }
@@ -176,7 +171,8 @@ const {
     render,
     Component,
     Spec,
-} = createExports(moduleConfig);
+    SpecError
+} = adaptComponentSystem(moduleConfig);
 
 export {
     createElement,
@@ -188,5 +184,6 @@ export {
     isElement,
     render,
     Component,
-    Spec
+    Spec,
+    SpecError
 };

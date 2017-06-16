@@ -18,7 +18,7 @@ const HelloWorld = defineFunctionalComponent({
     render({ name }) {
         return (
             dom('div',
-                null,
+                {className: 'xxx'},
                 `Hello ${name}!`));
     }
 });

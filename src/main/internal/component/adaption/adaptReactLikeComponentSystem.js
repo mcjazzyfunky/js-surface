@@ -1,21 +1,34 @@
-import adaptFunctionalComponent from
-    '../component/adaption/adaptFunctionalComponent.js';
+import Spec from '../../../api/Spec.js';
+import shapeOfAdaptReactLikeComponentSystemConfig from '../shape/shapeOfAdaptReactLikeComponentSystemConfig.js';
 
-import adaptStandardComponent from
-    '../component/adaption/adaptStandardComponent.js';
+
+import adaptComponentSystem from '../../../api/adaptComponentSystem.js';
+
+import adaptDefineFunctionalComponent from
+    './adaptDefineFunctionalComponent.js';
+
+import adaptDefineStandardComponent from
+    './adaptDefineStandardComponent.js';
 
 const fakeState = Object.freeze({});
 
-export default function defineDependentFunctions(
-    { Component
-    , createElement
-    , createFactory
-    , isValidElement
-    }) {
+export default function adaptReactLikeComponentSystem(reactLikeConfig) {
+    const err = Spec.hasShapeOf(shapeOfAdaptReactLikeComponentSystemConfig)(reactLikeConfig);
 
-    const commonMethods = {
+    if (err) {
+        throw new Error(
+            "Illegal first argument 'reactLikeConfig' for "
+            + "function 'adaptReactLikeComponentSystem':"
+            + err);
+    }
+
+    const CustomComponent = defineCustomComponent(reactLikeConfig.Component);
+
+    const newConfig = {
+        isBrowserBased: reactLikeConfig.isBrowserBased !== false,
+
         defineFunctionalComponent(config) {
-            return adaptFunctionalComponent(config, adjustedConfig => {
+            return adaptDefineFunctionalComponent(config, adjustedConfig => {
                 const ret = props => adjustedConfig.render(props);
 
                 ret.displayName = adjustedConfig.displayName;
@@ -29,7 +42,7 @@ export default function defineDependentFunctions(
         },
 
         defineStandardComponent(config) {
-            return adaptStandardComponent(config, adjustedConfig => {
+            return adaptDefineStandardComponent(config, adjustedConfig => {
                 class ExtCustomComponent extends CustomComponent {
                     constructor(...args) {
                         super(args, adjustedConfig);
@@ -38,21 +51,26 @@ export default function defineDependentFunctions(
 
                 ExtCustomComponent.displayName = adjustedConfig.displayName;
 
-                return createFactory(ExtCustomComponent);
+                return reactLikeConfig.createFactory(ExtCustomComponent);
             });
         },
 
-        createElement: createElement,
+        createElement: reactLikeConfig.createElement,
 
         isElement(it)  {
             return it !== undefined
                 && it !== null
-                && isValidElement(it);
-        }
+                && reactLikeConfig.isValidElement(it);
+        },
+
+        render: reactLikeConfig.render
     };
 
+    return adaptComponentSystem(newConfig);
+}
 
-    class CustomComponent extends Component {
+function defineCustomComponent(ReactLikeComponent) {
+    return class CustomComponent extends ReactLikeComponent {
         constructor(superArgs, config) {
             super(...superArgs);
 
@@ -131,8 +149,5 @@ export default function defineDependentFunctions(
         render() {
             return this.__viewToRender;
         }
-    }
-
-    return commonMethods;
+    };
 }
-

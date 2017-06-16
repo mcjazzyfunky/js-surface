@@ -1,5 +1,5 @@
 import {
-    hyperscript as dom,
+    createElement as dom,
     defineClassComponent,
     defineFunctionalComponent,
     render,
@@ -17,11 +17,8 @@ const CounterInfo = defineFunctionalComponent({
 
     render(props) {
         return (
-            dom(
-                'label',
-                null,
+            dom('label',
                 dom('b',
-                    null,
                     props.value)));
     }
 });

@@ -36,16 +36,16 @@ export default [
         files: ['stop-watch.js']
     },
     {
-        name: 'simple-counter-class-based',
-        displayName: 'Simple Counter (class based)',
+        name: 'simple-counter',
+        displayName: 'Simple Counter',
         directory: 'counter',
-        files: ['simple-counter-class-based.js']
+        files: ['simple-counter.js']
     },
     {
-        name: 'complex-counter-class-based',
-        displayName: 'Complex Counter (class based)',
+        name: 'complex-counter',
+        displayName: 'Complex Counter',
         directory: 'counter',
-        files: ['complex-counter-class-based.js']
+        files: ['complex-counter.js']
     },
     {
         name: 'pagination',
