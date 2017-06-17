@@ -15,13 +15,13 @@ export default function defineClassComponent(config) {
     const
         propsAdjuster = createPropsAdjuster(config),
 
-        init = (onRender, onState) => {
+        init = (viewCallback, stateCallback) => {
             let
                 component = null,
                 content = null,
                 done = false;
 
-            const onProps = origProps => {
+            const propsCallback = origProps => {
                 if (done) {
                     return;
                 } else if (origProps === undefined) {
@@ -38,13 +38,13 @@ export default function defineClassComponent(config) {
                 if (!component) {
                     component = new config(props);
                     
-                    if (onState) {
-                        onState(component.state);
+                    if (stateCallback) {
+                        stateCallback(component.state);
                     }
                         
-                    component.__onState = state => {
-                        if (onState) {
-                            onState(state);
+                    component.__stateCallback = state => {
+                        if (stateCallback) {
+                            stateCallback(state);
                         }    
                     };
                     
@@ -52,7 +52,7 @@ export default function defineClassComponent(config) {
 
                     component.__refresh = function (prevProps, prevState) {
                         content = component.render();
-                        const renderingDonePromise = onRender(content);
+                        const renderingDonePromise = viewCallback(content);
 
                         if (renderingDonePromise) {
                             renderingDonePromise.then(
@@ -103,7 +103,7 @@ export default function defineClassComponent(config) {
             }
 
             return {
-                onProps,
+                propsCallback,
                 api: methods 
             };
         },

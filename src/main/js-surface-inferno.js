@@ -119,7 +119,7 @@ class CustomComponent extends InfernoComponent {
         let initialized = false;
 
         const
-            { onProps, api } = config.init(
+            { propsCallback, api } = config.init(
                 view => {
                     this.__viewToRender = view;
 
@@ -138,7 +138,7 @@ class CustomComponent extends InfernoComponent {
                     });
                 });
 
-        this.__onProps = onProps;
+        this.__propsCallback = propsCallback;
 
         if (api) {
             Object.assign(this, api);
@@ -146,7 +146,7 @@ class CustomComponent extends InfernoComponent {
     }
 
     componentWillMount() {
-        this.__onProps(this.props);
+        this.__propsCallback(this.props);
     }
 
     componentDidMount() {
@@ -162,11 +162,11 @@ class CustomComponent extends InfernoComponent {
     }
 
     componentWillUnmount() {
-        this.__onProps(undefined);
+        this.__propsCallback(undefined);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.__onProps(nextProps);
+        this.__propsCallback(nextProps);
     }
 
     shouldComponentUpdate() {

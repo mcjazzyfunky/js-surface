@@ -73,9 +73,9 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                 displayName:  config.displayName,
                 properties: config.properties,
 
-                init: (onRender, onState = null) => {
+                init: (viewCallback, stateCallback = null) => {
                     const
-                        result = config.init(onRender, onState),
+                        result = config.init(viewCallback, stateCallback),
                         err = validateInitResult(result, config);
 
                     if (err) {
@@ -83,8 +83,8 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                     }
 
                     return {
-                        onProps(props) {
-                            result.onProps(propsAdjuster(props));
+                        propsCallback(props) {
+                            result.propsCallback(propsAdjuster(props));
                         },
                         api: result.api || null
                     };

@@ -68,7 +68,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { onProps, api } = config.init(
+                { propsCallback, api } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -91,7 +91,7 @@ function defineCustomComponent(ReactLikeComponent) {
                         this.state = state;
                     });
 
-            this.__onProps = onProps;
+            this.__propsCallback = propsCallback;
 
             if (api) {
                 Object.assign(this, api);
@@ -99,7 +99,7 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillMount() {
-            this.__onProps(this.props);
+            this.__propsCallback(this.props);
         }
 
         componentDidMount() {
@@ -115,11 +115,11 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillUnmount() {
-            this.__onProps(undefined);
+            this.__propsCallback(undefined);
         }
 
         componentWillReceiveProps(nextProps) {
-            this.__onProps(nextProps);
+            this.__propsCallback(nextProps);
         }
 
         shouldComponentUpdate() {

@@ -7,7 +7,7 @@ import shapeOfComponentClass
     from '../shape/shapeOfComponentClass.js';
 
 
-export default function validateFunctionalComponentConfig(componentClass) {
+export default function validateComponentClass(componentClass) {
     const config = {
         displayName: componentClass.displayName,
         properties: componentClass.properties

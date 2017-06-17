@@ -1,12 +1,9 @@
 import { REGEX_METHOD_NAME, FORBIDDEN_METHOD_NAMES } from '../constant/constants.js'; 
 import { Spec } from 'js-spec';
 
-export default
-    { onProps:
-        Spec.func
-        
-    , api:
-        Spec.optional(
+export default {
+    propsCallback: Spec.func,
+    api: Spec.optional(
             Spec.and(
                 Spec.keys(
                     Spec.and(
