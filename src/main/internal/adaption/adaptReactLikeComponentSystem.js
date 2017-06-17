@@ -2,7 +2,7 @@ import shapeOfAdaptReactLikeComponentSystemConfig from '../shape/shapeOfAdaptRea
 
 import { Spec } from 'js-spec';
 
-import adaptComponentSystem from '../../../api/adaptComponentSystem.js';
+import adaptComponentSystem from '../../api/adaptComponentSystem.js';
 
 const fakeState = Object.freeze({});
 

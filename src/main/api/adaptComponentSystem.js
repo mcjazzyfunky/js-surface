@@ -1,17 +1,17 @@
 import defineClassComponent from './defineClassComponent.js';
 import defineDispatchComponent from './defineDispatchComponent.js';
 import Component from './Component.js';
-import adaptCreateElement from '../internal/component/adaption/adaptCreateElement.js';
-import adaptIsRenderable from '../internal/component/adaption/adaptIsRenderable.js';
-import createPropsAdjuster from '../internal/component/helper/createPropsAdjuster.js';
+import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
+import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
+import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
 
-import validateConfigForStandardComponent from '../internal/component/validation/validateStandardComponentConfig.js';
-import validateInitResult from '../internal/component/validation/validateInitResult.js';
+import validateConfigForStandardComponent from '../internal/validation/validateStandardComponentConfig.js';
+import validateInitResult from '../internal/validation/validateInitResult.js';
 
 import { Spec } from 'js-spec';
 
 import shapeOfAdaptComponentSystemConfig
-    from './../internal/component/shape/shapeOfAdaptComponentSystemConfig.js';
+    from './../internal/shape/shapeOfAdaptComponentSystemConfig.js';
 
 export default function adaptComponentSystem(config) {
     const err = Spec.shape(shapeOfAdaptComponentSystemConfig)(config);

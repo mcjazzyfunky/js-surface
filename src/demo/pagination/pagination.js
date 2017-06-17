@@ -188,9 +188,7 @@ class DemoOfPaginationComponent extends Component {
                 {className: 'container-fluid'},
                 Seq.range(1, number).map(() =>
                     dom('div',
-                        {className: 'row'},
                         Pagination({
-                            className: 'col-md-3',
                             pageIndex: this.state.pageIndex,
                             pageSize: pageSize,
                             totalItemCount: totalItemCount,
@@ -308,7 +306,6 @@ class RDemoOfPaginationClass extends React.Component {
                         React.createElement('div',
                             {className: 'row'},
                             RPagination({
-                                className: 'col-md-3',
                                 pageIndex: this.state.currPageIdx,
                                 pageSize: pageSize,
                                 totalItemCount: totalItemCount,
@@ -323,13 +320,22 @@ const
     RPagination = React.createFactory(RPaginationClass),
     RDemoOfPagination = React.createFactory(RDemoOfPaginationClass);
 
-if (1) {
+    const container = document.getElementById('main-content');
+
+    container.innerHTML =
+        '<div class="row" style="margin: 0 0 0 50px">'
+        + '<div class="col-md-6"><b>js-surface:</b></div>'
+        + '<div class="col-md-6"><b>React:</b></div>'
+        + '<div id="section-surface" class="col-md-6"></div>'
+        + '<div id="section-react" class="col-md-6"></div>'
+        + '</div>';
+
     render(
         DemoOfPagination(),
-        'main-content',
+        'section-surface',
         'React');
-} else {
+
     ReactDOM.render(
         RDemoOfPagination(),
-        document.getElementById('main-content'));
-}
+        document.getElementById('section-react'));
+

@@ -1,5 +1,5 @@
-import createPropsAdjuster from '../internal/component/helper/createPropsAdjuster.js';
-import validateComponentClass from '../internal/component/validation/validateComponentClass.js';
+import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
+import validateComponentClass from '../internal/validation/validateComponentClass.js';
 
 import { defineStandardComponent }  from 'js-surface';
 

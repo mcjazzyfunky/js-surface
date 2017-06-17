@@ -1,4 +1,4 @@
-import adaptReactLikeComponentSystem from './internal/component/adaption/adaptReactLikeComponentSystem.js';
+import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
 
 import Preact from 'preact';
 
