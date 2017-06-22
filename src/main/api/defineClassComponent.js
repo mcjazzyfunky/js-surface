@@ -1,4 +1,3 @@
-//import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
 import validateComponentClass from '../internal/validation/validateComponentClass.js';
 
 import { defineStandardComponent }  from 'js-surface';
@@ -10,7 +9,6 @@ export default function defineClassComponent(componentClass) {
         instanceClass = function () {
             this.__component = null;
         };
-//        customClass = class extends componentClass {};
 
     if (err) {
         throw err;
@@ -18,10 +16,6 @@ export default function defineClassComponent(componentClass) {
 
     if (api) {
         for (let key of Object.keys(api)) {
-//            customClass.prototype[key] = function (...args) {
-//                this.__instance[key](...args);
-//            };
-
             instanceClass.prototype[key] = function () {
                 let ret = undefined;
                 
@@ -35,8 +29,6 @@ export default function defineClassComponent(componentClass) {
     }
 
     const
-//        propsAdjuster = createPropsAdjuster(config),
-
         init = (viewCallback, stateCallback) => {
             let
                 instance = new instanceClass(),
@@ -55,8 +47,6 @@ export default function defineClassComponent(componentClass) {
                     done = true;
                     return;
                 }
-
-                //const props = propsAdjuster(origProps);
 
                 if (!component) {
                     component = new componentClass(props);
@@ -122,20 +112,22 @@ export default function defineClassComponent(componentClass) {
             };
         };
 
-    const modifiedApi = api ? {} : null;
 
-    for (let key of Object.keys(api)) {
-        modifiedApi[key] = function (instance, args) {
-            return api[key].apply(instance.__component, args);
-        };
-    }
-    
     const config = {
         displayName:  componentClass.displayName,
         properties: componentClass.properties,
-        init,
-        api: modifiedApi || undefined 
+        init
     };
 
+    if (api) {
+        config.api = {};
+
+        for (let key of Object.keys(api)) {
+            config.api[key] = function (instance, args) {
+                return api[key].apply(instance.__component, args);
+            };
+        }
+    }
+    
     return defineStandardComponent(config);
 }
