@@ -17,9 +17,10 @@ const HelloWorld = defineStandardComponent({
 
     init(onContent) {
         return {
-            onProps(props) {
+            propsCallback(props) {
                 onContent(dom('div', null, 'Hello ' + props.name + '!'));
-            }
+            },
+            instance: {}
         };
     }
 });

@@ -69,10 +69,7 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
         const
             propsAdjuster = createPropsAdjuster(config),
     
-            adjustedConfig = {
-                displayName:  config.displayName,
-                properties: config.properties,
-
+            adjustedConfig = Object.assign({}, config, {
                 init: (viewCallback, stateCallback = null) => {
                     const
                         result = config.init(viewCallback, stateCallback),
@@ -86,10 +83,10 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                         propsCallback(props) {
                             result.propsCallback(propsAdjuster(props));
                         },
-                        api: result.api || null
+                        instance: result.instance 
                     };
                 }
-            };
+            });
 
         return defineStandardComponent(adjustedConfig);
     };

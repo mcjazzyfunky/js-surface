@@ -52,6 +52,14 @@ function customDefineStandardComponent(config) {
         }
     }
 
+    if (config.api) {
+        for (let key of Object.keys(config.api)) {
+            ExtCustomComponent.prototype[key] = function () {
+                return config.api[key](this.__instance, arguments);
+            };
+        }
+    }
+
     ExtCustomComponent.displayName = config.displayName;
 
     return (...args) => {
@@ -119,7 +127,7 @@ class CustomComponent extends InfernoComponent {
         let initialized = false;
 
         const
-            { propsCallback, api } = config.init(
+            { propsCallback, instance } = config.init(
                 view => {
                     this.__viewToRender = view;
 
@@ -139,10 +147,7 @@ class CustomComponent extends InfernoComponent {
                 });
 
         this.__propsCallback = propsCallback;
-
-        if (api) {
-            Object.assign(this, api);
-        }
+        this.__instance = instance;
     }
 
     componentWillMount() {

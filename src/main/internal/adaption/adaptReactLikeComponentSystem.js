@@ -38,6 +38,16 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
             ExtCustomComponent.displayName = config.displayName;
 
+            if (config.api) {
+                for (let key of Object.keys(config.api)) {
+                    ExtCustomComponent.prototype[key] = function () {
+                        return config.api[key](this.__instance, arguments);
+                    };
+                }
+            }
+
+            ExtCustomComponent.displayName = config.displayName;
+
             return reactLikeConfig.createFactory(ExtCustomComponent);
         },
 
@@ -68,7 +78,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { propsCallback, api } = config.init(
+                { propsCallback, instance } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -92,10 +102,7 @@ function defineCustomComponent(ReactLikeComponent) {
                     });
 
             this.__propsCallback = propsCallback;
-
-            if (api) {
-                Object.assign(this, api);
-            }
+            this.__instance = instance;
         }
 
         componentWillMount() {

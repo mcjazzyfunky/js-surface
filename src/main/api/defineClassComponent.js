@@ -1,30 +1,53 @@
-import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
+//import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
 import validateComponentClass from '../internal/validation/validateComponentClass.js';
 
 import { defineStandardComponent }  from 'js-surface';
 
-export default function defineClassComponent(config) {
+export default function defineClassComponent(componentClass) {
     const
-        err = validateComponentClass(config),
-        api = config.api || null;
+        err = validateComponentClass(componentClass),
+        api = componentClass.api || null,
+        instanceClass = function () {
+            this.__component = null;
+        };
+//        customClass = class extends componentClass {};
 
     if (err) {
         throw err;
     }
 
+    if (api) {
+        for (let key of Object.keys(api)) {
+//            customClass.prototype[key] = function (...args) {
+//                this.__instance[key](...args);
+//            };
+
+            instanceClass.prototype[key] = function () {
+                let ret = undefined;
+                
+                if (this.__component) {
+                    ret = api[key].apply(this.__component, arguments);
+                }
+
+                return ret;
+            };       
+        }
+    }
+
     const
-        propsAdjuster = createPropsAdjuster(config),
+//        propsAdjuster = createPropsAdjuster(config),
 
         init = (viewCallback, stateCallback) => {
             let
+                instance = new instanceClass(),
                 component = null,
                 content = null,
                 done = false;
 
-            const propsCallback = origProps => {
+            const propsCallback = props => {
                 if (done) {
                     return;
-                } else if (origProps === undefined) {
+                } else if (props === undefined) {
                     if (component) {
                         component.onWillUnmount();
                     }
@@ -33,11 +56,12 @@ export default function defineClassComponent(config) {
                     return;
                 }
 
-                const props = propsAdjuster(origProps);
+                //const props = propsAdjuster(origProps);
 
                 if (!component) {
-                    component = new config(props);
-                    
+                    component = new componentClass(props);
+                    instance.__component = component;
+
                     if (stateCallback) {
                         stateCallback(component.state);
                     }
@@ -92,27 +116,26 @@ export default function defineClassComponent(config) {
                 }
             };
 
-            let methods = null;
-
-            if (api) {
-                methods = {};
-
-                for (let key of Object.keys(api)) {
-                    methods[key] = (...args) => api[key].apply(component, args);
-                }
-            }
-
             return {
                 propsCallback,
-                api: methods 
+                instance 
             };
-        },
-
-        adjustedConfig = {
-            displayName:  config.displayName,
-            properties: config.properties,
-            init
         };
 
-    return defineStandardComponent(adjustedConfig);
+    const modifiedApi = api ? {} : null;
+
+    for (let key of Object.keys(api)) {
+        modifiedApi[key] = function (instance, args) {
+            return api[key].apply(instance.__component, args);
+        };
+    }
+    
+    const config = {
+        displayName:  componentClass.displayName,
+        properties: componentClass.properties,
+        init,
+        api: modifiedApi || undefined 
+    };
+
+    return defineStandardComponent(config);
 }
