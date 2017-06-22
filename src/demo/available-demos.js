@@ -52,6 +52,12 @@ export default [
         displayName: 'Pagination',
         directory: 'pagination',
         files: ['pagination.js']
+    },
+    {
+        name: 'provide-inject',
+        displayName: 'Provide/Inject',
+        directory: 'provide-inject',
+        files: ['provide-inject.js']
     }
 ];
 

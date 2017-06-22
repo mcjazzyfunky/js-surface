@@ -4,7 +4,9 @@ import { Spec } from 'js-spec';
 
 import adaptComponentSystem from '../../api/adaptComponentSystem.js';
 
-const fakeState = Object.freeze({});
+const
+    noOp = () => null,
+    fakeState = Object.freeze({});
 
 export default function adaptReactLikeComponentSystem(reactLikeConfig) {
     const err = Spec.shape(shapeOfAdaptReactLikeComponentSystemConfig)(reactLikeConfig);
@@ -33,6 +35,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
             class ExtCustomComponent extends CustomComponent {
                 constructor(...args) {
                     super(args, config);
+                    this.__childContextTypes = undefined;
                 }
             }
 
@@ -47,6 +50,24 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
             }
 
             ExtCustomComponent.displayName = config.displayName;
+
+            const injectPropsNames = [];
+
+            if (config.properties) {
+                for (let property of Object.keys(config.properties)) {
+                    if (config.properties[property].inject) {
+                        injectPropsNames.push(property);
+                    }
+                }
+            }
+
+            if (injectPropsNames.length > 0) {
+                ExtCustomComponent.contextTypes = {};
+
+                for (let propName of injectPropsNames) {
+                    ExtCustomComponent.contextTypes[propName] = noOp;
+                }
+            }
 
             return reactLikeConfig.createFactory(ExtCustomComponent);
         },
@@ -66,7 +87,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 }
 
 function defineCustomComponent(ReactLikeComponent) {
-    return class CustomComponent extends ReactLikeComponent {
+    const customClass = class CustomComponent extends ReactLikeComponent {
         constructor(superArgs, config) {
             super(...superArgs);
 
@@ -106,6 +127,7 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillMount() {
+            this.props = mixPropsWithContext(this.props, this.context);
             this.__propsCallback(this.props);
         }
 
@@ -126,7 +148,8 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillReceiveProps(nextProps) {
-            this.__propsCallback(nextProps);
+            this.props = mixPropsWithContext(nextProps, this.context);
+            this.__propsCallback(this.props);
         }
 
         shouldComponentUpdate() {
@@ -139,8 +162,38 @@ function defineCustomComponent(ReactLikeComponent) {
             return ret;
         }
 
-        render() {
+        render() {console.log(this.context)
             return this.__viewToRender;
         }
+
+        static get childContextTypes() {
+            return {
+                value: noOp
+            };
+        }
+
+        getChildContext() {
+            return {
+                value: 'xxx'
+            }
+        }
     };
+
+    return customClass;
+}
+
+function mixPropsWithContext(props, context) {
+    let ret = props;
+
+    if (context) {
+        ret = Object.assign({}, props);
+
+        for (let key of Object.keys(context)) {
+            if (context[key] !== undefined && props[key] === undefined) {
+                ret[key] = context[key];
+            }
+        }
+    }
+
+    return ret;
 }
