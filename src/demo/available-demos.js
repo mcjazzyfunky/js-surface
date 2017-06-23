@@ -54,10 +54,10 @@ export default [
         files: ['pagination.js']
     },
     {
-        name: 'provide-inject',
-        displayName: 'Provide/Inject',
-        directory: 'provide-inject',
-        files: ['provide-inject.js']
+        name: 'injection',
+        displayName: 'Injection',
+        directory: 'injection',
+        files: ['injection.js']
     }
 ];
 
