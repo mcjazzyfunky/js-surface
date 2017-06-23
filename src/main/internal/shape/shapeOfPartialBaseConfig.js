@@ -22,5 +22,5 @@ export default {
                              Spec.any,
                         inject:
                             Spec.optional(Spec.boolean)
-                    }))))
+                    })))),
 };

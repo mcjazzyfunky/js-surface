@@ -50,7 +50,6 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
                 properties: config.properties,
                 render: props => config.render(propsAdjuster(props))
             };
-
     
         return defineFunctionalComponent(adjustedConfig);
     };

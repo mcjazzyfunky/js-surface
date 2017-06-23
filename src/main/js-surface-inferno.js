@@ -151,6 +151,7 @@ class CustomComponent extends InfernoComponent {
     }
 
     componentWillMount() {
+        this.props = mixPropsWithContext(this.props, this.context);
         this.__propsCallback(this.props);
     }
 
@@ -171,7 +172,8 @@ class CustomComponent extends InfernoComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.__propsCallback(nextProps);
+        this.props = mixPropsWithContext(nextProps, this.context);
+        this.__propsCallback(this.props);
     }
 
     shouldComponentUpdate() {
@@ -183,4 +185,20 @@ class CustomComponent extends InfernoComponent {
     render() {
         return this.__viewToRender;
     }
+}
+
+function mixPropsWithContext(props, context) {
+    let ret = props;
+
+    if (context) {
+        ret = Object.assign({}, props);
+
+        for (let key of Object.keys(context)) {
+            if (context[key] !== undefined && props[key] === undefined) {
+                ret[key] = context[key];
+            }
+        }
+    }
+
+    return ret;
 }

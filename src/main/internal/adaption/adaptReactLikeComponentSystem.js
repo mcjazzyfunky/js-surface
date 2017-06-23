@@ -5,7 +5,7 @@ import { Spec } from 'js-spec';
 import adaptComponentSystem from '../../api/adaptComponentSystem.js';
 
 const
-    noOp = () => null,
+    returnNull = () => null,
     fakeState = Object.freeze({});
 
 export default function adaptReactLikeComponentSystem(reactLikeConfig) {
@@ -24,11 +24,34 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
         isBrowserBased: reactLikeConfig.isBrowserBased !== false,
 
         defineFunctionalComponent: config => {
-            const ret = props => config.render(props);
+            let ret;
+            const injectPropsNames = [];
+
+            if (config.properties) {
+                for (let property of Object.keys(config.properties)) {
+                    if (config.properties[property].inject) {
+                        injectPropsNames.push(property);
+                    }
+                }
+            }
+
+            if (injectPropsNames.length === 0) {
+                ret = props => config.render(props);
+            } else {
+                ret = (props, context) => {
+                    return config.render(mixPropsWithContext(props, context));
+                };
+
+                ret.contextTypes = {};
+
+                for (let propName of injectPropsNames) {
+                    ret.contextTypes[propName] = returnNull;
+                }
+            }
 
             ret.displayName = config.displayName;
 
-            return ret;
+            return reactLikeConfig.createFactory(ret);
         },
 
         defineStandardComponent: config => {
@@ -49,6 +72,19 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 }
             }
 
+            if (config.childInjection) {
+                ExtCustomComponent.childContextTypes = {};
+
+                for (let key of config.childInjection.keys) {
+                    ExtCustomComponent.childContextTypes[key] = returnNull;
+                }
+
+                ExtCustomComponent.prototype.getChildContext = function() {
+                    const state = this.__state === fakeState ? null : this.__state;
+                    return config.childInjection.get(this.props, state);
+                };
+            }
+
             ExtCustomComponent.displayName = config.displayName;
 
             const injectPropsNames = [];
@@ -65,7 +101,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 ExtCustomComponent.contextTypes = {};
 
                 for (let propName of injectPropsNames) {
-                    ExtCustomComponent.contextTypes[propName] = noOp;
+                    ExtCustomComponent.contextTypes[propName] = returnNull;
                 }
             }
 
@@ -162,20 +198,8 @@ function defineCustomComponent(ReactLikeComponent) {
             return ret;
         }
 
-        render() {console.log(this.context)
+        render() {
             return this.__viewToRender;
-        }
-
-        static get childContextTypes() {
-            return {
-                value: noOp
-            };
-        }
-
-        getChildContext() {
-            return {
-                value: 'xxx'
-            }
         }
     };
 

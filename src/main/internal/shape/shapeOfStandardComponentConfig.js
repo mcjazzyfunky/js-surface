@@ -6,7 +6,16 @@ import { Spec } from 'js-spec';
 export default Object.assign({}, shapeOfPartialBaseConfig, {
     init: Spec.func,
 
-    api: Spec.optional(
+    childInjection:
+        Spec.optional(
+            Spec.shape({
+                keys: Spec.instanceOf(Array), // TODO
+
+                get: Spec.func
+            })),
+        
+    api:
+        Spec.optional(
             Spec.and(
                 Spec.keys(
                     Spec.and(

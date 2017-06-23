@@ -119,6 +119,10 @@ export default function defineClassComponent(componentClass) {
         init
     };
 
+    if (componentClass.childInjection) {
+        config.childInjection = componentClass.childInjection; 
+    }
+
     if (api) {
         config.api = {};
 
@@ -128,6 +132,6 @@ export default function defineClassComponent(componentClass) {
             };
         }
     }
-    
+
     return defineStandardComponent(config);
 }
