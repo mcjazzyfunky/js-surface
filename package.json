@@ -45,6 +45,7 @@
     "react-native": "^0.45.1",
     "systemjs": "^0.19.20",
     "systemjs-plugin-babel": "0.0.18",
+    "vue": "^2.3.4",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   }

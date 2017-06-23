@@ -114,6 +114,17 @@ module.exports = function (grunt) {
                         'js-surface': './build/src/main/js-surface-preact.js'
                     }
                 }
+            },
+            jsSurfaceVue: {
+                src: 'build/src/main/js-surface-vue.js',
+                dest: 'dist/vue.js',
+                options: {
+                    ignore: ['./node_modules/**'],
+                    alias: {
+                        'js-spec': './build/js-spec/index.js',
+                        'js-surface': './build/src/main/js-surface-vue.js'
+                    }
+                }
             }
         },
         uglify: {
@@ -153,6 +164,10 @@ module.exports = function (grunt) {
             jsSurfacePreact: {
                 src: ['dist/preact.js'],
                 dest: 'dist/preact.min.js'
+            },
+            jsSurfaceVue: {
+                src: ['dist/vue.js'],
+                dest: 'dist/vue.min.js'
             }
         },
         compress: {
@@ -212,15 +227,23 @@ module.exports = function (grunt) {
                 src: ['dist/preact.min.js'],
                 dest: 'dist/preact.min.js.gz'
             },
+            jsSurfaceVue: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/vue.min.js'],
+                dest: 'dist/vue.min.js.gz'
+            }
         },
-       asciidoctor: [{
-           options: {
-               cwd: 'doc'
-           },
-           files: {
-             'dist/docs': ['*.adoc'],
-           },
-         }],
+        asciidoctor: [{
+            options: {
+                cwd: 'doc'
+            },
+            files: {
+                'dist/docs': ['*.adoc'],
+            },
+        }],
         watch: {
             js: {
                 options: {
