@@ -34,6 +34,7 @@ const Parent = defineClassComponent(class extends Component {
     render() {
         return dom('div',
             dom('div', 'Provided value: ', this.props.value),
+            dom('br'),
             dom('div',
                 ChildFunctionBased(),
                 ChildClassBased(),

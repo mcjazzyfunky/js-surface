@@ -37,12 +37,39 @@ export {
 
 // ------------------------------------------------------------------
 
+function returnNull() {
+    return null;
+}
+
 function customDefineFunctionalComponent(config) {
-    const ret = props => config.render(props);
+    let func;
+    const injectPropsNames = [];
 
-    ret.displayName = config.displayName;
+    if (config.properties) {
+        for (let property of Object.keys(config.properties)) {
+            if (config.properties[property].inject) {
+                injectPropsNames.push(property);
+            }
+        }
+    }
 
-    return ret;
+    if (injectPropsNames.length === 0) {
+        func = props => config.render(props);
+    } else {
+        func = (props, context) => {
+            return config.render(mixPropsWithContext(props, context));
+        };
+
+        func.contextTypes = {};
+
+        for (let propName of injectPropsNames) {
+            func.contextTypes[propName] = returnNull;
+        }
+    }
+
+    func.displayName = config.displayName;
+
+    return createInfernoElement.bind(null, func);
 }
 
 function customDefineStandardComponent(config) {
@@ -61,6 +88,19 @@ function customDefineStandardComponent(config) {
     }
 
     ExtCustomComponent.displayName = config.displayName;
+
+    if (config.childInjection) {
+        ExtCustomComponent.childContextTypes = {};
+
+        for (let key of config.childInjection.keys) {
+            ExtCustomComponent.childContextTypes[key] = returnNull;
+        }
+
+        ExtCustomComponent.prototype.getChildContext = function() {
+            const state = this.__state;
+            return config.childInjection.get(this.props, state);
+        };
+    }
 
     return (...args) => {
         return createElement(ExtCustomComponent, ...args);
@@ -200,5 +240,11 @@ function mixPropsWithContext(props, context) {
         }
     }
 
+    return ret;
+}
+
+function createFactory(type) {
+    const ret = createElement.bind(null, type)
+//    Object.assign(ret, type);
     return ret;
 }
