@@ -1,6 +1,6 @@
 'use static';
 import { Seq, Strings } from 'js-prelude';
-import { createElement as htm } from 'js-surface';
+import { createElement as dom } from 'js-surface';
 
 export default class ComponentHelper {
     static buildCssClass(...tokens) {
@@ -51,13 +51,13 @@ export default class ComponentHelper {
 
         if (icon !== null) {
             if (icon.indexOf('.') >= 0) {
-                ret = htm('img', { href: icon, alt: '', className: className });
+                ret = dom('img', { href: icon, alt: '', className: className });
             } else {
                 let match = icon.match(/(?:^|\s)(fa|glyphicon)-./),
                     fullClassName = (match ? match[1] : '') + ' ' + icon + ' ' + className;
 
                 if (match) {
-                    ret = htm('span', { className: fullClassName });
+                    ret = dom('span', { className: fullClassName });
                 }
             }
         }

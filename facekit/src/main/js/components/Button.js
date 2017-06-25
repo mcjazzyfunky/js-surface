@@ -4,9 +4,10 @@ import ComponentHelper from '../helpers/ComponentHelper.js';
 
 import {
     defineFunctionalComponent,
-    hyperscript as dom,
-    Spec
+    createElement as dom
 } from 'js-surface';
+
+import { Spec } from 'js-spec';
 
 import { Seq, Strings } from 'js-prelude';
 
@@ -16,55 +17,55 @@ export default defineFunctionalComponent({
     properties: {
         text: {
             type: String,
-            defaultValue: ''
+            preset: ''
         },
 
         icon: {
             type: String,
-            defaultValue: ''
+            preset: ''
         },
 
         type: {
             type: String,
-            constraint: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
-            defaultValue: 'default'
+            assert: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
+            preset: 'default'
         },
 
         disabled: {
             type: Boolean,
-            defaultValue: false
+            preset: false
         },
 
         size: {
             type: String,
-            constraint: Spec.oneOf(['normal', 'large', 'small']),
-            defaultValue: 'normal'
+            assert: Spec.oneOf(['normal', 'large', 'small']),
+            preset: 'normal'
         },
 
         iconPosition: {
             type: String,
-            constraint: Spec.oneOf(['top', 'bottom', 'left', 'right']),
-            defaultValue: 'left'
+            assert: Spec.oneOf(['top', 'bottom', 'left', 'right']),
+            preset: 'left'
         },
 
         tooltip: {
             type: String,
-            defaultValue: ''
+            preset: ''
         },
 
         className: {
             type: String,
-            defaultValue: ''
+            preset: ''
         },
 
         menu: {
             type: Array,
-            defaultValue: []
+            preset: []
         },
 
         onClick: {
             type: Function,
-            defaultValue: null
+            preset: null
         }
     },
 
@@ -123,7 +124,7 @@ export default defineFunctionalComponent({
                     (iconElement === null ? null : 'fk-has-icon'),
                     (!isDropdown ? null : 'dropdown-toggle')),
 
-            doOnClick = event => {
+            doOnClick = () => {
                 const onClick = props.onClick;
 
                 if (onClick) {
@@ -133,13 +134,13 @@ export default defineFunctionalComponent({
 
             button =
                 dom('button',
-                    { type: 'button'
-                    , className: className
-                    , title: tooltip
-                    , disabled: disabled
-                    , onClick: doOnClick
-                    , key: key
-                    , 'data-toggle': isDropdown ? 'dropdown' : null
+                    {   type: 'button',
+                        className: className,
+                        title: tooltip,
+                        disabled: disabled,
+                        onClick: doOnClick,
+                        key: key,
+                        'data-toggle': isDropdown ? 'dropdown' : null
                     },
                     (iconPosition === 'left' || iconPosition === 'top'
                          ? [iconElement, (text !== null && icon !== null ? ' ' : null), textElement]
@@ -151,45 +152,43 @@ export default defineFunctionalComponent({
         if (isDropdown) {
             ret =
                 dom('div.fk-button.btn-group',
-                    { className: props.className
+                    {   className: props.className
                     },
                     button,
-                    dom('ul',
-                        {className: 'dropdown-menu'},
-                        dom('li/a.dropdown-item',
-                            { className: 'dropdown-item', href: '#' },
+                    dom('ul.dropdown-menu',
+                        dom('li > a.dropdown-item',
+                            { href: '#' },
                             'Juhu'),
-                        dom('li/a.dropdown-item',
-                            { className: 'dropdown-item', href: '#' },
+                        dom('li > a.dropdown-item',
+                            { href: '#' },
                             'Juhu2')));
 
         } else if (isSplitButton) {
             ret =
-                dom('div',
-                    {className: 'fk-button btn-group dropdown ' + props.className},
+                dom('div.fk-button.btn-group.dropdown',
+                    {className: props.className},
                     button,
-                    dom('button',
-                        { className: 'btn dropdown-toggle dropdown-toggle-split btn-' + type
+                    dom('button.btn.dropdown-toggle.dropdown-toggle-split',
+                        { className: 'btn-' + type
                         , 'data-toggle': 'dropdown'
                         , type: 'button'
                         },
                         ' ',
                         caret),
-                    dom('div.dropdown-menu',{className: 'dropdown-menu'},
-                        dom('li/a.dropdown-item',
-                            { className: 'dropdown-item', href: '#' },
+                    dom('div.dropdown-menu.dropdown-menu',
+                        dom('li > a.dropdown-item',
+                            { href: '#' },
                             'Juhu'),
-                        dom('li/a.dropdown-item',
-                            { className: 'dropdown-item', href: '#' },
+                        dom('li > a.dropdown-item',
+                            { href: '#' },
                             'Juhu2')));
         } else {
             ret =
-                dom('div',
-                    { className: 'fk-button btn-group ' + props.className },
+                dom('div.fk-button.btn-group',
+                    { className: props.className },
                     button);
         }
 
         return ret;
-
     }
 });

@@ -3,7 +3,7 @@
 import ComponentHelper from '../helpers/ComponentHelper.js';
 import PaginationHelper from '../helpers/PaginationHelper.js';
 
-import { defineComponent, createElement as dom } from 'js-surface';
+import { defineClassComponent, createElement as dom } from 'js-surface';
 import { Seq, Strings } from 'js-prelude';
 
 const name = 'TextField';
@@ -13,42 +13,42 @@ let nextAutoId = 0;
 const properties = {
     className: {
         type: String,
-        defaultValue: null
+        preset: null
     },
 
-    defaultValue: {
+    preset: {
         type: String,
-        defaultValue: null
+        preset: null
     },
 
     disabled: {
         type: Boolean,
-        defaultValue: false
+        preset: false
     },
 
     id: {
         type: String,
-        defaultValue: ''
+        preset: ''
     },
 
     label: {
         type: String,
-        defaultValue: ''
+        preset: ''
     },
 
     onChange: {
         type: Function,
-        defaultValue: null
+        preset: null
     },
 
     readOnly: {
         type: Boolean,
-        defaultValue: false
+        preset: false
     },
 
     value: {
         type: String,
-        defaultValue: null
+        preset: null
     }
 };
 

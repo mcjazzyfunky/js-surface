@@ -3,7 +3,7 @@
 import ComponentHelper from '../helpers/ComponentHelper.js';
 import PaginationHelper from '../helpers/PaginationHelper.js';
 
-import { defineComponent, createElement as htm, Types } from 'js-surface';
+import { defineComponent, createElement as dom } from 'js-surface';
 import { Seq, Strings } from 'js-prelude';
 
 export default ComboBox;
@@ -13,27 +13,27 @@ const name = 'ComboBox';
 const properties = {
     dataSource: {
         type: Types.array,
-        defaultValue: []
+        preset: []
     },
     
     editable: {
         type: Types.boolean,
-        defaultValue: true
+        preset: true
     },
     
     enabled: {
         type: Types.boolean,
-        defaultValue: true
+        preset: true
     },
     
     readOnly: {
         type: Types.boolean,
-        defaultValue: false
+        preset: false
     },
     
     value: {
         type: Types.string,
-        defaultValue: null
+        preset: null
     }
 };
 

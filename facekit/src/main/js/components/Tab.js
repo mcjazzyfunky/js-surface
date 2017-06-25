@@ -1,36 +1,35 @@
-import ComponentHelper from '../helpers/ComponentHelper.js';
+import {
+    defineFunctionalComponent,
+    createElement as dom
+} from 'js-surface';
 
-import { defineComponent, createElement as htm, Types } from 'js-surface';
-import { Seq, Strings } from 'js-prelude';
 
-
-export default defineComponent({
+export default defineFunctionalComponent({
     displayName: 'FKTab',
 
     properties: {
         caption: {
-            type: Types.string,
-            defaultValue: ''
+            type: String,
+            preset: ''
         },
         
         id: {
-            type: Types.string,
-            defaultValue: null
+            type: String,
+            preset: null
         }
         /*
         children: {
             type: Types.oneOfType(Types.array, Types.object),
-            defaultValue: []
+            preset: []
         }
         */
     },
     
-    render({ props }) {
+    render(props) {
         return (
-            htm('div',
-                {className: 'fk-tab'},
+            dom('div.fk-tab',
                 props.caption,
-                props.children
-                ));
+                props.children)
+        );
     }
 });

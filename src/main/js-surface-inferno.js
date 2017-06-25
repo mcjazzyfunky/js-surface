@@ -242,9 +242,3 @@ function mixPropsWithContext(props, context) {
 
     return ret;
 }
-
-function createFactory(type) {
-    const ret = createElement.bind(null, type)
-//    Object.assign(ret, type);
-    return ret;
-}

@@ -1,4 +1,4 @@
-import { defineComponent, defineIntents, createElement as htm, Types, isElement } from 'js-surface';
+import { defineComponent, defineIntents, createElement as dom, isElement } from 'js-surface';
 
 import { Seq } from 'js-prelude';
 
