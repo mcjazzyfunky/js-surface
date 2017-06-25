@@ -10,24 +10,24 @@ export default defineFunctionalComponent({
     properties: {
         activeTab: {
             type: Number,
-            reset: 0
+            defaultValue: 0
         },
         
         tabPosition: {
             type: String,
-            assert: Spec.oneOf(['top']),
-            preset: 'top'
+            constraint: Spec.oneOf(['top']),
+            defaultValue: 'top'
         },
         
         tabStyle: {
             type: String,
-            assert: Spec.oneOf(['default']),
-            preset: 'default'
+            constraint: Spec.oneOf(['default']),
+            defaultValue: 'default'
         },
         
         preventSize: {
             type: Boolean,
-            preset: false
+            defaultValue: false
         }
     },
         
@@ -48,8 +48,8 @@ export default defineFunctionalComponent({
         const body =
             dom('div.fk-tabs-body',
                 ...Seq.from(props.children).map((child, index) =>
-                    dom('div',
-                        {className: 'fk-tabs-page', style: {display: activeTab === index || activeTab === child.props.name ? 'block' : 'none'}, id: child.props.id},
+                    dom('div.fk-tabs-page',
+                        { style: {display: activeTab === index || activeTab === child.props.name ? 'block' : 'none'}, id: child.props.id},
                         child)));
 
         const parts = tabPosition === 'bottom'

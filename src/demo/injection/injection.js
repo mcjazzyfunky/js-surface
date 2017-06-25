@@ -50,7 +50,7 @@ const ChildFunctionBased = defineFunctionalComponent({
         value: {
             type: String,
             inject: true,
-            preset: 'default value'
+            defaultValue: 'default value'
         }
     },
 
@@ -69,7 +69,7 @@ const ChildClassBased = defineClassComponent(class extends Component {
             value: {
                 type: String,
                 inject: true,
-                preset: 'default value'
+                defaultValue: 'default value'
             }
         };
     }

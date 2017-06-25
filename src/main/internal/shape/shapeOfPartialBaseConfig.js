@@ -16,9 +16,9 @@ export default {
                     Spec.shape({
                         type:
                             Spec.func,
-                        assert:
+                        constraint:
                             Spec.optional(Spec.func),
-                        preset:
+                        defaultValue:
                              Spec.any,
                         inject:
                             Spec.optional(Spec.boolean)

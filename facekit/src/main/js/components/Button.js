@@ -17,55 +17,55 @@ export default defineFunctionalComponent({
     properties: {
         text: {
             type: String,
-            preset: ''
+            defaultValue: ''
         },
 
         icon: {
             type: String,
-            preset: ''
+            defaultValue: ''
         },
 
         type: {
             type: String,
-            assert: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
-            preset: 'default'
+            constraint: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
+            defaultValue: 'default'
         },
 
         disabled: {
             type: Boolean,
-            preset: false
+            defaultValue: false
         },
 
         size: {
             type: String,
-            assert: Spec.oneOf(['normal', 'large', 'small']),
-            preset: 'normal'
+            constraint: Spec.oneOf(['normal', 'large', 'small']),
+            defaultValue: 'normal'
         },
 
         iconPosition: {
             type: String,
-            assert: Spec.oneOf(['top', 'bottom', 'left', 'right']),
-            preset: 'left'
+            constraint: Spec.oneOf(['top', 'bottom', 'left', 'right']),
+            defaultValue: 'left'
         },
 
         tooltip: {
             type: String,
-            preset: ''
+            defaultValue: ''
         },
 
         className: {
             type: String,
-            preset: ''
+            defaultValue: ''
         },
 
         menu: {
             type: Array,
-            preset: []
+            defaultValue: []
         },
 
         onClick: {
             type: Function,
-            preset: null
+            defaultValue: null
         }
     },
 
@@ -169,9 +169,9 @@ export default defineFunctionalComponent({
                     {className: props.className},
                     button,
                     dom('button.btn.dropdown-toggle.dropdown-toggle-split',
-                        { className: 'btn-' + type
-                        , 'data-toggle': 'dropdown'
-                        , type: 'button'
+                        {   className: 'btn-' + type,
+                            'data-toggle': 'dropdown',
+                            type: 'button'
                         },
                         ' ',
                         caret),

@@ -12,28 +12,28 @@ const name = 'ComboBox';
 
 const properties = {
     dataSource: {
-        type: Types.array,
-        preset: []
+        type: Spec.array,
+        defaultValue: []
     },
     
     editable: {
-        type: Types.boolean,
-        preset: true
+        type: Spec.boolean,
+        defaultValue: true
     },
     
     enabled: {
-        type: Types.boolean,
-        preset: true
+        type: Spec.boolean,
+        defaultValue: true
     },
     
     readOnly: {
-        type: Types.boolean,
-        preset: false
+        type: Spec.boolean,
+        defaultValue: false
     },
     
     value: {
-        type: Types.string,
-        preset: null
+        type: Spec.string,
+        defaultValue: null
     }
 };
 

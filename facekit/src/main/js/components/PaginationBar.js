@@ -10,27 +10,27 @@ export default defineComponent({
     properties: {
         type: {
             type: Types.oneOf(['']),
-            preset: null
+            defaultValue: null
         },
         
         pageIndex: {
             type: Types.number,
-            preset: null
+            defaultValue: null
         },
 
         pageSize: {
             type: Types.number,
-            preset: null
+            defaultValue: null
         },
         
         totalItemCount: {
             type: Types.number,
-            preset: null
+            defaultValue: null
         },
 
         className: {
             type: Types.string,
-            preset: null
+            defaultValue: null
         }
     },
 

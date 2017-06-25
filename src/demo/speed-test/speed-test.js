@@ -14,11 +14,11 @@ const Tile = defineFunctionalComponent({
     properties: {
         color: {
             type: String,
-            preset: 'white'
+            defaultValue: 'white'
         },
         width: {
             type: Number,
-            preset: 3
+            defaultValue: 3
         }
     },
     
@@ -46,7 +46,7 @@ const TileRow = defineFunctionalComponent(({
     properties: {
         tileWidth: {
             type: Number,
-            preset: 3
+            defaultValue: 3
         },
         columnCount: {
             type: Number
@@ -85,7 +85,7 @@ class SpeedTestComponent extends Component {
             },
             tileWidth: {
                 type: Number,
-                preset: 3
+                defaultValue: 3
             }
         };
     }

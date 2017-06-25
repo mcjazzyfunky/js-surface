@@ -10,17 +10,17 @@ export default defineFunctionalComponent({
     properties: {
         caption: {
             type: String,
-            preset: ''
+            defaultValue: ''
         },
         
         id: {
             type: String,
-            preset: null
+            defaultValue: null
         }
         /*
         children: {
             type: Types.oneOfType(Types.array, Types.object),
-            preset: []
+            defaultValue: []
         }
         */
     },

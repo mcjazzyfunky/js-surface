@@ -149,7 +149,6 @@ const
 
             return (
                 dom('div',
-                    null,
                     AppHeader({
                         inputText: state.inputText,
                         dispatch
@@ -194,12 +193,12 @@ const
         properties: {
             todos: {
                 type: Array,
-                preset: []
+                defaultValue: []
             },
 
             todoEditId: {
                 type: Number,
-                preset: null
+                defaultValue: null
             },
 
             todoEditText: {

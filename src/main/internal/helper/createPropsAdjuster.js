@@ -18,28 +18,28 @@ export default function createPropsAdjuster(config) {
             const
                 type = propertiesConfig[key].type,
                 check = propertiesConfig[key].check || null,
-                preset = propertiesConfig[key].preset,
-                getPreset = propertiesConfig[key].getPreset,
+                defaultValue = propertiesConfig[key].defaultValue,
+                getDefaultValue = propertiesConfig[key].getDefaultValue,
 
-                presetProvider = getPreset
-                    ? getPreset
-                    : (preset !== undefined ? () => preset : null);
+                defaultValueProvider = getDefaultValue
+                    ? getDefaultValue
+                    : (defaultValue !== undefined ? () => defaultValue : null);
 
-            hasDefaults = hasDefaults || presetProvider !== null;
+            hasDefaults = hasDefaults || defaultValueProvider !== null;
 
             validations.push([
                 key,
                 type,
                 check,
-                presetProvider]);
+                defaultValueProvider]);
 
-               if (getPreset) {
-                   Object.defineProperty(defaults, key, {
-                       get: getPreset
-                   });
-               } else if (preset !== undefined) {
-                   defaults[key] = preset;
-               }
+            if (getDefaultValue) {
+                Object.defineProperty(defaults, key, {
+                    get: getDefaultValue
+                });
+            } else if (defaultValue !== undefined) {
+                defaults[key] = defaultValue;
+            }
         }
 
         ret = props    => {
@@ -82,11 +82,11 @@ function validateProps(props, validations) {
     keysToBeChecked.delete('children');
 
     try {
-        for (let [propertyName, type, check, presetProvider] of validations) {
-            const preset = presetProvider
-                ? presetProvider() : undefined;
+        for (let [propertyName, type, check, defaultValueProvider] of validations) {
+            const defaultValue = defaultValueProvider
+                ? defaultValueProvider() : undefined;
 
-            if (presetProvider && preset === undefined) {
+            if (defaultValueProvider && defaultValue === undefined) {
                 errMsg = 'Default prop provider must not return undefined';
                 break;
             } else {
@@ -94,9 +94,9 @@ function validateProps(props, validations) {
 
                 keysToBeChecked.delete(propertyName);
 
-                if (preset !== undefined && prop === preset) {
+                if (defaultValue !== undefined && prop === defaultValue) {
                     // everything fine
-                } else if (preset === undefined && props[propertyName] === undefined) {
+                } else if (defaultValue === undefined && props[propertyName] === undefined) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
                 } else if (type === Array) {
                     if (!Array.isArray(prop)) {

@@ -1,6 +1,6 @@
 import {
     defineFunctionalComponent,
-    hyperscript as dom,
+    createElement as dom,
 } from 'js-surface';
 
 import { Seq } from 'js-prelude';

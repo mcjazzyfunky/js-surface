@@ -11,7 +11,7 @@ const HelloWorld = defineStandardComponent({
     properties: {
         name:  {
             type: String,
-            preset: 'World'
+            defaultValue: 'World'
         }
     },
 

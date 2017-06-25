@@ -25,47 +25,47 @@ export const Pagination = defineFunctionalComponent({
     properties: {
         className: {
             type: String,
-            preset: null
+            defaultValue: null
         },
 
         pageIndex: {
             type: Number,
-            preset: null
+            defaultValue: null
         },
 
         pageSize: {
             type: Number,
-            preset: null
+            defaultValue: null
         },
 
         totalItemCount: {
             type: Number,
-            preset: null
+            defaultValue: null
         },
 
         showFirstButton: {
             type: Boolean,
-            preset: true
+            defaultValue: true
         },
 
         showLastButton: {
             type: Boolean,
-            preset: true
+            defaultValue: true
         },
 
         showPreviousButton: {
             type: Boolean,
-            preset: true
+            defaultValue: true
         },
 
         showNextButton: {
             type: Boolean,
-            preset: true
+            defaultValue: true
         },
 
         onChange: {
             type: Function,
-            preset: null
+            defaultValue: null
         }
     },
 

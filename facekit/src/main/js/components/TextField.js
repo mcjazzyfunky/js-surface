@@ -13,42 +13,42 @@ let nextAutoId = 0;
 const properties = {
     className: {
         type: String,
-        preset: null
+        defaultValue: null
     },
 
-    preset: {
+    defaultValue: {
         type: String,
-        preset: null
+        defaultValue: null
     },
 
     disabled: {
         type: Boolean,
-        preset: false
+        defaultValue: false
     },
 
     id: {
         type: String,
-        preset: ''
+        defaultValue: ''
     },
 
     label: {
         type: String,
-        preset: ''
+        defaultValue: ''
     },
 
     onChange: {
         type: Function,
-        preset: null
+        defaultValue: null
     },
 
     readOnly: {
         type: Boolean,
-        preset: false
+        defaultValue: false
     },
 
     value: {
         type: String,
-        preset: null
+        defaultValue: null
     }
 };
 

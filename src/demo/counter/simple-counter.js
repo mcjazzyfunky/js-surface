@@ -15,11 +15,11 @@ class SimpleCounterComponent extends Component {
         return {
             label: {
                 type: String,
-                preset: 'Counter:'
+                defaultValue: 'Counter:'
             },
             initialValue: {
                 type: Number,
-                preset: 0
+                defaultValue: 0
             }
         };
     }
