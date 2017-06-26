@@ -1,5 +1,5 @@
 import {
-    createElement as dom,
+    createElement as h,
     defineClassComponent,
     render,
     Component
@@ -59,15 +59,15 @@ class SimpleCounterComponent extends Component {
 
     render() {
         return (
-            dom('div.simple-counter',
-                dom('label.simple-counter-label.btn',
+            h('div.simple-counter',
+                h('label.simple-counter-label.btn',
                     this.props.label),
-                dom('button.simple-counter-decrease-button.btn.btn-default',
+                h('button.simple-counter-decrease-button.btn.btn-default',
                     { onClick: () => this.incrementCounter(-1) },
                     '-'),
-                dom('div.simple-counter-value.btn',
+                h('div.simple-counter-value.btn',
                     this.state.counterValue),
-                dom('button.simple-counter-increase-button.btn.btn-default',
+                h('button.simple-counter-increase-button.btn.btn-default',
                     { onClick: () => this.incrementCounter(1) },
                     '+'))
         );

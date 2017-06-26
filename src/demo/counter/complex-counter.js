@@ -1,5 +1,5 @@
 import {
-    createElement as dom,
+    createElement as h, 
     defineClassComponent,
     defineFunctionalComponent,
     render,
@@ -17,8 +17,8 @@ const CounterInfo = defineFunctionalComponent({
 
     render(props) {
         return (
-            dom('label',
-                dom('b',
+            h('label',
+                h('b',
                     props.value)));
     }
 });
@@ -106,14 +106,14 @@ class CounterComponent extends Component {
 
     render() {
         return (
-            dom('span.counter',
-                dom('button.btn.btn-default',
+            h('span.counter',
+                h('button.btn.btn-default',
                     { onClick: () => this.increaseCounter(-1) },
                     '-'),
-                dom('div',
+                h('div',
                     { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
                     CounterInfo({ value: this.state.counterValue })),
-                dom('button.btn.btn-default',
+                h('button.btn.btn-default',
                     { onClick: () => this.increaseCounter(1) },
                     '+'))
         );
@@ -131,15 +131,15 @@ const CounterCtrl = defineFunctionalComponent({
         let counterInstance = null;
 
         return (
-            dom('div',
+            h('div',
                 { className: 'counter-ctrl' },
-                dom('button.btn.btn-info',
+                h('button.btn.btn-info',
                     { onClick: () => counterInstance.resetCounter(0) },
                     'Reset to 0'),
                     ' ',
                     Counter({ ref: it => counterInstance = it }),
                     ' ',
-                    dom('button.btn.btn-info',
+                    h('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },
                         'Reset to 100')));
     }

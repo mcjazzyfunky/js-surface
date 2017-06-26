@@ -1,5 +1,5 @@
 import {
-    createElement as dom,
+    createElement as h,
     defineDispatchComponent,
     render
 } from 'js-surface';
@@ -15,7 +15,7 @@ const HelloWorld = defineDispatchComponent({
     },
 
     render({ props }) {
-        return dom('div', null, `Hello ${props.name}!`);
+        return h('div', null, `Hello ${props.name}!`);
     }
 });
 

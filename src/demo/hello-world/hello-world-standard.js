@@ -1,6 +1,6 @@
 
 import {
-    createElement as dom,
+    createElement as h,
     defineStandardComponent,
     render
 } from 'js-surface';
@@ -18,7 +18,7 @@ const HelloWorld = defineStandardComponent({
     init(onContent) {
         return {
             propsCallback(props) {
-                onContent(dom('div', null, 'Hello ' + props.name + '!'));
+                onContent(h('div', null, 'Hello ' + props.name + '!'));
             },
             instance: {}
         };

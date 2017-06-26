@@ -1,7 +1,7 @@
 import {
     defineFunctionalComponent,
     defineClassComponent,
-    createElement as dom,
+    createElement as h,
     render,
     Component,
 }  from 'js-surface';
@@ -34,9 +34,9 @@ const Tile = defineFunctionalComponent({
             };
         
         return (
-            dom('div',
+            h('div',
                 { style })
-            );    
+        );    
     }
 });
 
@@ -66,7 +66,7 @@ const TileRow = defineFunctionalComponent(({
             tiles.push(Tile({ width: tileWidth, color, key: x }));
         }
        
-        return dom('div', { style: { clear: 'both' }}, tiles);
+        return h('div', { style: { clear: 'both' }}, tiles);
     }
 }));
 
@@ -123,12 +123,10 @@ class SpeedTestComponent extends Component {
         }
         
         return (
-            dom('div',
-                null,
-                dom('div',
-                    null,
+            h('div',
+                h('div',
                     `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
-                    dom('div',
+                    h('div',
                         { style },
                         rows)))
         );
@@ -138,10 +136,3 @@ class SpeedTestComponent extends Component {
 const SpeedTest = defineClassComponent(SpeedTestComponent);
 
 render(SpeedTest({ columnCount: 20, rowCount: 20, tileWidth: 5 }), 'main-content');
-
-
-
-
-
-
-

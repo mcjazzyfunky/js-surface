@@ -1,5 +1,5 @@
 import {
-    createElement as dom,
+    createElement as h,
     defineClassComponent,
     defineFunctionalComponent,
     render,
@@ -32,10 +32,10 @@ const Parent = defineClassComponent(class extends Component {
     }
 
     render() {
-        return dom('div',
-            dom('div', 'Provided value: ', this.props.value),
-            dom('br'),
-            dom('div',
+        return h('div',
+            h('div', 'Provided value: ', this.props.value),
+            h('br'),
+            h('div',
                 ChildFunctionBased(),
                 ChildClassBased(),
                 ChildFunctionBased({ value: 'with explicit value' }),
@@ -55,7 +55,7 @@ const ChildFunctionBased = defineFunctionalComponent({
     },
 
     render(props) {
-        return dom('div', 'ChildFunctionBased(', props.value, ')');
+        return h('div', 'ChildFunctionBased(', props.value, ')');
     }
 });
 
@@ -75,7 +75,7 @@ const ChildClassBased = defineClassComponent(class extends Component {
     }
 
     render() {
-        return dom('div', 'ChildClassBased(', this.props.value, ')');
+        return h('div', 'ChildClassBased(', this.props.value, ')');
     }
 });
 

@@ -20,7 +20,7 @@ class DataTableComponent extends Component {
 
     renderTable(config) {
         return (
-            dom('table',
+            h('table',
                 this.renderHeader(config))
         );
     }
@@ -30,7 +30,7 @@ class DataTableComponent extends Component {
             columns = config.columns;
 
         return (
-            dom('thead',
+            h('thead',
                 this.renderHeaderRow(columns)
 
             )
@@ -39,7 +39,7 @@ class DataTableComponent extends Component {
 
     renderHeaderRow(columns) {
         return (
-            dom('tr',
+            h('tr',
                 Seq.from(columns)
                     .map(column =>
                         this.renderHeaderCell(column)))
@@ -48,7 +48,7 @@ class DataTableComponent extends Component {
 
     renderHeaderCell(column) {
         return (
-            dom('th',
+            h('th',
                 { align: ''},
                 column.title)
         );

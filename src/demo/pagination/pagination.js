@@ -1,7 +1,7 @@
 import {
     defineFunctionalComponent,
     defineClassComponent,
-    createElement as dom,
+    createElement as h,
     render,
     Component,
 }  from 'js-surface';
@@ -140,9 +140,9 @@ export const Pagination = defineFunctionalComponent({
                 );
 
         return (
-            dom('div',
+            h('div',
                 {className: classNameOuter},
-                dom('u',
+                h('u',
                     {className: classNameInner},
                     firstPageLink,
                     precedingEllipsis,
@@ -156,12 +156,12 @@ export const Pagination = defineFunctionalComponent({
 
 function buildLinkListItem(text, isActive, moveToPage) {
     return (
-        dom('li',
+        h('li',
             {
                 className: isActive ? 'active' : '',
                 key: text !== '...' ? text + '-' + isActive : undefined
             },
-            dom('a',
+            h('a',
                 { onClick: moveToPage },
                 text))
     );
@@ -184,10 +184,10 @@ class DemoOfPaginationComponent extends Component {
 
     render() {
         return (
-            dom('div',
+            h('div',
                 {className: 'container-fluid'},
                 Seq.range(1, number).map(() =>
-                    dom('div',
+                    h('div',
                         Pagination({
                             pageIndex: this.state.pageIndex,
                             pageSize: pageSize,

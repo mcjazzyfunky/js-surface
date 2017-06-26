@@ -48,10 +48,10 @@ export default function adaptCreateElement(createElement, isElement) {
                     for (let i = 0; i < parts.length; ++i) {
                         const
                             part = parts[i],
-                            tagName = part.split(/(#|\.)/, 1)[0],
+                            tagName = part.split(/(#|\.|\[)/, 1)[0],
                             idName = (part.split('#', 2)[1] || '').split(/\.|\[/, 1)[0] || null,
                             className = part.split('[')[0].split('.').slice(1).join(' ') || null,
-                            attrs = getAttrs(part.split(/\[|\]\[|]/).slice(1, -1));
+                            attrs = getAttrs(part.split(/\[|\]\[|]/).slice(1, -1), tagName);
 
                         result.push([tagName, idName, className, attrs]);
                     }
@@ -143,7 +143,7 @@ export default function adaptCreateElement(createElement, isElement) {
     }
 }
 
-function getAttrs(items) {
+function getAttrs(items, tagName) {
     let ret = null;
 
     if (items.length > 0) {
@@ -156,6 +156,10 @@ function getAttrs(items) {
                 || value[0] === "'" && item[value.length - 1] === "'") {
 
                 value = value.substr(1, value.length - 2);
+            }
+
+            if (key === 'for' && tagName === 'label') {
+                key = 'htmlFor';
             }
 
             ret[key] = value;

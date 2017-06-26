@@ -148,7 +148,7 @@ const
                 dispatch = event => store.dispatch(event);
 
             return (
-                dom('div',
+                h('div',
                     AppHeader({
                         inputText: state.inputText,
                         dispatch
@@ -216,7 +216,7 @@ const
 
         render() {
             return (
-                dom('div')
+                h('div')
             );
         }
     }),
@@ -235,7 +235,7 @@ const
 
         render() {
             return (
-                dom('section')
+                h('section')
             );
         }
     });

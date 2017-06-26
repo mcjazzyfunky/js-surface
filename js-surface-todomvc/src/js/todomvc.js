@@ -1,9 +1,21 @@
 import {
     createElement as h,
-    defineClassComponent,
     defineFunctionalComponent,
-    Component
+    render
 } from 'js-surface';
+
+const TodoMVCApp = defineFunctionalComponent({
+    displayName: 'App',
+
+    render(props) {
+        return (
+            h('div',
+                Header(),
+                MainSection(),
+                Footer())
+        );
+    }
+});
 
 const Header = defineFunctionalComponent({
     displayName: 'Header',
@@ -42,11 +54,7 @@ const MainSection = defineFunctionalComponent({
                                 'Taste Javascript'),
                             h('button.destroy')),
                         h('input.edit[value="Create a TodoMVC template"]'))))
-
-            
-
-
-        )
+        );
     }
 });
 
@@ -73,3 +81,5 @@ const Footer = defineFunctionalComponent({
         );
     }
 });
+
+render(TodoMVCApp(), 'app-container');

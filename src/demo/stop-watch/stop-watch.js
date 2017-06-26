@@ -1,6 +1,6 @@
 import {
     defineClassComponent,
-    createElement as dom,
+    createElement as h,
     render,
     Component,
 }  from 'js-surface';
@@ -80,17 +80,17 @@ class StopWatchComponent extends Component {
         };
 
         return (
-            dom('div',
-                dom('h3',
+            h('div',
+                h('h3',
                     'Stop watch'),
-                dom('div',
+                h('div',
                     `Time: ${this.state.time} `),
-                    dom('br'),
-                    dom('div.btn-group',
-                        dom('button.btn.btn-primary',
+                    h('br'),
+                    h('div.btn-group',
+                        h('button.btn.btn-primary',
                             bind.startStopButton,
                             this.state.running ? 'Stop' : 'Start'),
-                        dom('button.btn.btn-warning',
+                        h('button.btn.btn-warning',
                             bind.resetButton,
                             'Reset')))
         );

@@ -17,9 +17,7 @@ const HelloWorld = defineFunctionalComponent({
     render({ name }) {
         return (
             h('div',
-                h('input.some-class[type=text][placeholder="Please ent whatever?"]'),
-                h('div',
-                    `Hello ${name}!`)));
+                `Hello ${name}!`));
     }
 });
 
