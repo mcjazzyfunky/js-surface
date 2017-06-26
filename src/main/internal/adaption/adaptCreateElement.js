@@ -2,8 +2,9 @@ const
     tagPattern = '[a-zA-Z][a-zA-Z0-9_-]*',
     idPattern = '(#[a-zA-Z][a-zA-Z0-9_-]*)?',
     classPattern = '(\.[a-zA-Z][a-zA-Z0-9_-]*)*',
-    partialPattern = `${tagPattern}${idPattern}${classPattern}`,
-    fullPattern = `^${partialPattern}(\/${partialPattern})*$`,
+    attrPattern = '(\[[a-z][a-zA-Z-]*=[^\[=]+\])*', // TODO
+    partialPattern = `${tagPattern}${idPattern}${classPattern}${attrPattern}`,
+    fullPattern = `^${partialPattern}(\s*\>\s*${partialPattern})*$`,
 
     tagRegex = new RegExp(`^${tagRegex}$`),
     hyperscriptRegex = new RegExp(`${fullPattern}`),
@@ -48,10 +49,11 @@ export default function adaptCreateElement(createElement, isElement) {
                         const
                             part = parts[i],
                             tagName = part.split(/(#|\.)/, 1)[0],
-                            idName = (part.split('#', 2)[1] || '').split('.', 1)[0] || null,
-                            className = (part.split('.')).slice(1).join(' ') || null;
+                            idName = (part.split('#', 2)[1] || '').split(/\.|\[/, 1)[0] || null,
+                            className = part.split('[')[0].split('.').slice(1).join(' ') || null,
+                            attrs = getAttrs(part.split(/\[|\]\[|]/).slice(1, -1));
 
-                        result.push([tagName, idName, className]);
+                        result.push([tagName, idName, className, attrs]);
                     }
 
                     tagCache[tag] = result;
@@ -64,7 +66,7 @@ export default function adaptCreateElement(createElement, isElement) {
                     lastTag = lastTriple[0],
                     lastId = lastTriple[1],
                     lastClassName = lastTriple[2],
-                    lastAttrs = {},
+                    lastAttrs = lastTriple[3] ? Object.assign({}, lastTriple[3]) : {},
                     secondArg = arguments[1],
 
                     secondArgHasAttrs =
@@ -88,12 +90,14 @@ export default function adaptCreateElement(createElement, isElement) {
 
                     Object.assign(lastAttrs, secondArg);
 
-                    if (secondArgClassNameIsString && typeof lastAttrs.className === 'string') {
-                        lastAttrs.className = (lastAttrs.className + ' ' + lastClassName).trim();
-                    } else if (secondArgClassNameIsString) {
-                        lastAttrs.className = lastClassName;
+                    if (lastClassName) {
+                        if (secondArgClassNameIsString && typeof lastAttrs.className === 'string') {
+                            lastAttrs.className = (lastClassName + ' ' + lastAttrs.className).trim();
+                        } else if (secondArgClassNameIsString) {
+                            lastAttrs.className = lastClassName;
+                        }
                     }
-
+                
                     newArgs.push(lastAttrs);
 
                     for (let i = 2; i < arguments.length; ++i) {
@@ -137,4 +141,26 @@ export default function adaptCreateElement(createElement, isElement) {
             ? createElement(tag, ...rest)
             : createElement(tag, null, ...rest);
     }
+}
+
+function getAttrs(items) {
+    let ret = null;
+
+    if (items.length > 0) {
+        ret = {};
+
+        for (let item of items) {
+            let [key, value] = item.split('=');
+
+            if (value[0] === '"' && value[value.length - 1] === '"'
+                || value[0] === "'" && item[value.length - 1] === "'") {
+
+                value = value.substr(1, value.length - 2);
+            }
+
+            ret[key] = value;
+        }
+    }
+
+    return ret;
 }
