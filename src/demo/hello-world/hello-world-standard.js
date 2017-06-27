@@ -18,7 +18,7 @@ const HelloWorld = defineStandardComponent({
     init(onContent) {
         return {
             propsCallback(props) {
-                onContent(h('div', null, 'Hello ' + props.name + '!'));
+                onContent(h('div > textarea', 'Hello ' + props.name + '!'));
             },
             instance: {}
         };

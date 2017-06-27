@@ -2,9 +2,9 @@ const
     tagPattern = '[a-zA-Z][a-zA-Z0-9_-]*',
     idPattern = '(#[a-zA-Z][a-zA-Z0-9_-]*)?',
     classPattern = '(\.[a-zA-Z][a-zA-Z0-9_-]*)*',
-    attrPattern = '(\[[a-z][a-zA-Z-]*=[^\[=]+\])*', // TODO
+    attrPattern = '(\[[a-z][a-zA-Z-]*(=[^\[=]+\]*)?\])*', // TODO
     partialPattern = `${tagPattern}${idPattern}${classPattern}${attrPattern}`,
-    fullPattern = `^${partialPattern}(\s*\>\s*${partialPattern})*$`,
+    fullPattern = `^${partialPattern}(\\s*\>\\s*${partialPattern})*$`,
 
     tagRegex = new RegExp(`^${tagRegex}$`),
     hyperscriptRegex = new RegExp(`${fullPattern}`),
@@ -150,7 +150,7 @@ function getAttrs(items, tagName) {
         ret = {};
 
         for (let item of items) {
-            let [key, value] = item.split('=');
+            let [key, value = ''] = item.split('=');
 
             if (value[0] === '"' && value[value.length - 1] === '"'
                 || value[0] === "'" && item[value.length - 1] === "'") {
@@ -160,6 +160,8 @@ function getAttrs(items, tagName) {
 
             if (key === 'for' && tagName === 'label') {
                 key = 'htmlFor';
+            } else if (key === 'autofocus') {
+                key = 'autoFocus';
             }
 
             ret[key] = value;

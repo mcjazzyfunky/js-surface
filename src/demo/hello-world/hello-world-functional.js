@@ -16,7 +16,8 @@ const HelloWorld = defineFunctionalComponent({
 
     render({ name }) {
         return (
-            h('div',
+            h('div > button',
+                {onClick: ev => console.log(ev)},
                 `Hello ${name}!`));
     }
 });
