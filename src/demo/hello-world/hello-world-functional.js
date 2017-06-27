@@ -4,6 +4,8 @@ import {
     render
 } from 'js-surface';
 
+import { Seq } from 'js-prelude';
+
 const HelloWorld = defineFunctionalComponent({
     displayName:  'HelloWorld',
 
@@ -16,8 +18,8 @@ const HelloWorld = defineFunctionalComponent({
 
     render({ name }) {
         return (
-            h('div > button',
-                {onClick: ev => console.log(ev)},
+            h('div',
+                Seq.of(1, 4, 9),
                 `Hello ${name}!`));
     }
 });

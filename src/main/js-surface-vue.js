@@ -53,12 +53,12 @@ function customDefineFunctionalComponent(config) {
     const component = Vue.extend({
         props: propNames,
 
-        render: function (createElement) {
+        render: function (vueCreateElement) {
             const props = this.$options.propsData;
 
             const content = config.render(props);
 
-            return renderContent(createElement, content);
+            return renderContent(vueCreateElement, content);
         }
     });
 
@@ -107,9 +107,9 @@ function customDefineStandardComponent(config) {
             this.__propsCallback(this.$options.propsData); 
         },
 
-        render: function (createElement) {
+        render: function (vueCreateElement) {
             console.log("=== render ===");
-            return renderContent(createElement, this.__content);
+            return renderContent(vueCreateElement, this.__content);
         }
     });
 
@@ -147,13 +147,13 @@ function customRender(content, targetNode) {
 
     new Vue({
         el: target,
-        render(createElement) {
-            return renderContent(createElement, content);
+        render(vueCreateElement) {
+            return renderContent(vueCreateElement, content);
         }
     });
 }
 
-function renderContent(createElement, content) {
+function renderContent(vueCreateElement, content) {
     if (!content || !content.isSurfaceElement) {
         throw new Error('no surface element');
     }
@@ -161,7 +161,7 @@ function renderContent(createElement, content) {
     const
         type = content.type,
         props = content.props,
-        children = convertChildren(content.children, createElement);
+        children = convertChildren(content.children, vueCreateElement);
 
     let ret;
 
@@ -195,45 +195,36 @@ function renderContent(createElement, content) {
             }
         }
 
-        ret = createElement(type, options, children); 
+        ret = vueCreateElement(type, options, children); 
     } else {
         const options = { props };
 
-        ret = createElement(type, options, children);
+        ret = vueCreateElement(type, options, children);
     }
 
     return ret;
 }
 
-function convertChildren(children, createElement) {
+function convertChildren(children, vueCreateElement) {console.log(2, children)
     const ret = [];
 
-    if (typeof children === 'string') {
-        children = [children];
-    } else if (children && !Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
+    if (children && !Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
         children = [children];
     }
 
-    for (let item of children) {
-        let convertedItem = null;
-
+    for (let item of children) {console.log(1, children)
         if (Array.isArray(item)) {
-            convertedItem = convertChildren(item, createElement);
+            ret.push(...convertChildren(item, vueCreateElement));
         } else if (typeof item === 'string') {
-            convertedItem = item;
+            ret.push(item);
         } else if (item && typeof item[Symbol.iterator] === 'function') {
-            convertedItem = convertChildren(Array.prototype.slice(item), createElement);
+            ret.push(...Array.prototype.slice.apply(item), vueCreateElement);
         } else if (item && item.isSurfaceElement) {
-            convertedItem = renderContent(createElement, item);
-            
-        } else {
-            convertedItem = item;
-        }
-
-        if (convertedItem !== undefined && convertedItem !== null) {
-            ret.push(convertedItem);
+            ret.push(renderContent(vueCreateElement, item));
+        } else if (item !== undefined && item !== null) {
+            ret.push(item);
         }
     }
-
+console.log(ret)
     return ret;
 }
