@@ -51,16 +51,24 @@ function getNextRefName() {
 }
 
 function customDefineFunctionalComponent(config) {
-    const propNames = [];
+    const
+        propNames = [],
+        injectPropNames = [];
 
     if (config.properties) {
         for (let key of Object.keys(config.properties)) {
             propNames.push(key);
+
+            if (config.properties[key].inject) {
+                injectPropNames.push(key);
+            }
         }
     }
 
     const component = Vue.extend({
         props: propNames,
+
+        inject: injectPropNames,
 
         render: function (vueCreateElement) {
             const props = this.$options.propsData;
@@ -80,29 +88,45 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
-    let propNames = [];
+    const
+        propNames = [],
+        injectPropNames = [];
 
     if (config.properties) {
         for (let key of Object.keys(config.properties)) {
             propNames.push(key);
+            
+            if (config.properties[key].inject) {
+                injectPropNames.push(key);
+            }
         }
     }
+    injectPropNames.push('xxx');
 
     const component = Vue.extend({
         props: propNames,
+
+        inject: injectPropNames,
 
         data: {
             index: 0
         },
 
         beforeMount() {
+            this.__resolveRenderingDone = null;
             this.__viewCallback = content => {
                 this.__content = content;
                 this.$forceUpdate();
+
+                return new Promise(resolve => {
+                    this.__resolveRenderingDone = () => {
+                        this.__resolveRenderingDone = null;
+                        resolve(true);
+                    };
+                });
             };
 
             this.__stateCallback = state => {
-                console.log("new state: ", state);
                 this.__state = state;
             };
 
@@ -115,23 +139,28 @@ function customDefineStandardComponent(config) {
         },
 
         mounted() {
-            console.log("=== mounted ===");
             this.__propsCallback(this.$options.propsData); 
-            console.log("refs (mounted): ", this.$refs)
+        
+            if (this.__resolveRenderingDone) {
+                this.__resolveRenderingDone();
+            }
         },
 
         updated() {
-            console.log("=== updated ===");
-            console.log("refs (updated): ", this.$refs)
+            if (this.__resolveRenderingDone) {
+                this.__resolveRenderingDone();
+            }
 
             for (let key of Object.keys(this.$refs)) {
                 this.__refCallbacks[key](this.$refs[key]);
             }
         },
 
+        beforeDestroy() {
+            this.__propsCallback(undefined);
+        },
+
         render: function (vueCreateElement) {
-            console.log("=== render ===");
-            console.log("refs: ", this.$refs)
             return renderContent(vueCreateElement, this.__content, this);
         }
     });
@@ -182,8 +211,6 @@ function customRender(content, targetNode) {
 }
 
 function renderContent(vueCreateElement, content, component) {
-    console.log("=== render ===")
-    
     if (!content || !content.isSurfaceElement) {
         throw new Error('no surface element');
     }
@@ -248,7 +275,7 @@ function renderContent(vueCreateElement, content, component) {
 
         if (refName) {
             options.ref = refName;
-            delete(options.props.ref);console.log("**********", refName, ref)
+            delete(options.props.ref);
         }
 
         ret = vueCreateElement(type, options, children);
