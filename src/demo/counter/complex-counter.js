@@ -137,7 +137,7 @@ const CounterCtrl = defineFunctionalComponent({
                     { onClick: () => counterInstance.resetCounter(0) },
                     'Reset to 0'),
                     ' ',
-                    Counter({ ref: it => counterInstance = it }),
+                    Counter({ ref: it => alert(counterInstance = it) }),
                     ' ',
                     h('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },

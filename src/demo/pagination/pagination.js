@@ -15,7 +15,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const
-    number = 50,
+    number = 20,
     pageSize = 25,
     totalItemCount = 1220;
 
@@ -332,8 +332,7 @@ const
 
     render(
         DemoOfPagination(),
-        'section-surface',
-        'React');
+        'section-surface');
 
     ReactDOM.render(
         RDemoOfPagination(),

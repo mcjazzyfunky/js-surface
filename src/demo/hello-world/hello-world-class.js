@@ -54,7 +54,7 @@ class HelloWorldComponent extends Component {
 
     render() {
         return (
-            h('div', null, `Hello ${this.props.name}!`)
+            h('div', { ref: () => alert(1111) }, `Hello ${this.props.name}!`)
         );
     }
 }

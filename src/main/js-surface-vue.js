@@ -1,4 +1,3 @@
-
 import adaptComponentSystem from
     './api/adaptComponentSystem.js';
 
@@ -37,8 +36,18 @@ export {
 
 // ------------------------------------------------------------------
 
-function returnNull() {
-    return null;
+let nextRefID = 1;
+
+function getNextRefName() {
+    const ret = 'ref-' + nextRefID.toString(16);
+
+    if (nextRefID === Number.MAX_SAFE_INTEGER) {
+        nextRefID = 0;
+    } else {
+        ++nextRefID;
+    }
+
+    return ret;
 }
 
 function customDefineFunctionalComponent(config) {
@@ -58,9 +67,11 @@ function customDefineFunctionalComponent(config) {
 
             const content = config.render(props);
 
-            return renderContent(vueCreateElement, content);
+            return renderContent(vueCreateElement, content, this);
         }
     });
+
+
 
     return (props, ...children) => {
         const ret = customCreateElement(component, props, ...children); 
@@ -87,11 +98,12 @@ function customDefineStandardComponent(config) {
         beforeMount() {
             this.__viewCallback = content => {
                 this.__content = content;
-                this.index++;
+                this.$forceUpdate();
             };
 
             this.__stateCallback = state => {
-                console.log("new state: ", state)
+                console.log("new state: ", state);
+                this.__state = state;
             };
 
             const initResult = config.init(
@@ -105,11 +117,22 @@ function customDefineStandardComponent(config) {
         mounted() {
             console.log("=== mounted ===");
             this.__propsCallback(this.$options.propsData); 
+            console.log("refs (mounted): ", this.$refs)
+        },
+
+        updated() {
+            console.log("=== updated ===");
+            console.log("refs (updated): ", this.$refs)
+
+            for (let key of Object.keys(this.$refs)) {
+                this.__refCallbacks[key](this.$refs[key]);
+            }
         },
 
         render: function (vueCreateElement) {
             console.log("=== render ===");
-            return renderContent(vueCreateElement, this.__content);
+            console.log("refs: ", this.$refs)
+            return renderContent(vueCreateElement, this.__content, this);
         }
     });
 
@@ -145,15 +168,22 @@ function customRender(content, targetNode) {
         ? document.getElementById(targetNode)
         : targetNode;
 
-    new Vue({
-        el: target,
-        render(vueCreateElement) {
-            return renderContent(vueCreateElement, content);
-        }
-    });
+    if (target) {
+        target.innerHTML = '';
+        target.appendChild(document.createElement('div'));
+
+        new Vue({
+            el: target.children[0],
+            render(vueCreateElement) {
+                return renderContent(vueCreateElement, content, this);
+            }
+        });
+    }
 }
 
-function renderContent(vueCreateElement, content) {
+function renderContent(vueCreateElement, content, component) {
+    console.log("=== render ===")
+    
     if (!content || !content.isSurfaceElement) {
         throw new Error('no surface element');
     }
@@ -161,9 +191,21 @@ function renderContent(vueCreateElement, content) {
     const
         type = content.type,
         props = content.props,
-        children = convertChildren(content.children, vueCreateElement);
+        children = convertChildren(content.children, vueCreateElement, component);
 
-    let ret;
+    let ret, ref = null, refName = null;
+
+
+    if (props && props.ref) {
+        ref = props.ref;
+        refName = getNextRefName();
+
+        if (!component.__refCallbacks) {
+            component.__refCallbacks = {};
+        }
+
+        component.__refCallbacks[refName] = ref;
+    }
 
     if (typeof type === 'string') {
         const attrs = Object.assign({}, props);
@@ -195,9 +237,19 @@ function renderContent(vueCreateElement, content) {
             }
         }
 
+        if (refName) {
+            options.ref = refName;
+            delete(options.attrs.ref);
+        }
+
         ret = vueCreateElement(type, options, children); 
     } else {
         const options = { props };
+
+        if (refName) {
+            options.ref = refName;
+            delete(options.props.ref);console.log("**********", refName, ref)
+        }
 
         ret = vueCreateElement(type, options, children);
     }
@@ -205,26 +257,26 @@ function renderContent(vueCreateElement, content) {
     return ret;
 }
 
-function convertChildren(children, vueCreateElement) {console.log(2, children)
+function convertChildren(children, vueCreateElement, component) {
     const ret = [];
 
     if (children && !Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
         children = [children];
     }
 
-    for (let item of children) {console.log(1, children)
+    for (let item of children) {
         if (Array.isArray(item)) {
-            ret.push(...convertChildren(item, vueCreateElement));
+            ret.push(...convertChildren(item, vueCreateElement, component));
         } else if (typeof item === 'string') {
             ret.push(item);
         } else if (item && typeof item[Symbol.iterator] === 'function') {
-            ret.push(...Array.prototype.slice.apply(item), vueCreateElement);
+            ret.push(...convertChildren(item, vueCreateElement, component));
         } else if (item && item.isSurfaceElement) {
-            ret.push(renderContent(vueCreateElement, item));
+            ret.push(renderContent(vueCreateElement, item, component));
         } else if (item !== undefined && item !== null) {
             ret.push(item);
         }
     }
-console.log(ret)
+
     return ret;
 }

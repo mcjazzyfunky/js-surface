@@ -48,6 +48,12 @@ export default [
         files: ['complex-counter.js']
     },
     {
+        name: 'mount-unmount',
+        displayName: 'Mount/Unmount',
+        directory: 'mount-unmount',
+        files: ['mount-unmount.js']
+    },
+    {
         name: 'pagination',
         displayName: 'Pagination',
         directory: 'pagination',

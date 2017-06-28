@@ -19,7 +19,6 @@ const HelloWorld = defineFunctionalComponent({
     render({ name }) {
         return (
             h('div',
-                Seq.of(1, 4, 9),
                 `Hello ${name}!`));
     }
 });

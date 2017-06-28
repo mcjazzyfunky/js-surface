@@ -59,7 +59,7 @@ class SimpleCounterComponent extends Component {
 
     render() {
         return (
-            h('div.simple-counter',
+            h('div.simple-counter', { ref: it => console.log('ref:>>>>: ', it) },
                 h('label.simple-counter-label.btn',
                     this.props.label),
                 h('button.simple-counter-decrease-button.btn.btn-default',
