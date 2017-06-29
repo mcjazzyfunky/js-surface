@@ -15,10 +15,10 @@ const HelloWorld = defineComponent({
         }
     },
 
-    init(onContent) {
+    init(viewConsumer) {
         return {
             propsConsumer(props) {
-                onContent(h('div > textarea', 'Hello ' + props.name + '!'));
+                viewConsumer(h('div', 'Hello ' + props.name + '!'));
             },
             instance: {}
         };

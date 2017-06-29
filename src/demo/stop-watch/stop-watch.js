@@ -5,7 +5,7 @@ import {
     Component,
 }  from 'js-surface';
 
-class StopWatchComponent extends Component {
+const StopWatch = defineComponent(class extends Component {
     static get displayName() {
         return 'StopWatch';
     }
@@ -95,8 +95,6 @@ class StopWatchComponent extends Component {
                             'Reset')))
         );
     }
-}
-
-const StopWatch = defineComponent(StopWatchComponent);
+});
 
 render(StopWatch(), 'main-content');
