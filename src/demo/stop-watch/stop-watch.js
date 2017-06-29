@@ -1,5 +1,5 @@
 import {
-    defineClassComponent,
+    defineComponent,
     createElement as h,
     render,
     Component,
@@ -97,6 +97,6 @@ class StopWatchComponent extends Component {
     }
 }
 
-const StopWatch = defineClassComponent(StopWatchComponent);
+const StopWatch = defineComponent(StopWatchComponent);
 
 render(StopWatch(), 'main-content');

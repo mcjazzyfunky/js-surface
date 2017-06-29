@@ -18,12 +18,6 @@ export default [
         files: ['hello-world-class.js']
     },
     {
-        name: 'hello-wold-dispatch',
-        displayName: 'Hello World (dispatch component)',
-        directory: 'hello-world',
-        files: ['hello-world-dispatch.js']
-    },
-    {
         name: 'clock',
         displayName: 'Clock',
         directory: 'clock',

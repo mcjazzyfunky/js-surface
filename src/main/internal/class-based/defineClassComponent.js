@@ -1,6 +1,6 @@
-import validateComponentClass from '../internal/validation/validateComponentClass.js';
+import validateComponentClass from '../validation/validateComponentClass.js';
 
-import { defineStandardComponent }  from 'js-surface';
+import { defineComponent }  from 'js-surface';
 
 export default function defineClassComponent(componentClass) {
     const
@@ -29,14 +29,14 @@ export default function defineClassComponent(componentClass) {
     }
 
     const
-        init = (viewCallback, stateCallback) => {
+        init = (viewConsumer, stateConsumer) => {
             let
                 instance = new instanceClass(),
                 component = null,
                 content = null,
                 done = false;
 
-            const propsCallback = props => {
+            const propsConsumer = props => {
                 if (done) {
                     return;
                 } else if (props === undefined) {
@@ -52,13 +52,13 @@ export default function defineClassComponent(componentClass) {
                     component = new componentClass(props);
                     instance.__component = component;
 
-                    if (stateCallback) {
-                        stateCallback(component.state);
+                    if (stateConsumer) {
+                        stateConsumer(component.state);
                     }
                         
-                    component.__stateCallback = state => {
-                        if (stateCallback) {
-                            stateCallback(state);
+                    component.__stateConsumer = state => {
+                        if (stateConsumer) {
+                            stateConsumer(state);
                         }    
                     };
                     
@@ -66,7 +66,7 @@ export default function defineClassComponent(componentClass) {
 
                     component.__refresh = function (prevProps, prevState) {
                         content = component.render();
-                        const renderingDonePromise = viewCallback(content);
+                        const renderingDonePromise = viewConsumer(content);
 
                         if (renderingDonePromise) {
                             renderingDonePromise.then(
@@ -107,7 +107,7 @@ export default function defineClassComponent(componentClass) {
             };
 
             return {
-                propsCallback,
+                propsConsumer,
                 instance 
             };
         };
@@ -133,5 +133,5 @@ export default function defineClassComponent(componentClass) {
         }
     }
 
-    return defineStandardComponent(config);
+    return defineComponent(config);
 }

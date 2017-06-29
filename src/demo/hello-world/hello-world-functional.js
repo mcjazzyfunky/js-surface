@@ -1,12 +1,12 @@
 import {
     createElement as h,
-    defineFunctionalComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
 import { Seq } from 'js-prelude';
 
-const HelloWorld = defineFunctionalComponent({
+const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
 
     properties: {

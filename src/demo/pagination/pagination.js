@@ -1,6 +1,5 @@
 import {
-    defineFunctionalComponent,
-    defineClassComponent,
+    defineComponent,
     createElement as h,
     render,
     Component,
@@ -19,7 +18,7 @@ const
     pageSize = 25,
     totalItemCount = 1220;
 
-export const Pagination = defineFunctionalComponent({
+export const Pagination = defineComponent({
     displayName:  'Pagination',
 
     properties: {
@@ -196,7 +195,7 @@ class DemoOfPaginationComponent extends Component {
     }
 }
 
-const DemoOfPagination = defineClassComponent(DemoOfPaginationComponent);
+const DemoOfPagination = defineComponent(DemoOfPaginationComponent);
 
 // -----------------
 

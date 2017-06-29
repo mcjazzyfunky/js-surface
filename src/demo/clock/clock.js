@@ -1,12 +1,12 @@
 import {
     createElement as h,
-    defineClassComponent,
+    defineComponent,
     render,
     Component
 } from 'js-surface';
 
 
-const Clock = defineClassComponent(class extends Component {
+const Clock = defineComponent(class extends Component {
     static get displayName() {
         return 'Clock';
     }

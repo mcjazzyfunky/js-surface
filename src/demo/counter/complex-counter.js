@@ -1,12 +1,11 @@
 import {
     createElement as h, 
-    defineClassComponent,
-    defineFunctionalComponent,
+    defineComponent,
     render,
     Component
 } from 'js-surface';
 
-const CounterInfo = defineFunctionalComponent({
+const CounterInfo = defineComponent({
     displayName:  'CounterInfo',
 
     properties: {
@@ -120,11 +119,11 @@ class CounterComponent extends Component {
     }
 }
 
-const Counter = defineClassComponent(CounterComponent);
+const Counter = defineComponent(CounterComponent);
 
 // --------------------------------------------------------------------
 
-const CounterCtrl = defineFunctionalComponent({
+const CounterCtrl = defineComponent({
     displayName:  'CounterCtrl',
 
     render() {

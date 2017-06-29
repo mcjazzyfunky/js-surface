@@ -6,10 +6,7 @@ import Vue from 'vue';
 
 const {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
@@ -24,10 +21,7 @@ const {
 
 export {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
@@ -114,7 +108,7 @@ function customDefineStandardComponent(config) {
 
         beforeMount() {
             this.__resolveRenderingDone = null;
-            this.__viewCallback = content => {
+            this.__viewConsumer = content => {
                 this.__content = content;
                 this.$forceUpdate();
 
@@ -126,21 +120,21 @@ function customDefineStandardComponent(config) {
                 });
             };
 
-            this.__stateCallback = state => {
+            this.__stateConsumer = state => {
                 this.__state = state;
             };
 
             const initResult = config.init(
-                 this.__viewCallback, this.__stateCallback);
+                 this.__viewConsumer, this.__stateConsumer);
 
-            this.__propsCallback = initResult.propsCallback;
+            this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
-            this.__propsCallback(this.$options.propsData);
+            this.__propsConsumer(this.$options.propsData);
             this.__refCallbacks = {};
         },
 
         mounted() {
-            this.__propsCallback(this.$options.propsData); 
+            this.__propsConsumer(this.$options.propsData); 
         
             if (this.__resolveRenderingDone) {
                 this.__resolveRenderingDone();
@@ -158,7 +152,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeDestroy() {
-            this.__propsCallback(undefined);
+            this.__propsConsumer(undefined);
         },
 
         render: function (vueCreateElement) {

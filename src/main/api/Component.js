@@ -2,7 +2,7 @@ export default class Component {
     constructor(initialProps) {
         this.__props = initialProps;
         this.__state = null;
-        this.__stateCallback = null;
+        this.__stateConsumer = null;
         this.__initialized = false;
         this.__refresh = null;
 
@@ -30,8 +30,8 @@ export default class Component {
             this.refresh();
         }
         
-        if (typeof this.__stateCallback === 'function') {
-            this.__stateCallback(this.__state);
+        if (typeof this.__stateConsumer === 'function') {
+            this.__stateConsumer(this.__state);
         }
     }
 

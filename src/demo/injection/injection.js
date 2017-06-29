@@ -1,12 +1,11 @@
 import {
     createElement as h,
-    defineClassComponent,
-    defineFunctionalComponent,
+    defineComponent,
     render,
     Component
 } from 'js-surface';
 
-const Parent = defineClassComponent(class extends Component {
+const Parent = defineComponent(class extends Component {
     static get displayName() {
         return 'Parent';
     }
@@ -43,7 +42,7 @@ const Parent = defineClassComponent(class extends Component {
     }
 });
 
-const ChildFunctionBased = defineFunctionalComponent({
+const ChildFunctionBased = defineComponent({
     displayName: 'ChildFunctionBased',
 
     properties: {
@@ -59,7 +58,7 @@ const ChildFunctionBased = defineFunctionalComponent({
     }
 });
 
-const ChildClassBased = defineClassComponent(class extends Component {
+const ChildClassBased = defineComponent(class extends Component {
     static get displayName() {
         return 'ChildClassBased';
     }

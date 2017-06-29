@@ -1,6 +1,6 @@
 import {
     createElement as h,
-    defineClassComponent,
+    defineComponent,
     render,
     Component
 } from 'js-surface';
@@ -58,7 +58,7 @@ class SimpleCounterComponent extends Component {
 
     render() {
         return (
-            h('div.simple-counter', { ref: it => console.log('ref:>>>>: ', it) },
+            h('div.simple-counter', { ref: (it, remove) => console.log('ref:>>>>: ', it, remove) },
                 h('label.simple-counter-label.btn',
                     this.props.label),
                 h('button.simple-counter-decrease-button.btn.btn-default',
@@ -74,6 +74,6 @@ class SimpleCounterComponent extends Component {
 }
 
 
-const SimpleCounter = defineClassComponent(SimpleCounterComponent);
+const SimpleCounter = defineComponent(SimpleCounterComponent);
 
 render(SimpleCounter({ initialValue: 100 }), 'main-content');

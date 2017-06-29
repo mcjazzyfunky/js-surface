@@ -1,11 +1,11 @@
 
 import {
     createElement as h,
-    defineStandardComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
-const HelloWorld = defineStandardComponent({
+const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
 
     properties: {
@@ -17,7 +17,7 @@ const HelloWorld = defineStandardComponent({
 
     init(onContent) {
         return {
-            propsCallback(props) {
+            propsConsumer(props) {
                 onContent(h('div > textarea', 'Hello ' + props.name + '!'));
             },
             instance: {}

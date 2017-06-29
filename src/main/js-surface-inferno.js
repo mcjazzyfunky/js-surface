@@ -7,10 +7,7 @@ import InfernoComponent from 'inferno-component';
 
 const {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
@@ -25,10 +22,7 @@ const {
 
 export {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
@@ -167,7 +161,7 @@ class CustomComponent extends InfernoComponent {
         let initialized = false;
 
         const
-            { propsCallback, instance } = config.init(
+            { propsConsumer, instance } = config.init(
                 view => {
                     this.__viewToRender = view;
 
@@ -186,13 +180,13 @@ class CustomComponent extends InfernoComponent {
                     });
                 });
 
-        this.__propsCallback = propsCallback;
+        this.__propsConsumer = propsConsumer;
         this.__instance = instance;
     }
 
     componentWillMount() {
         this.props = mixPropsWithContext(this.props, this.context);
-        this.__propsCallback(this.props);
+        this.__propsConsumer(this.props);
     }
 
     componentDidMount() {
@@ -208,12 +202,12 @@ class CustomComponent extends InfernoComponent {
     }
 
     componentWillUnmount() {
-        this.__propsCallback(undefined);
+        this.__propsConsumer(undefined);
     }
 
     componentWillReceiveProps(nextProps) {
         this.props = mixPropsWithContext(nextProps, this.context);
-        this.__propsCallback(this.props);
+        this.__propsConsumer(this.props);
     }
 
     shouldComponentUpdate() {

@@ -1,6 +1,5 @@
-import defineClassComponent from './defineClassComponent.js';
-import defineDispatchComponent from './defineDispatchComponent.js';
 import Component from './Component.js';
+import defineClassComponent from '../internal/class-based/defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
 import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
@@ -23,16 +22,33 @@ export default function adaptComponentSystem(config) {
             + err);
     }
     
-    const createElement = config.isBrowserBased === false
-        ? config.createElement
-        : adaptCreateElement(config.createElement, config.isElement);
+    const
+        createElement = config.isBrowserBased === false
+            ? config.createElement
+            : adaptCreateElement(config.createElement, config.isElement),
+
+        defineFunctionalComponent = enhanceDefineFunctionalComponent(config.defineFunctionalComponent),
+        defineStandardComponent = enhanceDefineStandardComponent(config.defineStandardComponent);
 
     return {
         createElement,
-        defineClassComponent,
-        defineDispatchComponent,
-        defineFunctionalComponent: enhanceDefineFunctionalComponent(config.defineFunctionalComponent),
-        defineStandardComponent: enhanceDefineStandardComponent(config.defineStandardComponent),
+
+        defineComponent(cfg) {
+            let ret;
+
+            if (cfg.init) {
+                ret = defineStandardComponent(cfg);
+            } else if (cfg.render) {
+                ret = defineFunctionalComponent(cfg);
+            } else if (typeof cfg === 'function') {
+                ret = defineClassComponent(cfg);
+            } else {
+                throw new Error('[defineComponent] Illegal configuration');
+            }
+
+            return ret;
+        },
+
         isElement: config.isElement,
         isRenderable: adaptIsRenderable(config.isElement),
         render: config.render,
@@ -69,9 +85,9 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
             propsAdjuster = createPropsAdjuster(config),
     
             adjustedConfig = Object.assign({}, config, {
-                init: (viewCallback, stateCallback = null) => {
+                init: (viewConsumer, stateConsumer = null) => {
                     const
-                        result = config.init(viewCallback, stateCallback),
+                        result = config.init(viewConsumer, stateConsumer),
                         err = validateInitResult(result, config);
 
                     if (err) {
@@ -79,8 +95,8 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                     }
 
                     return {
-                        propsCallback(props) {
-                            result.propsCallback(propsAdjuster(props));
+                        propsConsumer(props) {
+                            result.propsConsumer(propsAdjuster(props));
                         },
                         instance: result.instance 
                     };

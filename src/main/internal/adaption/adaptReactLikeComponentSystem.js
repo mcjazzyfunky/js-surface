@@ -18,7 +18,9 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
             + err);
     }
 
-    const CustomComponent = defineCustomComponent(reactLikeConfig.Component);
+    const
+        CustomComponent = defineCustomComponent(reactLikeConfig.Component),
+        createFactory = reactLikeConfig.createFactory;
 
     const newConfig = {
         isBrowserBased: reactLikeConfig.isBrowserBased !== false,
@@ -51,7 +53,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
             ret.displayName = config.displayName;
 
-            return reactLikeConfig.createFactory(ret);
+            return createFactory(ret);
         },
 
         defineStandardComponent: config => {
@@ -105,10 +107,12 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 }
             }
 
-            return reactLikeConfig.createFactory(ExtCustomComponent);
+            return createFactory(ExtCustomComponent);
         },
 
-        createElement: reactLikeConfig.createElement,
+        createElement(type, props, ...children) {
+            return reactLikeConfig.createElement(type, adjustProps(props), ...children);
+        },
 
         isElement(it)  {
             return it !== undefined
@@ -135,7 +139,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { propsCallback, instance } = config.init(
+                { propsConsumer, instance } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -158,13 +162,13 @@ function defineCustomComponent(ReactLikeComponent) {
                         this.state = state;
                     });
 
-            this.__propsCallback = propsCallback;
+            this.__propsConsumer = propsConsumer;
             this.__instance = instance;
         }
 
         componentWillMount() {
             this.props = mixPropsWithContext(this.props, this.context);
-            this.__propsCallback(this.props);
+            this.__propsConsumer(this.props);
         }
 
         componentDidMount() {
@@ -180,12 +184,12 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillUnmount() {
-            this.__propsCallback(undefined);
+            this.__propsConsumer(undefined);
         }
 
         componentWillReceiveProps(nextProps) {
             this.props = mixPropsWithContext(nextProps, this.context);
-            this.__propsCallback(this.props);
+            this.__propsConsumer(this.props);
         }
 
         shouldComponentUpdate() {
@@ -220,4 +224,38 @@ function mixPropsWithContext(props, context) {
     }
 
     return ret;
+}
+
+function adjustProps(props) {
+    let ret = props;
+console.log('adjustProps', !props ? null : props.ref)
+    if (props && props.ref) {
+        ret = Object.assign({}, props);
+
+        if (props.ref) {
+            ret.ref = adjustRefCallback(props.ref);
+        }
+    }
+
+    return ret;
+}
+
+function adjustRefCallback(refCallback) {
+    let involvedElement = null;
+console.log('adjustRefCallback')
+    return element => {
+        if (element) {
+            refCallback(element, null);
+            involvedElement = element;
+        } else {
+            refCallback(null, involvedElement);
+            involvedElement = null;
+        }
+    };
+}
+
+function adjustCreateFactory(createFactory) {
+    return (type, props, ...children) => {
+        return createFactory(type, adjustProps(props), ...children);
+    };
 }

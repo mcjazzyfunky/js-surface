@@ -1,12 +1,12 @@
 import {
     createElement as h,
-    defineClassComponent,
+    defineComponent,
     render,
     Component
 } from 'js-surface';
 
 
-const MountUnmount = defineClassComponent(class extends Component {
+const MountUnmount = defineComponent(class extends Component {
     static get displayName() {
         return 'MountUnmount';
     }
@@ -36,12 +36,12 @@ const MountUnmount = defineClassComponent(class extends Component {
             : Bar({ ref: this.refCallback.bind(this, 'Bar')});
     }
 
-    refCallback(type, ref) {
-        console.log(`Invoked ref callback - ${type}: `, String(ref))
+    refCallback(type, ref, prevRef) {
+        console.log(`Invoked ref callback - ${type}: `, String(ref), String(prevRef));
     }
 });
 
-const Foo = defineClassComponent(class extends Component {
+const Foo = defineComponent(class extends Component {
     static get displayName() {
         return 'Foo';
     }
@@ -59,7 +59,7 @@ const Foo = defineClassComponent(class extends Component {
     }
 });
 
-const Bar = defineClassComponent(class extends Component {
+const Bar = defineComponent(class extends Component {
     static get displayName() {
         return 'Bar';
     }

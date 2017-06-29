@@ -5,10 +5,7 @@ import AppRegistry from 'react-native';
 
 const {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
@@ -24,10 +21,7 @@ const {
 
 export {
     createElement,
-    defineDispatchComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
+    defineComponent,
     isElement,
     isRenderable,
     render,
