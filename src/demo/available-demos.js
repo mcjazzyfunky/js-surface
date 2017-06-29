@@ -24,6 +24,12 @@ export default [
         files: ['hello-world-dispatch.js']
     },
     {
+        name: 'clock',
+        displayName: 'Clock',
+        directory: 'clock',
+        files: ['clock.js']
+    },
+    {
         name: 'speed-test',
         displayName: 'Speed Test',
         directory: 'speed-test',

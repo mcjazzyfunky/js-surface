@@ -166,17 +166,17 @@ const TodoFilters = defineFunctionalComponent({
                     ' item(s) left'),
                 h('ul.filters',
                     h('li > a',
-                        {   className: state.activeFilter === 'all' ? 'active' : null,
+                        { className: state.activeFilter === 'all' ? 'active' : null,
                             onClick: () => dispatch(Actions.setActiveFilter('all')) 
                         },
                         'All'),
                     h('li > a',
-                        {   className: state.activeFilter === 'active' ? 'active' : null,
+                        { className: state.activeFilter === 'active' ? 'active' : null,
                             onClick: () => dispatch(Actions.setActiveFilter('active')) 
                         },
                         'Active'),
                     h('li > a',
-                        {   className: state.activeFilter === 'completed' ? 'active' : null,
+                        { className: state.activeFilter === 'completed' ? 'active' : null,
                             onClick: () => dispatch(Actions.setActiveFilter('completed')) 
                         },
                         'Completed')),

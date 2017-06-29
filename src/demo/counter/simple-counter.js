@@ -32,7 +32,6 @@ class SimpleCounterComponent extends Component {
 
     incrementCounter(delta) {
         this.state = {
-            ...this.state,
             counterValue: this.state.counterValue + delta
         };
     }

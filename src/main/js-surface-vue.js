@@ -136,6 +136,7 @@ function customDefineStandardComponent(config) {
             this.__propsCallback = initResult.propsCallback;
             this.__instance = initResult.instance;
             this.__propsCallback(this.$options.propsData);
+            this.__refCallbacks = {};
         },
 
         mounted() {
@@ -231,7 +232,12 @@ function renderContent(vueCreateElement, content, component) {
             component.__refCallbacks = {};
         }
 
-        component.__refCallbacks[refName] = ref;
+
+
+        component.__refCallbacks[refName] = {
+            callback: ref,
+            element: null
+        };
     }
 
     if (typeof type === 'string') {

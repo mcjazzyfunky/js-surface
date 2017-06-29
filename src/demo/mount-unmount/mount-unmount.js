@@ -22,7 +22,7 @@ const MountUnmount = defineClassComponent(class extends Component {
         this.__interval = setInterval(() => {
             this.__showFoo = !this.__showFoo;
             this.refresh();
-        }, 1000);
+        }, 10000);
     }
 
     onWillUnmount() {
@@ -55,7 +55,7 @@ const Foo = defineClassComponent(class extends Component {
     }
 
     render() {
-        return h('div', 'Foo');
+        return h('div', ' - - - Foo - - - ');
     }
 });
 
@@ -73,7 +73,7 @@ const Bar = defineClassComponent(class extends Component {
     }
 
     render() {
-        return h('div', 'Bar');
+        return h('div', ' - - - Bar - - - ');
     }
 });
 

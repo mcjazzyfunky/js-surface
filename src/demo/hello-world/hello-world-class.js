@@ -1,4 +1,3 @@
-
 import {
     createElement as h,
     defineClassComponent,
@@ -54,7 +53,7 @@ class HelloWorldComponent extends Component {
 
     render() {
         return (
-            h('div', { ref: () => alert(1111) }, `Hello ${this.props.name}!`)
+            h('div', { ref: () => alert(1111) } , `Hello ${this.props.name}!`)
         );
     }
 }
