@@ -11,7 +11,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptComponentSystem({
     componentSystemName: 'inferno',
     createElement: customCreateElement,
@@ -27,7 +28,8 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
 
 // ------------------------------------------------------------------

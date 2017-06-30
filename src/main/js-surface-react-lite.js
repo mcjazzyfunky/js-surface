@@ -8,7 +8,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-lite',
     Component: ReactLite.Component,
@@ -24,7 +25,8 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
 
 function reactLiteRender(content, targetNode) {

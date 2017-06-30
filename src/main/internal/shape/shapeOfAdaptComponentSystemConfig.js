@@ -1,6 +1,8 @@
+import { REGEX_COMPONENT_SYSTEM_NAME } from '../constant/constants.js';
 import { Spec } from 'js-spec';
 
 export default  {
+    componentSystemName: Spec.matches(REGEX_COMPONENT_SYSTEM_NAME),
     createElement: Spec.func,
     defineFunctionalComponent: Spec.func,
     defineStandardComponent: Spec.func,

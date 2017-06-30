@@ -22,7 +22,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-dom',
     createElement: React.createElement,
@@ -38,5 +39,6 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };

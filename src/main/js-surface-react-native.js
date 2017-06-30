@@ -9,7 +9,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-native',
     createElement: React.createElement,
@@ -26,7 +27,8 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
 
 

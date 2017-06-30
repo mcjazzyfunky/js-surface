@@ -10,7 +10,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptComponentSystem({
     createElement: customCreateElement,
     defineFunctionalComponent: customDefineFunctionalComponent,
@@ -25,7 +26,8 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
 
 // ------------------------------------------------------------------

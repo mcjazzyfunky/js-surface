@@ -10,7 +10,8 @@ const {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'preact',
     Component: Preact.Component,
@@ -26,7 +27,8 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
 
 function preactCreateFactory(type) {

@@ -30,7 +30,14 @@ export default function adaptComponentSystem(config) {
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.defineStandardComponent);
 
+    const ComponentSystem = {
+        name: config.componentSystemName
+    };
+
+    Object.freeze(ComponentSystem);
+
     return {
+        ComponentSystem,
         createElement,
 
         defineComponent(cfg) {

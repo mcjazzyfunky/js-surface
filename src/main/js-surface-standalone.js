@@ -4,7 +4,8 @@ import {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 } from './js-surface-preact.js';
 
 export {
@@ -13,5 +14,6 @@ export {
     isElement,
     isRenderable,
     render,
-    Component
+    Component,
+    ComponentSystem
 };
