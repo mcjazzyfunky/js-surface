@@ -36,6 +36,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
     const newConfig = {
         componentSystemName: reactLikeConfig.componentSystemName,
+        componentSystemAPI: reactLikeConfig.componentSystemAPI,
         isBrowserBased: reactLikeConfig.isBrowserBased !== false,
 
         defineFunctionalComponent: config => {

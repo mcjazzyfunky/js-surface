@@ -3,7 +3,6 @@ import adaptComponentSystem from
 
 import Vue from 'vue';
 
-
 const {
     createElement,
     defineComponent,
@@ -14,6 +13,7 @@ const {
     ComponentSystem
 } = adaptComponentSystem({
     componentSystemName: 'vue',
+    componentSystemAPI: { Vue },
     createElement: customCreateElement,
     defineFunctionalComponent: customDefineFunctionalComponent,
     defineStandardComponent: customDefineStandardComponent,

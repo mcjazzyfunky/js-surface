@@ -14,6 +14,7 @@ const {
     ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'preact',
+    componentSystemAPI: Preact,
     Component: Preact.Component,
     createElement: preactCreateElement,
     createFactory: preactCreateFactory,

@@ -26,6 +26,7 @@ const {
     ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-dom',
+    componentSystemAPI: Object.assign({}, React, ReactDOM),
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,

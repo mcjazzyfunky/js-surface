@@ -12,6 +12,7 @@ const {
     ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-lite',
+    componentSystemAPI: ReactLite,
     Component: ReactLite.Component,
     createElement: reactLiteCreateElement,
     createFactory: ReactLite.createFactory,

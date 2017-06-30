@@ -1,7 +1,7 @@
 import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
 
 import React from 'react';
-import AppRegistry from 'react-native';
+import ReactNative from 'react-native';
 
 const {
     createElement,
@@ -13,6 +13,7 @@ const {
     ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-native',
+    componentSystemAPI: Object.assign({}, React, ReactNative),
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
@@ -33,5 +34,5 @@ export {
 
 
 function reactNativeRender(Component) {
-    AppRegistry.registerComponent('AppMainComponent', () => Component);
+    ReactNative.AppRegistry.registerComponent('AppMainComponent', () => Component);
 }

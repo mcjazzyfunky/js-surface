@@ -1,9 +1,14 @@
 import adaptComponentSystem from
     './api/adaptComponentSystem.js';
 
-import { render as renderInferno } from 'inferno';
+import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
+
+const Inferno = Object.assign({}, InfernoCore, {
+    createElement: createInfernoElement,
+    Component: InfernoComponent    
+});
 
 const {
     createElement,
@@ -15,6 +20,7 @@ const {
     ComponentSystem
 } = adaptComponentSystem({
     componentSystemName: 'inferno',
+    componentSystemAPI: Inferno,
     createElement: customCreateElement,
     defineFunctionalComponent: customDefineFunctionalComponent,
     defineStandardComponent: customDefineStandardComponent,
@@ -66,7 +72,7 @@ function customDefineFunctionalComponent(config) {
 
     func.displayName = config.displayName;
 
-    return createInfernoElement.bind(null, func);
+    return Inferno.createElement.bind(null, func);
 }
 
 function customDefineStandardComponent(config) {
@@ -118,7 +124,7 @@ function customCreateElement(tag, props, ...children) {
     let ret;
 
     if (!children) {
-        ret = createInfernoElement(tag, adjustProps(props));
+        ret = Inferno.createElement(tag, adjustProps(props));
     } else {
         const newArguments = [tag, adjustProps(props)];
 
@@ -130,7 +136,7 @@ function customCreateElement(tag, props, ...children) {
             }
         }
 
-        ret = createInfernoElement.apply(null, newArguments);
+        ret = Inferno.createElement.apply(null, newArguments);
     }
 
     return ret;
@@ -153,10 +159,10 @@ function customRender(content, targetNode) {
         ? document.getElementById(targetNode)
         : targetNode;
 
-    renderInferno(content, target);
+    Inferno.render(content, target);
 }
 
-class CustomComponent extends InfernoComponent {
+class CustomComponent extends Inferno.Component {
     constructor(superArgs, config) {
         super(...superArgs);
 

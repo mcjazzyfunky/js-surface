@@ -31,7 +31,8 @@ export default function adaptComponentSystem(config) {
         defineStandardComponent = enhanceDefineStandardComponent(config.defineStandardComponent);
 
     const ComponentSystem = {
-        name: config.componentSystemName
+        name: config.componentSystemName,
+        api: config.componentSystemApi
     };
 
     Object.freeze(ComponentSystem);
