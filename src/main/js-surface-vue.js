@@ -13,6 +13,7 @@ const {
     Component,
     ComponentSystem
 } = adaptComponentSystem({
+    componentSystemName: 'vue',
     createElement: customCreateElement,
     defineFunctionalComponent: customDefineFunctionalComponent,
     defineStandardComponent: customDefineStandardComponent,

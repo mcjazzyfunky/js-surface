@@ -29,6 +29,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
             factory.type = type;
 
+
             return factory;
         };
         
@@ -63,18 +64,25 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 }
             }
 
+            if (reactLikeConfig.componentSystemName === 'react-lite') {
+                ret.vtype = 2;
+            }
+
             ret.displayName = config.displayName;
 
             return createFactory(ret);
         },
 
         defineStandardComponent: config => {
-            class ExtCustomComponent extends CustomComponent {
+            // Sorry for that evil eval hack - do not know how to
+            // ExtCustomComponent's class name otherwise
+            // (ExtCustomComponent.name is read-only).
+            const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
                 constructor(...args) {
                     super(args, config);
                     this.__childContextTypes = undefined;
                 }
-            }
+            })`);
 
             ExtCustomComponent.displayName = config.displayName;
 

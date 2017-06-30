@@ -70,11 +70,14 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
-    class ExtCustomComponent extends CustomComponent {
+    // Sorry for that evil eval hack - do not know how to
+    // ExtCustomComponent's class name otherwise
+    // (ExtCustomComponent.name is read-only).
+    const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
         constructor(...args) {
             super(args, config);
         }
-    }
+    })`);
 
     if (config.api) {
         for (let key of Object.keys(config.api)) {
