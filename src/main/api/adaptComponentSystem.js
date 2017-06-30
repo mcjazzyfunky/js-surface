@@ -23,16 +23,16 @@ export default function adaptComponentSystem(config) {
     }
     
     const
-        createElement = config.isBrowserBased === false
-            ? config.createElement
-            : adaptCreateElement(config.createElement, config.isElement),
+        createElement = config.options && config.options.isBrowserBased === false
+            ? config.interface.createElement
+            : adaptCreateElement(config.interface.createElement, config.interface.isElement),
 
-        defineFunctionalComponent = enhanceDefineFunctionalComponent(config.defineFunctionalComponent),
-        defineStandardComponent = enhanceDefineStandardComponent(config.defineStandardComponent);
+        defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
+        defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent);
 
     const ComponentSystem = {
-        name: config.componentSystemName,
-        api: config.componentSystemApi
+        name: config.componentSystem.name,
+        api: config.componentSystem.api
     };
 
     Object.freeze(ComponentSystem);
@@ -57,9 +57,9 @@ export default function adaptComponentSystem(config) {
             return ret;
         },
 
-        isElement: config.isElement,
-        isRenderable: adaptIsRenderable(config.isElement),
-        render: config.render,
+        isElement: config.interface.isElement,
+        isRenderable: adaptIsRenderable(config.interface.isElement),
+        render: config.interface.render,
         Component
     };
 }

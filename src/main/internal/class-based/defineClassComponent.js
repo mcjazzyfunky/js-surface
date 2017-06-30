@@ -5,7 +5,7 @@ import { defineComponent }  from 'js-surface';
 export default function defineClassComponent(componentClass) {
     const
         err = validateComponentClass(componentClass),
-        api = componentClass.api || null,
+        publicMethods = componentClass.publicMethods || null,
         instanceClass = function () {
             this.__component = null;
         };
@@ -14,13 +14,13 @@ export default function defineClassComponent(componentClass) {
         throw err;
     }
 
-    if (api) {
-        for (let key of Object.keys(api)) {
+    if (publicMethods) {
+        for (let key of Object.keys(publicMethods)) {
             instanceClass.prototype[key] = function () {
                 let ret = undefined;
                 
                 if (this.__component) {
-                    ret = api[key].apply(this.__component, arguments);
+                    ret = publicMethods[key].apply(this.__component, arguments);
                 }
 
                 return ret;
@@ -123,12 +123,12 @@ export default function defineClassComponent(componentClass) {
         config.childInjection = componentClass.childInjection; 
     }
 
-    if (api) {
-        config.api = {};
+    if (publicMethods) {
+        config.publicMethods = {};
 
-        for (let key of Object.keys(api)) {
-            config.api[key] = function (instance, args) {
-                return api[key].apply(instance.__component, args);
+        for (let key of Object.keys(publicMethods)) {
+            config.publicMethods[key] = function (instance, args) {
+                return publicMethods[key].apply(instance.__component, args);
             };
         }
     }

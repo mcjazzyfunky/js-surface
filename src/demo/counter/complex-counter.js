@@ -42,7 +42,7 @@ class CounterComponent extends Component {
         };
     }
 
-    static get api() {
+    static get publicMethods() {
         return {
             resetCounter(value = 0) {
                 this.state = { counterValue: value };

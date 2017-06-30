@@ -35,118 +35,123 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
         
 
     const newConfig = {
-        componentSystemName: reactLikeConfig.componentSystemName,
-        componentSystemAPI: reactLikeConfig.componentSystemAPI,
-        isBrowserBased: reactLikeConfig.isBrowserBased !== false,
+        componentSystem: {
+            name: reactLikeConfig.componentSystemName,
+            api: reactLikeConfig.componentSystemAPI,
+        },
+        interface: {
+            defineFunctionalComponent: config => {
+                let ret;
+                const injectPropsNames = [];
 
-        defineFunctionalComponent: config => {
-            let ret;
-            const injectPropsNames = [];
-
-            if (config.properties) {
-                for (let property of Object.keys(config.properties)) {
-                    if (config.properties[property].inject) {
-                        injectPropsNames.push(property);
+                if (config.properties) {
+                    for (let property of Object.keys(config.properties)) {
+                        if (config.properties[property].inject) {
+                            injectPropsNames.push(property);
+                        }
                     }
                 }
-            }
 
-            if (injectPropsNames.length === 0) {
-                ret = props => config.render(props);
-            } else {
-                ret = (props, context) => {
-                    return config.render(mixPropsWithContext(props, context));
-                };
+                if (injectPropsNames.length === 0) {
+                    ret = props => config.render(props);
+                } else {
+                    ret = (props, context) => {
+                        return config.render(mixPropsWithContext(props, context));
+                    };
 
-                ret.contextTypes = {};
+                    ret.contextTypes = {};
 
-                for (let propName of injectPropsNames) {
-                    ret.contextTypes[propName] = returnNull;
+                    for (let propName of injectPropsNames) {
+                        ret.contextTypes[propName] = returnNull;
+                    }
                 }
-            }
 
-            if (reactLikeConfig.componentSystemName === 'react-lite') {
-                ret.vtype = 2;
-            }
-
-            ret.displayName = config.displayName;
-
-            return createFactory(ret);
-        },
-
-        defineStandardComponent: config => {
-            // Sorry for that evil eval hack - do not know how to
-            // ExtCustomComponent's class name otherwise
-            // (ExtCustomComponent.name is read-only).
-            const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
-                constructor(...args) {
-                    super(args, config);
-                    this.__childContextTypes = undefined;
+                if (reactLikeConfig.componentSystemName === 'react-lite') {
+                    ret.vtype = 2;
                 }
-            })`);
 
-            ExtCustomComponent.displayName = config.displayName;
+                ret.displayName = config.displayName;
 
-            if (config.api) {
-                for (let key of Object.keys(config.api)) {
-                    ExtCustomComponent.prototype[key] = function () {
-                        return config.api[key](this.__instance, arguments);
+                return createFactory(ret);
+            },
+
+            defineStandardComponent: config => {
+                // Sorry for that evil eval hack - do not know how to
+                // ExtCustomComponent's class name otherwise
+                // (ExtCustomComponent.name is read-only).
+                const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
+                    constructor(...args) {
+                        super(args, config);
+                        this.__childContextTypes = undefined;
+                    }
+                })`);
+
+                ExtCustomComponent.displayName = config.displayName;
+
+                if (config.publicMethods) {
+                    for (let key of Object.keys(config.publicMethods)) {
+                        ExtCustomComponent.prototype[key] = function () {
+                            return config.publicMethods[key](this.__instance, arguments);
+                        };
+                    }
+                }
+
+                if (config.childInjection) {
+                    ExtCustomComponent.childContextTypes = {};
+
+                    for (let key of config.childInjection.keys) {
+                        ExtCustomComponent.childContextTypes[key] = returnNull;
+                    }
+
+                    ExtCustomComponent.prototype.getChildContext = function() {
+                        const state = this.__state === fakeState ? null : this.__state;
+                        return config.childInjection.get(this.props, state);
                     };
                 }
-            }
 
-            if (config.childInjection) {
-                ExtCustomComponent.childContextTypes = {};
+                ExtCustomComponent.displayName = config.displayName;
 
-                for (let key of config.childInjection.keys) {
-                    ExtCustomComponent.childContextTypes[key] = returnNull;
-                }
+                const injectPropsNames = [];
 
-                ExtCustomComponent.prototype.getChildContext = function() {
-                    const state = this.__state === fakeState ? null : this.__state;
-                    return config.childInjection.get(this.props, state);
-                };
-            }
-
-            ExtCustomComponent.displayName = config.displayName;
-
-            const injectPropsNames = [];
-
-            if (config.properties) {
-                for (let property of Object.keys(config.properties)) {
-                    if (config.properties[property].inject) {
-                        injectPropsNames.push(property);
+                if (config.properties) {
+                    for (let property of Object.keys(config.properties)) {
+                        if (config.properties[property].inject) {
+                            injectPropsNames.push(property);
+                        }
                     }
                 }
-            }
 
-            if (injectPropsNames.length > 0) {
-                ExtCustomComponent.contextTypes = {};
+                if (injectPropsNames.length > 0) {
+                    ExtCustomComponent.contextTypes = {};
 
-                for (let propName of injectPropsNames) {
-                    ExtCustomComponent.contextTypes[propName] = returnNull;
+                    for (let propName of injectPropsNames) {
+                        ExtCustomComponent.contextTypes[propName] = returnNull;
+                    }
                 }
-            }
 
-            // TODO - sorry for that hack
-            if (reactLikeConfig.componentSystemName === 'react-lite') {
-                ExtCustomComponent.vtype = 4;
-            }
+                // TODO - sorry for that hack
+                if (reactLikeConfig.componentSystemName === 'react-lite') {
+                    ExtCustomComponent.vtype = 4;
+                }
 
-            return createFactory(ExtCustomComponent);
+                return createFactory(ExtCustomComponent);
+            },
+
+            createElement(type, props, ...children) {
+                return reactLikeConfig.createElement(type, adjustProps(props), ...children);
+            },
+
+            isElement(it)  {
+                return it !== undefined
+                    && it !== null
+                    && reactLikeConfig.isValidElement(it);
+            },
+
+            render: reactLikeConfig.render
         },
-
-        createElement(type, props, ...children) {
-            return reactLikeConfig.createElement(type, adjustProps(props), ...children);
-        },
-
-        isElement(it)  {
-            return it !== undefined
-                && it !== null
-                && reactLikeConfig.isValidElement(it);
-        },
-
-        render: reactLikeConfig.render
+        options: {
+            isBrowserBased: reactLikeConfig.isBrowserBased !== false,
+        }
     };
 
     return adaptComponentSystem(newConfig);

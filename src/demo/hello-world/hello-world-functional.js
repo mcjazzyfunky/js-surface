@@ -4,8 +4,6 @@ import {
     render
 } from 'js-surface';
 
-import { Seq } from 'js-prelude';
-
 const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
 

@@ -19,13 +19,17 @@ const {
     Component,
     ComponentSystem
 } = adaptComponentSystem({
-    componentSystemName: 'inferno',
-    componentSystemAPI: Inferno,
-    createElement: customCreateElement,
-    defineFunctionalComponent: customDefineFunctionalComponent,
-    defineStandardComponent: customDefineStandardComponent,
-    isElement: customIsElement,
-    render: customRender
+    componentSystem: {
+        name: 'inferno',
+        api: Inferno,
+    },
+    interface: {
+        createElement: customCreateElement,
+        defineFunctionalComponent: customDefineFunctionalComponent,
+        defineStandardComponent: customDefineStandardComponent,
+        isElement: customIsElement,
+        render: customRender
+    }
 });
 
 export {
@@ -85,10 +89,10 @@ function customDefineStandardComponent(config) {
         }
     })`);
 
-    if (config.api) {
-        for (let key of Object.keys(config.api)) {
+    if (config.publicMethods) {
+        for (let key of Object.keys(config.publicMethods)) {
             ExtCustomComponent.prototype[key] = function () {
-                return config.api[key](this.__instance, arguments);
+                return config.publicMethods[key](this.__instance, arguments);
             };
         }
     }

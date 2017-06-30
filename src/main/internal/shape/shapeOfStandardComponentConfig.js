@@ -14,7 +14,7 @@ export default Object.assign({}, shapeOfPartialBaseConfig, {
                 get: Spec.func
             })),
         
-    api:
+    publicMethods:
         Spec.optional(
             Spec.and(
                 Spec.keys(
