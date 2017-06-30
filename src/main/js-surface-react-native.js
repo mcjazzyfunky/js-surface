@@ -11,6 +11,7 @@ const {
     render,
     Component
 } = adaptReactLikeComponentSystem({
+    componentSystemName: 'react-native',
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,

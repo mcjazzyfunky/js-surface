@@ -12,6 +12,7 @@ const {
     render,
     Component
 } = adaptReactLikeComponentSystem({
+    componentSystemName: 'preact',
     Component: Preact.Component,
     createElement: preactCreateElement,
     createFactory: preactCreateFactory,

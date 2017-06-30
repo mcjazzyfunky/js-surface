@@ -3,15 +3,15 @@
 import ComponentHelper from '../helpers/ComponentHelper.js';
 
 import {
-    defineFunctionalComponent,
-    createElement as dom
+    createElement as h,
+    defineComponent
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
 
 import { Seq, Strings } from 'js-prelude';
 
-export default defineFunctionalComponent({
+export default defineComponent({
     displayName: 'Button',
 
     properties: {
@@ -91,7 +91,7 @@ export default defineFunctionalComponent({
             textElement =
                 text === null
                 ? null
-                : dom('span',
+                : h('span',
                     {className: 'fk-button-text'},
                     text),
 
@@ -111,7 +111,7 @@ export default defineFunctionalComponent({
 
             caret =
                 hasMenu
-                ? dom('span', {className: 'caret'})
+                ? h('span', {className: 'caret'})
                 : null,
 
             sizeClass = { large: 'btn-lg', small: 'btn-sm'}[props.size] || null,
@@ -133,7 +133,7 @@ export default defineFunctionalComponent({
             },
 
             button =
-                dom('button',
+                h('button',
                     {   type: 'button',
                         className: className,
                         title: tooltip,
@@ -151,40 +151,40 @@ export default defineFunctionalComponent({
 
         if (isDropdown) {
             ret =
-                dom('div.fk-button.btn-group',
+                h('div.fk-button.btn-group',
                     {   className: props.className
                     },
                     button,
-                    dom('ul.dropdown-menu',
-                        dom('li > a.dropdown-item',
+                    h('ul.dropdown-menu',
+                        h('li > a.dropdown-item',
                             { href: '#' },
                             'Juhu'),
-                        dom('li > a.dropdown-item',
+                        h('li > a.dropdown-item',
                             { href: '#' },
                             'Juhu2')));
 
         } else if (isSplitButton) {
             ret =
-                dom('div.fk-button.btn-group.dropdown',
+                h('div.fk-button.btn-group.dropdown',
                     {className: props.className},
                     button,
-                    dom('button.btn.dropdown-toggle.dropdown-toggle-split',
+                    h('button.btn.dropdown-toggle.dropdown-toggle-split',
                         {   className: 'btn-' + type,
                             'data-toggle': 'dropdown',
                             type: 'button'
                         },
                         ' ',
                         caret),
-                    dom('div.dropdown-menu.dropdown-menu',
-                        dom('li > a.dropdown-item',
+                    h('div.dropdown-menu.dropdown-menu',
+                        h('li > a.dropdown-item',
                             { href: '#' },
                             'Juhu'),
-                        dom('li > a.dropdown-item',
+                        h('li > a.dropdown-item',
                             { href: '#' },
                             'Juhu2')));
         } else {
             ret =
-                dom('div.fk-button.btn-group',
+                h('div.fk-button.btn-group',
                     { className: props.className },
                     button);
         }

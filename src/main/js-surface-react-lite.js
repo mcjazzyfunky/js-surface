@@ -10,6 +10,7 @@ const {
     render,
     Component
 } = adaptReactLikeComponentSystem({
+    componentSystemName: 'react-lite',
     Component: ReactLite.Component,
     createElement: reactLiteCreateElement,
     createFactory: ReactLite.createFactory,
@@ -39,9 +40,10 @@ function reactLiteRender(content, targetNode) {
     return ReactLite.render(content, target);
 }
 
+
 function reactLiteCreateElement(tag, props, ...children)  {
     // TODO: For performance reasons
-    if (tag === null || tag === undefined || typeof tag !== 'string' && !ReactLite.isValidElement(tag)) {
+    if (tag === null || tag === undefined  || typeof tag !== 'string'  && !ReactLite.isValidElement(tag)) {
         throw new TypeError(
             '[createElement] '
             + "First argument 'tag' must not be undefined or null");

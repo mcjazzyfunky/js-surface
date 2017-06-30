@@ -13,6 +13,7 @@ const {
     render,
     Component
 } = adaptComponentSystem({
+    componentSystemName: 'inferno',
     createElement: customCreateElement,
     defineFunctionalComponent: customDefineFunctionalComponent,
     defineStandardComponent: customDefineStandardComponent,
@@ -112,9 +113,9 @@ function customCreateElement(tag, props, ...children) {
     let ret;
 
     if (!children) {
-        ret = createInfernoElement.apply(null, arguments);
+        ret = createInfernoElement(tag, adjustProps(props));
     } else {
-        const newArguments = [tag, props];
+        const newArguments = [tag, adjustProps(props)];
 
         for (let child of children) {
             if (child && !Array.isArray(child) && typeof child[Symbol.iterator] === 'function') {
@@ -172,12 +173,10 @@ class CustomComponent extends InfernoComponent {
                         initialized = true;
                     }
 
-                    return new Promise(resolve => {
-                        this.__resolveRenderingDone = () => {
-                            this.__resolveRenderingDone = null;
-                            resolve(true);
-                        };
-                    });
+                    return buildUpdatedViewPromise(this);
+                },
+                state => {
+                    this.state = state;
                 });
 
         this.__propsConsumer = propsConsumer;
@@ -235,4 +234,49 @@ function mixPropsWithContext(props, context) {
     }
 
     return ret;
+}
+
+function buildUpdatedViewPromise(infernoComponent) {
+    let done = false;
+
+    return new Promise(resolve => {
+        if (!done) {
+            infernoComponent.__resolveRenderingDone = () => {
+                infernoComponent.__resolveRenderingDone = null;
+                resolve(true);
+            };
+
+            done = true;
+        } else {
+            resolve(true);
+        }
+    });
+}
+
+function adjustProps(props) {
+    let ret = props;
+
+    if (props && props.ref) {
+        ret = Object.assign({}, props);
+
+        if (props.ref) {
+            ret.ref = adjustRefCallback(props.ref);
+        }
+    }
+
+    return ret;
+}
+
+function adjustRefCallback(refCallback) {
+    let involvedElement = null;
+
+    return element => {
+        if (element) {
+            refCallback(element, null);
+            involvedElement = element;
+        } else {
+            refCallback(null, involvedElement);
+            involvedElement = null;
+        }
+    };
 }

@@ -24,6 +24,7 @@ const {
     render,
     Component
 } = adaptReactLikeComponentSystem({
+    componentSystemName: 'react-dom',
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,

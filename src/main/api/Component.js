@@ -54,6 +54,12 @@ export default class Component {
     onDidUpdate() {
     }
 
+    onWillChangeState() {
+    }
+
+    onDidChangeState() {
+    }
+
     onWillUnmount() {
     }
 

@@ -21,6 +21,13 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
     const
         CustomComponent = defineCustomComponent(reactLikeConfig.Component),
         createFactory = reactLikeConfig.createFactory;
+        /* 
+        createFactory =  function(type) {
+            const factory = reactLikeConfig.createElement.bind(null, type);
+            factory.type = type;
+            return factory;
+        };
+        */
 
     const newConfig = {
         isBrowserBased: reactLikeConfig.isBrowserBased !== false,
@@ -150,13 +157,7 @@ function defineCustomComponent(ReactLikeComponent) {
                             initialized  = true;
                         }
 
-                        return new Promise(resolve => {
-                            this.__resolveRenderingDone = () => {
-                                this.__resolveRenderingDone = null;
-                                resolve(true);
-                            };
-                        });
-
+                        return buildUpdatedViewPromise(this);
                     },
                     state => {
                         this.state = state;
@@ -228,7 +229,7 @@ function mixPropsWithContext(props, context) {
 
 function adjustProps(props) {
     let ret = props;
-console.log('adjustProps', !props ? null : props.ref)
+
     if (props && props.ref) {
         ret = Object.assign({}, props);
 
@@ -242,7 +243,7 @@ console.log('adjustProps', !props ? null : props.ref)
 
 function adjustRefCallback(refCallback) {
     let involvedElement = null;
-console.log('adjustRefCallback')
+
     return element => {
         if (element) {
             refCallback(element, null);
@@ -254,8 +255,19 @@ console.log('adjustRefCallback')
     };
 }
 
-function adjustCreateFactory(createFactory) {
-    return (type, props, ...children) => {
-        return createFactory(type, adjustProps(props), ...children);
-    };
+function buildUpdatedViewPromise(infernoComponent) {
+    let done = false;
+
+    return new Promise(resolve => {
+        if (!done) {
+            infernoComponent.__resolveRenderingDone = () => {
+                infernoComponent.__resolveRenderingDone = null;
+                resolve(true);
+            };
+
+            done = true;
+        } else {
+            resolve(true);
+        }
+    });
 }
