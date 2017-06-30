@@ -20,14 +20,18 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
     const
         CustomComponent = defineCustomComponent(reactLikeConfig.Component),
-        createFactory = reactLikeConfig.createFactory;
-        /* 
+        //createFactory = reactLikeConfig.createFactory;
+         
         createFactory =  function(type) {
-            const factory = reactLikeConfig.createElement.bind(null, type);
+            const factory = (props, ...children) => {
+                return reactLikeConfig.createElement(type, adjustProps(props), ...children);
+            };
+
             factory.type = type;
+
             return factory;
         };
-        */
+        
 
     const newConfig = {
         componentSystemName: reactLikeConfig.componentSystemName,
@@ -113,6 +117,11 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 for (let propName of injectPropsNames) {
                     ExtCustomComponent.contextTypes[propName] = returnNull;
                 }
+            }
+
+            // TODO - sorry for that hack
+            if (reactLikeConfig.componentSystemName === 'react-lite') {
+                ExtCustomComponent.vtype = 4;
             }
 
             return createFactory(ExtCustomComponent);

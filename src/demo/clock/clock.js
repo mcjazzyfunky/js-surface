@@ -36,10 +36,27 @@ const Clock = defineComponent(class extends Component {
     render() {
         return (
             h('div',
-                h('h4', { ref: (it, that) => console.log('>>> ', it, that) },
-                    'Current time:'),
-                h('div', this.state.time))
+                h('h3', 'Current time'),
+                TimeInfo({time: this.state.time, ref: (it, that) => console.log(it, that)}))
         );
+    }
+});
+
+const TimeInfo = defineComponent(class extends Component {
+    static get displayName() {
+        return 'TimeInfo';
+    }
+
+    static get properties() {
+        return {
+            time: {
+                type: String
+            }
+        };
+    }
+
+    render() {
+        return h('div', this.props.time);
     }
 });
 

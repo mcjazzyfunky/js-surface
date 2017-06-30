@@ -43,9 +43,19 @@ function reactLiteRender(content, targetNode) {
 }
 
 
+function ReactLiteisValidElement(obj) {
+    const ret =  obj != null && !!obj.vtype;
+
+if(!ret) {
+    console.log(obj.vtype)
+}
+
+    return ret;
+}
+
 function reactLiteCreateElement(tag, props, ...children)  {
     // TODO: For performance reasons
-    if (tag === null || tag === undefined  || typeof tag !== 'string'  && !ReactLite.isValidElement(tag)) {
+    if (tag === null || tag === undefined  || typeof tag !== 'string'  && !ReactLiteisValidElement(tag)) {
         throw new TypeError(
             '[createElement] '
             + "First argument 'tag' must not be undefined or null");
