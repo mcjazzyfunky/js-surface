@@ -13,7 +13,7 @@ const {
     ComponentSystem
 } = adaptReactLikeComponentSystem({
     componentSystemName: 'react-native',
-    componentSystemAPI: Object.assign({}, React, ReactNative),
+    componentSystemAPI: { React, ReactNative },
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,

@@ -18,15 +18,13 @@ const Parent = defineComponent(class extends Component {
         };
     }
 
-    static get childInjection() {
-        return {
-            keys: ['value'],
+    static get childInjectionKeys() {
+        return ['value'];
+    }
 
-            get(props) {
-                return {
-                    value: props.value
-                };
-            }
+    getChildInjection() {
+        return {
+            value: this.props.value
         };
     }
 

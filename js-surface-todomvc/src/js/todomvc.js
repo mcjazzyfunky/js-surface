@@ -1,12 +1,11 @@
 import {
     createElement as h,
-    defineFunctionalComponent,
-    render
+    defineComponent,
+    render,
+    Component
 } from 'js-surface';
 
 import { Record, List } from 'immutable';
-import { createStore } from 'redux';
-import { StoreProvider } from 'js-surface-store-connect';
 import { Spec } from 'js-spec';
 
 const
@@ -66,10 +65,56 @@ const
 
     store = createStore(reducer);
 
+const Root = defineComponent(class extends Component {
+    static get childInjectionKeys() {
+        return ['state', 'dispatch'];
+    }
+
+    construct() {
+        super();
+
+        this.state = {
+            newTodo: '',
+            todoFilter: 'all',
+            todos: []
+        };
+
+        this.dispatch = this.dispatch.bind(this);
+    }
+    
+    getChildInjection() {
+        return {
+
+        }
+    }
 
 
-const TodoMVCApp = defineFunctionalComponent({
+    render() {
+        return h('div', this.props.children);
+    }
+
+    dispatch(action) {
+        const newState = reducer(this.state, action);
+
+        if (newState !== this.state) {
+            this.state = newState;
+        }
+    }
+});
+
+const TodoMVCApp = defineComponent({
     displayName: 'App',
+
+    properties: {
+        state: {
+            type: Object,
+            constraint: Spec.shape(stateShape)
+        },
+
+        dispatch: {
+            type: Function
+        }
+    },
 
     render(props) {
         return (
@@ -90,7 +135,6 @@ const Header = defineFunctionalComponent({
     properties: {
         store: {
             type: Object,
-            constraint: specStore,
             inject: true
         }
     },
@@ -111,7 +155,6 @@ const TodoList = defineFunctionalComponent({
     properties: {
         store: {
             type: Object,
-            constraint: specStore,
             inject: true
         }
     },

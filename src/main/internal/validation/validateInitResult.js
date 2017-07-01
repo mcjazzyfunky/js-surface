@@ -1,16 +1,19 @@
 import { Spec } from 'js-spec';
 
-import shapeOfInitResult
-    from '../shape/shapeOfInitResult.js';
+import shapeOfInitResultWithoutInjection
+    from '../shape/shapeOfInitResultWithoutInjection.js';
 
+import shapeOfInitResultWithInjection
+    from '../shape/shapeOfInitResultWithInjection.js';
 
 export default function validateInitResult(initResult, config) {
-    let error =
-        Spec.shape(shapeOfInitResult)(initResult, '');
+    let error = config.childInjectionKeys
+        ? Spec.shape(shapeOfInitResultWithInjection)(initResult, '')
+        : Spec.shape(shapeOfInitResultWithoutInjection)(initResult, '');
 
     if (error) {
         error = Error(
-            `Function 'init' of standard component '${config.displayName}' `
+            `Function 'init' of component '${config.displayName}' `
             + `has returned an invalid value => ${error.message}`);
     }
 

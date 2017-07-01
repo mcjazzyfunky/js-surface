@@ -102,12 +102,11 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                         throw err;
                     }
 
-                    return {
+                    return Object.assign({}, result, {
                         propsConsumer(props) {
                             result.propsConsumer(propsAdjuster(props));
-                        },
-                        instance: result.instance 
-                    };
+                        }
+                    });
                 }
             });
 

@@ -50,6 +50,18 @@ const Spec = {
     },
 
     optional(constraint) {
+        return (it, path) => it === undefined
+            ? null
+            : constraint(it);
+    },
+
+    nullable(constraint) {
+        return (it, path) => it === null
+            ? null
+            : constraint(it);
+    },
+
+    maybe(constraint) {
         return (it, path) => it === undefined || it === null
             ? null
             : constraint(it);
@@ -66,9 +78,9 @@ const Spec = {
             let ret = null;
 
             if (typeof it !== 'string') {
-              ret = createError('Must be a string', path);
+                ret = createError('Must be a string', path);
             } else if (!it.match(regex)) {
-              ret = createError('Must match regex ' + regex, path);
+                ret = createError('Must match regex ' + regex, path);
             }
 
             return ret;
@@ -94,6 +106,30 @@ const Spec = {
         return (it, path = null) => it instanceof type
           ? null
           : createError('Must be instance of ' + type);
+    },
+
+    equal(value) {
+        return (it, path) => null; // TODO
+    },
+
+    length(constraint) {
+        return (it, path) => null; // TODO
+    },
+
+    greater(value) {
+        return (it, path) => null; // TODO
+    },
+
+    greaterOrEqual(value) {
+        return (it, path) => null; // TODO
+    },
+
+    less(value) {
+        return (it, path) => null; // TODO
+    },
+
+    lessOrEqual(value) {
+        return (it, path) => null; // TODO
     },
 
     iterable(it, path = null) {
@@ -159,9 +195,9 @@ const Spec = {
                 ret = createError('Must be an object', path);
             } else {
                 for (const key of Object.keys(shape)) {
-                     const subPath = buildSubPath(path, key);
+                    const subPath = buildSubPath(path, key);
 
-                     ret = shape[key](it[key], subPath);
+                    ret = shape[key](it[key], subPath);
 
                     if (ret) {
                         break;
@@ -172,6 +208,29 @@ const Spec = {
             return ret;
         };
     },
+
+    statics(shape) {
+        return (it, path) => {
+            let ret = null;
+
+            if (it === null || typeof it !== 'function') {
+                ret = createError('Must be an constructor function', path);
+            } else {
+                for (const key of Object.keys(shape)) {
+                    const subPath = buildSubPath(path, key);
+
+                    ret = shape[key](it[key], subPath);
+
+                    if (ret) {
+                        break;
+                    }
+                }
+            }
+
+            return ret;
+        };
+    },
+
 
     any(path = null) {
         return null;

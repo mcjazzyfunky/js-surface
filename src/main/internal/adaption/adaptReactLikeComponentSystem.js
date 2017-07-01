@@ -96,16 +96,15 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                     }
                 }
 
-                if (config.childInjection) {
+                if (config.childInjectionKeys) {
                     ExtCustomComponent.childContextTypes = {};
 
-                    for (let key of config.childInjection.keys) {
+                    for (let key of config.childInjectionKeys) {
                         ExtCustomComponent.childContextTypes[key] = returnNull;
                     }
 
                     ExtCustomComponent.prototype.getChildContext = function() {
-                        const state = this.__state === fakeState ? null : this.__state;
-                        return config.childInjection.get(this.props, state);
+                        return this.__getChildInjection();
                     };
                 }
 
@@ -170,7 +169,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { propsConsumer, instance } = config.init(
+                { propsConsumer, instance, getChildInjection } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -189,6 +188,10 @@ function defineCustomComponent(ReactLikeComponent) {
 
             this.__propsConsumer = propsConsumer;
             this.__instance = instance;
+
+            if (getChildInjection) {
+                this.__getChildInjection = getChildInjection;
+            }
         }
 
         componentWillMount() {

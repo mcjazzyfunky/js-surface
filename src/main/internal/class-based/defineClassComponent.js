@@ -33,6 +33,7 @@ export default function defineClassComponent(componentClass) {
             let
                 instance = new instanceClass(),
                 component = null,
+                getComponent = () => component, // TODO - ugly
                 content = null,
                 done = false;
 
@@ -106,10 +107,16 @@ export default function defineClassComponent(componentClass) {
                 }
             };
 
-            return {
+            const initResult = {
                 propsConsumer,
                 instance 
             };
+
+            if (config.childInjectionKeys) {
+                initResult.getChildInjection = () => getComponent().getChildInjection();
+            }
+
+            return initResult;
         };
 
 
@@ -119,8 +126,8 @@ export default function defineClassComponent(componentClass) {
         init
     };
 
-    if (componentClass.childInjection) {
-        config.childInjection = componentClass.childInjection; 
+    if (componentClass.childInjectionKeys) {
+        config.childInjectionKeys = componentClass.childInjectionKeys; 
     }
 
     if (publicMethods) {

@@ -8,15 +8,10 @@ import shapeOfComponentClass
 
 
 export default function validateComponentClass(componentClass) {
-    const config = {
-        displayName: componentClass.displayName,
-        properties: componentClass.properties
-    };
-
     const error =
-        Spec.shape(shapeOfComponentClass)(config, '');
+        Spec.statics(shapeOfComponentClass)(componentClass, '');
 
     return error !== null
-        ? prettifyComponentConfigError(error, config)
+        ? prettifyComponentConfigError(error, componentClass)
         : null;
 }

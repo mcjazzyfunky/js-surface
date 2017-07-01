@@ -12,13 +12,17 @@ const {
     Component,
     ComponentSystem
 } = adaptComponentSystem({
-    componentSystemName: 'vue',
-    componentSystemAPI: { Vue },
-    createElement: customCreateElement,
-    defineFunctionalComponent: customDefineFunctionalComponent,
-    defineStandardComponent: customDefineStandardComponent,
-    isElement: customIsElement,
-    render: customRender
+    componentSystem: {
+        name: 'vue',
+        api: { Vue },
+    },
+    interface: {
+        createElement: customCreateElement,
+        defineFunctionalComponent: customDefineFunctionalComponent,
+        defineStandardComponent: customDefineStandardComponent,
+        isElement: customIsElement,
+        render: customRender
+    }
 });
 
 export {
