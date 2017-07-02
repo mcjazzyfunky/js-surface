@@ -82,12 +82,12 @@ function customDefineFunctionalComponent(config) {
 function customDefineStandardComponent(config) {
     // Sorry for that evil eval hack - do not know how to
     // ExtCustomComponent's class name otherwise
-    // (ExtCustomComponent.name is read-only).
-    const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
-        constructor(...args) {
-            super(args, config);
-        }
-    })`);
+    // (Babel makes ExtCustomComponent.name read-only).
+    const ExtCustomComponent = eval(`(function ${config.displayName} (...args) {
+            CustomComponent.call(this, args, config);
+        })`);
+
+    ExtCustomComponent.prototype = Object.create(CustomComponent.prototype);
 
     if (config.publicMethods) {
         for (let key of Object.keys(config.publicMethods)) {
@@ -212,7 +212,7 @@ class CustomComponent extends Inferno.Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate() {console.log('didupdate', this.__resolveRenderingDone)
         if (this.__resolveRenderingDone) {
             this.__resolveRenderingDone();
         }

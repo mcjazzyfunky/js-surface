@@ -56,6 +56,14 @@ class SimpleCounterComponent extends Component {
         //alert('onDidUpdate');
     }
 
+    onWillChangeState(nextState) {
+        console.log('onWillChangeState', nextState);
+    }
+
+    onDidChangeState(prevState) {
+        console.log('onDidChangeState', prevState);
+    }
+
     render() {
         return (
             h('div.simple-counter', { ref: (it, remove) => console.log('ref:>>>>: ', it, remove) },

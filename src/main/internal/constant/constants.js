@@ -1,6 +1,6 @@
 const
     FORBIDDEN_METHOD_NAMES = new Set([
-        'props', 'state', 'shouldComponentUpdated',
+        'props', 'state', 'shouldComponentUpdate',
         'setState', 'updateState',
         'componentWillReceiveProps', 'forceUpdate',
         'componentWillMount', 'componentDidMount',

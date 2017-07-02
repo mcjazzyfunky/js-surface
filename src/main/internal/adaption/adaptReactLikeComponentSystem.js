@@ -78,14 +78,13 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
             defineStandardComponent: config => {
                 // Sorry for that evil eval hack - do not know how to
                 // ExtCustomComponent's class name otherwise
-                // (ExtCustomComponent.name is read-only).
-                const ExtCustomComponent = eval(`(class ${config.displayName} extends CustomComponent {
-                    constructor(...args) {
-                        super(args, config);
-                        this.__childContextTypes = undefined;
-                    }
-                })`);
+                // (Babel makes ExtCustomComponent.name read-only).
+                const ExtCustomComponent = eval(
+                    `(function ${config.displayName} (...args) {
+                        CustomComponent.call(this, args, config);
+                    })`);
 
+                ExtCustomComponent.prototype = Object.create(CustomComponent.prototype);
                 ExtCustomComponent.displayName = config.displayName;
 
                 if (config.publicMethods) {
@@ -157,7 +156,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 }
 
 function defineCustomComponent(ReactLikeComponent) {
-    const customClass = class CustomComponent extends ReactLikeComponent {
+    const customClass = class extends ReactLikeComponent {
         constructor(superArgs, config) {
             super(...superArgs);
 
@@ -282,13 +281,13 @@ function adjustRefCallback(refCallback) {
     };
 }
 
-function buildUpdatedViewPromise(infernoComponent) {
+function buildUpdatedViewPromise(reactComponent) {
     let done = false;
 
     return new Promise(resolve => {
         if (!done) {
-            infernoComponent.__resolveRenderingDone = () => {
-                infernoComponent.__resolveRenderingDone = null;
+            reactComponent.__resolveRenderingDone = () => {
+                reactComponent.__resolveRenderingDone = null;
                 resolve(true);
             };
 

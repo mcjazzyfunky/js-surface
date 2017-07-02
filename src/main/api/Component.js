@@ -23,13 +23,23 @@ export default class Component {
         const
             currState = this.state;
 
+        if (this.__initialized) {
+            this.onWillChangeState(nextState);
+        }
+
         this.__state = nextState;
 
         if (this.__initialized && this.shouldUpdate(this.props, currState)) {
             this.onWillUpdate(this.props, nextState);
             this.refresh();
+      //      this.onDidUpdate(this.props, currState);
         }
-        
+
+        if (this.__initialized) {
+            // TODO
+            setTimeout(() => this.onDidChangeState(currState), 0);
+        }
+
         if (typeof this.__stateConsumer === 'function') {
             this.__stateConsumer(this.__state);
         }
