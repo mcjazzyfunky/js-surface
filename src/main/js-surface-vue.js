@@ -52,35 +52,18 @@ function getNextRefName() {
 }
 
 function customDefineFunctionalComponent(config) {
-    const
-        propNames = [],
-        injectPropNames = [];
-
-    if (config.properties) {
-        for (let key of Object.keys(config.properties)) {
-            propNames.push(key);
-
-            if (config.properties[key].inject) {
-                injectPropNames.push(key);
-            }
-        }
-    }
-
     const component = Vue.extend({
-        props: propNames,
+        functional: true,
+        props: determinePropsConfig(config),
 
-        inject: injectPropNames,
-
-        render: function (vueCreateElement) {
-            const props = this.$options.propsData;
-
-            const content = config.render(props);
+        render: function (vueCreateElement, context) {
+            const
+                props = mixPropsWithInjecions(context.props, context.injections),
+                content = config.render(props);
 
             return renderContent(vueCreateElement, content, this);
         }
     });
-
-
 
     return (props, ...children) => {
         const ret = customCreateElement(component, props, ...children); 
@@ -89,28 +72,12 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
-    const
-        propNames = [],
-        injectPropNames = [];
-
-    if (config.properties) {
-        for (let key of Object.keys(config.properties)) {
-            propNames.push(key);
-            
-            if (config.properties[key].inject) {
-                injectPropNames.push(key);
-            }
-        }
-    }
-    injectPropNames.push('xxx');
-
     const component = Vue.extend({
-        props: propNames,
+        props: determinePropsConfig(config),
+        inject: determineInjectionKeys(config),
 
-        inject: injectPropNames,
-
-        data: {
-            index: 0
+        provide: {
+            value: 'xxx'
         },
 
         beforeMount() {
@@ -136,7 +103,11 @@ function customDefineStandardComponent(config) {
 
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
-            this.__propsConsumer(this.$options.propsData);
+
+            this.__propsConsumer(
+                mixPropsWithInjecions(
+                this.$options.propsData, this.injetions));
+
             this.__refCallbacks = {};
         },
 
@@ -233,8 +204,6 @@ function renderContent(vueCreateElement, content, component) {
             component.__refCallbacks = {};
         }
 
-
-
         component.__refCallbacks[refName] = {
             callback: ref,
             element: null
@@ -309,6 +278,58 @@ function convertChildren(children, vueCreateElement, component) {
             ret.push(renderContent(vueCreateElement, item, component));
         } else if (item !== undefined && item !== null) {
             ret.push(item);
+        }
+    }
+
+    return ret;
+}
+
+function mixPropsWithInjecions(props, injections) {
+    let ret = props;
+
+    if (injections) {
+        ret = Object.assign({}, props);
+
+        for (let key of Object.keys(injections)) {
+            if (injections[key] !== undefined && props[key] === undefined) {
+                ret[key] = injections[key];
+            }
+        }
+    }
+
+    return ret;
+}
+
+
+function determinePropsConfig(config) {
+    const ret = {};
+
+    if (config.properties) {
+        for (let key of Object.keys(config.properties)) {
+            const
+                srcCfg = config.properties[key];
+
+            if (srcCfg.defaultValue) {
+                ret[key] = {
+                    default: () => srcCfg.defaultValue
+                };
+            } else if (srcCfg.getDefaultValue) {
+                ret[key] = srcCfg.getDefaultValue;
+            }
+        }
+    }
+
+    return ret;
+}
+
+function determineInjectionKeys(config) {
+    const ret = [];
+
+    if (config.properties) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].inject) {
+                ret.push(key);
+            }
         }
     }
 

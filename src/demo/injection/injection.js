@@ -13,7 +13,8 @@ const Parent = defineComponent(class extends Component {
     static get properties() {
         return {
             value: {
-                type: String
+                type: String,
+                defaultValue: 'default-value'
             }
         };
     }
