@@ -80,6 +80,7 @@ function customDefineStandardComponent(config) {
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
+        data: determineDataFunction(config),
 
         provide: !config.childInjectionKeys ? null : function () {
             let ret = null;
@@ -375,6 +376,25 @@ function determineInjectionKeys(config) {
                 ret.push(key);
             }
         }
+    }
+
+    return ret;
+}
+
+function determineDataFunction(config) {
+    let ret = null;
+
+    if (config.childInjectionKeys) {
+        const injection = {};
+
+        for (let key of config.childInjectionKeys) {
+            injection[key] = null;
+        }        
+    
+        ret = () => ({
+            injection:
+                Object.assign({}, injection)
+        });
     }
 
     return ret;

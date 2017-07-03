@@ -66,6 +66,12 @@ export default [
         files: ['injection.js']
     },
     {
+        name: 'i18n',
+        displayName: 'Internationalization',
+        directory: 'i18n',
+        files: ['i18n.js']
+    },
+    {
         name: 'foo-bar',
         displayName: 'Foo/Bar',
         directory: 'foo-bar',
