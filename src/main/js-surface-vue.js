@@ -52,13 +52,16 @@ function getNextRefName() {
 }
 
 function customDefineFunctionalComponent(config) {
+    const defaultValues = determineDefaultValues(config);
+
     const component = Vue.extend({
         functional: true,
-        props: determinePropsConfig(config),
+        props: Object.keys(config.properties || {}),
+        inject: determineInjectionKeys(config),
 
         render: function (vueCreateElement, context) {
             const
-                props = mixPropsWithInjecions(context.props, context.injections),
+                props = mixProps(context.props, context.injections, defaultValues, config),
                 content = config.render(props);
 
             return renderContent(vueCreateElement, content, this);
@@ -72,15 +75,44 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
+    const defaultValues = determineDefaultValues(config);
+
     const component = Vue.extend({
-        props: determinePropsConfig(config),
+        props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
 
-        provide: {
-            value: 'xxx'
+        provide: !config.childInjectionKeys ? null : function () {
+            let ret = null;
+
+            if (config.childInjectionKeys) {
+                let injection = null;
+                ret = {};
+
+                for (let key of config.childInjectionKeys) {
+                    Object.defineProperty(ret, key, {
+                        enumerable: true,
+                        
+                        get: () => {
+                            let val;
+
+                            if (!injection && this.__getChildInjection) {
+                                injection = this.__getChildInjection() || null;
+                            }
+
+                            if (injection) {
+                                val = injection[key];
+                            }
+
+                            return val;
+                        }
+                    });
+                }
+            }
+
+            return ret;
         },
 
-        beforeMount() {
+        beforeCreate() {
             this.__resolveRenderingDone = null;
             this.__viewConsumer = content => {
                 this.__content = content;
@@ -103,17 +135,21 @@ function customDefineStandardComponent(config) {
 
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
+            this.__getChildInjection = initResult.getChildInjection;
+        },
+
+        beforeMount() {
 
             this.__propsConsumer(
-                mixPropsWithInjecions(
-                this.$options.propsData, this.injetions));
+                mixProps(
+                    this.$options.propsData,
+                    this,
+                    defaultValues, config));
 
             this.__refCallbacks = {};
         },
 
         mounted() {
-            this.__propsConsumer(this.$options.propsData); 
-        
             if (this.__resolveRenderingDone) {
                 this.__resolveRenderingDone();
             }
@@ -284,43 +320,51 @@ function convertChildren(children, vueCreateElement, component) {
     return ret;
 }
 
-function mixPropsWithInjecions(props, injections) {
-    let ret = props;
+function determineDefaultValues(config) {
+    const ret = {};
+
+    if (config.properties) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].defaultValue) {
+                ret[key] = config.properties[key].defaultValue;
+            } else if (config.properties[key].getDefaultValue) {
+                const getter = () => config.properties[key].getDefaultValue();
+                
+                Object.defineProperty(ret, key, { get: getter });
+            }
+        }
+    }
+
+    return ret;
+}
+
+function mixProps(props, injections, defaultValues, config) {
+    let ret = Object.assign({}, props);
 
     if (injections) {
-        ret = Object.assign({}, props);
-
-        for (let key of Object.keys(injections)) {
-            if (injections[key] !== undefined && props[key] === undefined) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].inject
+                && injections[key] !== undefined
+                && props[key] === undefined) {
+                
                 ret[key] = injections[key];
             }
         }
     }
 
-    return ret;
-}
+    if (defaultValues) {
+        for (let key of Object.keys(defaultValues)) {
+            if (ret[key] === undefined) {
+                const defaultValue = defaultValues[key];
 
-
-function determinePropsConfig(config) {
-    const ret = {};
-
-    if (config.properties) {
-        for (let key of Object.keys(config.properties)) {
-            const
-                srcCfg = config.properties[key];
-
-            if (srcCfg.defaultValue) {
-                ret[key] = {
-                    default: () => srcCfg.defaultValue
-                };
-            } else if (srcCfg.getDefaultValue) {
-                ret[key] = srcCfg.getDefaultValue;
+                ret[key] = defaultValue;
             }
         }
     }
 
     return ret;
 }
+
 
 function determineInjectionKeys(config) {
     const ret = [];

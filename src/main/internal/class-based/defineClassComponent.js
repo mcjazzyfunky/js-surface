@@ -33,7 +33,6 @@ export default function defineClassComponent(componentClass) {
             let
                 instance = new instanceClass(),
                 component = null,
-                getComponent = () => component, // TODO - ugly
                 content = null,
                 done = false;
 
@@ -113,7 +112,9 @@ export default function defineClassComponent(componentClass) {
             };
 
             if (config.childInjectionKeys) {
-                initResult.getChildInjection = () => getComponent().getChildInjection();
+                initResult.getChildInjection = () => component
+                        ? component.getChildInjection()
+                        : null;
             }
 
             return initResult;

@@ -12,7 +12,7 @@ const Parent = defineComponent(class extends Component {
 
     static get properties() {
         return {
-            value: {
+            masterValue: {
                 type: String,
                 defaultValue: 'default-value'
             }
@@ -25,13 +25,13 @@ const Parent = defineComponent(class extends Component {
 
     getChildInjection() {
         return {
-            value: this.props.value
+            value: this.props.masterValue
         };
     }
 
     render() {
         return h('div',
-            h('div', 'Provided value: ', this.props.value),
+            h('div', 'Provided value: ', this.props.masterValue),
             h('br'),
             h('div',
                 ChildFunctionBased(),
@@ -77,4 +77,4 @@ const ChildClassBased = defineComponent(class extends Component {
     }
 });
 
-render(Parent({ value: 'the injected value' }), 'main-content');
+render(Parent({ masterValue: 'the injected value' }), 'main-content');
