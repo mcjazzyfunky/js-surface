@@ -39,6 +39,7 @@ export {
 
 let nextRefID = 1;
 
+
 function getNextRefName() {
     const ret = 'ref-' + nextRefID.toString(16);
 
@@ -80,6 +81,7 @@ function customDefineStandardComponent(config) {
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
+        methods: determineMethods(config),
 
         provide: !config.childInjectionKeys ? null : function () {
             let ret = null;
@@ -122,6 +124,8 @@ function customDefineStandardComponent(config) {
         },
 
         created() {
+            this.__refCallbacks = {};
+            this.__refCleanupCallbacks = {};
             this.__resolveRenderingDone = null;
             this.__viewConsumer = content => {
                 this.__content = content;
@@ -148,30 +152,27 @@ function customDefineStandardComponent(config) {
         },
 
         beforeMount() {
-
             this.__propsConsumer(
                 mixProps(
                     this.$options.propsData,
                     this,
                     defaultValues, config));
-
-            this.__refCallbacks = {};
         },
 
-        mounted() {
-            if (this.__resolveRenderingDone) {
-                this.__resolveRenderingDone();
-            }
-        },
-
-        updated() {
+        mounted() {console.log('Mounted - Refs:', this.$refs)
             if (this.__resolveRenderingDone) {
                 this.__resolveRenderingDone();
             }
 
-            for (let key of Object.keys(this.$refs)) {
-                this.__refCallbacks[key](this.$refs[key]);
+            handleRefCallbacks(this);
+        },
+
+        updated() {console.log('Updated - Refs:', this.$refs, config.displayName);
+            if (this.__resolveRenderingDone) {
+                this.__resolveRenderingDone();
             }
+
+            handleRefCallbacks(this);
         },
 
         beforeDestroy() {
@@ -182,7 +183,6 @@ function customDefineStandardComponent(config) {
             if (this.childInjection) {
                 Object.assign({}, this.childInjection);
             }
-
 
             return renderContent(vueCreateElement, this.__content, this);
         }
@@ -238,18 +238,21 @@ function renderContent(vueCreateElement, content, component) {
         throw new Error('no surface element');
     }
 
+    let props = content.props;
+
     const
         type = content.type,
-        props = content.props,
         children = convertChildren(content.children, vueCreateElement, component);
 
-    let ret, ref = null, refName = null;
-
+    let ret, refCallback = null, refName = null;
 
     if (props && props.ref) {
-        ref = props.ref;
-        refName = getNextRefName();
+        refCallback = props.ref,
+        refName = getNextRefName(),
+        props = Object.assign({}, props, { ref: refName });
+        component.__refCallbacks[refName] = refCallback;
 
+        /*
         if (!component.__refCallbacks) {
             component.__refCallbacks = {};
         }
@@ -258,6 +261,7 @@ function renderContent(vueCreateElement, content, component) {
             callback: ref,
             element: null
         };
+        */
     }
 
     if (typeof type === 'string') {
@@ -355,7 +359,11 @@ function determineDefaultValues(config) {
 function mixProps(props, injections, defaultValues, config) {
     let ret = Object.assign({}, props);
 
-    if (injections) {
+    // TODO
+    const hasInjections = config.properties
+        && Object.keys(config.properties).some(key => config.properties[key].inject);
+
+    if (hasInjections) {
         for (let key of Object.keys(config.properties)) {
             if (config.properties[key].inject
                 && injections[key] !== undefined
@@ -394,3 +402,39 @@ function determineInjectionKeys(config) {
     return ret;
 }
 
+function handleRefCallbacks(comp) {
+    for (let key of Object.keys(comp.__refCleanupCallbacks)) {
+        const callback = comp.__refCallbacks[key];
+        
+        delete(comp.__refCleanupCallbacks[key]);
+
+        callback();
+    }
+
+    for (let key of Object.keys(comp.__refCallbacks)) {
+        const
+            callback = comp.__refCallbacks[key],
+            ref = comp.$refs[key];
+        
+        delete(comp.__refCallbacks[key]);
+
+        comp.__refCleanupCallbacks[key] = () => callback(null, ref);
+        callback(ref, null);
+    }
+}
+
+function determineMethods(config) {
+    let ret = null;
+
+    if (config.publicMethods) {
+        ret = {};
+
+        for (let key of Object.keys(config.publicMethods)) {
+            ret[key] = function (...args) {
+                return config.publicMethods[key].apply(this.__instance, args);
+            };
+        }
+    }
+
+    return ret;
+}

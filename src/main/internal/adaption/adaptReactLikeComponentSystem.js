@@ -89,8 +89,8 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
 
                 if (config.publicMethods) {
                     for (let key of Object.keys(config.publicMethods)) {
-                        ExtCustomComponent.prototype[key] = function () {
-                            return config.publicMethods[key](this.__instance, arguments);
+                        ExtCustomComponent.prototype[key] = function (...args) {
+                            return config.publicMethods[key].apply(this.__instance, args);
                         };
                     }
                 }

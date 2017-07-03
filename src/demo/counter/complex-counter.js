@@ -123,20 +123,21 @@ const Counter = defineComponent(CounterComponent);
 
 // --------------------------------------------------------------------
 
-const CounterCtrl = defineComponent({
-    displayName:  'CounterCtrl',
+const CounterCtrl = defineComponent(class extends Component {
+    static get displayName() {
+        return 'CounterCtrl';
+    }
 
     render() {
         let counterInstance = null;
 
         return (
-            h('div',
-                { className: 'counter-ctrl' },
+            h('div.counter-ctrl',
                 h('button.btn.btn-info',
                     { onClick: () => counterInstance.resetCounter(0) },
                     'Reset to 0'),
                     ' ',
-                    Counter({ ref: it => alert(counterInstance = it) }),
+                    Counter({ ref: it => { counterInstance = it; } }),
                     ' ',
                     h('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },

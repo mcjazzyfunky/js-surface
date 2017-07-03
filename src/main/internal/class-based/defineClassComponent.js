@@ -135,8 +135,8 @@ export default function defineClassComponent(componentClass) {
         config.publicMethods = {};
 
         for (let key of Object.keys(publicMethods)) {
-            config.publicMethods[key] = function (instance, args) {
-                return publicMethods[key].apply(instance.__component, args);
+            config.publicMethods[key] = function (...args) {
+                return publicMethods[key].apply(this.__component, args);
             };
         }
     }
