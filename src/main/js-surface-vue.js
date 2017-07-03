@@ -80,7 +80,6 @@ function customDefineStandardComponent(config) {
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
-        data: determineDataFunction(config),
 
         provide: !config.childInjectionKeys ? null : function () {
             let ret = null;
@@ -98,10 +97,19 @@ function customDefineStandardComponent(config) {
 
                             if (!injection && this.__getChildInjection) {
                                 injection = this.__getChildInjection() || null;
+
+                                if (this.childInjection) {
+                                    this.childInjection = injection;
+                                }
                             }
 
                             if (injection) {
-                                val = injection[key];
+                                val = this.data
+                                    ? this.childInjection[key]
+                                    : injection[key]
+                            }
+
+                            if (injection && !this.data) {
                             }
 
                             return val;
@@ -113,7 +121,7 @@ function customDefineStandardComponent(config) {
             return ret;
         },
 
-        beforeCreate() {
+        created() {
             this.__resolveRenderingDone = null;
             this.__viewConsumer = content => {
                 this.__content = content;
@@ -170,7 +178,12 @@ function customDefineStandardComponent(config) {
             this.__propsConsumer(undefined);
         },
 
-        render: function (vueCreateElement) {
+        render(vueCreateElement) {
+            if (this.childInjection) {
+                Object.assign({}, this.childInjection);
+            }
+
+
             return renderContent(vueCreateElement, this.__content, this);
         }
     });
@@ -381,21 +394,3 @@ function determineInjectionKeys(config) {
     return ret;
 }
 
-function determineDataFunction(config) {
-    let ret = null;
-
-    if (config.childInjectionKeys) {
-        const injection = {};
-
-        for (let key of config.childInjectionKeys) {
-            injection[key] = null;
-        }        
-    
-        ret = () => ({
-            injection:
-                Object.assign({}, injection)
-        });
-    }
-
-    return ret;
-}

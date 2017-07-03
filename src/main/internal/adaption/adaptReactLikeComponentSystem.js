@@ -103,7 +103,17 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                     }
 
                     ExtCustomComponent.prototype.getChildContext = function() {
-                        return this.__getChildInjection();
+                        // TODO - call this.__getChildInjection each time and make sure
+                        // that the values of the result did not change,
+                        // as changing the child injection is not supported currently
+                        let ret = this.__childContext;
+
+                        if (!ret) {
+                            this.__childContext = this.__getChildInjection();
+                            ret = this.__childContext;
+                        }
+
+                        return ret;
                     };
                 }
 

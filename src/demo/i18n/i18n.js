@@ -7,7 +7,7 @@ import {
 
 import { Spec } from 'js-spec';
 
-const translationsByLang = {
+const translations = {
     en: {
         salutation: 'Hello, ladies and gentlemen'
     },
@@ -18,6 +18,25 @@ const translationsByLang = {
         salutation: 'Salut, Mesdames, Messieurs'
     }
 };
+
+class Translator {
+    constructor(translations) {
+        this.__translations = translations;
+        this.__lang = 'en';
+    }
+
+    setLang(lang) {
+        this.__lang = lang;
+    }
+
+    getLang() {
+        return this.__lang;
+    }
+
+    translate(key) {
+        return this.__translations[this.__lang][key];
+    }
+}
 
 const App = defineComponent(class extends Component {
     static get displayName() {
@@ -35,22 +54,24 @@ const App = defineComponent(class extends Component {
     }
 
     static get childInjectionKeys() {
-        return ['translations'];
+        return ['translator'];
     }
 
     constructor(props) {
         super(props);
-        this.setLang(props.defaultLang);
+        this.__translator = new Translator(translations);
+        this.__translator.setLang(this.props.defaultLang);
     }
 
     getChildInjection() {
         return {
-            translations: translationsByLang[this.state.lang]
+            translator: this.__translator
         };
     }
 
     setLang(lang) {
-        this.state = { lang };
+        this.__translator.setLang(lang);
+        this.refresh();
     }
 
     render() {
@@ -59,12 +80,12 @@ const App = defineComponent(class extends Component {
                 h('label[for=lang-selector]',
                     'Select language: '),
                 h('select#lang-selector',
-                    {   value: this.state.lang,
+                    {   value: this.__translator.getLang(),
                         onChange: ev => this.setLang(ev.target.value)
                     },
-                    h('option', 'en'),
-                    h('option', 'fr'),
-                    h('option', 'de')),
+                    h('option[value=en]', 'en'),
+                    h('option[value=fr]', 'fr'),
+                    h('option[value=de]', 'de')),
                 h('div', Text({ name: 'salutation'})))
         );
     }
@@ -78,16 +99,16 @@ const Text = defineComponent({
             type: String,
         },
 
-        translations: {
-            type: Object,
+        translator: {
+            type: Translator,
             inject: true
         }
     },
 
-    render(props) {console.log('Rendering Text', props.translations)
+    render(props) {
         return (
             h('div',
-                props.translations[props.name])
+                props.translator.translate(props.name))
         );
     }
 });
