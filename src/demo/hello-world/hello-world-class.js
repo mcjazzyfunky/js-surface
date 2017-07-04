@@ -53,7 +53,7 @@ class HelloWorldComponent extends Component {
 
     render() {
         return (
-            h('div', { ref: () => alert(1111) } , `Hello ${this.props.name}!`)
+            h('div', `Hello ${this.props.name}!`)
         );
     }
 }

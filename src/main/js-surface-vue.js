@@ -123,13 +123,23 @@ function customDefineStandardComponent(config) {
             return ret;
         },
 
+        data() {
+            return {
+                index: 0
+            };
+        },
+
         created() {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
             this.__resolveRenderingDone = null;
             this.__viewConsumer = content => {
                 this.__content = content;
-                this.$forceUpdate();
+
+                if (!this.__preventForceUpdate) {
+                    this.__preventForceUpdate = true;
+                    this.$forceUpdate();
+                }
 
                 return new Promise(resolve => {
                     this.__resolveRenderingDone = () => {
@@ -159,7 +169,9 @@ function customDefineStandardComponent(config) {
                     defaultValues, config));
         },
 
-        mounted() {console.log('Mounted - Refs:', this.$refs)
+        mounted() {
+            this.__preventForceUpdate = false;
+            
             if (this.__resolveRenderingDone) {
                 this.__resolveRenderingDone();
             }
@@ -167,7 +179,22 @@ function customDefineStandardComponent(config) {
             handleRefCallbacks(this);
         },
 
-        updated() {console.log('Updated - Refs:', this.$refs, config.displayName);
+        beforeUpdate() {
+
+            handleRefCleanupCallbacks(this);            
+
+            if (!this.__preventForceUpdate) {
+                this.__propsConsumer(
+                    mixProps(
+                        this.$options.propsData,
+                        this,
+                        defaultValues, config));
+            }
+        },
+
+        updated() {
+            this.__preventForceUpdate = false;
+            
             if (this.__resolveRenderingDone) {
                 this.__resolveRenderingDone();
             }
@@ -177,9 +204,10 @@ function customDefineStandardComponent(config) {
 
         beforeDestroy() {
             this.__propsConsumer(undefined);
+            handleRefCleanupCallbacks(this);
         },
 
-        render(vueCreateElement) {
+        render(vueCreateElement) {this.index;
             if (this.childInjection) {
                 Object.assign({}, this.childInjection);
             }
@@ -402,26 +430,6 @@ function determineInjectionKeys(config) {
     return ret;
 }
 
-function handleRefCallbacks(comp) {
-    for (let key of Object.keys(comp.__refCleanupCallbacks)) {
-        const callback = comp.__refCallbacks[key];
-        
-        delete(comp.__refCleanupCallbacks[key]);
-
-        callback();
-    }
-
-    for (let key of Object.keys(comp.__refCallbacks)) {
-        const
-            callback = comp.__refCallbacks[key],
-            ref = comp.$refs[key];
-        
-        delete(comp.__refCallbacks[key]);
-
-        comp.__refCleanupCallbacks[key] = () => callback(null, ref);
-        callback(ref, null);
-    }
-}
 
 function determineMethods(config) {
     let ret = null;
@@ -437,4 +445,35 @@ function determineMethods(config) {
     }
 
     return ret;
+}
+
+function handleRefCallbacks(comp) {
+    for (let key of Object.keys(comp.__refCallbacks)) {
+        const
+            callback = comp.__refCallbacks[key],
+            ref = comp.$refs[key];
+        
+        delete(comp.__refCallbacks[key]);
+
+        comp.__refCleanupCallbacks[key] = () => callback(null, ref);
+
+        if (callback) {
+            callback(ref, null);
+        }
+    }
+}
+
+
+function handleRefCleanupCallbacks(comp) {
+    for (let key of Object.keys(comp.__refCleanupCallbacks)) {
+        //if (!comp.$refs[key]) {
+            const callback = comp.__refCleanupCallbacks[key];
+            
+            delete(comp.__refCleanupCallbacks[key]);
+
+            if (callback) {
+                callback();
+            }
+//        }
+    }
 }
