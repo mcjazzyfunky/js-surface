@@ -71,7 +71,9 @@ export default function createPropsAdjuster(config) {
 function validateProps(props, validations) {
     let errMsg = null;
 
-    const keysToBeChecked = new Set(Object.getOwnPropertyNames(props));
+    const keysToBeChecked = props
+        ? new Set(Object.getOwnPropertyNames(props))
+        : new Set();
 
     // Depending on the platform they may be still available
     keysToBeChecked.delete('ref');

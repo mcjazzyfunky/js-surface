@@ -62,8 +62,8 @@ export default function adaptComponentSystem(config) {
                 throw new Error('[defineComponent] Illegal configuration');
             }
 
-            Object.freeze(ret.meta);
-            Object.freeze(ret);
+         //   Object.freeze(ret.meta);
+         //   Object.freeze(ret);
 
             return ret;
         },

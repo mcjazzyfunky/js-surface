@@ -108,10 +108,7 @@ function customDefineStandardComponent(config) {
                             if (injection) {
                                 val = this.data
                                     ? this.childInjection[key]
-                                    : injection[key]
-                            }
-
-                            if (injection && !this.data) {
+                                    : injection[key];
                             }
 
                             return val;
@@ -121,12 +118,6 @@ function customDefineStandardComponent(config) {
             }
 
             return ret;
-        },
-
-        data() {
-            return {
-                index: 0
-            };
         },
 
         created() {
@@ -159,6 +150,13 @@ function customDefineStandardComponent(config) {
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
             this.__getChildInjection = initResult.getChildInjection;
+
+            Object.defineProperty(this, 'props', {
+                get() {
+                    // TODO - Add children?
+                    return this.$options.propsData;
+                }
+            });
         },
 
         beforeMount() {
