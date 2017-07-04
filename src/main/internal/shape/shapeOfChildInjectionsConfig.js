@@ -2,7 +2,7 @@ import { REGEX_INJECTION_NAME } from '../constant/constants.js';
 import { Spec } from 'js-spec';
 
 export default {
-    childInjectionKeys:
+    childInjections:
         Spec.optional(
             Spec.and(
                 Spec.array,

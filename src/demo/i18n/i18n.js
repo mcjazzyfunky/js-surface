@@ -53,7 +53,7 @@ const App = defineComponent(class extends Component {
         };
     }
 
-    static get childInjectionKeys() {
+    static get childInjections() {
         return ['translator'];
     }
 
@@ -63,7 +63,7 @@ const App = defineComponent(class extends Component {
         this.__translator.setLang(this.props.defaultLang);
     }
 
-    getChildInjection() {
+    provideChildInjections() {
         return {
             translator: this.__translator
         };
@@ -94,6 +94,8 @@ const App = defineComponent(class extends Component {
 const Text = defineComponent({
     displayName: 'Text',
 
+    properties: ['name', 'translator'],
+/*
     properties: {
         name: {
             type: String,
@@ -104,7 +106,7 @@ const Text = defineComponent({
             inject: true
         }
     },
-
+*/
     render(props) {
         return (
             h('div',

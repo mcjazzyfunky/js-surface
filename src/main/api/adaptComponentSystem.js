@@ -2,6 +2,7 @@ import Component from './Component.js';
 import defineClassComponent from '../internal/class-based/defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
+import normalizeComponentConfig from '../internal/helper/normalizeComponentConfig.js';
 import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
 
 import validateConfigForStandardComponent from '../internal/validation/validateStandardComponentConfig.js';
@@ -86,8 +87,9 @@ export default function adaptComponentSystem(config) {
 }
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
-    const ret = config => {
+    const ret = cfg => {
         const
+            config = normalizeComponentConfig(cfg),
             propsAdjuster = createPropsAdjuster(config),
 
             adjustedConfig = {
@@ -103,14 +105,15 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 }
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
-    return config => {
-        const err = validateConfigForStandardComponent(config);
+    return cfg => {
+        const err = validateConfigForStandardComponent(cfg);
 
         if (err) {
             throw err;
         }
 
         const
+            config = normalizeComponentConfig(cfg),
             propsAdjuster = createPropsAdjuster(config),
     
             adjustedConfig = Object.assign({}, config, {

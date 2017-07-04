@@ -7,7 +7,7 @@ import shapeOfInitResultWithInjection
     from '../shape/shapeOfInitResultWithInjection.js';
 
 export default function validateInitResult(initResult, config) {
-    let error = config.childInjectionKeys
+    let error = config.childInjections
         ? Spec.shape(shapeOfInitResultWithInjection)(initResult, '')
         : Spec.shape(shapeOfInitResultWithoutInjection)(initResult, '');
 

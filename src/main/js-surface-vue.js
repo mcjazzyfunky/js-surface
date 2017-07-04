@@ -83,22 +83,22 @@ function customDefineStandardComponent(config) {
         inject: determineInjectionKeys(config),
         methods: determineMethods(config),
 
-        provide: !config.childInjectionKeys ? null : function () {
+        provide: !config.childInjections ? null : function () {
             let ret = null;
 
-            if (config.childInjectionKeys) {
+            if (config.childInjections) {
                 let injection = null;
                 ret = {};
 
-                for (let key of config.childInjectionKeys) {
+                for (let key of Object.keys(config.childInjections)) {
                     Object.defineProperty(ret, key, {
                         enumerable: true,
                         
                         get: () => {
                             let val;
 
-                            if (!injection && this.__getChildInjection) {
-                                injection = this.__getChildInjection() || null;
+                            if (!injection && this.__provideChildInjections) {
+                                injection = this.__provideChildInjections() || null;
 
                                 if (this.childInjection) {
                                     this.childInjection = injection;
@@ -149,7 +149,7 @@ function customDefineStandardComponent(config) {
 
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
-            this.__getChildInjection = initResult.getChildInjection;
+            this.__provideChildInjections = initResult.provideChildInjections;
 
             Object.defineProperty(this, 'props', {
                 get() {

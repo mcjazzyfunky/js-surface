@@ -111,9 +111,9 @@ export default function defineClassComponent(componentClass) {
                 instance 
             };
 
-            if (config.childInjectionKeys) {
-                initResult.getChildInjection = () => component
-                        ? component.getChildInjection()
+            if (config.childInjections) {
+                initResult.provideChildInjections = () => component
+                        ? component.provideChildInjections()
                         : null;
             }
 
@@ -127,8 +127,8 @@ export default function defineClassComponent(componentClass) {
         init
     };
 
-    if (componentClass.childInjectionKeys) {
-        config.childInjectionKeys = componentClass.childInjectionKeys; 
+    if (componentClass.childInjections) {
+        config.childInjections = componentClass.childInjections; 
     }
 
     if (publicMethods) {

@@ -9,18 +9,24 @@ export default {
 
     properties:
         Spec.optional(
-            Spec.and(
-                Spec.keys(
-                    Spec.matches(REGEX_PROPERTY_NAME)),
-                Spec.values(
-                    Spec.shape({
-                        type:
-                            Spec.func,
-                        constraint:
-                            Spec.optional(Spec.func),
-                        defaultValue:
-                             Spec.any,
-                        inject:
-                            Spec.optional(Spec.boolean)
-                    })))),
+            Spec.or(
+                Spec.and(
+                    Spec.array,
+                    Spec.values(Spec.matches(REGEX_PROPERTY_NAME)),
+                    Spec.unique
+                ),
+                Spec.and(
+                    Spec.keys(
+                        Spec.matches(REGEX_PROPERTY_NAME)),
+                    Spec.values(
+                        Spec.shape({
+                            type:
+                                Spec.func,
+                            constraint:
+                                Spec.optional(Spec.func),
+                            defaultValue:
+                                Spec.any,
+                            inject:
+                                Spec.optional(Spec.boolean)
+                        }))))),
 };

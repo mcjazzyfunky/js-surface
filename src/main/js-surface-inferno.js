@@ -99,21 +99,21 @@ function customDefineStandardComponent(config) {
 
     ExtCustomComponent.displayName = config.displayName;
 
-    if (config.childInjectionKeys) {
+    if (config.childInjections) {
         ExtCustomComponent.childContextTypes = {};
 
-        for (let key of config.childInjectionKeys) {
+        for (let key of Object.keys(config.childInjections)) {
             ExtCustomComponent.childContextTypes[key] = returnNull;
         }
 
         ExtCustomComponent.prototype.getChildContext = function() {
-            // TODO - call this.__getChildInjection each time and make sure
+            // TODO - call this.__provideChildInjections each time and make sure
             // that the values of the result did not change,
             // as changing the child injection is not supported currently
             let ret = this.__childContext;
 
             if (!ret) {
-                this.__childContext = this.__getChildInjection();
+                this.__childContext = this.__provideChildInjections();
                 ret = this.__childContext;
             }
 
@@ -186,7 +186,7 @@ class CustomComponent extends Inferno.Component {
         let initialized = false;
 
         const
-            { propsConsumer, instance, getChildInjection } = config.init(
+            { propsConsumer, instance, provideChildInjections } = config.init(
                 view => {
                     this.__viewToRender = view;
 
@@ -206,8 +206,8 @@ class CustomComponent extends Inferno.Component {
         this.__propsConsumer = propsConsumer;
         this.__instance = instance;
 
-        if (getChildInjection) {
-            this.__getChildInjection = getChildInjection;
+        if (provideChildInjections) {
+            this.__provideChildInjections = provideChildInjections;
         }
     }
 

@@ -187,6 +187,10 @@ const Spec = {
         };
     },
 
+    unique(it, path) {
+        return null; // TODO
+    },
+
     shape(shape, allowExtension = false) {
         return (it, path) => {
             let ret = null;

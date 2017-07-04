@@ -19,11 +19,11 @@ const Parent = defineComponent(class extends Component {
         };
     }
 
-    static get childInjectionKeys() {
+    static get childInjections() {
         return ['value'];
     }
 
-    getChildInjection() {
+    provideChildInjections() {
         return {
             value: this.props.masterValue
         };

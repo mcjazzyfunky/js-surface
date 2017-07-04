@@ -1,7 +1,7 @@
 import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
-import shapeOfChildInjectionKeysConfig from './shapeOfChildInjectionKeysConfig.js';
+import shapeOfchildInjectionsConfig from './shapeOfchildInjectionsConfig.js';
 
 export default Object.assign({},
     shapeOfPartialBaseConfig,
-    shapeOfChildInjectionKeysConfig);
+    shapeOfchildInjectionsConfig);
 
