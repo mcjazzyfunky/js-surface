@@ -46,13 +46,24 @@ export default function adaptComponentSystem(config) {
 
             if (cfg.init) {
                 ret = defineStandardComponent(cfg);
+                ret.meta = Object.assign({ kind: 'standard' }, cfg);
             } else if (cfg.render) {
                 ret = defineFunctionalComponent(cfg);
+                ret.meta = Object.assign({ kind: 'functional' }, cfg);
             } else if (typeof cfg === 'function') {
                 ret = defineClassComponent(cfg);
+                
+                ret.meta = Object.assign({
+                    kind: 'class-based',
+                    displayName: cfg.displayName,
+                    componentClass: cfg
+                }, cfg);
             } else {
                 throw new Error('[defineComponent] Illegal configuration');
             }
+
+            Object.freeze(ret.meta);
+            Object.freeze(ret);
 
             return ret;
         },
