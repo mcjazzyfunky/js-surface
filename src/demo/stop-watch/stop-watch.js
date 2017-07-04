@@ -1,11 +1,11 @@
 import {
-    defineComponent,
+    defineClassComponent,
     createElement as h,
     render,
     Component,
 }  from 'js-surface';
 
-const StopWatch = defineComponent(class extends Component {
+const StopWatch = defineClassComponent(class extends Component {
     static get displayName() {
         return 'StopWatch';
     }

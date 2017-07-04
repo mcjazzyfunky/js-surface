@@ -1,6 +1,6 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
@@ -82,6 +82,6 @@ class SimpleCounterComponent extends Component {
 }
 
 
-const SimpleCounter = defineComponent(SimpleCounterComponent);
+const SimpleCounter = defineClassComponent(SimpleCounterComponent);
 
 render(SimpleCounter({ initialValue: 100 }), 'main-content');

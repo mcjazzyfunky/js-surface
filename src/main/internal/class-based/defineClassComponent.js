@@ -1,6 +1,6 @@
 import validateComponentClass from '../validation/validateComponentClass.js';
 
-import { defineComponent }  from 'js-surface';
+import { defineStandardComponent }  from 'js-surface';
 
 export default function defineClassComponent(componentClass) {
     const
@@ -141,5 +141,5 @@ export default function defineClassComponent(componentClass) {
         }
     }
 
-    return defineComponent(config);
+    return defineStandardComponent(config);
 }

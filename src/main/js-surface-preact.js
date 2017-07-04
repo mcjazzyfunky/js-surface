@@ -6,7 +6,9 @@ const VNode = Preact.h('').constructor;
 
 const {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -24,7 +26,9 @@ const {
 
 export {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

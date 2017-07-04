@@ -41,44 +41,9 @@ export default function adaptComponentSystem(config) {
     return {
         ComponentSystem,
         createElement,
-
-        defineComponent(cfg) {
-            let ret, meta;
-
-            if (cfg.init) {
-                ret = defineStandardComponent(cfg);
-                meta = Object.assign({ kind: 'standard' }, cfg);
-            } else if (cfg.render) {
-                ret = defineFunctionalComponent(cfg);
-                meta = Object.assign({ kind: 'functional' }, cfg);
-            } else if (typeof cfg === 'function') {
-                ret = defineClassComponent(cfg);
-                
-                meta = Object.assign({
-                    kind: 'class-based',
-                    displayName: cfg.displayName,
-                    componentClass: cfg
-                }, cfg);
-            } else {
-                throw new Error('[defineComponent] Illegal configuration');
-            }
-
-            // TODO - the following lines are really strange
-            Object.freeze(meta);
-
-            if (!ret.meta) {
-                Object.defineProperty(ret, 'meta', {
-                    enumerable: true,
-
-                    get() {
-                        return meta;
-                    }
-                });
-            }
-
-            return ret;
-        },
-
+        defineFunctionalComponent,
+        defineStandardComponent,
+        defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
         render: config.interface.render,

@@ -5,7 +5,9 @@ import Vue from 'vue';
 
 const {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -27,7 +29,9 @@ const {
 
 export {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

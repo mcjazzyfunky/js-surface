@@ -1,5 +1,6 @@
 import {
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
     createElement as h,
     render,
     Component,
@@ -7,7 +8,7 @@ import {
 
 const COLORS = ['red', 'yellow', 'orange'];
 
-const Tile = defineComponent({
+const Tile = defineFunctionalComponent({
     displayName:  'Tile',
     
     properties: {
@@ -39,7 +40,7 @@ const Tile = defineComponent({
     }
 });
 
-const TileRow = defineComponent(({
+const TileRow = defineFunctionalComponent({
     displayName:  'TileRow',
     
     properties: {
@@ -67,7 +68,7 @@ const TileRow = defineComponent(({
        
         return h('div', { style: { clear: 'both' }}, tiles);
     }
-}));
+});
 
 class SpeedTestComponent extends Component {
     static get displayName() {
@@ -132,6 +133,6 @@ class SpeedTestComponent extends Component {
     }
 }
 
-const SpeedTest = defineComponent(SpeedTestComponent);
+const SpeedTest = defineClassComponent(SpeedTestComponent);
 
 render(SpeedTest({ columnCount: 20, rowCount: 20, tileWidth: 5 }), 'main-content');

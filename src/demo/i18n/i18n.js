@@ -1,6 +1,7 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
     render,
     Component
 } from 'js-surface';
@@ -38,7 +39,7 @@ class Translator {
     }
 }
 
-const App = defineComponent(class extends Component {
+const App = defineClassComponent(class extends Component {
     static get displayName() {
         return 'App';
     }
@@ -91,7 +92,7 @@ const App = defineComponent(class extends Component {
     }
 });
 
-const Text = defineComponent({
+const Text = defineFunctionalComponent({
     displayName: 'Text',
 
     properties: {

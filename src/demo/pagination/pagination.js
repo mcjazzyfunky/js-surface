@@ -1,5 +1,6 @@
 import {
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
     createElement as h,
     render,
     Component,
@@ -18,7 +19,7 @@ const
     pageSize = 25,
     totalItemCount = 1220;
 
-export const Pagination = defineComponent({
+export const Pagination = defineFunctionalComponent({
     displayName:  'Pagination',
 
     properties: {
@@ -195,7 +196,7 @@ class DemoOfPaginationComponent extends Component {
     }
 }
 
-const DemoOfPagination = defineComponent(DemoOfPaginationComponent);
+const DemoOfPagination = defineClassComponent(DemoOfPaginationComponent);
 
 // -----------------
 
@@ -319,21 +320,21 @@ const
     RPagination = React.createFactory(RPaginationClass),
     RDemoOfPagination = React.createFactory(RDemoOfPaginationClass);
 
-    const container = document.getElementById('main-content');
+const container = document.getElementById('main-content');
 
-    container.innerHTML =
-        '<div class="row" style="margin: 0 0 0 50px">'
-        + '<div class="col-md-6"><b>js-surface:</b></div>'
-        + '<div class="col-md-6"><b>React:</b></div>'
-        + '<div id="section-surface" class="col-md-6"></div>'
-        + '<div id="section-react" class="col-md-6"></div>'
-        + '</div>';
+container.innerHTML =
+    '<div class="row" style="margin: 0 0 0 50px">'
+    + '<div class="col-md-6"><b>js-surface:</b></div>'
+    + '<div class="col-md-6"><b>React:</b></div>'
+    + '<div id="section-surface" class="col-md-6"></div>'
+    + '<div id="section-react" class="col-md-6"></div>'
+    + '</div>';
 
-    render(
-        DemoOfPagination(),
-        'section-surface');
+render(
+    DemoOfPagination(),
+    'section-surface');
 
-    ReactDOM.render(
-        RDemoOfPagination(),
-        document.getElementById('section-react'));
+ReactDOM.render(
+    RDemoOfPagination(),
+    document.getElementById('section-react'));
 

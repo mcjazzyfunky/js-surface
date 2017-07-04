@@ -1,6 +1,8 @@
 import {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -10,7 +12,9 @@ import {
 
 export {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

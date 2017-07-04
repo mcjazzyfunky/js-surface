@@ -1,6 +1,6 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
@@ -58,6 +58,6 @@ class HelloWorldComponent extends Component {
     }
 }
 
-const HelloWorld = defineComponent(HelloWorldComponent);
+const HelloWorld = defineClassComponent(HelloWorldComponent);
 
 render(HelloWorld({ name: 'John Doe' }), 'main-content');

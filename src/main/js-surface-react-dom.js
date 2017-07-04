@@ -18,7 +18,9 @@ function reactRender(content, targetNode) {
 
 const {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -36,7 +38,9 @@ const {
 
 export {
     createElement,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

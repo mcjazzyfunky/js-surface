@@ -1,139 +1,58 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
 
-import { Record, List } from 'immutable';
 import { Spec } from 'js-spec';
 
-const
-    specStore = Spec.shape({
-        subscribe: Spec.func,
-        getState: Spec.func,
-        dispatch: Spec.func
-    }),
+const TodoMVCApp = defineClassComponent({
+    displayName: 'TodoMVCApp',
 
-    AppState = Record({
-        todos: List(),
-        activeFilter: 'all',
-        todoText: '',
-        editTodoId: null,
-    }),
+    childInjections: ['ctrl'],
 
-    Todo = Record({
-        id: null,
-        text: '',
-        completed: false
-    }),
+    publicMethods: {
 
-    Actions = {
-        addTodo(text) {
-            return { type: 'addTodo', text };
-        },
-
-        removeTodo(id) {
-            return { type: 'removeTodo', id };
-        },
-
-        setActiveFilter(filter) {
-            return { type: 'setActiveFilter', filter };
-        }
     },
 
-    reducer = (state = AppState(), action) => {
-        let ret = state;
-
-        switch (action.type) {
-        case 'addTodo':
-            ret = state.todos.push(Todo({
-                id: Date.now().toString(36),
-                text: action.text
-            }));
-
-            break;
-
-        case 'removeTodo':
-            ret = state.todos.filter(todo => todo.id !== action.id);
-
-            break;
-        }
-
-        return ret;
-    },
-
-    store = createStore(reducer);
-
-const Root = defineComponent(class extends Component {
-    static get childInjectionKeys() {
-        return ['state', 'dispatch'];
-    }
-
-    construct() {
-        super();
-
+    init(props) {
         this.state = {
             newTodo: '',
-            todoFilter: 'all',
+            todoFilder: 'all',
             todos: []
-        };
-
-        this.dispatch = this.dispatch.bind(this);
-    }
-    
-    getChildInjection() {
-        return {
-
         }
-    }
+     
+        this.ctrl = {
+            addItem(text) {
 
+            }
+        };
+    },
+    
+    provideChildInjections() {
+        return {
+            ctrl: this.ctrl
+        };
+    }
 
     render() {
-        return h('div', this.props.children);
-    }
-
-    dispatch(action) {
-        const newState = reducer(this.state, action);
-
-        if (newState !== this.state) {
-            this.state = newState;
-        }
-    }
-});
-
-const TodoMVCApp = defineComponent({
-    displayName: 'App',
-
-    properties: {
-        state: {
-            type: Object,
-            constraint: Spec.shape(stateShape)
-        },
-
-        dispatch: {
-            type: Function
-        }
-    },
-
-    render(props) {
         return (
-            h(StoreProvider(
-                { store },
+            h('div',
                 h('section.todoapp',
                     Header(),
                     TodoList(),
                     TodoFilters()),
-                Footer()))
+                Footer())
         );
     }
 });
 
-const Header = defineFunctionalComponent({
+const Header = defineComponent({
     displayName: 'Header',
 
     properties: {
-        store: {
+        ctrl: {
             type: Object,
             inject: true
         }
@@ -149,7 +68,7 @@ const Header = defineFunctionalComponent({
     }
 });
 
-const TodoList = defineFunctionalComponent({
+const TodoList = defineComponent({
     displayName: 'MainSection',
 
     properties: {
@@ -229,10 +148,10 @@ const TodoFilters = defineFunctionalComponent({
     }
 });
 
-const Footer = defineFunctionalComponent({
+const Footer = defineComponent({
     displayName: 'Footer',
 
-    render(props) {
+    render() {
         return (
             h('footer.info',
                 h('p',

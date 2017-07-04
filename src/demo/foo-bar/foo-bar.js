@@ -1,11 +1,11 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
 
-const App = defineComponent(class extends Component {
+const App = defineClassComponent(class extends Component {
     static get displayName() {
         return 'App';
     }

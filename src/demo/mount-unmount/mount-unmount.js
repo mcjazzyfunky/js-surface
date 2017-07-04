@@ -1,12 +1,12 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render,
     Component
 } from 'js-surface';
 
 
-const MountUnmount = defineComponent(class extends Component {
+const MountUnmount = defineClassComponent(class extends Component {
     static get displayName() {
         return 'MountUnmount';
     }
@@ -41,7 +41,7 @@ const MountUnmount = defineComponent(class extends Component {
     }
 });
 
-const Foo = defineComponent(class extends Component {
+const Foo = defineClassComponent(class extends Component {
     static get displayName() {
         return 'Foo';
     }
@@ -59,7 +59,7 @@ const Foo = defineComponent(class extends Component {
     }
 });
 
-const Bar = defineComponent(class extends Component {
+const Bar = defineClassComponent(class extends Component {
     static get displayName() {
         return 'Bar';
     }
