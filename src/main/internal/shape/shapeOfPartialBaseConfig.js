@@ -12,6 +12,7 @@ export default {
             Spec.or(
                 Spec.and(
                     Spec.array,
+                    Spec.length(Spec.greater(0)),
                     Spec.values(Spec.matches(REGEX_PROPERTY_NAME)),
                     Spec.unique
                 ),

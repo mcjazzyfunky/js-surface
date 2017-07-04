@@ -27,7 +27,7 @@ export default function normalizeComponentConfig(config) {
             ret.childInjections = normalizePropertiesLikeConfig(config.childInjections);
         }
     }
-console.log(config)
+
     return ret;
 }
 

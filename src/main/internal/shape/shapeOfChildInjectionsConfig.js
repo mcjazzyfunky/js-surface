@@ -4,8 +4,21 @@ import { Spec } from 'js-spec';
 export default {
     childInjections:
         Spec.optional(
-            Spec.and(
-                Spec.array,
-                Spec.length(Spec.greater(0)),
-                Spec.values(Spec.matches(REGEX_INJECTION_NAME)))),
+            Spec.or(
+                Spec.and(
+                    Spec.array,
+                    Spec.length(Spec.greater(0)),
+                    Spec.values(Spec.matches(REGEX_INJECTION_NAME)),
+                    Spec.unique
+                ),
+                Spec.and(
+                    Spec.keys(
+                        Spec.matches(REGEX_INJECTION_NAME)),
+                    Spec.values(
+                        Spec.shape({
+                            type:
+                                Spec.func,
+                            constraint:
+                                Spec.optional(Spec.func)
+                        }))))),
 };
