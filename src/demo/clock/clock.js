@@ -37,7 +37,7 @@ const Clock = defineComponent(class extends Component {
         return (
             h('div',
                 h('h3', 'Current time'),
-                TimeInfo({time: this.state.time, ref: (it, that) => {if (it)  console.log(it, that); }}))
+                TimeInfo({time: this.state.time, ref: (it, that) => console.log(it, that) }))
         );
     }
 });
