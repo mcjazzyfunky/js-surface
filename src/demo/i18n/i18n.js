@@ -94,8 +94,6 @@ const App = defineComponent(class extends Component {
 const Text = defineComponent({
     displayName: 'Text',
 
-    properties: ['name', 'translator'],
-/*
     properties: {
         name: {
             type: String,
@@ -106,7 +104,7 @@ const Text = defineComponent({
             inject: true
         }
     },
-*/
+
     render(props) {
         return (
             h('div',

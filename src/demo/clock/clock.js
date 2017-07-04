@@ -45,8 +45,11 @@ const TimeInfo = defineComponent(class extends Component {
     static get displayName() {
         return 'TimeInfo';
     }
-
-    static get properties() {
+    
+static get properties() {
+    return ['time'];
+}
+    static get xproperties() {
         return {
             time: {
                 type: String

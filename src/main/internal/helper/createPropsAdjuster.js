@@ -17,7 +17,7 @@ export default function createPropsAdjuster(config) {
         for (let key of  Object.keys(propertiesConfig)) {
             const
                 type = propertiesConfig[key].type,
-                check = propertiesConfig[key].check || null,
+                check = propertiesConfig[key].constraint || null,
                 defaultValue = propertiesConfig[key].defaultValue,
                 getDefaultValue = propertiesConfig[key].getDefaultValue,
 
@@ -83,7 +83,7 @@ function validateProps(props, validations) {
     // Ignore children
     keysToBeChecked.delete('children');
 
-    try {
+    //try {
         for (let [propertyName, type, check, defaultValueProvider] of validations) {
             const defaultValue = defaultValueProvider
                 ? defaultValueProvider() : undefined;
@@ -96,7 +96,7 @@ function validateProps(props, validations) {
 
                 keysToBeChecked.delete(propertyName);
 
-                if (defaultValue !== undefined && prop === defaultValue) {
+                if (type === undefined || defaultValue !== undefined && prop === defaultValue) {
                     // everything fine
                 } else if (defaultValue === undefined && props[propertyName] === undefined) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
@@ -138,9 +138,9 @@ function validateProps(props, validations) {
 
             errMsg = `Illegal property key(s): ${joined}`;
         }
-    } catch (err) {
-        errMsg = String(err);
-    }
+    //} catch (err) {
+    //    errMsg = String(err);
+    //}
 
     return errMsg ? new Error(errMsg) : null;
 }

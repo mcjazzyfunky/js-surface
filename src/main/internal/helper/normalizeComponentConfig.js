@@ -27,7 +27,7 @@ export default function normalizeComponentConfig(config) {
             ret.childInjections = normalizePropertiesLikeConfig(config.childInjections);
         }
     }
-
+console.log(config)
     return ret;
 }
 
@@ -41,6 +41,7 @@ function normalizePropertiesLikeConfig(propertiesConfig) {
 
         for (let key of propertiesConfig) {
             ret[key] = {
+                defaultValue: null
             };
 
             if (key) {
