@@ -5,7 +5,6 @@ import {
     Component
 } from 'js-surface';
 
-
 const Clock = defineComponent(class extends Component {
     static get displayName() {
         return 'Clock';

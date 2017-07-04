@@ -42,18 +42,18 @@ export default function adaptComponentSystem(config) {
         createElement,
 
         defineComponent(cfg) {
-            let ret;
+            let ret, meta;
 
             if (cfg.init) {
                 ret = defineStandardComponent(cfg);
-                ret.meta = Object.assign({ kind: 'standard' }, cfg);
+                meta = Object.assign({ kind: 'standard' }, cfg);
             } else if (cfg.render) {
                 ret = defineFunctionalComponent(cfg);
-                ret.meta = Object.assign({ kind: 'functional' }, cfg);
+                meta = Object.assign({ kind: 'functional' }, cfg);
             } else if (typeof cfg === 'function') {
                 ret = defineClassComponent(cfg);
                 
-                ret.meta = Object.assign({
+                meta = Object.assign({
                     kind: 'class-based',
                     displayName: cfg.displayName,
                     componentClass: cfg
@@ -62,8 +62,18 @@ export default function adaptComponentSystem(config) {
                 throw new Error('[defineComponent] Illegal configuration');
             }
 
-         //   Object.freeze(ret.meta);
-         //   Object.freeze(ret);
+            // TODO - the following lines are really strange
+            Object.freeze(meta);
+
+            if (!ret.meta) {
+                Object.defineProperty(ret, 'meta', {
+                    enumerable: true,
+
+                    get() {
+                        return meta;
+                    }
+                });
+            }
 
             return ret;
         },
