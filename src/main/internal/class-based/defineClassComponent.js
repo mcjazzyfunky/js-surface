@@ -194,5 +194,7 @@ function defineClassComponentByClass(componentClass) {
         }
     }
 
-    return defineStandardComponent(config);
+    const factory = defineStandardComponent(config);
+    factory.meta.componentClass = componentClass;
+    return factory;
 }

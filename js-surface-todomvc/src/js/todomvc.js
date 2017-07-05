@@ -54,11 +54,13 @@ const
         updateNewTodoText(text) {
             app.state = app.state.set('newTodoText', text);
         },
+
         updateEditTodo(id, text) {
             app.state = app.state
                 .set('editTodoId', id)
                 .set('editTodoText', text);
         },
+            
         addTodo(text) {
             const id = app.state.todos.reduce(
                 (prev, curr) => Math.max(prev, curr), 0) + 1;

@@ -63,7 +63,13 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
                 render: props => config.render(propsAdjuster(props))
             };
 
-        return defineFunctionalComponent(adjustedConfig);
+        const factory = defineFunctionalComponent(adjustedConfig);
+
+        factory.meta = Object.assign({}, config, {
+            functional: true
+        });
+
+        return factory;
     };
 
     return ret;
@@ -99,6 +105,12 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                 }
             });
 
-        return defineStandardComponent(adjustedConfig);
+        const factory = defineStandardComponent(adjustedConfig);
+
+        factory.meta = Object.assign({}, config, {
+            functional: 'false'
+        });
+
+        return factory;
     };
 }

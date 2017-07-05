@@ -51,5 +51,4 @@ const HelloWorld = defineClassComponent({
     }
 });
 
-
 render(HelloWorld({ name: 'John Doe' }), 'main-content');
