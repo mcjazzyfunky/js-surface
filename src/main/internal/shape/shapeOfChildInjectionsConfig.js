@@ -17,7 +17,9 @@ export default {
                     Spec.values(
                         Spec.shape({
                             type:
-                                Spec.func,
+                                Spec.optional(Spec.func),
+                            nullable:
+                                Spec.optional(Spec.boolean),
                             constraint:
                                 Spec.optional(Spec.func)
                         }))))),

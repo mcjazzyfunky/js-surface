@@ -1,18 +1,71 @@
-import validateComponentClass from '../validation/validateComponentClass.js';
+import validateComponentClass
+    from '../validation/validateComponentClass.js';
 
-import { defineStandardComponent }  from 'js-surface';
+import validateComponentClassConfig
+    from '../validation/validateComponentClassConfig.js';
 
-export default function defineClassComponent(componentClass) {
+import { defineStandardComponent, Component }  from 'js-surface';
+
+export default function defineClassComponent(config) {
+    let ret;
+
+    if (typeof config === 'function') {
+        ret = defineClassComponentByClass(config);
+    } else {
+        ret = defineClassComponentByConfig(config);
+    }
+
+    return ret;
+}
+
+function defineClassComponentByConfig(config) {
+    const err = validateComponentClassConfig(config);
+    
+    if (err) {
+        throw err;
+    }
+
+    const componentClass = class extends Component {
+        constructor(props) {
+            super(props);
+
+            for (let key of Object.keys(this)) {
+                if (typeof this[key] === 'function') {
+                    this[key] = this[key].bind(this);
+                }
+            }
+
+            if (config.constructor) {
+                config.constructor.call(this, props);
+            }
+        }
+    };
+
+    for (let key of Object.keys(config)) {
+        const value = config[key];
+
+        if (typeof value !== 'function') {
+            componentClass[key] = value;
+        } else if (key !== 'constructor') {
+            componentClass.prototype[key] = value;
+        }
+    }
+
+    return defineClassComponentByClass(componentClass);
+}
+
+function defineClassComponentByClass(componentClass) {
+    const err = validateComponentClass(componentClass);
+    
+    if (err) {
+        throw err;
+    }
+
     const
-        err = validateComponentClass(componentClass),
         publicMethods = componentClass.publicMethods || null,
         instanceClass = function () {
             this.__component = null;
         };
-
-    if (err) {
-        throw err;
-    }
 
     if (publicMethods) {
         for (let key of Object.keys(publicMethods)) {

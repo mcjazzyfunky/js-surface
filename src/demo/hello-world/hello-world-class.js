@@ -1,63 +1,55 @@
 import {
     createElement as h,
     defineClassComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
+const HelloWorld = defineClassComponent({
+    displayName: 'HelloWorld',
 
-class HelloWorldComponent extends Component {
-    static get displayName() {
-        return 'HelloWorld';
-    }
+    properties: {
+        name: {
+            type: String,
+            defaultValue: 'World'
+        }
+    },
 
-    static get properties() {
-        return {
-            name: {
-                type: String,
-                defaultValue: 'World'
-            }
-        };
-    }
-
-    constructor(...args) {
-        console.log('Constructor', ...args);
-        super(...args);
-    }
+    constructor(props) {
+        console.log('constructor', props);
+    },
 
     shouldUpdate() {
         console.log('shouldUpdate');
 
         return true;
-    }
+    },
 
-    onWillReceiveProps() {
-        console.log('onWillRecieveProps', arguments);
-    }
+    onWillReceiveProps(...args) {
+        console.log('onWillRecieveProps', ...args);
+    },
 
-    onWillMount() {
-        console.log('onWillMount', arguments);
-    }
+    onWillMount(...args) {
+        console.log('onWillMount', ...args);
+    },
 
-    onDidMount() {
-        console.log('onDidMount', arguments);
-    }
+    onDidMount(...args) {
+        console.log('onDidMount', ...args);
+    },
 
-    onWillUpdate() {
-        console.log('onWillUpdate', arguments);
-    }
+    onWillUpdate(...args) {
+        console.log('onWillUpdate', ...args);
+    },
 
-    onDidUpdate() {
-        console.log('onDidUpdate', arguments);
-    }
+    onDidUpdate(...args) {
+        console.log('onDidUpdate', ...args);
+    },
 
     render() {
         return (
             h('div', `Hello ${this.props.name}!`)
         );
     }
-}
+});
 
-const HelloWorld = defineClassComponent(HelloWorldComponent);
 
 render(HelloWorld({ name: 'John Doe' }), 'main-content');

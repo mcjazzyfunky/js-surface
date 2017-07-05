@@ -1,104 +1,211 @@
 import {
     createElement as h,
     defineClassComponent,
-    render,
-    Component
+    defineFunctionalComponent,
+    render
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
 
+import { List, Record, toJS } from 'immutable';
+
+const
+    allowedFilters = ['all', 'active', 'completed'],
+    
+    shapeOfAppState = {
+        newTodoText: Spec.string,
+        editTodoId: Spec.nullable(Spec.Number),
+        editTodoText: Spec.string,
+        filter: Spec.oneOf(allowedFilters),
+        todos: Spec.arrayOf(
+            Spec.shape({
+                text: Spec.string,
+                completed: Spec.boolean
+            })
+        )
+    },
+
+    AppState = Record({
+        newTodoText: '',
+        editTodoId: null,
+        editTodoText: '',
+        filter: 'all',
+        todos: List()
+    }),
+
+    Todo = Record({
+        id: null,
+        text: '',
+        completed: false
+    }),
+
+    fromJSToAppState = data =>
+        (!data || Spec.shape(shapeOfAppState)(data) !== null)
+            ? AppState()
+            : AppState({
+                newTodo: data.newTodo,
+                filter: data.filter,
+                todos: List(data.list.map(Todo))
+            }),
+
+    fromAppStateToJS = appState => toJS(appState),
+
+    createAppCtrl = app => ({
+        updateNewTodoText(text) {
+            app.state = app.state.set('newTodoText', text);
+        },
+        updateEditTodo(id, text) {
+            app.state = app.state
+                .set('editTodoId', id)
+                .set('editTodoText', text);
+        },
+        addTodo(text) {
+            const id = app.state.todos.reduce(
+                (prev, curr) => Math.max(prev, curr), 0) + 1;
+            
+            app.state = app.state.updateIn('todos', todos =>
+                todos.push(Todo({ id, text })));
+        },
+
+        removeTodo(id) {
+            app.state = app.state.updateIn('todos', todos =>
+                todos.filter(todo => todo.id !== id));
+        },
+
+        removedCompletedTodos() {
+            app.state = app.state.updateIn('todos', todos =>
+                todos.filter(todo => !todo.completed));
+        },
+
+        setFilter(filter) {
+            app.state = app.state.set('filter', filter);
+        }
+    });
+
 const TodoMVCApp = defineClassComponent({
     displayName: 'TodoMVCApp',
 
-    childInjections: ['ctrl'],
+    properties: {
+        initialState: {
+            type: Object,
+            defaultValue: null
+        },
 
-    publicMethods: {
-
+        onStateChange: {
+            type: Function,
+            defaultValue: null
+        }
     },
 
-    init(props) {
-        this.state = {
-            newTodo: '',
-            todoFilder: 'all',
-            todos: []
-        }
-     
-        this.ctrl = {
-            addItem(text) {
+    childInjections: ['ctrl'],
 
-            }
-        };
+    constructor({ initialState }) {
+        this.state = fromJSToAppState(initialState);
+        this.ctrl = createAppCtrl(this);
     },
     
     provideChildInjections() {
         return {
             ctrl: this.ctrl
         };
-    }
+    },
+
+    onDidChangeState() {
+        if (this.props.onChange) {
+            this.props.onChange(fromAppStateToJS(this.state));
+        }
+    },
 
     render() {
+        const
+            state = this.state,
+            
+            visibleTodos = state.filter === 'all'
+                ? state.todos
+                : state.todos.filter(todo =>
+                    state.filter === 'active' ^ todo.completed);
+
         return (
             h('div',
                 h('section.todoapp',
-                    Header(),
-                    TodoList(),
-                    TodoFilters()),
+                    Header({
+                        newTodoText: state.newTodoText
+                    }),
+                    TodoList({
+                        todos:visibleTodos
+                    }),
+                    TodoFilters({
+                        filter: state.filter,
+                        visibleCount: visibleTodos.length
+                    })),
                 Footer())
         );
     }
 });
 
-const Header = defineComponent({
+const Header = defineFunctionalComponent({
     displayName: 'Header',
 
     properties: {
         ctrl: {
             type: Object,
             inject: true
+        },
+        newTodoText: {
+            type: String,
+            defaultValue: ''
         }
     },
 
-    render(props) {
+    render({ newTodoText }) {
         return (
             h('header.header',
                 h('h1',
                     'todos'),
-                h('input.new-todo[placeholder="What needs to be done?"][autofocus]'))
+                h('input.new-todo[placeholder="What needs to be done?"][autofocus]',
+                    { value: newTodoText }))
         );
     }
 });
 
-const TodoList = defineComponent({
+const TodoList = defineFunctionalComponent({
     displayName: 'MainSection',
 
     properties: {
-        store: {
+        ctrl: {
             type: Object,
             inject: true
+        },
+        editTodoId: {
+            type: Number,
+            constraint: Spec.nonNegativeInteger,
+            defaultValue: null
+        },
+        editTodoText: {
+            type: String,
+            defaultValue: null
+        },
+        todos: {
+            type: List
         }
     },
 
-    render(props) {
+    render({ ctrl, editTodoId, editTodoText, todos}) {
         return (
             h('section.main',
                 h('input.toggle-all[type=checkbox]'),
                 h('label[for=toggle-all]',
                     'Mark all as complete'),
                 h('ul.todo-list',
-                    h('li.completed',
-                        h('div.view',
-                            h('input.toggle[type=checkbox][checked]'),
-                            h('label',
-                                'Taste Javascript'),
-                            h('button.destroy')),
-                        h('input.edit[value="Create a TodoMVC template"]')),
-                    h('li',
-                        h('div.view',
-                            h('input.toggle[type=checkbox][checked]'),
-                            h('label',
-                                'Taste Javascript'),
-                            h('button.destroy')),
-                        h('input.edit[value="Create a TodoMVC template"]'))))
+                    todos.map(todo => 
+                        h('li.completed',
+                            h('div.view',
+                                h('input.toggle[type=checkbox][checked]'),
+                                h('label',
+                                    todo.text),
+                                h('button.destroy')),
+                            h('input.edit[value="Create a TodoMVC template"]'))
+                    )))
         );
     }
 });
@@ -107,48 +214,52 @@ const TodoFilters = defineFunctionalComponent({
     displayName: 'TodoFilters',
 
     properties: {
-        store: {
+        ctrl: {
             type: Object,
-            constraint: specStore,
             inject: true
+        },
+        filter: {
+            type: String,
+            constraint: Spec.oneOf(allowedFilters),
+            defaultValue: 'all'
+        },
+        visibleCount: {
+            type: Number,
+            constraint: Spec.and(Spec.integer, Spec.greaterOrEqual(0))
         }
     },
 
-    render(props) {
-        const
-            store = props.store,
-            dispatch = store.dispatch,
-            state = store.getState();
-
+    render({ ctrl, filter, visibleCount }) {
         return (
             h('footer.footer',
                 h('span.todo-count',
                     h('strong',
-                        0),
+                        `${visibleCount} item(s) left`),
                     ' item(s) left'),
                 h('ul.filters',
                     h('li > a',
-                        { className: state.activeFilter === 'all' ? 'active' : null,
-                            onClick: () => dispatch(Actions.setActiveFilter('all')) 
+                        { className: filter === 'all' ? 'active' : null,
+                            onClick: () => ctrl.setActiveFilter('all') 
                         },
                         'All'),
                     h('li > a',
-                        { className: state.activeFilter === 'active' ? 'active' : null,
-                            onClick: () => dispatch(Actions.setActiveFilter('active')) 
+                        { className: filter === 'active' ? 'active' : null,
+                            onClick: () => ctrl.setFilter('active') 
                         },
                         'Active'),
                     h('li > a',
-                        { className: state.activeFilter === 'completed' ? 'active' : null,
-                            onClick: () => dispatch(Actions.setActiveFilter('completed')) 
+                        { className: filter === 'completed' ? 'active' : null,
+                            onClick: () => ctrl.setFilter('completed') 
                         },
                         'Completed')),
                 h('button.clear-completed',
+                    { onClick: () => ctrl.removeCompletedTodos() },
                     'Clear completed'))
         );
     }
 });
 
-const Footer = defineComponent({
+const Footer = defineFunctionalComponent({
     displayName: 'Footer',
 
     render() {

@@ -43,10 +43,36 @@ const Spec = {
           : createError('Must be an array', path);
     },
 
+    arrayOf(constraint) {
+        return (it, path = null) => {
+            return null; // TODO
+        }
+    },
+
     func(it, path = null) {
         return typeof it === 'function'
           ? null
           : createError('Must be a function', path);
+    },
+
+    integer(it, path) {
+        return null; // TODO
+    },
+
+    positiveInteger(it, path) {
+        return null; // TODO
+    },
+
+    negativeInteger(it, path) {
+        return null; // TODO
+    },
+
+    nonNegativeInteger(it, path) {
+        return null; // TODO
+    },
+
+    nonPositiveInteger(it, path) {
+        return null; // TODO
     },
 
     optional(constraint) {

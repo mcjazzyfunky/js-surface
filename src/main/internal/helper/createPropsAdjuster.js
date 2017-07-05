@@ -17,7 +17,8 @@ export default function createPropsAdjuster(config) {
         for (let key of  Object.keys(propertiesConfig)) {
             const
                 type = propertiesConfig[key].type,
-                check = propertiesConfig[key].constraint || null,
+                nullable = propertiesConfig[key].nullable || false,
+                constraint = propertiesConfig[key].constraint || null,
                 defaultValue = propertiesConfig[key].defaultValue,
                 getDefaultValue = propertiesConfig[key].getDefaultValue,
 
@@ -30,7 +31,8 @@ export default function createPropsAdjuster(config) {
             validations.push([
                 key,
                 type,
-                check,
+                nullable,
+                constraint,
                 defaultValueProvider]);
 
             if (getDefaultValue) {
@@ -84,7 +86,7 @@ function validateProps(props, validations) {
     keysToBeChecked.delete('children');
 
     //try {
-        for (let [propertyName, type, check, defaultValueProvider] of validations) {
+        for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
             const defaultValue = defaultValueProvider
                 ? defaultValueProvider() : undefined;
 
@@ -97,6 +99,9 @@ function validateProps(props, validations) {
                 keysToBeChecked.delete(propertyName);
 
                 if (type === undefined || defaultValue !== undefined && prop === defaultValue) {
+                    // TODO - shall the default value always be fine???
+                    // everything fine
+                } else if (nullable && props === null) {
                     // everything fine
                 } else if (defaultValue === undefined && props[propertyName] === undefined) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
@@ -117,8 +122,8 @@ function validateProps(props, validations) {
 
                     errMsg = `The property '${propertyName}' must be `
                         + type.name.toLowerCase();
-                } else if (check) {
-                    const checkResult =  check(prop);
+                } else if (constraint) {
+                    const checkResult = constraint(prop);
 
                     if (checkResult && typeof checkResult.message === 'string') {
                         errMsg = `Invalid value for property '${propertyName}' => `
