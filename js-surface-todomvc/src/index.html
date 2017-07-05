@@ -121,7 +121,7 @@
 
         function run() {
             let content =
-                '<div class="well">'
+                '<div class="card"><div class="card-block">'
                 + '<label for="adapter-selector">Adapter:</label> '
                 + '<select id="adapter-selector">';
 
@@ -131,7 +131,7 @@
                 content += `<option ${selected}>${adapter.name}</option>`;
             }
 
-            content += '</select></div><br/><br/><br/><div id="app-container"></div>';
+            content += '</select></div><br/><br/><br/><div id="app-container"></div></div>';
 
             document.body.innerHTML = content;
 

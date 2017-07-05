@@ -4,14 +4,14 @@ import ComponentHelper from '../helpers/ComponentHelper.js';
 
 import {
     createElement as h,
-    defineComponent
+    defineFunctionalComponent
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
 
 import { Seq, Strings } from 'js-prelude';
 
-export default defineComponent({
+export default defineFunctionalComponent({
     displayName: 'Button',
 
     properties: {
@@ -91,8 +91,7 @@ export default defineComponent({
             textElement =
                 text === null
                 ? null
-                : h('span',
-                    {className: 'fk-button-text'},
+                : h('span.fk-button-text',
                     text),
 
             tooltip = props.tooltip, // TODO

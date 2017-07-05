@@ -1,9 +1,8 @@
 /* global jQuery */
 
 import ComponentHelper from '../helpers/ComponentHelper.js';
-import PaginationHelper from '../helpers/PaginationHelper.js';
 
-import { defineClassComponent, createElement as dom } from 'js-surface';
+import { defineClassComponent, createElement as h  } from 'js-surface';
 import { Seq, Strings } from 'js-prelude';
 
 const name = 'TextField';
@@ -115,10 +114,10 @@ console.log(event.target);
     }
 
     return (
-        dom('div',
+        h('div',
             { className },
             label,(console.log(33333, state)),
-            dom('input',
+            h('input',
                 { className: 'form-control'
                 , type: 'text'
                 , id: id
@@ -148,7 +147,7 @@ function createLabel(text, id) {
     if (typeof text !== 'string' || text.trim().length === 0) {
         ret = null;
     } else {
-        ret = dom('label', { htmlFor: id }, text.trim());
+        ret = h('label', { htmlFor: id }, text.trim());
     }
 
     return ret;

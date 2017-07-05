@@ -4,6 +4,12 @@
 <head>
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css"/>
     
+    <style type="text/css">
+        #main-content:empty {
+            display: none;
+        }
+    </style>
+
     <script type="text/javascript" src="../../../../node_modules/js-prelude/dist/js-prelude/polyfill.min.js"></script>
     <script type="text/javascript" src="../../../../node_modules/systemjs/dist/system.js"></script>
 
@@ -104,7 +110,7 @@
                     activeDemo =  availableDemos[activeDemoIndex];
 
                 let content =
-                    '<div class="well">'
+                    '<div class="card"><div class="card-header">'
                     + '<label for="demo-selector">Demo:</label> '
                     + '<select id="demo-selector">';
 
@@ -132,7 +138,7 @@
                     content += `<option ${selected}>${adapter.name}</option>`;
                 }
 
-                content += '</select></div><br/><br/><br/><div id="main-content"></div>';
+                content += '</select></div><div id="main-content" class="card-block"></div></div>';
                 
                 document.body.innerHTML = content;
 

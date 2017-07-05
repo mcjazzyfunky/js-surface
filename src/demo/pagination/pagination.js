@@ -142,7 +142,7 @@ export const Pagination = defineFunctionalComponent({
         return (
             h('div',
                 {className: classNameOuter},
-                h('u',
+                h('ul',
                     {className: classNameInner},
                     firstPageLink,
                     precedingEllipsis,
@@ -156,12 +156,12 @@ export const Pagination = defineFunctionalComponent({
 
 function buildLinkListItem(text, isActive, moveToPage) {
     return (
-        h('li',
+        h('li.page-item',
             {
                 className: isActive ? 'active' : '',
                 key: text !== '...' ? text + '-' + isActive : undefined
             },
-            h('a',
+            h('a.page-link',
                 { onClick: moveToPage },
                 text))
     );
@@ -284,9 +284,9 @@ function buildLinkListItem2(text, isActive, props, pageIndexToMove = null) {
 
     return (
         React.createElement('li',
-            {className: isActive ? 'active' : '', key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
+            {className: 'page-item ' + isActive ? 'active' : '', key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
             React.createElement('a',
-                {onClick: onClick},
+                { className: 'page-link', onClick: onClick },
                 text))
     );
 }
