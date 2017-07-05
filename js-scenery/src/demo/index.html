@@ -1,20 +1,13 @@
+
 <!DOCTYPE html>
 
 <html>
 <head>
-    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css"/>
-    
-    <style type="text/css">
-        main-content:hidden {
-            display: none;
-        }
-    </style>
-
-    <script type="text/javascript" src="../../../../node_modules/js-prelude/dist/js-prelude/polyfill.min.js"></script>
-    <script type="text/javascript" src="../../../../node_modules/systemjs/dist/system.js"></script>
-
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+    <script type="text/javascript" src="../../node_modules/js-prelude/dist/js-prelude/polyfill.min.js"></script>
+    <script type="text/javascript" src="../../node_modules/systemjs/dist/system.js"></script>
     <script type="text/javascript">
-    {
+
         const
             uri = location.href,
             baseUri = uri.split('#')[0],
@@ -63,15 +56,18 @@
             activeAdapter = availableAdapters[activeAdapterIndex],
             jsSurfaceInclude = '../main/' + activeAdapter.module;
 
+
+
+
         System.config({
-            baseURL: '../../../..',
+            baseURL: '../../..',
             transpiler: 'plugin-babel',
 
             meta: {
                 '*.js': {
  		            presets: ['es2017']
                 },
-                '../../../node_modules/bootstrap/dist/js/bootstrap.js': {
+                '../../node_modules/bootstrap/dist/js/bootstrap.js': {
                     format: 'global',
                     deps: ['jquery'],
  		            presets: ['es2017']
@@ -95,8 +91,6 @@
                 'vue': 'node_modules/vue/dist/vue.min.js',
 
                 'js-spec': '../../js-spec/index.js',
-
-                'js-message': '../../js-message/src/main/js-message.js',
 
                 'js-surface': jsSurfaceInclude + '.js',
                 'js-prelude': 'node_modules/js-prelude/dist/js-prelude/js-prelude.min.js',
@@ -155,3 +149,6 @@
 <body>
 </body>
 </html>
+
+    
+    
