@@ -48,6 +48,12 @@ export default [
         files: ['complex-counter.js']
     },
     {
+        name: 'vue-demo',
+        displayName: 'Vue demo',
+        directory: 'vue',
+        files: ['vue-demo.js']
+    },
+    {
         name: 'mount-unmount',
         displayName: 'Mount/Unmount',
         directory: 'mount-unmount',

@@ -2,7 +2,7 @@ import { REGEX_COMPONENT_SYSTEM_NAME } from '../constant/constants.js';
 import { Spec } from 'js-spec';
 
 export default  {
-    componentSystem: Spec.shape({
+    renderEngine: Spec.shape({
         name: Spec.matches(REGEX_COMPONENT_SYSTEM_NAME),
         api: Spec.object,
     }),

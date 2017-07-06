@@ -1,4 +1,4 @@
-import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
+import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -25,10 +25,10 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptReactLikeComponentSystem({
-    componentSystemName: 'react-dom',
-    componentSystemAPI: { React, ReactDOM },
+    RenderEngine
+} = adaptReactLikeRenderEngine({
+    renderEngineName: 'react-dom',
+    renderEngineAPI: { React, ReactDOM },
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
@@ -45,5 +45,5 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };

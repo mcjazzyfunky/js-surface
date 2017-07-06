@@ -1,5 +1,5 @@
-import adaptComponentSystem from
-    './api/adaptComponentSystem.js';
+import adaptRenderEngine from
+    './api/adaptRenderEngine.js';
 
 import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
@@ -19,9 +19,9 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptComponentSystem({
-    componentSystem: {
+    RenderEngine
+} = adaptRenderEngine({
+    renderEngine: {
         name: 'inferno',
         api: Inferno,
     },
@@ -43,7 +43,7 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };
 
 // ------------------------------------------------------------------
@@ -80,7 +80,9 @@ function customDefineFunctionalComponent(config) {
 
     func.displayName = config.displayName;
 
-    return Inferno.createElement.bind(null, func);
+    const factory = Inferno.createElement.bind(null, func);
+    factory.component = func;
+    return factory;
 }
 
 function customDefineStandardComponent(config) {
@@ -125,9 +127,13 @@ function customDefineStandardComponent(config) {
         };
     }
 
-    return (...args) => {
+    const factory = (...args) => {
         return createElement(ExtCustomComponent, ...args);
     };
+
+    factory.component = ExtCustomComponent;
+
+    return factory;
 }
 
 function customCreateElement(tag, props, ...children) {

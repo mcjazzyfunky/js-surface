@@ -1,3 +1,3 @@
-import adaptComponentSystem from './api/adaptComponentSystem';
+import adaptRenderEngine from './api/adaptRenderEngine';
 
-export default adaptComponentSystem;
+export default adaptRenderEngine;

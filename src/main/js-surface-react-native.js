@@ -1,4 +1,4 @@
-import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
+import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
 
 import React from 'react';
 import ReactNative from 'react-native';
@@ -12,10 +12,10 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptReactLikeComponentSystem({
-    componentSystemName: 'react-native',
-    componentSystemAPI: { React, ReactNative },
+    RenderEngine
+} = adaptReactLikeRenderEngine({
+    renderEngineName: 'react-native',
+    renderEngineAPI: { React, ReactNative },
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
@@ -33,7 +33,7 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };
 
 

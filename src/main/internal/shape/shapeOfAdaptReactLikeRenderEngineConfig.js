@@ -3,8 +3,8 @@ import { Spec } from 'js-spec';
 
 
 export default  {
-    componentSystemName: Spec.matches(REGEX_COMPONENT_SYSTEM_NAME),
-    componentSystemAPI: Spec.object,
+    renderEngineName: Spec.matches(REGEX_COMPONENT_SYSTEM_NAME),
+    renderEngineAPI: Spec.object,
     createElement: Spec.func,
     createFactory: Spec.func,
     isBrowserBased: Spec.optional(Spec.boolean),

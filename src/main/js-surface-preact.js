@@ -1,4 +1,4 @@
-import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
+import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
 
 import Preact from 'preact';
 
@@ -13,10 +13,10 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptReactLikeComponentSystem({
-    componentSystemName: 'preact',
-    componentSystemAPI: Preact,
+    RenderEngine
+} = adaptReactLikeRenderEngine({
+    renderEngineName: 'preact',
+    renderEngineAPI: Preact,
     Component: Preact.Component,
     createElement: preactCreateElement,
     createFactory: preactCreateFactory,
@@ -33,7 +33,7 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };
 
 function preactCreateFactory(type) {

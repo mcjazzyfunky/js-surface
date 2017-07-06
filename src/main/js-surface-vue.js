@@ -1,5 +1,5 @@
-import adaptComponentSystem from
-    './api/adaptComponentSystem.js';
+import adaptRenderEngine from
+    './api/adaptRenderEngine.js';
 
 import Vue from 'vue';
 
@@ -12,9 +12,9 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptComponentSystem({
-    componentSystem: {
+    RenderEngine
+} = adaptRenderEngine({
+    renderEngine: {
         name: 'vue',
         api: { Vue },
     },
@@ -36,7 +36,7 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };
 
 // ------------------------------------------------------------------
@@ -66,17 +66,21 @@ function customDefineFunctionalComponent(config) {
 
         render: function (vueCreateElement, context) {
             const
-                props = mixProps(context.props, context.injections, defaultValues, config),
+                props = mixProps(context.props, context.listeners, context.injections, defaultValues, config),
                 content = config.render(props);
 
             return renderContent(vueCreateElement, content, this);
         }
     });
 
-    return (props, ...children) => {
+    const factory = (props, ...children) => {
         const ret = customCreateElement(component, props, ...children); 
         return ret;
     };
+
+    factory.component = component;
+
+    return factory;
 }
 
 function customDefineStandardComponent(config) {
@@ -167,6 +171,7 @@ function customDefineStandardComponent(config) {
             this.__propsConsumer(
                 mixProps(
                     this.$options.propsData,
+                    this._events,
                     this,
                     defaultValues, config));
         },
@@ -189,6 +194,7 @@ function customDefineStandardComponent(config) {
                 this.__propsConsumer(
                     mixProps(
                         this.$options.propsData,
+                        this._events,
                         this,
                         defaultValues, config));
             }
@@ -218,11 +224,14 @@ function customDefineStandardComponent(config) {
         }
     });
 
-    return (props, ...children) => {
+    const factory = (props, ...children) => {
         const ret = customCreateElement(component, props, ...children); 
 
         return ret;
     };
+
+    factory.component = component;
+    return factory;
 }
 
 function customCreateElement(tag, props, ...children) {
@@ -386,7 +395,7 @@ function determineDefaultValues(config) {
     return ret;
 }
 
-function mixProps(props, injections, defaultValues, config) {
+function mixProps(props, events, injections, defaultValues, config) {
     let ret = Object.assign({}, props);
 
     // TODO
@@ -411,6 +420,17 @@ function mixProps(props, injections, defaultValues, config) {
 
                 ret[key] = defaultValue;
             }
+        }
+    }
+
+    if (events) {
+        for (let key of Object.keys(events)) {
+            // TODO - what's with that array case
+            const handler = Array.isArray(events[key])
+                ? events[key][0]
+                : events[key];
+
+            ret['on' + key[0].toUpperCase() + key.substr(1)] = handler;
         }
     }
 

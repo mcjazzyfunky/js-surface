@@ -1,4 +1,4 @@
-import adaptReactLikeComponentSystem from './internal/adaption/adaptReactLikeComponentSystem.js';
+import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
 
 import ReactLite from 'react-lite';
 
@@ -11,10 +11,10 @@ const {
     isRenderable,
     render,
     Component,
-    ComponentSystem
-} = adaptReactLikeComponentSystem({
-    componentSystemName: 'react-lite',
-    componentSystemAPI: ReactLite,
+    RenderEngine
+} = adaptReactLikeRenderEngine({
+    renderEngineName: 'react-lite',
+    renderEngineAPI: ReactLite,
     Component: ReactLite.Component,
     createElement: reactLiteCreateElement,
     createFactory: ReactLite.createFactory,
@@ -31,7 +31,7 @@ export {
     isRenderable,
     render,
     Component,
-    ComponentSystem
+    RenderEngine
 };
 
 function reactLiteRender(content, targetNode) {

@@ -10,16 +10,16 @@ import validateInitResult from '../internal/validation/validateInitResult.js';
 
 import { Spec } from 'js-spec';
 
-import shapeOfAdaptComponentSystemConfig
-    from './../internal/shape/shapeOfAdaptComponentSystemConfig.js';
+import shapeOfAdaptRenderEngineConfig
+    from './../internal/shape/shapeOfAdaptRenderEngineConfig.js';
 
-export default function adaptComponentSystem(config) {
-    const err = Spec.shape(shapeOfAdaptComponentSystemConfig)(config);
+export default function adaptRenderEngine(config) {
+    const err = Spec.shape(shapeOfAdaptRenderEngineConfig)(config);
 
     if (err) {
         throw new Error(
             "Illegal first argument 'config' for "
-            + "function 'adaptComponentSystem':"
+            + "function 'adaptRenderEngine':"
             + err);
     }
     
@@ -31,15 +31,15 @@ export default function adaptComponentSystem(config) {
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent);
 
-    const ComponentSystem = {
-        name: config.componentSystem.name,
-        api: config.componentSystem.api
+    const RenderEngine = {
+        name: config.renderEngine.name,
+        api: config.renderEngine.api
     };
 
-    Object.freeze(ComponentSystem);
+    Object.freeze(RenderEngine);
 
     return {
-        ComponentSystem,
+        RenderEngine: RenderEngine,
         createElement,
         defineFunctionalComponent,
         defineStandardComponent,

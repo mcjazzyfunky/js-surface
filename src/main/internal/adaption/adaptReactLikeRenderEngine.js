@@ -1,20 +1,20 @@
-import shapeOfAdaptReactLikeComponentSystemConfig from '../shape/shapeOfAdaptReactLikeComponentSystemConfig.js';
+import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig.js';
 
 import { Spec } from 'js-spec';
 
-import adaptComponentSystem from '../../api/adaptComponentSystem.js';
+import adaptRenderEngine from '../../api/adaptRenderEngine.js';
 
 const
     returnNull = () => null,
     fakeState = Object.freeze({});
 
-export default function adaptReactLikeComponentSystem(reactLikeConfig) {
-    const err = Spec.shape(shapeOfAdaptReactLikeComponentSystemConfig)(reactLikeConfig);
+export default function adaptReactLikeRenderEngine(reactLikeConfig) {
+    const err = Spec.shape(shapeOfAdaptReactLikeRenderEngineConfig)(reactLikeConfig);
 
     if (err) {
         throw new Error(
             "Illegal first argument 'reactLikeConfig' for "
-            + "function 'adaptReactLikeComponentSystem':"
+            + "function 'adaptReactLikeRenderEngine':"
             + err);
     }
 
@@ -35,9 +35,9 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
         
 
     const newConfig = {
-        componentSystem: {
-            name: reactLikeConfig.componentSystemName,
-            api: reactLikeConfig.componentSystemAPI,
+        renderEngine: {
+            name: reactLikeConfig.renderEngineName,
+            api: reactLikeConfig.renderEngineAPI,
         },
         interface: {
             defineFunctionalComponent: config => {
@@ -66,13 +66,15 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                     }
                 }
 
-                if (reactLikeConfig.componentSystemName === 'react-lite') {
+                if (reactLikeConfig.renderEngineName === 'react-lite') {
                     ret.vtype = 2;
                 }
 
                 ret.displayName = config.displayName;
 
-                return createFactory(ret);
+                const factory = createFactory(ret);
+                factory.component = ret;
+                return factory;
             },
 
             defineStandardComponent: config => {
@@ -138,11 +140,13 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
                 }
 
                 // TODO - sorry for that hack
-                if (reactLikeConfig.componentSystemName === 'react-lite') {
+                if (reactLikeConfig.renderEngineName === 'react-lite') {
                     ExtCustomComponent.vtype = 4;
                 }
 
-                return createFactory(ExtCustomComponent);
+                const factory = createFactory(ExtCustomComponent);
+                factory.component = ExtCustomComponent;
+                return factory;
             },
 
             createElement(type, props, ...children) {
@@ -162,7 +166,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
         }
     };
 
-    return adaptComponentSystem(newConfig);
+    return adaptRenderEngine(newConfig);
 }
 
 function defineCustomComponent(ReactLikeComponent) {

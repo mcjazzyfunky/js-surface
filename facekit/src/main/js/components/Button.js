@@ -68,6 +68,7 @@ export default defineFunctionalComponent({
 
         onClick: {
             type: Function,
+            nullable: true,
             defaultValue: null
         }
     },

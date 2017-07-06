@@ -141,13 +141,13 @@ const CounterCtrl = defineClassComponent(class extends Component {
             h('div.counter-ctrl',
                 h('button.btn.btn-info',
                     { onClick: () => counterInstance.resetCounter(0) },
-                    'Reset to 0'),
+                    'Set to 0'),
                     ' ',
                     Counter({ ref: it => { counterInstance = it; } }),
                     ' ',
                     h('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },
-                        'Reset to 100')));
+                        'Set to 100')));
     }
 });
 
