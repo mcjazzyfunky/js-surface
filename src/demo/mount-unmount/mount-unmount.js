@@ -22,7 +22,7 @@ const MountUnmount = defineClassComponent(class extends Component {
         this.__interval = setInterval(() => {
             this.__showFoo = !this.__showFoo;
             this.refresh();
-        }, 10000);
+        }, 3000);
     }
 
     onWillUnmount() {
@@ -32,8 +32,8 @@ const MountUnmount = defineClassComponent(class extends Component {
 
     render() {
         return this.__showFoo
-            ? Foo({ ref: this.refCallback.bind(this, 'Foo') })
-            : Bar({ ref: this.refCallback.bind(this, 'Bar')});
+            ? ComponentA({ ref: this.refCallback.bind(this, 'ComponentA') })
+            : ComponentB({ ref: this.refCallback.bind(this, 'ComponentB')});
     }
 
     refCallback(type, ref, prevRef) {
@@ -41,39 +41,39 @@ const MountUnmount = defineClassComponent(class extends Component {
     }
 });
 
-const Foo = defineClassComponent(class extends Component {
+const ComponentA = defineClassComponent(class extends Component {
     static get displayName() {
-        return 'Foo';
+        return 'ComponentA';
     }
 
     onDidMount() {
-        console.log('Did mount Foo...');
+        console.log('Did mount ComponentA...');
     }
 
     onWillUnmount() {
-        console.log('Will unmount Foo...');
+        console.log('Will unmount ComponentA...');
     }
 
     render() {
-        return h('div', ' - - - Foo - - - ');
+        return h('div', ' - - - ComponentA - - - ');
     }
 });
 
-const Bar = defineClassComponent(class extends Component {
+const ComponentB = defineClassComponent(class extends Component {
     static get displayName() {
-        return 'Bar';
+        return 'ComponentB';
     }
 
     onDidMount() {
-        console.log('Did mount Bar..');
+        console.log('Did mount ComponentB..');
     }
 
     onWillUnmount() {
-        console.log('Will unmount Bar...');
+        console.log('Will unmount ComponentB...');
     }
 
     render() {
-        return h('div', ' - - - Bar - - - ');
+        return h('div', ' - - - ComponentB - - - ');
     }
 });
 

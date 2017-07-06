@@ -15,6 +15,12 @@
 
     <script type="text/javascript">
     {
+        process = {
+            env: {
+                NODE_ENV: 'production'
+            }
+        };
+
         const
             uri = location.href,
             baseUri = uri.split('#')[0],
@@ -65,6 +71,7 @@
 
         System.config({
             baseURL: '../../../..',
+            defaultJSExtensions: true,
             transpiler: 'plugin-babel',
 
             meta: {
@@ -84,6 +91,14 @@
 
                 'react': 'node_modules/react/dist/react.js',
                 'react-dom': 'node_modules/react-dom/dist/react-dom.js',
+
+                // React - next/fiber
+                // 'react': 'node_modules/react/index.js',
+                // 'react-dom': 'node_modules/react-dom/index.js',
+                // 'fbjs': 'node_modules/fbjs',
+                // 'object-assign': 'node_modules/object-assign/index.js',
+                // 'prop-types': 'node_modules/prop-types/index.js',
+                // 'prop-types/checkPropTypes': 'node_modules/prop-types/checkPropTypes.js',
 
                 'react-lite': 'node_modules/react-lite/dist/react-lite.min.js',
                 'preact': 'node_modules/preact/dist/preact.js',

@@ -99,7 +99,12 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
 
                     return Object.assign({}, result, {
                         propsConsumer(props) {
-                            result.propsConsumer(propsAdjuster(props));
+                            const props2 = props === undefined
+                                ? undefined
+                                : propsAdjuster(props);
+
+
+                            result.propsConsumer(props2);
                         }
                     });
                 }

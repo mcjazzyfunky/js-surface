@@ -284,7 +284,7 @@ function buildLinkListItem2(text, isActive, props, pageIndexToMove = null) {
 
     return (
         React.createElement('li',
-            {className: 'page-item ' + isActive ? 'active' : '', key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
+            { className: 'page-item ' + (isActive ? 'active' : ''), key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
             React.createElement('a',
                 { className: 'page-link', onClick: onClick },
                 text))
