@@ -6,6 +6,8 @@ import {
     Component,
 }  from 'js-surface';
 
+const framesPerSecond = 240;
+
 const COLORS = ['red', 'yellow', 'orange'];
 
 const Tile = defineFunctionalComponent({
@@ -92,16 +94,29 @@ class SpeedTestComponent extends Component {
         
     constructor(props) {
         super(props);
+        this.__startTime = null;
+        this.__frameCount = 0;
+        this.__actualFramesPerSecond = '0';
     }
     
     onDidMount() {
+        this.__startTime = Date.now();
+
         this.intervalID = setInterval(() => {
+            ++this.__frameCount;
             this.refresh();
-        }, 20);
+
+            if (this.__frameCount % 10 === 0) {
+                this.__actualFramesPerSecond =
+                   (this.__frameCount * 1000.0 / (Date.now() - this.__startTime)).toFixed(2);
+            }
+        }, 1000 / framesPerSecond);
     }
     
     onWillUnmount() {
         clearInterval(this.intervalID);
+        this.__startTime = null;
+        this.__frameCount = 0;
     }
     
     render() {
@@ -112,7 +127,7 @@ class SpeedTestComponent extends Component {
                 marginTop: 40,
                 marginLeft: 40
             };
-            
+
         for (let y = 0; y < this.props.rowCount; ++y) {
             rows.push(
                 TileRow({
@@ -128,7 +143,10 @@ class SpeedTestComponent extends Component {
                     `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
                     h('div',
                         { style },
-                        rows)))
+                        rows)),
+                h('p',
+                    { style: { clear: 'both' } },
+                   `(actual frames per second: ${this.__actualFramesPerSecond})`))
         );
     }
 }

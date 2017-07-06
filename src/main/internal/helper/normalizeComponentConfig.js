@@ -47,6 +47,7 @@ function normalizePropertiesLikeConfig(propertiesConfig) {
             if (key) {
                 if (key.match(REGEX_CALLBACK_PROPERTY_NAME)) {
                     ret[key].type = Function;
+                    ret[key].nullable = true;
                 }
             }
         }

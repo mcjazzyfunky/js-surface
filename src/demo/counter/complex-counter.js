@@ -6,6 +6,8 @@ import {
     Component
 } from 'js-surface';
 
+import { Spec } from 'js-spec';
+
 const CounterInfo = defineFunctionalComponent({
     displayName:  'CounterInfo',
 
@@ -34,10 +36,13 @@ class CounterComponent extends Component {
         return {
             initialValue: {
                 type: Number,
+                constraint: Spec.integer,
                 defaultValue: 0
             },
+
             onChange: {
                 type: Function,
+                nullable: true,
                 defaultValue: null
             }
         };

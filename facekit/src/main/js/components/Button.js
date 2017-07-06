@@ -1,5 +1,3 @@
-/* global jQuery */
-
 import ComponentHelper from '../helpers/ComponentHelper.js';
 
 import {
@@ -27,7 +25,9 @@ export default defineFunctionalComponent({
 
         type: {
             type: String,
-            constraint: Spec.oneOf(['default', 'primary', 'link', 'info', 'warning', 'danger', 'success']),
+            constraint: Spec.oneOf([
+                'default', 'primary', 'link', 'info',
+                'warning', 'danger', 'success']),
             defaultValue: 'default'
         },
 
@@ -38,13 +38,15 @@ export default defineFunctionalComponent({
 
         size: {
             type: String,
-            constraint: Spec.oneOf(['normal', 'large', 'small']),
+            constraint: Spec.oneOf(
+                ['normal', 'large', 'small']),
             defaultValue: 'normal'
         },
 
         iconPosition: {
             type: String,
-            constraint: Spec.oneOf(['top', 'bottom', 'left', 'right']),
+            constraint: Spec.oneOf(
+                ['top', 'bottom', 'left', 'right']),
             defaultValue: 'left'
         },
 
@@ -60,7 +62,8 @@ export default defineFunctionalComponent({
 
         menu: {
             type: Array,
-            defaultValue: []
+            nullable: true,
+            defaultValue: null
         },
 
         onClick: {
