@@ -96,5 +96,5 @@ const StopWatch = defineClassComponent(class extends Component {
         );
     }
 });
-
+console.log(222, StopWatch())
 render(StopWatch(), 'main-content');

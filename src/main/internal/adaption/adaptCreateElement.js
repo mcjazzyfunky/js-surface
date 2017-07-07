@@ -1,172 +1,81 @@
+import { parseHyperscript } from '../helper/parseHyperscript.js';
+
 const
-    tagPattern = '[a-zA-Z][a-zA-Z0-9_-]*',
-    idPattern = '(#[a-zA-Z][a-zA-Z0-9_-]*)?',
-    classPattern = '(\.[a-zA-Z][a-zA-Z0-9_-]*)*',
-    attrPattern = '(\[[a-z][a-zA-Z-]*(=[^\[=]+\]*)?\])*', // TODO
-    partialPattern = `${tagPattern}${idPattern}${classPattern}${attrPattern}`,
-    fullPattern = `^${partialPattern}(\\s*\>\\s*${partialPattern})*$`,
-
-    tagRegex = new RegExp(`^${tagRegex}$`),
-    hyperscriptRegex = new RegExp(`${fullPattern}`),
-
-    tagCache = {},
-    tagIsSimpleMark = Symbol();
+    hyperscriptCache = {},
+    simpleTagMark = {};
 
 export default function adaptCreateElement(createElement, isElement) {
     return function (tag, ...rest) {
         let ret = null;
 
-        const
-            typeOfTag = typeof tag,
-            tagIsString = typeOfTag === 'string';
+        if (typeof tag === 'string') {
+            let hyperscriptData = hyperscriptCache[tag];
 
-        if (!tagIsString && typeOfTag !== 'function') {
-            throw new Error('[createElement] First parameter tag must either be a string or a component function');
-        }
-
-        if (!tagIsString) {
-            ret = applyCreateElement(tag, ...rest);
-        } else {
-            let result = tagCache[tag];
-
-            if (result === tagIsSimpleMark) {
+            if (hyperscriptData === simpleTagMark) {
                 ret = applyCreateElement(tag, ...rest);
-            } else if (result === undefined || !tagCache.hasOwnProperty(tag)) {
-                if (!tag.match(hyperscriptRegex)) {
+            } else if (hyperscriptData) {
+                ret = createHyperscriptElement(tag, rest, hyperscriptData);
+            } else {
+                hyperscriptData = parseHyperscript(tag);
+
+                if (hyperscriptData === null) {
                     throw new Error(
                         "[createElement] First argument 'tag' "
-                        + `is not a valid hyperscript tag string ('${tag}')`);
-                } else if (tag.match(tagRegex)) {
-                    tagCache[tag] = tagIsSimpleMark;
+                        + `is not in valid hyperscript format ('${tag}')`);
+                }
+                
+                if (hyperscriptData.length === 1
+                    && !hyperscriptData[0].attrs) {
 
+                    hyperscriptCache[tag] = simpleTagMark;
                     ret = applyCreateElement(tag, ...rest);
                 } else {
-                    const parts = tag.split(/\s*>\s*/);
-
-                    result = [];
-
-                    for (let i = 0; i < parts.length; ++i) {
-                        const
-                            part = parts[i],
-                            tagName = part.split(/(#|\.|\[)/, 1)[0],
-                            idName = (part.split('#', 2)[1] || '').split(/\.|\[/, 1)[0] || null,
-                            className = part.split('[')[0].split('.').slice(1).join(' ') || null,
-                            attrs = getAttrs(part.split(/\[|\]\[|]/).slice(1, -1), tagName);
-
-                        result.push([tagName, idName, className, attrs]);
-                    }
-
-                    tagCache[tag] = result;
+                    hyperscriptCache[tag] = hyperscriptData;
+                    ret = createHyperscriptElement(tag, rest, hyperscriptData);
                 }
             }
-
-            if (!ret) {
-                const
-                    lastTriple = result[result.length - 1],
-                    lastTag = lastTriple[0],
-                    lastId = lastTriple[1],
-                    lastClassName = lastTriple[2],
-                    lastAttrs = lastTriple[3] ? Object.assign({}, lastTriple[3]) : {},
-                    secondArg = arguments[1],
-
-                    secondArgHasAttrs =
-                        secondArg === undefined || secondArg === null ||
-                        typeof secondArg === 'object' && !secondArg[Symbol.iterator] && !isElement(secondArg),
-
-                    newArgs = [lastTag];
-
-                if (lastId) {
-                    lastAttrs.id = lastId;
-                }
-
-                if (lastClassName) {
-                    lastAttrs.className = lastClassName;
-                }
-
-                if (secondArgHasAttrs) {
-                    const
-                        secondArgClassName = !secondArg ? null : secondArg.className,
-                        secondArgClassNameIsString = typeof secondArgClassName === 'string';
-
-                    Object.assign(lastAttrs, secondArg);
-
-                    if (lastClassName) {
-                        if (secondArgClassNameIsString && typeof lastAttrs.className === 'string') {
-                            lastAttrs.className = (lastClassName + ' ' + lastAttrs.className).trim();
-                        } else if (secondArgClassNameIsString) {
-                            lastAttrs.className = lastClassName;
-                        }
-                    }
-                
-                    newArgs.push(lastAttrs);
-
-                    for (let i = 2; i < arguments.length; ++i) {
-                        newArgs.push(arguments[i]);
-                    }
-                } else {
-                    newArgs.push(lastAttrs);
-                    
-                    for (let i = 1; i < arguments.length; ++i) {
-                        newArgs.push(arguments[i]);
-                    }
-                }
-
-                ret = createElement.apply(null, newArgs);
-
-                for (let i = result.length - 2; i >= 0; --i) {
-                    const
-                        triple = result[i],
-                        attrs = {};
-
-                    if (triple[1]) {
-                        attrs.id = triple[1];
-                    }
-
-                    if (triple[2]) {
-                        attrs.className = triple[2];
-                    }
-
-                    ret = createElement(triple[0], attrs, ret);
-                }
-            }
+        } else {
+            ret = applyCreateElement(tag, ...rest);
         }
 
         return ret;
     };
 
+    function isAttrs(it) {
+        return  it === undefined
+            || it === null
+            || typeof it === 'object'
+                && !it[Symbol.iterator]
+                && !isElement(it);
+    }
+
     function applyCreateElement(tag, ...rest) {
-        const snd = rest[0];
-    
-        return  snd === undefined || snd === null || typeof snd === 'object' && !snd[Symbol.iterator] && !isElement(snd)
+        return isAttrs(rest[0]) 
             ? createElement(tag, ...rest)
             : createElement(tag, null, ...rest);
     }
-}
 
-function getAttrs(items, tagName) {
-    let ret = null;
+    function createHyperscriptElement(tag, rest, hyperscriptData) {
+        let currElem = null;
+        const dataLength = hyperscriptData.length;
 
-    if (items.length > 0) {
-        ret = {};
+        for (let i = dataLength - 1; i >= 0; --i) {
+            const { tag, attrs } = hyperscriptData[i];
 
-        for (let item of items) {
-            let [key, value = true] = item.split('=');
+            if (i < dataLength - 1) {
+                currElem = createElement(tag, attrs, currElem);
+            } else {
+                const attrs2 = attrs ? Object.assign({}, attrs) : {};
 
-            if (value[0] === '"' && value[value.length - 1] === '"'
-                || value[0] === "'" && item[value.length - 1] === "'") {
-
-                value = value.substr(1, value.length - 2);
+                if (isAttrs(rest[0])) {
+                    Object.assign(attrs2, rest[0]);
+                    currElem = createElement(tag, attrs2, ...rest.slice(1));
+                } else {
+                    currElem = createElement(tag, attrs2, ...rest); 
+                }
             }
+        } 
 
-            if (key === 'for' && tagName === 'label') {
-                key = 'htmlFor';
-            } else if (key === 'autofocus') {
-                key = 'autoFocus';
-            }
-
-            ret[key] = value;
-        }
+        return currElem;
     }
-
-    return ret;
 }

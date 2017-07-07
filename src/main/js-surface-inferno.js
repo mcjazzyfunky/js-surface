@@ -178,7 +178,7 @@ function customIsElement(it) {
         && !!(it.flags & (28 | 3970 )); // 28: component, 3970: element
 }
 
-function customRender(content, targetNode) {
+function customRender(content, targetNode) {console.log(content)
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");
