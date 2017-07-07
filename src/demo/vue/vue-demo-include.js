@@ -10,6 +10,12 @@ import Vue from 'vue';
 
 document.getElementById('main-content').innerHTML = '<div><vue-demo/></div>';
 
+/*
+window.Vue = Vue;
+Vue.config.debug = true;
+Vue.config.devtools = true;
+*/        
+
 // ==============================================
 // js-surface components
 // ==============================================
@@ -19,6 +25,12 @@ const SurfaceButton = defineFunctionalComponent({
 
     properties: {
         text: {
+            type: String,
+            nullable: true,
+            defaultValue: null
+        },
+
+        className: {
             type: String,
             nullable: true,
             defaultValue: null
@@ -34,7 +46,8 @@ const SurfaceButton = defineFunctionalComponent({
     render(props) {
         return (
             h('button.btn',
-                { onClick: props.onClick },
+                { className: 'btn ' + String(props.className),
+                    onClick: props.onClick },
                 props.text)
         );
     }
@@ -70,14 +83,19 @@ const SurfaceCounter = defineClassComponent({
     render() {
         return (
             h('span',
-                h('button.btn.btn-default',
-                    { onClick: () => this.incrementCounter(-1) },
+                SurfaceButton(
+                    { className: 'btn-primary',
+                        text: '-',
+                        onClick: () => this.incrementCounter(-1)
+                    },
                     '-'),
                 h('span',
                     ` ${this.state.counterValue} `),
-                h('button.btn.btn-default',
-                    { onClick: () => this.incrementCounter(1) },
-                    '+'))
+                SurfaceButton(
+                    { className: 'btn-primary',
+                        text: '+',
+                        onClick: () => this.incrementCounter(1)
+                    }))
         );
     }
 });
@@ -100,11 +118,11 @@ const SurfaceClock = defineClassComponent({
 
     constructor() {
         this.interval = null;
-        this.updateState();
+        this.updateTime(new Date());
     },
 
-    updateState() {
-        this.state = { time: new Date().toLocaleTimeString() };
+    updateTime(dateTime) {
+        this.state = { time: dateTime.toLocaleTimeString() };
 
         if (this.props.onChange) {
             this.props.onChange({
@@ -116,7 +134,7 @@ const SurfaceClock = defineClassComponent({
 
     onDidMount() {
         this.interval = setInterval(() => {
-            this.updateState();
+            this.updateTime(new Date());
         }, 1000);
     },
 
