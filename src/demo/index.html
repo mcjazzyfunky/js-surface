@@ -3,10 +3,17 @@
 <html>
 <head>
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css"/>
-    
+
     <style type="text/css">
         #main-content:empty {
             display: none;
+        }
+        #main-content {
+            background: #f5f5f5;
+        }
+
+        .demo-header {
+            background: #efefef;
         }
     </style>
 
@@ -88,6 +95,7 @@
                 'jquery': 'node_modules/jquery/dist/jquery.js',
                 'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
                 'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
+                'immutable': 'node_modules/immutable/dist/immutable.min.js',
 
                 'react': 'node_modules/react/dist/react.js',
                 'react-dom': 'node_modules/react-dom/dist/react-dom.js',
@@ -125,7 +133,7 @@
                     activeDemo =  availableDemos[activeDemoIndex];
 
                 let content =
-                    '<div class="card"><div class="card-header">'
+                    '<div class="card"><div class="card-header demo-header">'
                     + '<label for="demo-selector">Demo:</label> '
                     + '<select id="demo-selector">';
 
@@ -134,6 +142,13 @@
 
                     if (path.endsWith('.js')) {
                         System.import(path);
+                    } else if (path.endsWith('.css')) {
+                        const elem = document.createElement('link');
+                        elem.setAttribute('type', 'text/css');
+                        elem.setAttribute('rel', 'stylesheet');
+                        elem.setAttribute('href', path);
+
+                        document.head.appendChild(elem);
                     }
                 }
 

@@ -303,6 +303,13 @@ function renderContent(vueCreateElement, content, component) {
         */
     }
 
+    if (props && type === 'label' && props.htmlFor) {
+        props = Object.assign({}, props);
+        props.for = props.htmlFor;
+        delete(props.htmlFor);
+    }
+
+
     if (typeof type === 'string') {
         const attrs = Object.assign({}, props);
         const options = { attrs };

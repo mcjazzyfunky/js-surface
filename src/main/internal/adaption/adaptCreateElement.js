@@ -150,7 +150,7 @@ function getAttrs(items, tagName) {
         ret = {};
 
         for (let item of items) {
-            let [key, value = ''] = item.split('=');
+            let [key, value = true] = item.split('=');
 
             if (value[0] === '"' && value[value.length - 1] === '"'
                 || value[0] === "'" && item[value.length - 1] === "'") {

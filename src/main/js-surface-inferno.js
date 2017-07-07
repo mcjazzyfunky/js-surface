@@ -146,6 +146,12 @@ function customCreateElement(tag, props, ...children) {
 
     let ret;
 
+    if (props && tag === 'label' && props.htmlFor) {
+        props = Object.assign({}, props);
+        props.for = props.htmlFor;
+        delete(props.htmlFor);
+    }
+
     if (!children) {
         ret = Inferno.createElement(tag, adjustProps(props));
     } else {

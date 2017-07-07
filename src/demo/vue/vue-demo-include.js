@@ -13,6 +13,7 @@ document.getElementById('main-content').innerHTML = '<div><vue-demo/></div>';
 // ==============================================
 // js-surface components
 // ==============================================
+
 const SurfaceButton = defineFunctionalComponent({
     displayName: 'SurfaceButton',
 
