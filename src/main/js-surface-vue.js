@@ -330,7 +330,7 @@ function renderContent(vueCreateElement, content, component) {
                 const handler = attrs[key];
                 delete(attrs[key]);
 
-                const newKey = key[2].toLowerCase() + key.substr(3);
+                const newKey = (key[2].toLowerCase() + key.substr(3)).toLowerCase();
 
                 if (!options.on) {
                     options.on = {};

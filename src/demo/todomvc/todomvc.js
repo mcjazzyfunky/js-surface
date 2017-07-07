@@ -65,22 +65,34 @@ const
             const id = app.state.todos.reduce(
                 (prev, curr) => Math.max(prev, curr), 0) + 1;
             
-            app.state = app.state.updateIn('todos', todos =>
+            app.state = app.state.update('todos', todos =>
                 todos.push(Todo({ id, text })));
         },
 
         removeTodo(id) {
-            app.state = app.state.updateIn('todos', todos =>
+            app.state = app.state.update('todos', todos =>
                 todos.filter(todo => todo.id !== id));
         },
 
-        removedCompletedTodos() {
-            app.state = app.state.updateIn('todos', todos =>
+        removeCompletedTodos() {
+            app.state = app.state.update('todos', todos =>
                 todos.filter(todo => !todo.completed));
         },
 
         setFilter(filter) {
             app.state = app.state.set('filter', filter);
+        },
+
+        setNewTodoText(text) {
+            app.state = app.state.set('newTodoText', text);
+        },
+
+        setTodoCompleted(id, completed) {
+            app.state = app.state.update('todos', todos =>
+                todos.map(todo =>
+                    todo.id !== id
+                        ? todo
+                        : todo.set('completed', completed)));
         }
     });
 
@@ -125,7 +137,9 @@ const TodoMVCApp = defineClassComponent({
             visibleTodos =  state.filter === 'all'
                 ? state.todos
                 : state.todos.filter(todo =>
-                    state.filter === 'active' ^ todo.completed);
+                    state.filter === 'active' ^ todo.completed),
+
+            activeCount = this.state.todos.count(todo => !todo.completed);
 
         return (
             h('div.todomvc',
@@ -138,9 +152,8 @@ const TodoMVCApp = defineClassComponent({
                     }),
                     TodoFilters({
                         filter: state.filter,
-                        visibleCount: visibleTodos.size
-                    })),
-                Footer())
+                        activeCount
+                    })))
         );
     }
 });
@@ -159,13 +172,39 @@ const Header = defineFunctionalComponent({
         }
     },
 
-    render({ newTodoText }) {
+    render({ newTodoText, ctrl }) {
         return (
             h('header.header',
                 h('h1',
                     'todos'),
                 h('input.new-todo[placeholder="What needs to be done?"][autofocus]',
-                    { value: newTodoText }))
+                    { value: newTodoText,
+                        onChange(ev) {
+                            ctrl.setNewTodoText(ev.target.value);
+                        },
+
+                        onBlur(ev) {
+                            const text = ev.target.value.trim();
+
+                            if (text !== '') {
+                                ctrl.addTodo(text);
+                            }
+
+                            ctrl.setNewTodoText('');
+                        },
+
+                        onKeyDown(ev) {
+                            if (ev.keyCode === 13) {
+                                const text = ev.target.value.trim();
+
+                                if (text !== '') {
+                                    ctrl.addTodo(text);
+                                }
+
+                                ctrl.setNewTodoText('');
+                            }
+                        }
+                    }))
         );
     }
 });
@@ -194,18 +233,34 @@ const TodoList = defineFunctionalComponent({
 
     render({ ctrl, editTodoId, editTodoText, todos}) {
         return (
-            h('section.main', { style: { display: 'block'} }, // TODO
+            h('section.main',
                 h('input.toggle-all[type=checkbox]'),
                 h('label[for=toggle-all]',
                     'Mark all as complete'),
                 h('ul.todo-list',
                     todos.map(todo => 
-                        h('li.completed',
+                        h('li',
+                            { className: todo.completed ? 'completed' : '' },
                             h('div.view',
-                                h('input.toggle[type=checkbox][checked]'),
+                                h('input.toggle[type=checkbox]',
+                                    { checked: todo.completed,
+                                        'data-id': todo.id,
+                                        onClick(ev) {
+                                            const
+                                                id = Number(ev.target.dataset.id),
+                                                checked = ev.target.checked;
+                                        
+                                            ctrl.setTodoCompleted(id, checked);
+                                        }
+                                    }),
                                 h('label',
                                     todo.text),
-                                h('button.destroy')),
+                                h('button.destroy',
+                                    { 'data-id': todo.id,
+                                        onClick(ev) {
+                                            ctrl.removeTodo(Number(ev.target.dataset.id));
+                                        }
+                                    })),
                             //h('input.edit[value="Create a TodoMVC template"]')
                             )
                     )))
@@ -226,23 +281,23 @@ const TodoFilters = defineFunctionalComponent({
             constraint: Spec.oneOf(allowedFilters),
             defaultValue: 'all'
         },
-        visibleCount: {
+        activeCount: {
             type: Number,
             constraint: Spec.and(Spec.integer, Spec.greaterOrEqual(0))
         }
     },
 
-    render({ ctrl, filter, visibleCount }) {
+    render({ ctrl, filter, activeCount }) {
         return (
             h('footer.footer',
                 h('span.todo-count',
                     h('strong',
-                        `${visibleCount}`),
+                        `${activeCount}`),
                     ' item(s) left'),
                 h('div.filters',
                     h('a',
                         { className: filter === 'all' ? 'selected' : null,
-                            onClick: () => ctrl.setActiveFilter('all') 
+                            onClick: () => ctrl.setFilter('all') 
                         },
                         'All'),
                     h('a',
@@ -256,32 +311,8 @@ const TodoFilters = defineFunctionalComponent({
                         },
                         'Completed')),
                 h('button.clear-completed', 
-                    { onClick: () => ctrl.removeCompletedTodos(), style: { display: 'block'} }, // TODO
+                    { onClick: () => ctrl.removeCompletedTodos() },
                     'Clear completed'))
-        );
-    }
-});
-
-const Footer = defineFunctionalComponent({
-    displayName: 'Footer',
-
-    render() {
-        return (
-            h('footer.info',
-                h('p',
-                    'Double-click to edit a todo'),
-                h('p',
-                    'Template by ',
-                    h('a[href="http://sindresorhus.com"]',
-                        ' Sindre Sorhus')),
-                h('p',
-                    'Created by ',
-                    h('a[href="https://github.com/js-works/js-surface"]',
-                        ' the authors of "js-surface"')),
-                h('p',
-                    'Part of ',
-                    h('a[href="http://todomvc.com"]',
-                        'TodoMVC')))
         );
     }
 });

@@ -50,8 +50,6 @@
     "redux": "^3.7.1",
     "systemjs": "^0.19.20",
     "systemjs-plugin-babel": "0.0.18",
-    "todomvc-app-css": "^2.1.0",
-    "todomvc-common": "^1.0.3",
     "vue": "^2.3.4",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
