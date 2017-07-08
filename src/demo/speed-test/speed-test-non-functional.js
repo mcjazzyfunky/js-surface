@@ -1,16 +1,14 @@
 import {
     defineClassComponent,
-    defineFunctionalComponent,
     createElement as h,
-    render,
-    Component,
+    render
 }  from 'js-surface';
 
 const framesPerSecond = 240;
 
 const COLORS = ['red', 'yellow', 'orange'];
 
-const Tile = defineFunctionalComponent({
+const Tile = defineClassComponent({
     displayName:  'Tile',
     
     properties: {
@@ -24,9 +22,9 @@ const Tile = defineFunctionalComponent({
         }
     },
     
-    render(props) {
-        const  
-            { width, color } = props,
+    render() {
+        const
+            { width, color } = this.props,
         
             style = {
                 float: 'left',
@@ -42,7 +40,7 @@ const Tile = defineFunctionalComponent({
     }
 });
 
-const TileRow = defineFunctionalComponent({
+const TileRow = defineClassComponent({
     displayName:  'TileRow',
     
     properties: {
@@ -55,9 +53,9 @@ const TileRow = defineFunctionalComponent({
         }
     },
     
-    render(props) {
+    render() {
         const
-            { tileWidth, columnCount } = props, 
+            { tileWidth, columnCount } = this.props, 
             tiles = [];
        
         for (let x = 0; x < columnCount; ++x) {
@@ -72,32 +70,27 @@ const TileRow = defineFunctionalComponent({
     }
 });
 
-class SpeedTestComponent extends Component {
-    static get displayName() {
-        return 'SpeedTest';
-    }
+const SpeedTest = defineClassComponent({
+    displayName: 'SpeedTest',
 
-    static get properties() {    
-        return {
-            columnCount: {
-                type: Number
-            },
-            rowCount: {
-                type: Number
-            },
-            tileWidth: {
-                type: Number,
-                defaultValue: 3
-            }
-        };
-    }
+    properties: {
+        columnCount: {
+            type: Number
+        },
+        rowCount: {
+            type: Number
+        },
+        tileWidth: {
+            type: Number,
+            defaultValue: 3
+        }
+    },
         
-    constructor(props) {
-        super(props);
+    constructor() {
         this.__startTime = null;
         this.__frameCount = 0;
         this.__actualFramesPerSecond = '0';
-    }
+    },
     
     onDidMount() {
         this.__startTime = Date.now();
@@ -108,16 +101,17 @@ class SpeedTestComponent extends Component {
 
             if (this.__frameCount % 10 === 0) {
                 this.__actualFramesPerSecond =
-                   (this.__frameCount * 1000.0 / (Date.now() - this.__startTime)).toFixed(2);
+                    (this.__frameCount * 1000.0 /
+                        (Date.now() - this.__startTime)).toFixed(2);
             }
         }, 1000 / framesPerSecond);
-    }
+    },
     
     onWillUnmount() {
         clearInterval(this.intervalID);
         this.__startTime = null;
         this.__frameCount = 0;
-    }
+    },
     
     render() {
         const
@@ -149,8 +143,6 @@ class SpeedTestComponent extends Component {
                    `(actual frames per second: ${this.__actualFramesPerSecond})`))
         );
     }
-}
-
-const SpeedTest = defineClassComponent(SpeedTestComponent);
+});
 
 render(SpeedTest({ columnCount: 20, rowCount: 20, tileWidth: 5 }), 'main-content');
