@@ -6,6 +6,7 @@ export default class Component {
         this.__initialized = false;
         this.__refresh = null;
 
+        // TODO - isn't there a better solution?
         setTimeout(() => {
             this.__initialized = true;
         }, 0);
@@ -20,8 +21,7 @@ export default class Component {
     }
 
     set state(nextState) {
-        const
-            currState = this.state;
+        const currState = this.state;
 
         if (this.__initialized) {
             this.onWillChangeState(nextState);
@@ -36,7 +36,7 @@ export default class Component {
         }
 
         if (this.__initialized) {
-            // TODO
+            // TODO - isn't there a better solution?
             setTimeout(() => this.onDidChangeState(currState), 0);
         }
 

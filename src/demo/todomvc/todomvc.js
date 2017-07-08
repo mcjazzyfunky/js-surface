@@ -177,7 +177,7 @@ const Header = defineFunctionalComponent({
             h('header.header',
                 h('h1',
                     'todos'),
-                h('input.new-todo[placeholder="What needs to be done?"][autofocus]',
+                h('input.new-todo[placeholder="What needs to be done?"][autoFocus]',
                     { value: newTodoText,
                         onChange(ev) {
                             ctrl.setNewTodoText(ev.target.value);

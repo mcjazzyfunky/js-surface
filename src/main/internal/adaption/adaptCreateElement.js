@@ -65,10 +65,17 @@ export default function adaptCreateElement(createElement, isElement) {
             if (i < dataLength - 1) {
                 currElem = createElement(tag, attrs, currElem);
             } else {
-                const attrs2 = attrs ? Object.assign({}, attrs) : {};
+                const
+                    attrs2 = attrs ? Object.assign({}, attrs) : {},
+                    className = attrs2.className;
 
                 if (isAttrs(rest[0])) {
                     Object.assign(attrs2, rest[0]);
+
+                    if (className !== attrs2.className) {
+                        attrs2.className = `${className} ${attrs2.className}`;
+                    }
+
                     currElem = createElement(tag, attrs2, ...rest.slice(1));
                 } else {
                     currElem = createElement(tag, attrs2, ...rest); 

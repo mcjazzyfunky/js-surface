@@ -1,8 +1,8 @@
 import validateComponentClass
-    from '../validation/validateComponentClass.js';
+    from '../internal/validation/validateComponentClass.js';
 
 import validateComponentClassConfig
-    from '../validation/validateComponentClassConfig.js';
+    from '../internal/validation/validateComponentClassConfig.js';
 
 import { defineStandardComponent, Component }  from 'js-surface';
 

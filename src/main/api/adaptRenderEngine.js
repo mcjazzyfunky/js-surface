@@ -1,5 +1,5 @@
 import Component from './Component.js';
-import defineClassComponent from '../internal/class-based/defineClassComponent.js';
+import defineClassComponent from './defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
 import normalizeComponentConfig from '../internal/helper/normalizeComponentConfig.js';

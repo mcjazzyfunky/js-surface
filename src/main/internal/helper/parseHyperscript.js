@@ -75,11 +75,9 @@ export function parseHyperscript(hyperscript) {
                     }
                 }
 
-                // TODO 
+                // TODO?
                 if (key === 'for') {
                     key = 'htmlFor';
-                } else if (key === 'autofocus') {
-                    key = 'autoFocus';
                 }
 
                 if (meta.attrs[key] === undefined
@@ -111,14 +109,14 @@ export function parseHyperscript(hyperscript) {
 }
 
 
-function tokenize(str, regex, mapper = null) {
+function tokenize(str, regex) {
     let ret = null;
   
     if (str !== '') {
         const arr = [];
   
         const rest = str.replace(regex, key => {
-            arr.push(mapper ? mapper(key) : key);
+            arr.push(key);
       
             return '';  
         });
