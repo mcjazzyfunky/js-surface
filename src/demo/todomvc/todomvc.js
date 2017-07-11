@@ -16,7 +16,7 @@ const
         newTodoText: Spec.string,
         editTodoId: Spec.nullable(Spec.Number),
         editTodoText: Spec.string,
-        filter: Spec.oneOf(allowedFilters),
+        filter: Spec.in(allowedFilters),
         todos: Spec.arrayOf(
             Spec.shape({
                 text: Spec.string,
@@ -278,7 +278,7 @@ const TodoFilters = defineFunctionalComponent({
         },
         filter: {
             type: String,
-            constraint: Spec.oneOf(allowedFilters),
+            constraint: Spec.in(allowedFilters),
             defaultValue: 'all'
         },
         activeCount: {
@@ -311,7 +311,7 @@ const TodoFilters = defineFunctionalComponent({
                         },
                         'Completed')),
                 h('button.clear-completed', 
-                    { onClick: () => ctrl.removeCompletedTodos() },
+                    { onClick:() => ctrl.removeCompletedTodos() },
                     'Clear completed'))
         );
     }

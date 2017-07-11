@@ -48,7 +48,7 @@ const App = defineClassComponent(class extends Component {
         return {
             defaultLang: {
                 type: String,
-                constraint: Spec.oneOf(['en', 'fr', 'de']),
+                constraint: Spec.oneOf('en', 'fr', 'de'),
                 defaultValue: 'en'
             }
         };

@@ -5,20 +5,20 @@ import { REGEX_COMPONENT_NAME, REGEX_PROPERTY_NAME }
 
 export default {
     displayName: 
-        Spec.matches(REGEX_COMPONENT_NAME),
+        Spec.match(REGEX_COMPONENT_NAME),
 
     properties:
         Spec.optional(
             Spec.or(
                 Spec.and(
                     Spec.array,
-                    Spec.length(Spec.greater(0)),
-                    Spec.values(Spec.matches(REGEX_PROPERTY_NAME)),
+                    Spec.size(Spec.greater(0)),
+                    Spec.values(Spec.match(REGEX_PROPERTY_NAME)),
                     Spec.unique
                 ),
                 Spec.and(
                     Spec.keys(
-                        Spec.matches(REGEX_PROPERTY_NAME)),
+                        Spec.match(REGEX_PROPERTY_NAME)),
                     Spec.values(
                         Spec.shape({
                             type:

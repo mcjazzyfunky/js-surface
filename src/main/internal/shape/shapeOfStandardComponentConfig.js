@@ -16,7 +16,7 @@ export default Object.assign({},
                     Spec.object,
                     Spec.keys(
                         Spec.and(
-                            Spec.matches(REGEX_METHOD_NAME),
+                            Spec.match(REGEX_METHOD_NAME),
                             Spec.notIn(FORBIDDEN_METHOD_NAMES))),
                     Spec.values(Spec.func)))
     });

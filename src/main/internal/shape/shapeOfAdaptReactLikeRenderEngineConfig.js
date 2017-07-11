@@ -3,7 +3,7 @@ import { Spec } from 'js-spec';
 
 
 export default  {
-    renderEngineName: Spec.matches(REGEX_COMPONENT_SYSTEM_NAME),
+    renderEngineName: Spec.match(REGEX_COMPONENT_SYSTEM_NAME),
     renderEngineAPI: Spec.object,
     createElement: Spec.func,
     createFactory: Spec.func,
