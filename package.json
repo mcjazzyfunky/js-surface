@@ -2,7 +2,7 @@
   "name": "js-surface",
   "version": "0.1.0",
   "license": "LGPL-3.0",
-  "homepage": "https://github.com/mcjazzyfunky/js-surface",
+  "homepage": "https://github.com/ws-workds/js-surface",
   "main": "dist/standalone.js",
   "devDependencies": {
     "angular": "^1.6.5",
