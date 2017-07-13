@@ -13,13 +13,13 @@ export default {
                 Spec.and(
                     Spec.array,
                     Spec.size(Spec.greater(0)),
-                    Spec.values(Spec.match(REGEX_PROPERTY_NAME)),
+                    Spec.valuesOf(Spec.match(REGEX_PROPERTY_NAME)),
                     Spec.unique
                 ),
                 Spec.and(
-                    Spec.keys(
+                    Spec.keysOf(
                         Spec.match(REGEX_PROPERTY_NAME)),
-                    Spec.values(
+                    Spec.valuesOf(
                         Spec.shape({
                             type:
                                 Spec.optional(Spec.func),

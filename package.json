@@ -41,7 +41,7 @@
     "inferno-create-element": "^3.6.4",
     "jquery": "^2.2.4",
     "js-prelude": "^0.1.38",
-    "js-spec": "^0.1.1",
+    "js-spec": "^0.1.4",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.1.0",

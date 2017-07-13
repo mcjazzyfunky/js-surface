@@ -14,9 +14,9 @@ export default Object.assign({},
             Spec.optional(
                 Spec.and(
                     Spec.object,
-                    Spec.keys(
+                    Spec.keysOf(
                         Spec.and(
                             Spec.match(REGEX_METHOD_NAME),
                             Spec.notIn(FORBIDDEN_METHOD_NAMES))),
-                    Spec.values(Spec.func)))
+                    Spec.valuesOf(Spec.func)))
     });

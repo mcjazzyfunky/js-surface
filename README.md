@@ -1,5 +1,5 @@
-# Surface for JavaScript
+# js-surface
 
-A UI toolkit written in ECMAScript 2015 using Facebook's react library
+A UI framwork abstraction layer written in ECMAScript 2015.
 
-(project has just started)
+(project is in alpha state)
