@@ -17,7 +17,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: './',
-                    src: ['src/main/**/*.js*', './js-spec/**/*.js'],
+                    src: ['src/main/**/*.js*'],
                     dest: 'build/',
                     ext: '.js'
                 }]
@@ -44,7 +44,6 @@ module.exports = function (grunt) {
                 dest: 'dist/adapt.js',
                 options: {
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-inferno.js'
                     },
                     ignore: ['./node_modules/**']
@@ -55,7 +54,6 @@ module.exports = function (grunt) {
                 dest: 'dist/standalone.js',
                 options: {
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-standalone.js'
                     }
                 }
@@ -65,7 +63,6 @@ module.exports = function (grunt) {
                 dest: 'dist/inferno.js',
                 options: {
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-inferno.js'
                     },
                     ignore: ['./node_modules/**']
@@ -76,7 +73,6 @@ module.exports = function (grunt) {
                 dest: 'dist/react-dom.js',
                 options: {
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-react-dom.js'
                     },
                     ignore: ['./node_modules/**']
@@ -87,7 +83,6 @@ module.exports = function (grunt) {
                 dest: 'dist/react-native.js',
                 options: {
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-react-native.js'
                     },
                     ignore: ['./node_modules/**']
@@ -99,7 +94,6 @@ module.exports = function (grunt) {
                 options: {
                     ignore: ['./node_modules/**'],
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-react-lite.js'
                     }
                 }
@@ -110,7 +104,6 @@ module.exports = function (grunt) {
                 options: {
                     ignore: ['./node_modules/**'],
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-preact.js'
                     }
                 }
@@ -121,7 +114,6 @@ module.exports = function (grunt) {
                 options: {
                     ignore: ['./node_modules/**'],
                     alias: {
-                        'js-spec': './build/js-spec/index.js',
                         'js-surface': './build/src/main/js-surface-vue.js'
                     }
                 }
