@@ -8,10 +8,15 @@ module.exports = function (grunt) {
         },
         babel: {
             options: {
+                moduleId: 'Surface',
+                sourceType: 'module',
                 presets: ['es2015', 'es2016', 'es2017'],
                 retainLines: true,
                 moduleIds: false,
-                sourceMaps: true
+                sourceMaps: true,
+                plugins: [
+  //                  'transform-es2015-modules-umd'
+                ]
             },
             dist:  {
                 files: [{
@@ -46,7 +51,12 @@ module.exports = function (grunt) {
                     alias: {
                         'js-surface': './build/src/main/js-surface-inferno.js'
                     },
-                    ignore: ['./node_modules/**']
+                    ignore: ['./node_modules/**'],
+                    external: ['js-spec'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
+                    }
                 }
             },
             jsSurfaceStandalone: {
@@ -55,6 +65,11 @@ module.exports = function (grunt) {
                 options: {
                     alias: {
                         'js-surface': './build/src/main/js-surface-standalone.js'
+                    },
+                    external: ['js-spec'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
                     }
                 }
             },
@@ -65,7 +80,12 @@ module.exports = function (grunt) {
                     alias: {
                         'js-surface': './build/src/main/js-surface-inferno.js'
                     },
-                    ignore: ['./node_modules/**']
+                    ignore: ['./node_modules/**'],
+                    external: ['js-spec', 'inferno', 'inferno-component', 'inferno-create-element'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
+                    }
                 }
             },
             jsSurfaceReactDOM: {
@@ -73,9 +93,14 @@ module.exports = function (grunt) {
                 dest: 'dist/react-dom.js',
                 options: {
                     alias: {
-                        'js-surface': './build/src/main/js-surface-react-dom.js'
+                        'js-surface': './build/src/main/js-surface-react-dom.js',
                     },
-                    ignore: ['./node_modules/**']
+                    ignore: ['./node_modules/**'],
+                    external: ['js-spec', 'react', 'react-dom'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
+                    }
                 }
             },
             jsSurfaceReactNative: {
@@ -85,7 +110,12 @@ module.exports = function (grunt) {
                     alias: {
                         'js-surface': './build/src/main/js-surface-react-native.js'
                     },
-                    ignore: ['./node_modules/**']
+                    ignore: ['./node_modules/**'],
+                    external: ['js-spec', 'react', 'react-native'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
+                    }
                 }
             },
             jsSurfaceReactLite: {
@@ -95,6 +125,11 @@ module.exports = function (grunt) {
                     ignore: ['./node_modules/**'],
                     alias: {
                         'js-surface': './build/src/main/js-surface-react-lite.js'
+                    },
+                    external: ['js-spec', 'react-lite'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
                     }
                 }
             },
@@ -105,6 +140,11 @@ module.exports = function (grunt) {
                     ignore: ['./node_modules/**'],
                     alias: {
                         'js-surface': './build/src/main/js-surface-preact.js'
+                    },
+                    external: ['js-spec', 'preact'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
                     }
                 }
             },
@@ -115,6 +155,11 @@ module.exports = function (grunt) {
                     ignore: ['./node_modules/**'],
                     alias: {
                         'js-surface': './build/src/main/js-surface-vue.js'
+                    },
+                    external: ['js-spec', 'vue'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurface'
                     }
                 }
             }

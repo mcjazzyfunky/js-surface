@@ -75,10 +75,11 @@
             activeAdapterIndex = Math.max(availableAdapters.findIndex(it => it.name === adapterName), 0),
             activeAdapter = availableAdapters[activeAdapterIndex],
             jsSurfaceInclude = '../main/' + activeAdapter.module;
+            //jsSurfaceInclude = '../../dist/' + activeAdapter.module.replace('js-surface-', '');
 
         System.config({
             baseURL: '../../../..',
-            defaultJSExtensions: true,
+           // defaultJSExtensions: true,
             transpiler: 'plugin-babel',
 
             meta: {
@@ -89,6 +90,9 @@
                     format: 'global',
                     deps: ['jquery'],
  		            presets: ['es2017']
+                },
+                'js-surface': {
+                    deps: ['js-spec', 'react', 'react-dom', 'react-lite', 'preact', 'inferno', 'inferno-component', 'inferno-create-element', 'vue']
                 }
             },
             map: {
@@ -117,7 +121,7 @@
 
                 'vue': 'node_modules/vue/dist/vue.min.js',
 
-                'js-spec': 'node_modules/js-spec/dist/js-spec.min.js',
+                'js-spec': 'node_modules/js-spec/dist/js-spec.js',
 
                 'js-message': '../../js-message/src/main/js-message.js',
 

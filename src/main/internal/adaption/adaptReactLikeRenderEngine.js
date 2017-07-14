@@ -9,7 +9,7 @@ const
     fakeState = Object.freeze({});
 
 export default function adaptReactLikeRenderEngine(reactLikeConfig) {
-    const err = Spec.shape(shapeOfAdaptReactLikeRenderEngineConfig)(reactLikeConfig);
+    const err = Spec.shape(shapeOfAdaptReactLikeRenderEngineConfig)(reactLikeConfig, '');
 
     if (err) {
         throw new Error(
