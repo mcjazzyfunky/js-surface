@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/standalone.js",
@@ -40,7 +40,7 @@
     "inferno-component": "^3.6.4",
     "inferno-create-element": "^3.6.4",
     "jquery": "^2.2.4",
-    "js-prelude": "^0.1.38",
+    "js-essential": "^0.1.2",
     "js-spec": "^0.1.8",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",

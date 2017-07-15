@@ -6,7 +6,7 @@ import {
     Component,
 }  from 'js-surface';
 
-import { Seq } from 'js-prelude';
+import { Seq } from 'js-essential';
 
 import PaginationHelper from './helper/PaginationHelper.js';
 import ComponentHelper from './helper/ComponentHelper.js';
