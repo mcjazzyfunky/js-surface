@@ -1,5 +1,7 @@
 import warn from './warn.js';
 
+import { SpecValidator } from 'js-spec';
+
 export default function createPropsAdjuster(config) {
     let ret;
 
@@ -32,7 +34,7 @@ export default function createPropsAdjuster(config) {
                 key,
                 type,
                 nullable,
-                constraint,
+                constraint ? SpecValidator.from(constraint) : null,
                 defaultValueProvider]);
 
             if (getDefaultValue) {
@@ -123,7 +125,7 @@ function validateProps(props, validations) {
                     errMsg = `The property '${propertyName}' must be `
                         + type.name.toLowerCase();
                 } else if (constraint) {
-                    const checkResult = constraint(prop);
+                    const checkResult = constraint.validate(prop);
 
                     if (checkResult && typeof checkResult.message === 'string') {
                         errMsg = `Invalid value for property '${propertyName}' => `

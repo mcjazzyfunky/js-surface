@@ -8,7 +8,7 @@ export default Object.assign({},
     shapeOfPartialBaseConfig,
     shapeOfchildInjectionsConfig,
     {   
-        init: Spec.func,
+        init: Spec.function,
 
         publicMethods:
             Spec.optional(
@@ -18,5 +18,5 @@ export default Object.assign({},
                         Spec.and(
                             Spec.match(REGEX_METHOD_NAME),
                             Spec.notIn(FORBIDDEN_METHOD_NAMES))),
-                    Spec.valuesOf(Spec.func)))
+                    Spec.valuesOf(Spec.function)))
     });

@@ -87,7 +87,7 @@ export default [
         name: 'foo-bar',
         displayName: 'Foo/Bar',
         directory: 'foo-bar',
-        files: ['foo-bar.js', 'foo-bar.css'] 
+        files: ['foo-bar.js'] 
     },
     {
         name: 'todomvc',

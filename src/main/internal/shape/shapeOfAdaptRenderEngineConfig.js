@@ -7,10 +7,10 @@ export default  {
         api: Spec.object,
     }),
     interface: Spec.shape({
-        createElement: Spec.func,
-        defineFunctionalComponent: Spec.func,
-        defineStandardComponent: Spec.func,
-        isElement: Spec.func
+        createElement: Spec.function,
+        defineFunctionalComponent: Spec.function,
+        defineStandardComponent: Spec.function,
+        isElement: Spec.function
     }),
     options: Spec.optional(Spec.shape({
         isBrowserBased: Spec.optional(Spec.boolean)

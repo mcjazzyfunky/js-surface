@@ -1,6 +1,6 @@
 import { Spec } from 'js-spec';
 
 export default {
-    propsConsumer: Spec.func,
+    propsConsumer: Spec.function,
     instance: Spec.object
 };

@@ -6,5 +6,5 @@ import { Spec } from 'js-spec';
 export default Object.assign({},
     shapeOfInitResultWithoutInjection,
     {
-        provideChildInjections: Spec.func
+        provideChildInjections: Spec.function
     });

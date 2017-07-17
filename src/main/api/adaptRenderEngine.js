@@ -14,7 +14,9 @@ import shapeOfAdaptRenderEngineConfig
     from './../internal/shape/shapeOfAdaptRenderEngineConfig.js';
 
 export default function adaptRenderEngine(config) {
-    const err = Spec.shape(shapeOfAdaptRenderEngineConfig)(config);
+    const err =
+        Spec.shape(shapeOfAdaptRenderEngineConfig)
+            .validate(config);
 
     if (err) {
         throw new Error(

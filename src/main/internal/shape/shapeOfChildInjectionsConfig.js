@@ -17,10 +17,10 @@ export default {
                     Spec.valuesOf(
                         Spec.shape({
                             type:
-                                Spec.optional(Spec.func),
+                                Spec.optional(Spec.function),
                             nullable:
                                 Spec.optional(Spec.boolean),
                             constraint:
-                                Spec.optional(Spec.func)
+                                Spec.optional(Spec.function)
                         }))))),
 };
