@@ -9,7 +9,7 @@ import shapeOfComponentClass
 
 export default function validateComponentClassConfig(config) {
     const error =
-        Spec.shape(shapeOfComponentClass)
+        Spec.struct(shapeOfComponentClass)
             .validate(config, '');
 
     return error !== null
