@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/standalone.js",
@@ -40,7 +40,6 @@
     "inferno-create-element": "^3.6.4",
     "jquery": "^2.2.4",
     "js-essential": "^0.1.2",
-    "js-spec": "^0.1.14",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.1.0",
@@ -55,5 +54,8 @@
     "vue": "^2.3.4",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "js-spec": "^0.1.14"
   }
 }
