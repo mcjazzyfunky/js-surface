@@ -16,7 +16,7 @@ const HelloWorld = defineFunctionalComponent({
 
     render({ name }) {
         return (
-            h('div.xxx.yyy > section#my-section.some-class > p[data-xxx=4]',
+            h('div',
                 { style: { display: 'block' } },
                 `Hello ${name}!`));
     }

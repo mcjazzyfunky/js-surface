@@ -22,7 +22,7 @@ export function parseHyperscript(hyperscript) {
         }
 
         let meta = {
-            tag: null,
+            tag: 'div', // div is default if no tag is given
             attrs: null
         };
 
@@ -103,6 +103,10 @@ export function parseHyperscript(hyperscript) {
         if (ret === null) {
             break;
         }    
+    }
+
+    if (ret !== null && ret.length === 0) {
+        ret = null;
     }
 
     return ret;
