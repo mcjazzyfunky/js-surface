@@ -18,6 +18,12 @@ export default [
         files: ['hello-world-class.js']
     },
     {
+        name: 'click-me',
+        displayName: 'Click Me',
+        directory: 'click-me',
+        files: ['click-me.js']
+    },
+    {
         name: 'clock',
         displayName: 'Clock',
         directory: 'clock',

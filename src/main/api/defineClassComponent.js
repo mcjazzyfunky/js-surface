@@ -29,7 +29,7 @@ function defineClassComponentByConfig(config) {
         constructor(props) {
             super(props);
 
-            for (let key of Object.keys(this)) {
+            for (let key of Object.keys(this.constructor.prototype)) {
                 if (typeof this[key] === 'function') {
                     this[key] = this[key].bind(this);
                 }
