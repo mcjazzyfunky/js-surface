@@ -217,7 +217,8 @@ class CustomComponent extends Inferno.Component {
                 },
                 state => {
                     this.state = state;
-                });
+                },
+                this);
 
         this.__propsConsumer = propsConsumer;
         this.__instance = instance;

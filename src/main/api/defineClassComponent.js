@@ -26,8 +26,8 @@ function defineClassComponentByConfig(config) {
     }
 
     const componentClass = class extends Component {
-        constructor(props) {
-            super(props);
+        constructor(props, platformComponent) {
+            super(props, platformComponent);
 
             for (let key of Object.keys(this.constructor.prototype)) {
                 if (typeof this[key] === 'function') {
@@ -82,7 +82,7 @@ function defineClassComponentByClass(componentClass) {
     }
 
     const
-        init = (viewConsumer, stateConsumer) => {
+        init = (viewConsumer, stateConsumer, platformComponent) => {
             let
                 instance = new instanceClass(),
                 component = null,
@@ -102,7 +102,7 @@ function defineClassComponentByClass(componentClass) {
                 }
 
                 if (!component) {
-                    component = new componentClass(props);
+                    component = new componentClass(props, platformComponent);
                     instance.__component = component;
 
                     if (stateConsumer) {

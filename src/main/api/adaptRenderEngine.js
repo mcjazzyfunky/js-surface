@@ -90,9 +90,9 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
             propsAdjuster = createPropsAdjuster(config),
     
             adjustedConfig = Object.assign({}, config, {
-                init: (viewConsumer, stateConsumer = null) => {
+                init: (viewConsumer, stateConsumer, platformComponent) => {
                     const
-                        result = config.init(viewConsumer, stateConsumer),
+                        result = config.init(viewConsumer, stateConsumer, platformComponent),
                         err = validateInitResult(result, config);
 
                     if (err) {

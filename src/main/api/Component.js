@@ -1,10 +1,11 @@
 export default class Component {
-    constructor(initialProps) {
+    constructor(initialProps, platformComponent) {
         this.__props = initialProps;
         this.__state = null;
         this.__stateConsumer = null;
         this.__initialized = false;
         this.__refresh = null;
+        this.__platformComponent = platformComponent;
 
         // TODO - isn't there a better solution?
         setTimeout(() => {
@@ -43,6 +44,10 @@ export default class Component {
         if (typeof this.__stateConsumer === 'function') {
             this.__stateConsumer(this.__state);
         }
+    }
+
+    get component() {
+        return this.__platformComponent;
     }
 
     shouldUpdate() {

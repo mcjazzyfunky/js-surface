@@ -153,7 +153,7 @@ function customDefineStandardComponent(config) {
             };
 
             const initResult = config.init(
-                 this.__viewConsumer, this.__stateConsumer);
+                 this.__viewConsumer, this.__stateConsumer, this);
 
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;

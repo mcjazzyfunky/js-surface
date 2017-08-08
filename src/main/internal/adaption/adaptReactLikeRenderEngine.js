@@ -199,7 +199,8 @@ function defineCustomComponent(ReactLikeComponent) {
                     },
                     state => {
                         this.state = state;
-                    });
+                    },
+                    this);
 
             this.__propsConsumer = propsConsumer;
             this.__instance = instance;
