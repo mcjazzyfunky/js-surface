@@ -1,11 +1,11 @@
 import { Spec } from 'js-spec';
 
-import { REGEX_COMPONENT_NAME, REGEX_PROPERTY_NAME }
+import { REGEX_COMPONENT_DISPLAY_NAME, REGEX_PROPERTY_NAME }
     from '../constant/constants.js';
 
 export default {
     displayName: 
-        Spec.match(REGEX_COMPONENT_NAME),
+        Spec.match(REGEX_COMPONENT_DISPLAY_NAME),
 
     properties:
         Spec.optional(
