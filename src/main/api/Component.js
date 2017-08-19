@@ -4,7 +4,7 @@ export default class Component {
         this.__state = null;
         this.__stateConsumer = null;
         this.__initialized = false;
-        this.__refresh = null;
+        this.__forceUpdate = null;
         this.__platformComponent = platformComponent;
 
         // TODO - isn't there a better solution?
@@ -32,7 +32,7 @@ export default class Component {
 
         if (this.__initialized && this.shouldUpdate(this.props, currState)) {
             this.onWillUpdate(this.props, nextState);
-            this.refresh();
+            this.forceUpdate();
       //      this.onDidUpdate(this.props, currState);
         }
 
@@ -82,9 +82,9 @@ export default class Component {
         return null;
     }
 
-    refresh() {
-        if (this.__refresh) {
-            this.__refresh(this.props, this.state);
+    forceUpdate() {
+        if (this.__forceUpdate) {
+            this.__forceUpdate(this.props, this.state);
         }
     }
 }

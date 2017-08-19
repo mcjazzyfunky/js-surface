@@ -21,7 +21,7 @@ const MountUnmount = defineClassComponent(class extends Component {
     onDidMount() {
         this.__interval = setInterval(() => {
             this.__showFoo = !this.__showFoo;
-            this.refresh();
+            this.forceUpdate();
         }, 3000);
     }
 

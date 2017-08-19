@@ -5,7 +5,7 @@ const
         'componentWillReceiveProps', 'forceUpdate',
         'componentWillMount', 'componentDidMount',
         'componentWillUpdate', 'componentDidUpdate',
-        'constructor', 'refresh']),
+        'constructor', 'forceUpdate']),
 
     REGEX_COMPONENT_SYSTEM_NAME = /^[a-z][a-z]*(-[a-z][a-z]*)*$/,
     REGEX_COMPONENT_NAME = /^[A-Z][a-zA-Z0-9_-]*$/,

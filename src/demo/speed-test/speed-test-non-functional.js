@@ -97,7 +97,7 @@ const SpeedTest = defineClassComponent({
 
         this.intervalID = setInterval(() => {
             ++this.__frameCount;
-            this.refresh();
+            this.forceUpdate();
 
             if (this.__frameCount % 10 === 0) {
                 this.__actualFramesPerSecond =

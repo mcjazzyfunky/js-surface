@@ -117,7 +117,7 @@ function defineClassComponentByClass(componentClass) {
                     
                     let initialized = false;
 
-                    component.__refresh = function (prevProps, prevState) {
+                    component.__forceUpdate = function (prevProps, prevState) {
                         content = component.render();
                         const renderingDonePromise = viewConsumer(content);
 
@@ -138,7 +138,7 @@ function defineClassComponentByClass(componentClass) {
                     };
 
                     component.onWillMount();
-                    component.refresh(null, null);
+                    component.forceUpdate(null, null);
                 } else {
                     component.onWillReceiveProps(props);
 
@@ -154,7 +154,7 @@ function defineClassComponentByClass(componentClass) {
                     component.__props = props;
 
                     if (shouldUpdate) {
-                        component.refresh(prevProps, component.state);
+                        component.forceUpdate(prevProps, component.state);
                     }
                 }
             };

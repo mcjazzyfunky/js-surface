@@ -17,7 +17,7 @@ const App = defineClassComponent(class extends Component {
     }
 
     onDidMount() {
-        this.interval = setInterval(() => this.refresh(), 1000);
+        this.interval = setInterval(() => this.forceUpdate(), 1000);
     }
    
     onWillUnmount() {

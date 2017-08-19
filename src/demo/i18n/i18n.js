@@ -72,7 +72,7 @@ const App = defineClassComponent(class extends Component {
 
     setLang(lang) {
         this.__translator.setLang(lang);
-        this.refresh();
+        this.forceUpdate();
     }
 
     render() {
