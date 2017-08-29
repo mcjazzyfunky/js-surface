@@ -2,8 +2,7 @@ import {
     createElement as h,
     defineClassComponent,
     defineFunctionalComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -39,41 +38,34 @@ class Translator {
     }
 }
 
-const App = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'App';
-    }
+const App = defineClassComponent({
+    displayName: 'App',
 
-    static get properties() {
-        return {
-            defaultLang: {
-                type: String,
-                constraint: Spec.oneOf('en', 'fr', 'de'),
-                defaultValue: 'en'
-            }
-        };
-    }
-
-    static get childInjections() {
-        return ['translator'];
-    }
+    properties: {
+        defaultLang: {
+            type: String,
+            constraint: Spec.oneOf('en', 'fr', 'de'),
+            defaultValue: 'en'
+        }
+    },
 
     constructor(props) {
-        super(props);
         this.__translator = new Translator(translations);
         this.__translator.setLang(this.props.defaultLang);
-    }
+    },
+    
+    childInjections: ['translator'],
 
     provideChildInjections() {
         return {
             translator: this.__translator
         };
-    }
+    },
 
     setLang(lang) {
         this.__translator.setLang(lang);
         this.forceUpdate();
-    }
+    },
 
     render() {
         return (

@@ -1,4 +1,4 @@
-import Component from './Component.js';
+import Component from '../internal/class/Component.js';
 import defineClassComponent from './defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';

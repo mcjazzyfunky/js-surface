@@ -24,7 +24,6 @@ const {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-dom',
@@ -44,6 +43,5 @@ export {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 };

@@ -2,8 +2,7 @@ import {
     defineClassComponent,
     defineFunctionalComponent,
     createElement as h,
-    render,
-    Component,
+    render
 }  from 'js-surface';
 
 import { Seq } from 'js-essential';
@@ -167,20 +166,16 @@ function buildLinkListItem(text, isActive, moveToPage) {
     );
 }
 
-class DemoOfPaginationComponent extends Component {
-    static get displayName() {
-        return 'DemoOfPagination';
-    }
+const DemoOfPagination = defineClassComponent({
+    displayName: 'DemoOfPagination',
 
-    constructor(props) {
-        super(props);
-
+    constructor() {
         this.state = { pageIndex: 0 };
-    }
+    },
 
     moveToPage(pageIndex) {
         this.state = { pageIndex };
-    }
+    },
 
     render() {
         return (
@@ -194,9 +189,7 @@ class DemoOfPaginationComponent extends Component {
                             totalItemCount: totalItemCount,
                             onChange: evt => this.moveToPage(evt.targetPage)})))));
     }
-}
-
-const DemoOfPagination = defineClassComponent(DemoOfPaginationComponent);
+});
 
 // -----------------
 

@@ -18,7 +18,6 @@ const {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 } = adaptRenderEngine({
     renderEngine: {
@@ -42,7 +41,6 @@ export {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 };
 

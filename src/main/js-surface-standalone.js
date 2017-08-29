@@ -6,7 +6,6 @@ import {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 } from './js-surface-preact.js';
 
@@ -18,6 +17,5 @@ export {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 };

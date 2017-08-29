@@ -4,7 +4,8 @@ import validateComponentClass
 import validateComponentClassConfig
     from '../internal/validation/validateComponentClassConfig.js';
 
-import { defineStandardComponent, Component }  from 'js-surface';
+import { defineStandardComponent }  from 'js-surface';
+import Component from '../internal/class/Component.js';
 
 export default function defineClassComponent(config) {
     let ret;

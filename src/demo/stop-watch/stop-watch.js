@@ -1,36 +1,30 @@
 import {
     defineClassComponent,
     createElement as h,
-    render,
-    Component,
+    render
 }  from 'js-surface';
 
-const StopWatch = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'StopWatch';
-    }
+const StopWatch = defineClassComponent({
+    displayName: 'StopWatch',
 
-    static get properties() {
-        return {};
-    }
+    properties: {},
 
     constructor(props) {
-        super(props);
         this.timerID = null;
         this.state = { time: 0, running: false };
-    }
+    },
 
     setTime(time) {
         const running = this.state.running;
 
         this.state = { time, running };
-    }
+    },
 
     setRunning(running) {
         const time = this.state.time;
 
         this.state = { time, running };
-    }
+    },
 
     startTimer() {
         if (!this.state.running) {
@@ -42,7 +36,7 @@ const StopWatch = defineClassComponent(class extends Component {
 
             this.setRunning(true);
         }
-    }
+    },
 
     stopTimer() {
         if (this.state.running) {
@@ -50,16 +44,16 @@ const StopWatch = defineClassComponent(class extends Component {
             this.timerID = null;
             this.setRunning(false);
         }
-    }
+    },
 
     resetTimer() {
         this.stopTimer();
         this.setTime(0);
-    }
+    },
 
     onWillUnmount() {
         this.stopTimer();
-    }
+    },
 
     render() {
         const bind = {
@@ -96,5 +90,5 @@ const StopWatch = defineClassComponent(class extends Component {
         );
     }
 });
-console.log(222, StopWatch())
+
 render(StopWatch(), 'main-content');

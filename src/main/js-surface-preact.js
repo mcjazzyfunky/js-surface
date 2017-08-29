@@ -12,7 +12,6 @@ const {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'preact',
@@ -32,7 +31,6 @@ export {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 };
 

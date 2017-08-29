@@ -2,8 +2,7 @@ import {
     createElement as h, 
     defineClassComponent,
     defineFunctionalComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -27,56 +26,49 @@ const CounterInfo = defineFunctionalComponent({
 
 // --------------------------------------------------------------------
 
-class CounterComponent extends Component {
-    static get displayName() {
-        return 'Counter';
-    }
+const Counter = defineClassComponent({
+    displayName: 'Counter',
 
-    static get properties() {
-        return {
-            initialValue: {
-                type: Number,
-                constraint: Spec.integer,
-                defaultValue: 0
-            },
+    properties: {
+        initialValue: {
+            type: Number,
+            constraint: Spec.integer,
+            defaultValue: 0
+        },
 
-            onChange: {
-                type: Function,
-                nullable: true,
-                defaultValue: null
-            }
-        };
-    }
+        onChange: {
+            type: Function,
+            nullable: true,
+            defaultValue: null
+        }
+    },
 
-    static get publicMethods() {
-        return {
-            resetCounter(value = 0) {
-                this.state = { counterValue: value };
-            }
-        };
-    }
+    publicMethods: {
+        resetCounter(value = 0) {
+            this.state = { counterValue: value };
+        }
+    },
 
     constructor(props) {
-        super(props);
         this.state = { counterValue: this.props.initialValue };
-    }
+    },
 
     increaseCounter(delta) {
         this.state = { counterValue: this.state.counterValue + delta };
-    }
+    },
 
     shouldUpdate() {
         console.log('[needsUpdate]', arguments);
         return true;
-    }
+    },
 
     onWillReceiveProps(nextProps) {
         console.log('[onWillReceiveProps]', arguments);
-    }
+    },
 
     onWillChangeState(nextState) {
         console.log('[onWillChangeState]', arguments);
-    }
+    },
 
     onDidChangeState(prevState) {
         console.log('[onDidChangeState]', arguments);
@@ -87,27 +79,27 @@ class CounterComponent extends Component {
                 value: this.state.counterValue
             });
         }
-    }
+    },
 
     onWillMount() {
         console.log('[onWillMount]', arguments);
-    }
+    },
 
     onDidMount() {
         console.log('[onDidMount]', arguments);
-    }
+    },
 
     onWillUpdate() {
         console.log('[onWillUpdate]', arguments);
-    }
+    },
 
     onDidUpdate() {
         console.log('[onDidUpdate]', arguments);
-    }
+    },
 
     onWillUnmount() {
         console.log('[onWillUnmount]:', arguments);
-    }
+    },
 
     render() {
         return (
@@ -123,16 +115,12 @@ class CounterComponent extends Component {
                     '+'))
         );
     }
-}
-
-const Counter = defineClassComponent(CounterComponent);
+});
 
 // --------------------------------------------------------------------
 
-const CounterCtrl = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'CounterCtrl';
-    }
+const CounterCtrl = defineClassComponent({
+    displayName: 'CounterCtrl',
 
     render() {
         let counterInstance = null;

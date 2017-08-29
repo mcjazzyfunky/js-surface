@@ -10,7 +10,6 @@ const {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-lite',
@@ -30,7 +29,6 @@ export {
     isElement,
     isRenderable,
     render,
-    Component,
     RenderEngine
 };
 

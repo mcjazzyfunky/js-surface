@@ -2,33 +2,26 @@ import {
     createElement as h,
     defineClassComponent,
     defineFunctionalComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
-const Parent = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'Parent';
-    }
+const Parent = defineClassComponent({
+    displayName: 'Parent',
 
-    static get properties() {
-        return {
-            masterValue: {
-                type: String,
-                defaultValue: 'default-value'
-            }
-        };
-    }
+    properties: {
+        masterValue: {
+            type: String,
+            defaultValue: 'default-value'
+        }
+    },
 
-    static get childInjections() {
-        return ['value'];
-    }
+    childInjections: ['value'],
 
     provideChildInjections() {
         return {
             value: this.props.masterValue
         };
-    }
+    },
 
     render() {
         return h('div',
@@ -58,20 +51,16 @@ const ChildFunctionBased = defineFunctionalComponent({
     }
 });
 
-const ChildClassBased = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'ChildClassBased';
-    }
+const ChildClassBased = defineClassComponent({
+    displayName: 'ChildClassBased',
 
-    static get properties() {
-        return {
-            value: {
-                type: String,
-                inject: true,
-                defaultValue: 'default value'
-            }
-        };
-    }
+    properties: {
+        value: {
+            type: String,
+            inject: true,
+            defaultValue: 'default value'
+        }
+    },
 
     render() {
         return h('div', 'ChildClassBased(', this.props.value, ')');

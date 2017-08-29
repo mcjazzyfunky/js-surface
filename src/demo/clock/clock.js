@@ -1,36 +1,31 @@
 import {
     createElement as h,
     defineClassComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
-const Clock = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'Clock';
-    }
+const Clock = defineClassComponent({
+    displayName: 'Clock',
 
-    constructor(props) {
-        super(props);
-
+    constructor() {
         this.interval = null;
         this.updateState();
-    }
+    },
 
     updateState() {
         this.state = { time: new Date().toLocaleTimeString() };
-    }
+    },
 
     onDidMount() {
         this.interval = setInterval(() => {
             this.updateState(); 
         }, 1000);
-    }
+    },
 
     onWillUnmount() {
         clearInterval(this.interval);
         this.interval = null;
-    }
+    },
 
     render() {
         return (
@@ -41,18 +36,14 @@ const Clock = defineClassComponent(class extends Component {
     }
 });
 
-const TimeInfo = defineClassComponent(class extends Component {
-    static get displayName() {
-        return 'TimeInfo';
-    }
+const TimeInfo = defineClassComponent({
+    displayName: 'TimeInfo',
     
-    static get properties() {
-        return {
-            time: {
-                type: String
-            }
-        };
-    }
+    properties: {
+        time: {
+            type: String
+        }
+    },
 
     render() {
         return h('div', this.props.time);

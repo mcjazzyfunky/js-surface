@@ -1,72 +1,65 @@
 import {
     createElement as h,
     defineClassComponent,
-    render,
-    Component
+    render
 } from 'js-surface';
 
 
-class SimpleCounterComponent extends Component {
-    static get displayName() {
-        return 'SimpleCounter';
-    }
+const SimpleCounter = defineClassComponent({
+    displayName: 'SimpleCounter',
 
-    static get properties() {
-        return {
-            label: {
-                type: String,
-                defaultValue: 'Counter:'
-            },
-            initialValue: {
-                type: Number,
-                defaultValue: 0
-            }
-        };
-    }
+    properties: {
+        label: {
+            type: String,
+            defaultValue: 'Counter:'
+        },
+        initialValue: {
+            type: Number,
+            defaultValue: 0
+        }
+    },
 
     constructor(props) {
-        super(props);
-
         this.state = { counterValue: props.initialValue };
-    }
+    },
 
     incrementCounter(delta) {
         this.state = {
             counterValue: this.state.counterValue + delta
         };
-    }
+    },
 
     onWillMount() {
         console.log('onWillMount');
         //alert('onWillMount');
-    }
+    },
 
     onDidMount() {
         console.log('onDidMount');
         //alert('onDidMount');
-    }
+    },
 
     onWillUpdate() {
         console.log('onWillUpdate');
         //alert('onWillUpdate');
-    }
+    },
 
     onDidUpdate() {
         console.log('onDidUpdate');
         //alert('onDidUpdate');
-    }
+    },
 
     onWillChangeState(nextState) {
         console.log('onWillChangeState', nextState);
-    }
+    },
 
     onDidChangeState(prevState) {
         console.log('onDidChangeState', prevState);
-    }
+    },
 
     render() {
         return (
-            h('div.simple-counter', { ref: (it, remove) => console.log('ref:>>>>: ', it, remove) },
+            h('div.simple-counter',
                 h('label.simple-counter-label.btn',
                     this.props.label),
                 h('button.simple-counter-decrease-button.btn.btn-default',
@@ -79,9 +72,6 @@ class SimpleCounterComponent extends Component {
                     '+'))
         );
     }
-}
-
-
-const SimpleCounter = defineClassComponent(SimpleCounterComponent);
+});
 
 render(SimpleCounter({ initialValue: 100 }), 'main-content');
