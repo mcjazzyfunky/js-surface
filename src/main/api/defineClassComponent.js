@@ -1,26 +1,12 @@
-import validateComponentClass
-    from '../internal/validation/validateComponentClass.js';
+import validateClassComponentConfig
+    from '../internal/validation/validateClassComponentConfig.js';
 
-import validateComponentClassConfig
-    from '../internal/validation/validateComponentClassConfig.js';
 
 import { defineStandardComponent }  from 'js-surface';
 import Component from '../internal/class/Component.js';
 
 export default function defineClassComponent(config) {
-    let ret;
-
-    if (typeof config === 'function') {
-        ret = defineClassComponentByClass(config);
-    } else {
-        ret = defineClassComponentByConfig(config);
-    }
-
-    return ret;
-}
-
-function defineClassComponentByConfig(config) {
-    const err = validateComponentClassConfig(config);
+    const err = validateClassComponentConfig(config);
     
     if (err) {
         throw err;
@@ -50,16 +36,6 @@ function defineClassComponentByConfig(config) {
         } else if (key !== 'constructor') {
             componentClass.prototype[key] = value;
         }
-    }
-
-    return defineClassComponentByClass(componentClass);
-}
-
-function defineClassComponentByClass(componentClass) {
-    const err = validateComponentClass(componentClass);
-    
-    if (err) {
-        throw err;
     }
 
     const
@@ -175,27 +151,27 @@ function defineClassComponentByClass(componentClass) {
         };
 
 
-    const config = {
+    const stdConfig = {
         displayName:  componentClass.displayName,
         properties: componentClass.properties,
         init
     };
 
     if (componentClass.childInjections) {
-        config.childInjections = componentClass.childInjections; 
+        stdConfig.childInjections = componentClass.childInjections; 
     }
 
     if (publicMethods) {
-        config.publicMethods = {};
+        stdConfig.publicMethods = {};
 
         for (let key of Object.keys(publicMethods)) {
-            config.publicMethods[key] = function (...args) {
+            stdConfig.publicMethods[key] = function (...args) {
                 return publicMethods[key].apply(this.__component, args);
             };
         }
     }
 
-    const factory = defineStandardComponent(config);
+    const factory = defineStandardComponent(stdConfig);
     factory.meta.componentClass = componentClass;
     return factory;
 }
