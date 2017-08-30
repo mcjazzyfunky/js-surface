@@ -1,11 +1,11 @@
 import {
     createElement as h,
-    defineClassComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
 
-const SimpleCounter = defineClassComponent({
+const SimpleCounter = defineComponent({
     displayName: 'SimpleCounter',
 
     properties: {

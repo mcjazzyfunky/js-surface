@@ -1,11 +1,11 @@
 import {
     createElement as h,
-    defineClassComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
 
-const MountUnmount = defineClassComponent({
+const MountUnmount = defineComponent({
     displayName: 'MountUnmount',
 
     constructor() {
@@ -37,7 +37,7 @@ const MountUnmount = defineClassComponent({
     }
 });
 
-const ComponentA = defineClassComponent({
+const ComponentA = defineComponent({
     displayName: 'ComponentA',
 
     onDidMount() {
@@ -53,7 +53,7 @@ const ComponentA = defineClassComponent({
     }
 });
 
-const ComponentB = defineClassComponent({
+const ComponentB = defineComponent({
     displayName: 'ComponentB',
 
     onDidMount() {

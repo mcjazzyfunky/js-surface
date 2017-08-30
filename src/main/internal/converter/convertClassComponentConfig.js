@@ -1,11 +1,9 @@
 import validateClassComponentConfig
-    from '../internal/validation/validateClassComponentConfig.js';
+    from '../validation/validateClassComponentConfig.js';
 
+import Component from '../class/Component.js';
 
-import { defineStandardComponent }  from 'js-surface';
-import Component from '../internal/class/Component.js';
-
-export default function defineClassComponent(config) {
+export default function convertClassComponentConfig(config) {
     const err = validateClassComponentConfig(config);
     
     if (err) {
@@ -37,7 +35,7 @@ export default function defineClassComponent(config) {
             componentClass.prototype[key] = value;
         }
     }
-
+console.log(Object.keys(componentClass), Object.keys(componentClass.prototype))
     const
         publicMethods = componentClass.publicMethods || null,
         instanceClass = function () {
@@ -170,8 +168,6 @@ export default function defineClassComponent(config) {
             };
         }
     }
-
-    const factory = defineStandardComponent(stdConfig);
-    factory.meta.componentClass = componentClass;
-    return factory;
+console.log(stdConfig)
+    return stdConfig;
 }

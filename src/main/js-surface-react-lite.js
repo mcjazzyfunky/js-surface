@@ -3,10 +3,8 @@ import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRender
 import ReactLite from 'react-lite';
 
 const {
+    defineComponent,
     createElement,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -22,10 +20,8 @@ const {
 });
 
 export {
+    defineComponent,
     createElement,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
     isElement,
     isRenderable,
     render,

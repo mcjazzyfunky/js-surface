@@ -1,6 +1,5 @@
 import {
-    defineClassComponent,
-    defineFunctionalComponent,
+    defineComponent,
     createElement as h,
     render
 }  from 'js-surface';
@@ -9,7 +8,7 @@ const framesPerSecond = 240;
 
 const COLORS = ['red', 'yellow', 'orange'];
 
-const Tile = defineFunctionalComponent({
+const Tile = defineComponent({
     displayName:  'Tile',
     
     properties: {
@@ -41,7 +40,7 @@ const Tile = defineFunctionalComponent({
     }
 });
 
-const TileRow = defineFunctionalComponent({
+const TileRow = defineComponent({
     displayName:  'TileRow',
     
     properties: {
@@ -71,7 +70,7 @@ const TileRow = defineFunctionalComponent({
     }
 });
 
-const SpeedTest = defineClassComponent({
+const SpeedTest = defineComponent({
     displayName: 'SpeedTest',
 
     properties: {

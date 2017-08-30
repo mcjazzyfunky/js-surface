@@ -1,7 +1,6 @@
 import {
     createElement as h,
-    defineClassComponent,
-    defineFunctionalComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
@@ -96,7 +95,7 @@ const
         }
     });
 
-const TodoMVCApp = defineClassComponent({
+const TodoMVCApp = defineComponent({
     displayName: 'TodoMVCApp',
 
     properties: {
@@ -158,7 +157,7 @@ const TodoMVCApp = defineClassComponent({
     }
 });
 
-const Header = defineFunctionalComponent({
+const Header = defineComponent({
     displayName: 'Header',
 
     properties: {
@@ -209,7 +208,7 @@ const Header = defineFunctionalComponent({
     }
 });
 
-const TodoList = defineFunctionalComponent({
+const TodoList = defineComponent({
     displayName: 'MainSection',
 
     properties: {
@@ -268,7 +267,7 @@ const TodoList = defineFunctionalComponent({
     }
 });
 
-const TodoFilters = defineFunctionalComponent({
+const TodoFilters = defineComponent({
     displayName: 'TodoFilters',
 
     properties: {

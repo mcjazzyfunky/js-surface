@@ -1,7 +1,6 @@
 import {
     createElement as h,
-    defineClassComponent,
-    defineFunctionalComponent,
+    defineComponent,
     render
 } from 'js-surface';
 
@@ -38,7 +37,7 @@ class Translator {
     }
 }
 
-const App = defineClassComponent({
+const App = defineComponent({
     displayName: 'App',
 
     properties: {
@@ -84,7 +83,7 @@ const App = defineClassComponent({
     }
 });
 
-const Text = defineFunctionalComponent({
+const Text = defineComponent({
     displayName: 'Text',
 
     properties: {

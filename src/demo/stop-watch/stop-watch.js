@@ -1,10 +1,10 @@
 import {
-    defineClassComponent,
+    defineComponent,
     createElement as h,
     render
 }  from 'js-surface';
 
-const StopWatch = defineClassComponent({
+const StopWatch = defineComponent({
     displayName: 'StopWatch',
 
     properties: {},
