@@ -1,5 +1,6 @@
 import {
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
     createElement as h,
     render
 }  from 'js-surface';
@@ -17,7 +18,7 @@ const
     pageSize = 25,
     totalItemCount = 1220;
 
-export const Pagination = defineComponent({
+export const Pagination = defineFunctionalComponent({
     displayName:  'Pagination',
 
     properties: {
@@ -165,7 +166,7 @@ function buildLinkListItem(text, isActive, moveToPage) {
     );
 }
 
-const DemoOfPagination = defineComponent({
+const DemoOfPagination = defineClassComponent({
     displayName: 'DemoOfPagination',
 
     constructor() {

@@ -1,6 +1,8 @@
 import {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -8,8 +10,10 @@ import {
 } from './js-surface-preact.js';
 
 export {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

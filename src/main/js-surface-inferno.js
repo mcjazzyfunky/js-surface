@@ -11,8 +11,10 @@ const Inferno = Object.assign({}, InfernoCore, {
 });
 
 const {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -32,8 +34,10 @@ const {
 });
 
 export {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

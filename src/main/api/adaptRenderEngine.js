@@ -1,5 +1,5 @@
 import Component from '../internal/class/Component.js';
-import adaptDefineComponent from '../internal/adaption/adaptDefineComponent.js';
+import defineClassComponent from './defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
 import normalizeComponentConfig from '../internal/helper/normalizeComponentConfig.js';
@@ -43,10 +43,9 @@ export default function adaptRenderEngine(config) {
     return {
         RenderEngine: RenderEngine,
         createElement,
-        defineComponent: adaptDefineComponent(
-            defineFunctionalComponent,
-            defineStandardComponent
-        ),
+        defineFunctionalComponent,
+        defineStandardComponent,
+        defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
         render: config.interface.render,

@@ -1,10 +1,10 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render
 } from 'js-surface';
 
-const ClickMe = defineComponent({
+const ClickMe = defineClassComponent({
     displayName: 'ClickMe',
 
     properties: {
@@ -18,9 +18,6 @@ const ClickMe = defineComponent({
         }
     },
 
-    constructor() {
-    },
-    
     onClick() {
         alert(`You've clicked on "${this.props.text}"`);
     },

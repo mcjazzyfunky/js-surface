@@ -1,10 +1,10 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render
 } from 'js-surface';
 
-const HelloWorld = defineComponent({
+const HelloWorld = defineClassComponent({
     displayName: 'HelloWorld',
 
     properties: {

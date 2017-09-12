@@ -1,10 +1,11 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
+    defineFunctionalComponent,
     render
 } from 'js-surface';
 
-const Parent = defineComponent({
+const Parent = defineClassComponent({
     displayName: 'Parent',
 
     properties: {
@@ -12,9 +13,6 @@ const Parent = defineComponent({
             type: String,
             defaultValue: 'default-value'
         }
-    },
-
-    constructor() {
     },
 
     childInjections: ['value'],
@@ -37,7 +35,7 @@ const Parent = defineComponent({
     }
 });
 
-const ChildFunctionBased = defineComponent({
+const ChildFunctionBased = defineFunctionalComponent({
     displayName: 'ChildFunctionBased',
 
     properties: {
@@ -53,7 +51,7 @@ const ChildFunctionBased = defineComponent({
     }
 });
 
-const ChildClassBased = defineComponent({
+const ChildClassBased = defineClassComponent({
     displayName: 'ChildClassBased',
 
     properties: {
@@ -62,9 +60,6 @@ const ChildClassBased = defineComponent({
             inject: true,
             defaultValue: 'default value'
         }
-    },
-
-    constructor() {
     },
 
     render() {

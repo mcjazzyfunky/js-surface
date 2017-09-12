@@ -1,1 +1,0 @@
-import defineClassComponent from '../internal/',

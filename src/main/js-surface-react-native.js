@@ -4,8 +4,10 @@ import React from 'react';
 import ReactNative from 'react-native';
 
 const {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -22,8 +24,10 @@ const {
 });
 
 export {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

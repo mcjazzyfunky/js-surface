@@ -4,8 +4,10 @@ import adaptRenderEngine from
 import Vue from 'vue';
 
 const {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -25,8 +27,10 @@ const {
 });
 
 export {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,

@@ -1,10 +1,10 @@
 import {
     createElement as h,
-    defineComponent,
+    defineClassComponent,
     render
 } from 'js-surface';
 
-const Clock = defineComponent({
+const Clock = defineClassComponent({
     displayName: 'Clock',
 
     constructor() {
@@ -36,7 +36,7 @@ const Clock = defineComponent({
     }
 });
 
-const TimeInfo = defineComponent({
+const TimeInfo = defineClassComponent({
     displayName: 'TimeInfo',
     
     properties: {
@@ -45,8 +45,8 @@ const TimeInfo = defineComponent({
         }
     },
 
-    render(props) {
-        return h('div', props.time);
+    render() {
+        return h('div', this.props.time);
     }
 });
 

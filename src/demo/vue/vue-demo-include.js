@@ -1,6 +1,7 @@
 import {
     createElement as h,
-    defineComponent
+    defineFunctionalComponent,
+    defineClassComponent
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -19,7 +20,7 @@ Vue.config.devtools = true;
 // js-surface components
 // ==============================================
 
-const SurfaceButton = defineComponent({
+const SurfaceButton = defineFunctionalComponent({
     displayName: 'SurfaceButton',
 
     properties: {
@@ -52,7 +53,7 @@ const SurfaceButton = defineComponent({
     }
 });
 
-const SurfaceCounter = defineComponent({
+const SurfaceCounter = defineClassComponent({
     displayName: 'Counter',
 
     properties: {
@@ -99,7 +100,7 @@ const SurfaceCounter = defineComponent({
     }
 });
 
-const SurfaceClock = defineComponent({
+const SurfaceClock = defineClassComponent({
     displayName: 'SurfaceClock',
 
     properties: {

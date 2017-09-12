@@ -5,8 +5,10 @@ import Preact from 'preact';
 const VNode = Preact.h('').constructor;
 
 const {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
@@ -22,8 +24,10 @@ const {
 });
 
 export {
-    defineComponent,
     createElement,
+    defineClassComponent,
+    defineFunctionalComponent,
+    defineStandardComponent,
     isElement,
     isRenderable,
     render,
