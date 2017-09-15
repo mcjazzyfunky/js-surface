@@ -1,4 +1,4 @@
-import warn from './warn.js';
+import warn from './warn';
 
 import { SpecValidator } from 'js-spec';
 

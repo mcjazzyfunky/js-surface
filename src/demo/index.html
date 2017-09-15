@@ -78,8 +78,13 @@
 
         System.config({
             baseURL: '../../../..',
-           // defaultJSExtensions: true,
             transpiler: 'plugin-babel',
+
+            packages: {
+               '': {
+                   defaultExtension: 'js'
+                }
+            },
 
             meta: {
                 '*.js': {
@@ -130,7 +135,7 @@
         });
 
         System.import('./available-demos.js')
-            .then (({ default: availableDemos }) => {
+            .then(({ default: availableDemos }) => {
                 const
                     activeDemoIndex = Math.max(availableDemos.findIndex(it => it.name === demoName), 0),
                     activeDemo =  availableDemos[activeDemoIndex];

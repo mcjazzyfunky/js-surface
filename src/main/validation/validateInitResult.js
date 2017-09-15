@@ -1,10 +1,10 @@
 import { Spec } from 'js-spec';
 
 import shapeOfInitResultWithoutInjection
-    from '../shape/shapeOfInitResultWithoutInjection.js';
+    from '../shape/shapeOfInitResultWithoutInjection';
 
 import shapeOfInitResultWithInjection
-    from '../shape/shapeOfInitResultWithInjection.js';
+    from '../shape/shapeOfInitResultWithInjection';
 
 export default function validateInitResult(initResult, config) {
     let error =

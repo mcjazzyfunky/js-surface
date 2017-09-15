@@ -1,8 +1,8 @@
-import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig.js';
+import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig';
 
 import { Spec } from 'js-spec';
 
-import adaptRenderEngine from '../adaption/adaptRenderEngine.js';
+import adaptRenderEngine from '../adaption/adaptRenderEngine';
 
 const
     returnNull = () => null,

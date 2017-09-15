@@ -1,10 +1,10 @@
 import { Spec } from 'js-spec';
 
 import prettifyComponentConfigError
-    from '../helper/prettifyComponentConfigError.js';
+    from '../helper/prettifyComponentConfigError';
 
 import shapeOfClassComponentConfig
-    from '../shape/shapeOfClassComponentConfig.js';
+    from '../shape/shapeOfClassComponentConfig';
 
 
 export default function validateClassComponentConfig(config) {

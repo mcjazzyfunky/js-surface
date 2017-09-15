@@ -1,10 +1,10 @@
 import { Spec } from 'js-spec';
 
 import prettifyComponentConfigError
-    from '../helper/prettifyComponentConfigError.js';
+    from '../helper/prettifyComponentConfigError';
 
 import shapeOfFunctionalComponentConfig
-    from '../shape/shapeOfFunctionalComponentConfig.js';
+    from '../shape/shapeOfFunctionalComponentConfig';
 
 
 export default function validateFunctionalComponentConfig(config) {

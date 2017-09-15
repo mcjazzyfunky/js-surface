@@ -7,7 +7,7 @@ import {
     isRenderable,
     render,
     RenderEngine
-} from './js-surface-preact.js';
+} from './js-surface-preact';
 
 export {
     createElement,

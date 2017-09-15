@@ -1,4 +1,4 @@
-import { REGEX_CALLBACK_PROPERTY_NAME } from '../constant/constants.js';
+import { REGEX_CALLBACK_PROPERTY_NAME } from '../constant/constants';
 
 export default function normalizeComponentConfig(config) {
     let ret;

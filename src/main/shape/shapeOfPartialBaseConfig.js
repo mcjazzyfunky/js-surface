@@ -1,7 +1,7 @@
 import { Spec } from 'js-spec';
 
 import { REGEX_COMPONENT_DISPLAY_NAME, REGEX_PROPERTY_NAME }
-    from '../constant/constants.js';
+    from '../constant/constants';
 
 export default {
     displayName: 

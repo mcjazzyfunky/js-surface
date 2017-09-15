@@ -1,4 +1,4 @@
-import { REGEX_COMPONENT_SYSTEM_NAME } from '../constant/constants.js';
+import { REGEX_COMPONENT_SYSTEM_NAME } from '../constant/constants';
 import { Spec } from 'js-spec';
 
 export default  {

@@ -1,5 +1,5 @@
 import shapeOfInitResultWithoutInjection
-    from './shapeOfInitResultWithoutInjection.js';
+    from './shapeOfInitResultWithoutInjection';
 
 import { Spec } from 'js-spec';
 

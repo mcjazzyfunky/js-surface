@@ -1,7 +1,7 @@
 import validateClassComponentConfig
-    from '../validation/validateClassComponentConfig.js';
+    from '../validation/validateClassComponentConfig';
 
-import Component from '../class/Component.js';
+import Component from '../class/Component';
 
 export default function convertClassComponentConfig(config) {
     const err = validateClassComponentConfig(config);

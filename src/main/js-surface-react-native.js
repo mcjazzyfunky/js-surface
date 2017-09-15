@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine.js';
+import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
 
 import React from 'react';
 import ReactNative from 'react-native';

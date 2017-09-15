@@ -1,4 +1,4 @@
-import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig.js';
+import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig';
 
 import { Spec } from 'js-spec';
 

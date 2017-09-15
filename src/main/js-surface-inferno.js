@@ -1,5 +1,5 @@
 import adaptRenderEngine from
-    './adaption/adaptRenderEngine.js';
+    './adaption/adaptRenderEngine';
 
 import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
