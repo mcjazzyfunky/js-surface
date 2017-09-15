@@ -1,5 +1,5 @@
 import adaptRenderEngine from
-    './api/adaptRenderEngine.js';
+    './adaption/adaptRenderEngine.js';
 
 import Vue from 'vue';
 

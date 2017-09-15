@@ -1,16 +1,16 @@
-import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
-import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
-import convertClassComponentConfig from '../internal/convert/convertClassComponentConfig.js';
-import normalizeComponentConfig from '../internal/helper/normalizeComponentConfig.js';
-import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
+import adaptCreateElement from './adaptCreateElement.js';
+import adaptIsRenderable from './adaptIsRenderable.js';
+import convertClassComponentConfig from '../conversion/convertClassComponentConfig.js';
+import normalizeComponentConfig from '../helper/normalizeComponentConfig.js';
+import createPropsAdjuster from '../helper/createPropsAdjuster.js';
 
-import validateConfigForStandardComponent from '../internal/validation/validateStandardComponentConfig.js';
-import validateInitResult from '../internal/validation/validateInitResult.js';
+import validateConfigForStandardComponent from '../validation/validateStandardComponentConfig.js';
+import validateInitResult from '../validation/validateInitResult.js';
 
 import { Spec } from 'js-spec';
 
 import shapeOfAdaptRenderEngineConfig
-    from './../internal/shape/shapeOfAdaptRenderEngineConfig.js';
+    from './../shape/shapeOfAdaptRenderEngineConfig.js';
 
 export default function adaptRenderEngine(config) {
     const err =

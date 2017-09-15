@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
+import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine.js';
 
 import Preact from 'preact';
 

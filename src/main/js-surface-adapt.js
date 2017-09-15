@@ -1,3 +1,3 @@
-import adaptRenderEngine from './api/adaptRenderEngine';
+import adaptRenderEngine from './adaption/adaptRenderEngine';
 
 export default adaptRenderEngine;

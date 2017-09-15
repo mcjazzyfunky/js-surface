@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './internal/adaption/adaptReactLikeRenderEngine.js';
+import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

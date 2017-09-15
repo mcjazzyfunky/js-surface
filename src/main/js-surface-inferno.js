@@ -1,5 +1,5 @@
 import adaptRenderEngine from
-    './api/adaptRenderEngine.js';
+    './adaption/adaptRenderEngine.js';
 
 import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
@@ -176,7 +176,7 @@ function customIsElement(it) {
         && !!(it.flags & (28 | 3970 )); // 28: component, 3970: element
 }
 
-function customRender(content, targetNode) {console.log(content)
+function customRender(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");

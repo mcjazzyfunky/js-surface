@@ -2,7 +2,7 @@ import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactL
 
 import { Spec } from 'js-spec';
 
-import adaptRenderEngine from '../../api/adaptRenderEngine.js';
+import adaptRenderEngine from '../adaption/adaptRenderEngine.js';
 
 const
     returnNull = () => null,
