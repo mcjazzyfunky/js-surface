@@ -1,7 +1,6 @@
-import Component from '../internal/class/Component.js';
-import defineClassComponent from './defineClassComponent.js';
 import adaptCreateElement from '../internal/adaption/adaptCreateElement.js';
 import adaptIsRenderable from '../internal/adaption/adaptIsRenderable.js';
+import convertClassComponentConfig from '../internal/convert/convertClassComponentConfig.js';
 import normalizeComponentConfig from '../internal/helper/normalizeComponentConfig.js';
 import createPropsAdjuster from '../internal/helper/createPropsAdjuster.js';
 
@@ -31,7 +30,10 @@ export default function adaptRenderEngine(config) {
             : adaptCreateElement(config.interface.createElement, config.interface.isElement),
 
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
-        defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent);
+        defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
+        
+        defineClassComponent = config => defineStandardComponent(
+            convertClassComponentConfig(config)); 
 
     const RenderEngine = {
         name: config.renderEngine.name,
@@ -48,8 +50,7 @@ export default function adaptRenderEngine(config) {
         defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
-        render: config.interface.render,
-        Component
+        render: config.interface.render
     };
 }
 
