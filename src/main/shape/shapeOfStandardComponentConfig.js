@@ -1,12 +1,12 @@
 import shapeOfPartialBaseConfig from './shapeOfPartialBaseConfig';
-import shapeOfchildInjectionsConfig from './shapeOfchildInjectionsConfig';
+import shapeOfChildInjectionsConfig from './shapeOfChildInjectionsConfig';
 
 import { REGEX_METHOD_NAME, FORBIDDEN_METHOD_NAMES } from '../constant/constants'; 
 import { Spec } from 'js-spec';
 
 export default Object.assign({},
     shapeOfPartialBaseConfig,
-    shapeOfchildInjectionsConfig,
+    shapeOfChildInjectionsConfig,
     {   
         init: Spec.function,
 

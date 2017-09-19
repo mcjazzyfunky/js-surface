@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css"/>
 
     <style type="text/css">
         #main-content:empty {
@@ -23,7 +23,7 @@
         }
     </style>
 
-    <script type="text/javascript" src="../../../../node_modules/systemjs/dist/system.js"></script>
+    <script type="text/javascript" src="../../node_modules/systemjs/dist/system.js"></script>
 
     <script type="text/javascript">
     {   
@@ -77,7 +77,7 @@
             //jsSurfaceInclude = '../../dist/' + activeAdapter.module.replace('js-surface-', '');
 
         System.config({
-            baseURL: '../../../..',
+            baseURL: '../..',
             transpiler: 'plugin-babel',
 
             packages: {
@@ -88,9 +88,9 @@
 
             meta: {
                 '*.js': {
- 		            presets: ['es2017']
+ 		            presets: ['es2015',  'es2016', 'es2017']
                 },
-                '../../../node_modules/bootstrap/dist/js/bootstrap.js': {
+                '../../node_modules/bootstrap/dist/js/bootstrap.js': {
                     format: 'global',
                     deps: ['jquery'],
  		            presets: ['es2017']
