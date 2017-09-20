@@ -1,4 +1,5 @@
 import warn from './warn';
+import validateProperty from '../validation/validateProperty';
 
 import { SpecValidator } from 'js-spec';
 
@@ -103,40 +104,21 @@ function validateProps(props, validations) {
                 if (type === undefined || defaultValue !== undefined && prop === defaultValue) {
                     // TODO - shall the default value always be fine???
                     // everything fine
-                } else if (nullable && props === null) {
+                } else if (nullable && prop === null) {
                     // everything fine
                 } else if (defaultValue === undefined && props[propertyName] === undefined) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
-                } else if (type === Array) {
-                    if (!Array.isArray(prop)) {
-                        errMsg = `The property '${propertyName}' must be an array`;
-                    }
-                } else if (type === Object) {
-                    if (prop === null || typeof prop !== 'object') {
-                        errMsg = `The property '${propertyName}' must be an object`;
-                    }
-                } else if (type === Date) {
-                    if (!(prop instanceof Date)) {
-                        errMsg = `The property '${propertyName}' must be a date`;
-                    }
-                } else if (prop != undefined && prop !== null
-                    && typeof prop !== 'object' && prop.constructor !== type) {
-
-                    errMsg = `The property '${propertyName}' must be `
-                        + type.name.toLowerCase();
-                } else if (constraint) {
-                    const checkResult = constraint.validate(prop);
-
-                    if (checkResult && typeof checkResult.message === 'string') {
-                        errMsg = `Invalid value for property '${propertyName}' => `
-                            + checkResult.message;
-                    } else if (checkResult !== undefined
-                        && checkResult !== null
-                        && checkResult !== true) {
-                    
-                        errMsg = `Invalid value for property '${propertyName}'`;
+                } else {
+                    const err = validateProperty(prop, propertyName, type, nullable, constraint);
+                
+                    if (err) {
+                        errMsg = err.message;
                     }
                 }
+            }
+            
+            if (errMsg) {
+                break;
             }
         }
 
