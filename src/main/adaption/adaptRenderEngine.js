@@ -1,6 +1,7 @@
 import adaptCreateElement from './adaptCreateElement';
 import adaptIsRenderable from './adaptIsRenderable';
 import convertClassComponentConfig from '../conversion/convertClassComponentConfig';
+import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
 
@@ -68,9 +69,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
         const factory = defineFunctionalComponent(adjustedConfig);
 
-        factory.meta = Object.assign({}, config, {
-            functional: true
-        });
+        enrichComponentFactory(factory, config, ret);
 
         return factory;
     };
@@ -79,7 +78,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 }
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
-    return cfg => {
+    const ret = cfg => {
         const err = validateConfigForStandardComponent(cfg);
 
         if (err) {
@@ -114,11 +113,11 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
             });
 
         const factory = defineStandardComponent(adjustedConfig);
-
-        factory.meta = Object.assign({}, config, {
-            functional: 'false'
-        });
+        
+        enrichComponentFactory(factory, config, ret);
 
         return factory;
     };
+    
+    return ret;
 }
