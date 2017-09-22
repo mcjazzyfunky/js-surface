@@ -4,19 +4,19 @@ export default function enrichCompnentFactory(factory, config, componentFactoryC
     const
         functional = typeof config.render === 'function',
         type = factory;
-    
+
     factory.meta = Object.assign({ functional, type }, config);
     
     factory.withDefaults = defaultProps => {
         if (!defaultProps || typeof defaultProps !== 'object') {
-            throw new Error(`[${config.name}.withDefaults] `
+            throw new Error(`[${config.displayName}.withDefaults] `
                 + "First argument 'defaultProps' must be an object");
         }
         
         const keysOfDefaults = Object.keys(defaultProps);
         
         if (keysOfDefaults.length === 0) {
-            throw new Error(`[${config.name}.withDefaults] `
+            throw new Error(`[${config.displayName}.withDefaults] `
                 + "First argument 'defaultProps' must not be an empty");
         }
 
@@ -25,15 +25,15 @@ export default function enrichCompnentFactory(factory, config, componentFactoryC
             newConfig = Object.assign({}, config);
             
         for (const propName of propNames) {
-            newConfig[propName] = Object.assign({}, config.properties[propName]);
+            newConfig.properties[propName] = Object.assign({}, config.properties[propName]);
         }
         
         for (const keyOfDefault of keysOfDefaults) {
             const propConfig = config.properties[keyOfDefault];
             
             if (!propConfig) {
-                throw new Error(`[${config.name}.withDefaults] `
-                    + `Component does not have a property called '${keyOfDefault}'`);
+                throw new Error(`[${config.displayName}.withDefaults] `
+                    + `Component does not have a property named '${keyOfDefault}'`);
             }
             
             const
@@ -42,16 +42,15 @@ export default function enrichCompnentFactory(factory, config, componentFactoryC
                 err = validateProperty(valueOfDefault, keyOfDefault, type, nullable, constraint);
             
             if (err) {
-                throw new Error(`[${config.name}.withDefaults] ${err.message}`);
+                throw new Error(`[${config.displayName}.withDefaults] ${err.message}`);
             }
             
-            newConfig[keyOfDefault].defaultValue = valueOfDefault;
+            newConfig.properties[keyOfDefault].defaultValue = valueOfDefault;
         }
         
         const newFactory = componentFactoryCreator(newConfig);
-        
-        newFactory.meta.type = factory;
-        
+        newFactory.meta.type = factory.meta.type;
+        console.log(newConfig)
         return newFactory;
     };
 }

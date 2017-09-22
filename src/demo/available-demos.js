@@ -100,6 +100,12 @@ export default [
         displayName: 'TodoMVC',
         directory: 'todomvc',
         files: ['todomvc.js', 'css/todomvc-app.css']
+    },
+    {
+        name: 'deriving',
+        displayName: 'Component deriving',
+        directory: 'deriving',
+        files: ['deriving.js']
     }
 ];
 
