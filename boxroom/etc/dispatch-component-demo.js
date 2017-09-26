@@ -44,7 +44,7 @@ export default defineDispatchComponent({
 	},
 	
 	init(props) {
-		return CounterStore.create({ counter: props.initialValue }, middleware);
+		return CounterStore.create({ initialValue: props.initialValue }, middleware);
 	},
 	
 	lifecycle: {
