@@ -30,6 +30,10 @@ const SurfaceButton = defineFunctionalComponent({
             defaultValue: null
         },
 
+        x: {
+            defaultValue: null
+        },
+
         className: {
             type: String,
             nullable: true,
@@ -46,8 +50,10 @@ const SurfaceButton = defineFunctionalComponent({
     render(props) {
         return (
             h('button.btn',
-                { className: 'btn ' + String(props.className),
-                    onClick: props.onClick },
+                {
+                    className: 'btn ' + String(props.className),
+                    onClick: props.onClick
+                },
                 props.text)
         );
     }
@@ -84,7 +90,8 @@ const SurfaceCounter = defineClassComponent({
         return (
             h('span',
                 SurfaceButton(
-                    { className: 'btn-primary',
+                    {
+                        className: 'btn-primary',
                         text: '-',
                         onClick: () => this.incrementCounter(-1)
                     },
@@ -92,7 +99,8 @@ const SurfaceCounter = defineClassComponent({
                 h('span',
                     ` ${this.state.counterValue} `),
                 SurfaceButton(
-                    { className: 'btn-primary',
+                    {
+                        className: 'btn-primary',
                         text: '+',
                         onClick: () => this.incrementCounter(1)
                     }))

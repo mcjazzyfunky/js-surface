@@ -47,14 +47,22 @@ export default function createPropsAdjuster(config) {
             }
         }
 
-        ret = props    => {
-            const adjustedProps = hasDefaults
-                ? Object.assign({}, defaults, props)
-                : props,
+        ret = props => {
+            let adjustedProps = props;
+            
+            if (hasDefaults) {
+                adjustedProps = Object.assign({}, props); // TODO: really necessary?
 
-                err = validateProps(adjustedProps, validations);
+                for (const key of Object.keys(defaults)) {
+                    if (adjustedProps[key] === undefined) {
+                        adjustedProps[key] = defaults[key];
+                    }
+                }
+            }
+            
+            const err = validateProps(adjustedProps, validations);
 
-            if (err) {
+            if (err) { console.log("-----------\nprops:\n", props, "\n----------------\nadjustedProps:\n", adjustedProps, "\n---------------\ndefaults:\n", defaults, "\n-----------------\n")
                 const errMsg = 'Error while validating props for ' 
                     +  `'${componentName}': ${err.message}`;
 

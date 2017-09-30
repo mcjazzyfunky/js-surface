@@ -6,20 +6,19 @@ export default {
         Spec.optional(
             Spec.or(
                 {
-                    when: it => Array.isArray(it),
+                    when: Spec.array,
 
-                    validator:
+                    check:
                         Spec.and(
-                            Spec.array,
-                            Spec.size(Spec.greater(0)),
+                            Spec.prop('length', Spec.greater(0)),
                             Spec.valuesOf(Spec.match(REGEX_INJECTION_NAME)),
                             Spec.unique
                         )
                 },
                 {
-                    when: it => it && typeof it === 'object',
+                    when: Spec.object,
 
-                    validator:
+                    check:
                         Spec.and(
                             Spec.keysOf(
                                 Spec.match(REGEX_INJECTION_NAME)),

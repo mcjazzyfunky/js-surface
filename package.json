@@ -38,6 +38,7 @@
     "inferno-create-element": "^3.9.0",
     "jquery": "^2.2.4",
     "js-essential": "^0.1.2",
+    "js-spec": "^0.1.18",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.2.1",
@@ -50,12 +51,11 @@
     "systemjs": "^0.20.15",
     "systemjs-plugin-babel": "0.0.25",
     "typescript": "^2.4.2",
-    "vue": "^2.4.2",
+    "vue": "^2.4.4",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
-    "grunt": "^1.0.1",
-    "js-spec": "^0.1.16"
+    "grunt": "^1.0.1"
   }
 }
