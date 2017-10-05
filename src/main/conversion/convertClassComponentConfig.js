@@ -141,7 +141,7 @@ export default function convertClassComponentConfig(config) {
 
             if (config.childInjections) {
                 initResult.provideChildInjections = () => component
-                        ? component.provideChildInjections()
+                        ? config.childInjections.provide.apply(component)
                         : null;
             }
 

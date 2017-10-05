@@ -93,7 +93,7 @@ function customDefineStandardComponent(config) {
             const ret = {};
 
             if (config.childInjections) {
-                for (const key of config.childInjections) {
+                for (const key of config.childInjections.keys) {
                     ret[key] = new Injection(() => this.__childInjections[key]);
                 }
             }

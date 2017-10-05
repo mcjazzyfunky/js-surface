@@ -102,7 +102,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                 if (config.childInjections) {
                     ExtCustomComponent.childContextTypes = {};
 
-                    for (let key of config.childInjections) {
+                    for (let key of config.childInjections.keys) {
                         ExtCustomComponent.childContextTypes[key] = returnNull;
                     }
 
