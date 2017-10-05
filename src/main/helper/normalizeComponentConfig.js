@@ -20,18 +20,14 @@ export default function normalizeComponentConfig(config) {
         }
 
         if (config.properties) {
-            ret.properties = normalizePropertiesLikeConfig(config.properties);
-        }
-
-        if (config.childInjections) {
-            ret.childInjections = normalizePropertiesLikeConfig(config.childInjections);
+            ret.properties = normalizePropertiesConfig(config.properties);
         }
     }
 
     return ret;
 }
 
-function normalizePropertiesLikeConfig(propertiesConfig) {
+function normalizePropertiesConfig(propertiesConfig) {
     let ret;
 
     if (!Array.isArray(propertiesConfig)) {

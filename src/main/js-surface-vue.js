@@ -90,36 +90,11 @@ function customDefineStandardComponent(config) {
         methods: determineMethods(config),
 
         provide: !config.childInjections ? null : function () {
-            let ret = null;
+            const ret = {};
 
             if (config.childInjections) {
-                let injection = null;
-                ret = {};
-
-                for (let key of Object.keys(config.childInjections)) {
-                    Object.defineProperty(ret, key, {
-                        enumerable: true,
-                        
-                        get: () => {
-                            let val;
-
-                            if (!injection && this.__provideChildInjections) {
-                                injection = this.__provideChildInjections() || null;
-
-                                if (this.childInjection) {
-                                    this.childInjection = injection;
-                                }
-                            }
-
-                            if (injection) {
-                                val = this.data
-                                    ? this.childInjection[key]
-                                    : injection[key];
-                            }
-
-                            return val;
-                        }
-                    });
+                for (const key of config.childInjections) {
+                    ret[key] = new Injection(() => this.__childInjections[key]);
                 }
             }
 
@@ -155,7 +130,12 @@ function customDefineStandardComponent(config) {
 
             this.__propsConsumer = initResult.propsConsumer;
             this.__instance = initResult.instance;
-            this.__provideChildInjections = initResult.provideChildInjections;
+
+            if (initResult.provideChildInjections) {
+                this.__updateChildInjections = function () {
+                    this.__childInjections = initResult.provideChildInjections();
+                };
+            }
 
             Object.defineProperty(this, 'props', {
                 get() {
@@ -172,6 +152,10 @@ function customDefineStandardComponent(config) {
                     this._events,
                     this,
                     defaultValues, config));
+            
+            if (this.__updateChildInjections) {
+                this.__updateChildInjections();
+            }
         },
 
         mounted() {
@@ -185,10 +169,13 @@ function customDefineStandardComponent(config) {
         },
 
         beforeUpdate() {
-
             handleRefCleanupCallbacks(this);            
 
             if (!this.__preventForceUpdate) {
+                if (this.__updateChildInjections) {
+                    this.__updateChildInjections();
+                }
+
                 this.__propsConsumer(
                     mixProps(
                         this.$options.propsData,
@@ -213,11 +200,7 @@ function customDefineStandardComponent(config) {
             handleRefCleanupCallbacks(this);
         },
 
-        render(vueCreateElement) {this.index;
-            if (this.childInjection) {
-                Object.assign({}, this.childInjection);
-            }
-
+        render(vueCreateElement) {
             return renderContent(vueCreateElement, this.__content, this);
         }
     });
@@ -413,7 +396,13 @@ function mixProps(props, events, injections, defaultValues, config) {
                 && injections[key] !== undefined
                 && props[key] === undefined) {
                 
-                ret[key] = injections[key];
+                let injectedValue = injections[key];
+
+                if (injectedValue instanceof Injection) {
+                    injectedValue = injectedValue.value;
+                }
+
+                ret[key] = injectedValue;
             }
         }
     }
@@ -502,5 +491,11 @@ function handleRefCleanupCallbacks(comp) {
                 callback();
             }
 //        }
+    }
+}
+
+class Injection {
+    constructor(getValue) {
+        Object.defineProperty(this, 'value', { get: getValue });
     }
 }
