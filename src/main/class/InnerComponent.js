@@ -1,8 +1,12 @@
+import validateInitResult from '../validation/validationInitResult';
+
 export class InnerComponent {
     constructor(config, updateView, updateState) {
+        this.__config = config;
         this.__view = null;
         this.__state = null;
         this.__updateView = updateView;
+        this.__updateState = updateState;
         this.__isInitialized = false;
 
         const result = config.init(
@@ -16,51 +20,48 @@ export class InnerComponent {
                 this.__state = state;
                 updateState(state);
             });
+        
+        const error = validateInitResult(result, config);
 
-        if (result === null) {
-            throw new Error("Component's init function must not return null");
-        } else if (typeof result !== 'object') {
-            throw new Error("Component's init function must return an object");
-        } else if (typeof result.receiveProps !== 'function') {
-            throw new Error("Parameter 'receiveProps' in component's init result must be a function");
-        } else if (!result.instance || typeof result.instance !== 'object') {
-            throw new Error("Parmater 'instance' of component's init result must be an object");
-        } else if (typeof result.forceUpdate !== 'function') {
-            throw new Error("Parameter 'forceUpdate' of component's init result must be a function");
-        } else {
-            const keys = Object.keys(result);
-
-            if (keys.length > 3) {
-                for (const key of keys) {
-                    if (key !== 'receiveProps' && key !== 'instance' && key !== 'forceUpdate') {
-                        throw new Error(`Invalid key '${key}' in result of component's init function`);
-                    }
-                }
-            }
+        if (error) {
+            throw error;
         }
 
         this.__receiveProps = result.receiveProps;
-        this.__instance = result.instance;
-        this.__publicMethods = config.publicMethods || null;
-        
-        this.__namesOfPublicMethods =
-            this.__publicMethods
-            ? Object.keys(this.__publicMethods)
-            : null;
-            
-        this.__provide =
-            config.childInjections
-            ? config.childInjections.provide
-            : null;
+        this.__forceUpdate = result.forceUpdate;
+        this.__applyPublicMethod = config.applyPublicMethod || null;
+        this.__provideChildInjections = config.provideChildInjections || null;
     }
 
-    consumeProps(props) {
+    getConfig() {
+        return this.__config;
+    }
+
+    receiveProps(props) {
         this.__receiveProps(props);
     }
 
+    getNamsOfPublicMethods() {
+        return this.__config.publicMethods || null;
+    }
+
+    applyPublicMethod(methodName, args) {
+        if (!this.__config.publicMethods || !this.__config.publicMethods.includes(methodName)) {
+            throw new Error(
+                `Tried to call unknown public method '${methodName}' `
+                + `on component of type '${this.__config.displayName}'`);
+        }
+
+        return this.__applyPublicMethod(methodName, args);
+    }
+
+    hasChildInjections() {
+        return !!this.__provideChildInjections;
+    }
+    
     provideChildInjections() {
-        return this.__provide
-            ? this.__provide.apply(this.__instance)
+        return this.__provideChildInjections
+            ? this.__provideChildInjections()
             : null;
     }
 
@@ -76,7 +77,7 @@ export class InnerComponent {
 
     forceUpdate() {
         if (this.__isInitialized) {
-            this.__forceUpdate.apply(this.__instance);
+            this.__forceUpdate();
         }
     }
 }

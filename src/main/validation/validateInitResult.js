@@ -32,14 +32,18 @@ export default function validateInitResult(initResult, config) {
     }
 
     if (!errMsg) {
-        for (const key of Object.keys(initResult)) {
-            if (key !== 'receiveProps'
-                && key !== 'forceUpdate'
-                && key !== 'applyPublicMethod'
-                && key !== 'provideChildInjections') {
+        const keys = Object.keys(initResult);
 
-                errMsg = `Invalid parameter '${key}'`;
-                break;
+        if (keys.length > 2 + !!config.publicMethods + !!config.childInjections) {
+            for (const key of keys) {
+                if (key !== 'receiveProps'
+                    && key !== 'forceUpdate'
+                    && key !== 'applyPublicMethod'
+                    && key !== 'provideChildInjections') {
+
+                    errMsg = `Invalid parameter '${key}'`;
+                    break;
+                }
             }
         }
     }
