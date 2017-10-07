@@ -92,9 +92,9 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                 ExtCustomComponent.displayName = config.displayName;
 
                 if (config.publicMethods) {
-                    for (let key of Object.keys(config.publicMethods)) {
+                    for (let key of config.publicMethods) {
                         ExtCustomComponent.prototype[key] = function (...args) {
-                            return config.publicMethods[key].apply(this.__instance, args);
+                            return this.__applyPublicMethod(key, args);
                         };
                     }
                 }
@@ -174,7 +174,7 @@ function defineCustomComponent(ReactLikeComponent) {
             let initialized = false;
 
             const
-                { propsConsumer, instance, provideChildInjections } = config.init(
+                { receiveProps, forceUpdate, applyPublicMethod, provideChildInjections } = config.init(
                     view => {
                         this.__viewToRender = view;
 
@@ -192,8 +192,9 @@ function defineCustomComponent(ReactLikeComponent) {
                     },
                     this);
 
-            this.__propsConsumer = propsConsumer;
-            this.__instance = instance;
+            this.__receiveProps = receiveProps;
+            this.__forceUpdate = forceUpdate;
+            this.__applyPublicMethod = applyPublicMethod;
 
             if (provideChildInjections) {
                 this.__provideChildInjections = provideChildInjections;
@@ -202,7 +203,7 @@ function defineCustomComponent(ReactLikeComponent) {
 
         componentWillMount() {
             this.props = mixPropsWithContext(this.props, this.context);
-            this.__propsConsumer(this.props);
+            this.__receiveProps(this.props);
         }
 
         componentDidMount() {
@@ -218,12 +219,12 @@ function defineCustomComponent(ReactLikeComponent) {
         }
 
         componentWillUnmount() {
-            this.__propsConsumer(undefined);
+            this.__receiveProps(undefined);
         }
 
         componentWillReceiveProps(nextProps) {
             this.props = mixPropsWithContext(nextProps, this.context);
-            this.__propsConsumer(this.props);
+            this.__receiveProps(this.props);
         }
 
         shouldComponentUpdate() {

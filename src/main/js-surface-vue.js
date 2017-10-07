@@ -105,7 +105,7 @@ function customDefineStandardComponent(config) {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
             this.__resolveRenderingDone = null;
-            this.__viewConsumer = content => {
+            this.__updateView = content => {
                 this.__content = content;
 
                 if (!this.__preventForceUpdate) {
@@ -121,15 +121,17 @@ function customDefineStandardComponent(config) {
                 });
             };
 
-            this.__stateConsumer = state => {
+            this.__updateState = state => {
                 this.__state = state;
             };
 
             const initResult = config.init(
-                 this.__viewConsumer, this.__stateConsumer, this);
+                 this.__updateView, this.__updateState, this);
 
-            this.__propsConsumer = initResult.propsConsumer;
-            this.__instance = initResult.instance;
+            this.__receiveProps = initResult.receiveProps;
+            this.__forceUpdate = initResult.forceUpdate;
+            this.__applyPublicMethod = initResult.applyPublicMethod;
+//            this.__provideChildInjections = initResult.provideChildInjections;
 
             if (initResult.provideChildInjections) {
                 this.__updateChildInjections = function () {
@@ -146,7 +148,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeMount() {
-            this.__propsConsumer(
+            this.__receiveProps(
                 mixProps(
                     this.$options.propsData,
                     this._events,
@@ -176,7 +178,7 @@ function customDefineStandardComponent(config) {
                     this.__updateChildInjections();
                 }
 
-                this.__propsConsumer(
+                this.__receiveProps(
                     mixProps(
                         this.$options.propsData,
                         this._events,
@@ -196,7 +198,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeDestroy() {
-            this.__propsConsumer(undefined);
+            this.__receiveProps(undefined);
             handleRefCleanupCallbacks(this);
         },
 
@@ -453,9 +455,9 @@ function determineMethods(config) {
     if (config.publicMethods) {
         ret = {};
 
-        for (let key of Object.keys(config.publicMethods)) {
+        for (let key of config.publicMethods) {
             ret[key] = function (...args) {
-                return config.publicMethods[key].apply(this.__instance, args);
+                return this.__applyPublicMethod(key, args);
             };
         }
     }

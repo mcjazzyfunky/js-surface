@@ -43,13 +43,9 @@ const Counter = defineClassComponent({
         }
     },
 
-    publicMethods: {
-        resetCounter(value = 0) {
-            this.state = { counterValue: value };
-        }
-    },
+    publicMethods: ['resetCounter'],
 
-    constructor(props) {
+    constructor() {
         this.state = { counterValue: this.props.initialValue };
     },
 
@@ -99,6 +95,10 @@ const Counter = defineClassComponent({
 
     onWillUnmount() {
         console.log('[onWillUnmount]:', arguments);
+    },
+
+    resetCounter(value = 0) {
+        this.state = { counterValue: value };
     },
 
     render() {

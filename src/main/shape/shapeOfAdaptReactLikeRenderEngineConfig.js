@@ -1,8 +1,8 @@
-import { REGEX_COMPONENT_SYSTEM_NAME } from '../constant/constants';
+import { REGEX_RENDER_ENGINE_NAME } from '../constant/constants';
 import { Spec } from 'js-spec';
 
 export default  {
-    renderEngineName: Spec.match(REGEX_COMPONENT_SYSTEM_NAME),
+    renderEngineName: Spec.match(REGEX_RENDER_ENGINE_NAME),
     renderEngineAPI: Spec.object,
     createElement: Spec.function,
     createFactory: Spec.function,

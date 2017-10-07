@@ -15,14 +15,12 @@ const Parent = defineClassComponent({
         }
     },
 
-    childInjections: {
-        keys: ['value'],
-        
-        provide() {
-            return {
-                value: this.props.masterValue
-            };
-        }
+    childInjections: ['value'],
+    
+    provideChildInjections() {
+        return {
+            value: this.props.masterValue
+        };
     },
 
     render() {

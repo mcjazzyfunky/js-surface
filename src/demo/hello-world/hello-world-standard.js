@@ -14,12 +14,15 @@ const HelloWorld = defineStandardComponent({
         }
     },
 
-    init(viewConsumer) {
+    init(updateView) {
         return {
-            propsConsumer(props) {
-                viewConsumer(h('div', 'Hello ' + props.name + '!'));
+            receiveProps(props) {
+                updateView(h('div', 'Hello ' + props.name + '!'));
             },
-            instance: {}
+
+            forceUpdate() {
+                // Not needed here
+            }
         };
     }
 });

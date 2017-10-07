@@ -70,11 +70,7 @@ const SurfaceCounter = defineClassComponent({
         }
     },
 
-    publicMethods: {
-        reset(value = 0) {
-            this.state = { counterValue: value };
-        }
-    },
+    publicMethods: ['reset'],
 
     constructor(props) {
         this.state = { counterValue: props.initialValue };
@@ -86,6 +82,10 @@ const SurfaceCounter = defineClassComponent({
         };
     },
 
+    reset(value = 0) {
+        this.state = { counterValue: value };
+    },
+    
     render() {
         return (
             h('span',

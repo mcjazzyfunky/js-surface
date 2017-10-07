@@ -54,14 +54,12 @@ const App = defineClassComponent({
         this.__translator.setLang(this.props.defaultLang);
     },
     
-    childInjections: {
-        keys: ['translator'],
+    childInjections: ['translator'],
 
-        provide() {
-            return {
-                translator: this.__translator
-            };
-        }
+    provideChildInjections() {
+        return {
+            translator: this.__translator
+        };
     },
 
     setLang(lang) {

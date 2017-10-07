@@ -43,12 +43,12 @@ export default function convertClassComponentConfig(config) {
         };
 
     if (publicMethods) {
-        for (let key of Object.keys(publicMethods)) {
+        for (let key of publicMethods) {
             instanceClass.prototype[key] = function () {
                 let ret = undefined;
                 
                 if (this.__component) {
-                    ret = publicMethods[key].apply(this.__component, arguments);
+                    ret = this[key].apply(this.__component, arguments);
                 }
 
                 return ret;
@@ -64,7 +64,7 @@ export default function convertClassComponentConfig(config) {
                 content = null,
                 done = false;
 
-            const propsConsumer = props => {
+            const receiveProps = props => {
                 if (done) {
                     return;
                 } else if (props === undefined) {
@@ -135,9 +135,15 @@ export default function convertClassComponentConfig(config) {
             };
 
             const initResult = {
-                propsConsumer,
-                instance 
+                receiveProps,
+                forceUpdate: () => {} // TODO !!!!!!!!! - IMPLEMENT forceUpdate!!!!
             };
+
+            if (config.publicMethods) {
+                initResult.applyPublicMethod = (methodName, args) => {
+                    return instance.__component[methodName](...args); 
+                };
+            }
 
             if (config.childInjections) {
                 initResult.provideChildInjections = () => component
@@ -160,13 +166,7 @@ export default function convertClassComponentConfig(config) {
     }
 
     if (publicMethods) {
-        stdConfig.publicMethods = {};
-
-        for (let key of Object.keys(publicMethods)) {
-            stdConfig.publicMethods[key] = function (...args) {
-                return publicMethods[key].apply(this.__component, args);
-            };
-        }
+        stdConfig.publicMethods = publicMethods; 
     }
 
     return stdConfig;
