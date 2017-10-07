@@ -106,7 +106,7 @@ function customDefineStandardComponent(config) {
     if (config.childInjections) {
         ExtCustomComponent.childContextTypes = {};
 
-        for (let key of config.childInjections.keys) {
+        for (let key of config.childInjections) {
             ExtCustomComponent.childContextTypes[key] = returnNull;
         }
 
@@ -220,12 +220,8 @@ class CustomComponent extends Inferno.Component {
 
         this.__receiveProps = receiveProps;
         this.__forceUpdate = forceUpdate;
-        this.__applyPublicMethod = applyPublicMethod;
-        this.__provideChildInjections = provideChildInjections;
-
-        if (provideChildInjections) {
-            this.__provideChildInjections = provideChildInjections;
-        }
+        this.__applyPublicMethod = applyPublicMethod || null;
+        this.__provideChildInjections = provideChildInjections || null;
     }
 
     componentWillMount() {

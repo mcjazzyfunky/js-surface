@@ -57,7 +57,7 @@ export default function convertClassComponentConfig(config) {
     }
 
     const
-        init = (viewConsumer, stateConsumer, platformComponent) => {
+        init = (updateView, updateState, platformComponent) => {
             let
                 instance = new instanceClass(),
                 component = null,
@@ -80,13 +80,13 @@ export default function convertClassComponentConfig(config) {
                     component = new componentClass(props, platformComponent);
                     instance.__component = component;
 
-                    if (stateConsumer) {
-                        stateConsumer(component.state);
+                    if (updateState) {
+                        updateState(component.state);
                     }
                         
-                    component.__stateConsumer = state => {
-                        if (stateConsumer) {
-                            stateConsumer(state);
+                    component.__updateState = state => {
+                        if (updateState) {
+                            updateState(state);
                         }    
                     };
                     
@@ -94,7 +94,7 @@ export default function convertClassComponentConfig(config) {
 
                     component.__forceUpdate = function (prevProps, prevState) {
                         content = component.render();
-                        const renderingDonePromise = viewConsumer(content);
+                        const renderingDonePromise = updateView(content);
 
                         if (renderingDonePromise) {
                             renderingDonePromise.then(
@@ -147,7 +147,7 @@ export default function convertClassComponentConfig(config) {
 
             if (config.childInjections) {
                 initResult.provideChildInjections = () => component
-                        ? config.childInjections.provide.apply(component)
+                        ? instance.__component.provideChildInjections()
                         : null;
             }
 
@@ -161,12 +161,12 @@ export default function convertClassComponentConfig(config) {
         init
     };
 
-    if (componentClass.childInjections) {
-        stdConfig.childInjections = componentClass.childInjections; 
+    if (config.childInjections) {
+        stdConfig.childInjections = config.childInjections; 
     }
 
-    if (publicMethods) {
-        stdConfig.publicMethods = publicMethods; 
+    if (config.publicMethods) {
+        stdConfig.publicMethods = config.publicMethods; 
     }
 
     return stdConfig;
