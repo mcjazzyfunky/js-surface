@@ -93,7 +93,7 @@ const SpeedTest = defineClassComponent({
         this.__actualFramesPerSecond = '0';
     },
     
-    onDidMount() {
+    onDidMount() {console.log('OOOOOOOOOO')
         this.__startTime = Date.now();
 
         this.intervalID = setInterval(() => {

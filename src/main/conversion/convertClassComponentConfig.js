@@ -94,22 +94,18 @@ export default function convertClassComponentConfig(config) {
 
                     component.__forceUpdate = function (prevProps, prevState) {
                         content = component.render();
-                        const renderingDonePromise = updateView(content);
 
-                        if (renderingDonePromise) {
-                            renderingDonePromise.then(
-                                successful => {
-                                    if (successful) {
-                                        if (!initialized) {
-                                            initialized = true;
-                                            component.onDidMount();
-                                        } else {
-                                            component.onDidUpdate(prevProps, prevState);
-                                        }
+                        updateView(content)
+                            .then(
+                                successful => {console.log(4444, successful)
+                                    if (!initialized) {
+                                        initialized = true;
+                                        component.onDidMount();
+                                    } else {
+                                        component.onDidUpdate(prevProps, prevState);
                                     }
                                 }
                             );
-                        }
                     };
 
                     component.onWillMount();
@@ -136,7 +132,9 @@ export default function convertClassComponentConfig(config) {
 
             const initResult = {
                 receiveProps,
-                forceUpdate: () => {} // TODO !!!!!!!!! - IMPLEMENT forceUpdate!!!!
+                forceUpdate: () => {
+                    console.log('forceUpdate')
+                }
             };
 
             if (config.publicMethods) {

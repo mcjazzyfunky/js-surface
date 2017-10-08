@@ -1,48 +1,28 @@
-import validateInitResult from '../validation/validationInitResult';
+import validateInitResult from '../validation/validateInitResult';
 
-export class InnerComponent {
+export default class InnerComponent {
     constructor(config, updateView, updateState) {
-        this.__config = config;
-        this.__view = null;
-        this.__state = null;
-        this.__updateView = updateView;
-        this.__updateState = updateState;
-        this.__isInitialized = false;
-
-        const result = config.init(
-            view => {
-                this.__view = view;
-                updateView(view);
-                this.__isInitialized = true;
-            },
-
-            state => {
-                this.__state = state;
-                updateState(state);
-            });
-        
-        const error = validateInitResult(result, config);
+        const
+            result = config.init(updateView, updateState),
+            error = validateInitResult(result, config);
 
         if (error) {
             throw error;
         }
 
+        this.__config = config;
         this.__receiveProps = result.receiveProps;
         this.__forceUpdate = result.forceUpdate;
-        this.__applyPublicMethod = config.applyPublicMethod || null;
-        this.__provideChildInjections = config.provideChildInjections || null;
+        this.__applyPublicMethod = result.applyPublicMethod || null;
+        this.__provideChildInjections = result.provideChildInjections || null;
     }
 
-    getConfig() {
-        return this.__config;
-    }
-
-    receiveProps(props) {
+    receiveProps(props) {console.log('receiveProps2')
         this.__receiveProps(props);
     }
 
-    getNamsOfPublicMethods() {
-        return this.__config.publicMethods || null;
+    forceUpdate() {console.log('forceUpdate2')
+        this.__forceUpdate();
     }
 
     applyPublicMethod(methodName, args) {
@@ -55,29 +35,9 @@ export class InnerComponent {
         return this.__applyPublicMethod(methodName, args);
     }
 
-    hasChildInjections() {
-        return !!this.__provideChildInjections;
-    }
-    
     provideChildInjections() {
         return this.__provideChildInjections
             ? this.__provideChildInjections()
             : null;
-    }
-
-    // TODO: really needed?
-    getView () {
-        return this.__view;
-    }
-
-    // TODO: really needed?
-    getState() {
-        return this.__state;
-    }
-
-    forceUpdate() {
-        if (this.__isInitialized) {
-            this.__forceUpdate();
-        }
     }
 }

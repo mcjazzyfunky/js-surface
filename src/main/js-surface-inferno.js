@@ -1,9 +1,14 @@
 import adaptRenderEngine from
     './adaption/adaptRenderEngine';
 
+import InnerComponent from './class/InnerComponent';
+
 import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
+
+
+const stateUpdatedPromise = Promise.resolve(true);
 
 const Inferno = Object.assign({}, InfernoCore, {
     createElement: createInfernoElement,
@@ -84,19 +89,16 @@ function customDefineFunctionalComponent(config) {
 }
 
 function customDefineStandardComponent(config) {
-    // Sorry for that evil eval hack - do not know how to
-    // ExtCustomComponent's class name otherwise
-    // (Babel makes ExtCustomComponent.name read-only).
-    const ExtCustomComponent = eval(`(function ${config.displayName} (...args) {
-            CustomComponent.call(this, args, config);
-        })`);
-
-    ExtCustomComponent.prototype = Object.create(CustomComponent.prototype);
+    const ExtCustomComponent = class extends CustomComponent {
+        constructor(...args) {
+            super(config, ...args);
+        }
+    };
 
     if (config.publicMethods) {
-        for (let key of config.publicMethods) {
+        for (const key of config.publicMethods) {
             ExtCustomComponent.prototype[key] = function (...args) {
-                return this.__applyPublicMethod(key, args);
+                return this.__innerComponent.applyPublicMethod(key, args);
             };
         }
     }
@@ -111,17 +113,7 @@ function customDefineStandardComponent(config) {
         }
 
         ExtCustomComponent.prototype.getChildContext = function() {
-            // TODO - call this.__provideChildInjections each time and make sure
-            // that the values of the result did not change,
-            // as changing the child injection is not supported currently
-            let ret = this.__childContext;
-
-            if (!ret) {
-                this.__childContext = this.__provideChildInjections();
-                ret = this.__childContext;
-            }
-
-            return ret;
+            return this.__innerComponent.provideChildInjections();
         };
     }
 
@@ -190,78 +182,71 @@ function customRender(content, targetNode) {
 }
 
 class CustomComponent extends Inferno.Component {
-    constructor(superArgs, config) {
+    constructor(config, superArgs) {
         super(...superArgs);
 
-        this.__viewToRender = null;
-        this.__resolveRenderingDone = null;
-        this.__needsUpdate = false;
-
-        let initialized = false;
-
+        this.__view = null;
+        this.__viewUpdateResolver = null;
+ 
         const
-            { receiveProps, forceUpdate, applyPublicMethod, provideChildInjections } = config.init(
-                view => {
-                    this.__viewToRender = view;
+            updateView = view => {
+                this.__view = view;
 
-                    if (initialized) {
-                        this.__needsUpdate = true;
-                        this.setState(null);
-                    } else {
-                        initialized = true;
-                    }
+                return new Promise(resolve => {
+                    this.__viewUpdateResolver = resolve;
+                    super.forceUpdate();
+                });
+            },
 
-                    return buildUpdatedViewPromise(this);
-                },
-                state => {
-                    this.state = state;
-                },
-                this);
+            updateState = state => {
+                this.state = state;
+                return stateUpdatedPromise;
+            };
 
-        this.__receiveProps = receiveProps;
-        this.__forceUpdate = forceUpdate;
-        this.__applyPublicMethod = applyPublicMethod || null;
-        this.__provideChildInjections = provideChildInjections || null;
+        this.__innerComponent =
+            new InnerComponent(config, updateView, updateState);
+    }
+
+    forceUpdate() {
+        this.__innerComponent.forceUpdate();
     }
 
     componentWillMount() {
         this.props = mixPropsWithContext(this.props, this.context);
-        this.__receiveProps(this.props);
+        this.__innerComponent.receiveProps(this.props);
     }
 
     componentDidMount() {
-        if (this.__resolveRenderingDone) {
-            this.__resolveRenderingDone();
+        if (this.__viewUpdateResolver) {console.log('componentDidMount3')
+            this.__viewUpdateResolver(true);
+            this.__viewUpdateResolver = null;
         }
     }
 
     componentDidUpdate() {
-        if (this.__resolveRenderingDone) {
-            this.__resolveRenderingDone();
+        if (this.__viewUpdateResolver) {
+            this.__viewUpdateResolver();
+            this.__viewUpdateResolver = null;
         }
     }
 
     componentWillUnmount() {
-        this.__receiveProps(undefined);
+        this.__innerComponent.receiveProps(undefined);
     }
 
     componentWillReceiveProps(nextProps) {
         this.props = mixPropsWithContext(nextProps, this.context);
-        this.__receiveProps(this.props);
-    }
-
-    shouldComponentUpdate() {
-        const ret = this.__needsUpdate;
-        this.__needsUpdate = false;
-        return ret;
+        this.__innerCompoennt.receiveProps(this.props);
     }
 
     render() {
-        return this.__viewToRender;
+        return this.__view;
     }
 }
 
 function mixPropsWithContext(props, context) {
+    console.log(context)
+
     let ret = props;
 
     if (context) {
@@ -275,23 +260,6 @@ function mixPropsWithContext(props, context) {
     }
 
     return ret;
-}
-
-function buildUpdatedViewPromise(infernoComponent) {
-    let done = false;
-
-    return new Promise(resolve => {
-        if (!done) {
-            infernoComponent.__resolveRenderingDone = () => {
-                infernoComponent.__resolveRenderingDone = null;
-                resolve(true);
-            };
-
-            done = true;
-        } else {
-            resolve(true);
-        }
-    });
 }
 
 function adjustProps(props) {
