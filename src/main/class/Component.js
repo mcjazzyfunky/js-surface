@@ -1,15 +1,4 @@
 export default class Component {
-    static get factory() {
-        let ret = this.__factory;
-
-        if (this.__factory !== null) {
-
-        }
-
-        return ret;
-    }
-
-
     constructor(initialProps, platformComponent) {
         this.__props = initialProps;
         this.__state = null;
@@ -17,6 +6,7 @@ export default class Component {
         this.__initialized = false;
         this.__forceUpdate = null;
         this.__platformComponent = platformComponent;
+        this.__onStateUpdate = null;
 
         // TODO - isn't there a better solution?
         setTimeout(() => {
@@ -52,8 +42,8 @@ export default class Component {
             setTimeout(() => this.onDidChangeState(currState), 0);
         }
 
-        if (typeof this.__stateConsumer === 'function') {
-            this.__stateConsumer(this.__state);
+        if (typeof this.__onStateUpdate === 'function') {
+            this.__onStateUpdate(this.__state);
         }
     }
 

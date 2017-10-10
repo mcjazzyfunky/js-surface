@@ -50,11 +50,16 @@ const SimpleCounter = defineClassComponent({
     },
 
     onWillChangeState(nextState) {
-        console.log('onWillChangeState', nextState);
+        console.log('onWillChangeState', 'current state:', this.state, 'next state:', nextState);
     },
 
     onDidChangeState(prevState) {
-        console.log('onDidChangeState', prevState);
+        console.log('onDidChangeState', 'current state', this.state, 'previous state:', prevState);
+    },
+
+    shouldUpdate(...args) {
+        console.log('should update', 'args:', args);
+        return true;
     },
 
     render() {

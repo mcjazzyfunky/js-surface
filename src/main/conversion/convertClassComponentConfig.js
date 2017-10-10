@@ -37,29 +37,8 @@ export default function convertClassComponentConfig(config) {
     }
 
     const
-        publicMethods = componentClass.publicMethods || null,
-        instanceClass = function () {
-            this.__component = null;
-        };
-
-    if (publicMethods) {
-        for (let key of publicMethods) {
-            instanceClass.prototype[key] = function () {
-                let ret = undefined;
-                
-                if (this.__component) {
-                    ret = this[key].apply(this.__component, arguments);
-                }
-
-                return ret;
-            };       
-        }
-    }
-
-    const
         init = (updateView, updateState, platformComponent) => {
             let
-                instance = new instanceClass(),
                 component = null,
                 content = null,
                 done = false;
@@ -78,17 +57,12 @@ export default function convertClassComponentConfig(config) {
 
                 if (!component) {
                     component = new componentClass(props, platformComponent);
-                    instance.__component = component;
 
                     if (updateState) {
                         updateState(component.state);
-                    }
-                        
-                    component.__updateState = state => {
-                        if (updateState) {
-                            updateState(state);
-                        }    
-                    };
+
+                        component.__onStateUpdate = state => updateState(state);
+                    } 
                     
                     let initialized = false;
 
@@ -138,15 +112,12 @@ export default function convertClassComponentConfig(config) {
             };
 
             if (config.publicMethods) {
-                initResult.applyPublicMethod = (methodName, args) => {
-                    return instance.__component[methodName](...args); 
-                };
+                initResult.applyPublicMethod = (methodName, args) => 
+                    component[methodName](...args);
             }
 
             if (config.childInjections) {
-                initResult.provideChildInjections = () => component
-                        ? instance.__component.provideChildInjections()
-                        : null;
+                initResult.provideChildInjections = () => component.provideChildInjections();
             }
 
             return initResult;

@@ -110,26 +110,29 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
 }
 
 function defineCustomComponent(config, ParentComponent) {
-    const CustomComponent = function (...superArgs) {
+    const CustomComponent = function Component (...superArgs) {
         ParentComponent.apply(this, superArgs);
 
         this.__view = null;
         this.__viewUpdateResolver = null;
+        this.__initialized = false;
 
         const
             updateView = view => {
                 this.__view = view;
 
+                if (this.__initialized) {
+                    ParentComponent.prototype.forceUpdate.apply(this);
+                } else {
+                    this.__initialized = true;
+                }
+
                 return new Promise(resolve => {
                     this.__viewUpdateResolver = resolve;
-                    ParentComponent.prototype.forceUpdate.apply(this);
                 });
             },
 
             updateState = state => {
-                //this.state = state;
-
-                // Check whether this has a performance issue
                 this.setState(state);
                 return stateUpdatedPromise;
             };
@@ -141,20 +144,20 @@ function defineCustomComponent(config, ParentComponent) {
     CustomComponent.displayName = config.displayName;
     CustomComponent.prototype = Object.create(ParentComponent.prototype);
 
-    const injectPropsNames = [];
+    const injectPropNames = [];
 
     if (config.properties) {
         for (const key of Object.keys(config.properties)) {
             if (config.properties[key].inject) {
-                injectPropsNames.push(key);
+                injectPropNames.push(key);
             }
         }
     }
 
-    if (injectPropsNames.length === 0) {
+    if (injectPropNames.length > 0) {
         CustomComponent.contextTypes = {};
 
-        for (const key of injectPropsNames) {
+        for (const key of injectPropNames) {
             CustomComponent.contextTypes[key] = returnNull;
         }
     }
@@ -170,15 +173,14 @@ function defineCustomComponent(config, ParentComponent) {
             return this.__ctrl.provideChildInjections();
         };
     }
-    
+
     Object.assign(CustomComponent.prototype, {
-        forceUpdate() {
+        forceUpdate() {console.log(1111)
             this.__ctrl.forceUpdate();
         },
 
         componentWillMount() {
-            this.props = mixPropsWithContext(this.props, this.context);
-            this.__ctrl.receiveProps(this.props);
+            this.__ctrl.receiveProps(mixPropsWithContext(this.props, this.context));
         },
 
         componentDidMount() {
@@ -200,8 +202,11 @@ function defineCustomComponent(config, ParentComponent) {
         },
 
         componentWillReceiveProps(nextProps) {
-            this.props = mixPropsWithContext(nextProps, this.context);
-            this.__innerCompoennt.receiveProps(this.props);
+            this.__ctrl.receiveProps(mixPropsWithContext(nextProps, this.context));
+        },
+
+        shouldComponentUpdate() {
+            return false;
         },
 
         render() {
