@@ -18,10 +18,6 @@ const HelloWorld = defineStandardComponent({
         return {
             receiveProps(props) {
                 updateView(h('div', 'Hello ' + props.name + '!'));
-            },
-
-            forceUpdate() {
-                // Not needed here
             }
         };
     }

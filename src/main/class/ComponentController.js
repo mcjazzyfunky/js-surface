@@ -12,17 +12,12 @@ export default class ComponentController {
 
         this.__config = config;
         this.__receiveProps = result.receiveProps;
-        this.__forceUpdate = result.forceUpdate;
         this.__applyPublicMethod = result.applyPublicMethod || null;
         this.__provideChildInjections = result.provideChildInjections || null;
     }
 
     receiveProps(props) {
         this.__receiveProps(props);
-    }
-
-    forceUpdate() {
-        this.__forceUpdate();
     }
 
     applyPublicMethod(methodName, args) {

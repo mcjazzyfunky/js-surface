@@ -116,13 +116,15 @@ function defineCustomComponent(config, ParentComponent) {
         this.__view = null;
         this.__viewUpdateResolver = null;
         this.__initialized = false;
+        this.__mustBeRerendered = false;
 
         const
             updateView = view => {
                 this.__view = view;
+                this.__mustBeRerendered = true;
 
                 if (this.__initialized) {
-                    ParentComponent.prototype.forceUpdate.apply(this);
+                    this.forceUpdate();
                 } else {
                     this.__initialized = true;
                 }
@@ -175,10 +177,6 @@ function defineCustomComponent(config, ParentComponent) {
     }
 
     Object.assign(CustomComponent.prototype, {
-        forceUpdate() {console.log(1111)
-            this.__ctrl.forceUpdate();
-        },
-
         componentWillMount() {
             this.__ctrl.receiveProps(mixPropsWithContext(this.props, this.context));
         },
@@ -206,10 +204,11 @@ function defineCustomComponent(config, ParentComponent) {
         },
 
         shouldComponentUpdate() {
-            return false;
+            return this.__mustBeRerendered;
         },
 
         render() {
+            this.__mustBeRerendered = false;
             return this.__view;
         }
     });

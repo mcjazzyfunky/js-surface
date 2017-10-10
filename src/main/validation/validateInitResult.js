@@ -7,8 +7,6 @@ export default function validateInitResult(initResult, config) {
         errMsg = 'Must be an object';
     } else if (typeof initResult.receiveProps !== 'function') {
         errMsg = "Parameter 'receiveProps' must be a function";
-    } else if (typeof initResult.forceUpdate !== 'function') {
-        errMsg = "Parameter 'forceUpdate' must be a function";
     }
 
     if (!errMsg) {
@@ -34,10 +32,9 @@ export default function validateInitResult(initResult, config) {
     if (!errMsg) {
         const keys = Object.keys(initResult);
 
-        if (keys.length > 2 + !!config.publicMethods + !!config.childInjections) {
+        if (keys.length > 1 + !!config.publicMethods + !!config.childInjections) {
             for (const key of keys) {
                 if (key !== 'receiveProps'
-                    && key !== 'forceUpdate'
                     && key !== 'applyPublicMethod'
                     && key !== 'provideChildInjections') {
 

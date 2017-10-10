@@ -1,12 +1,10 @@
 export default class Component {
-    constructor(initialProps, platformComponent) {
+    constructor(initialProps) {
         this.__props = initialProps;
         this.__state = null;
-        this.__stateConsumer = null;
         this.__initialized = false;
+        this.__onStatepdate = null;
         this.__forceUpdate = null;
-        this.__platformComponent = platformComponent;
-        this.__onStateUpdate = null;
 
         // TODO - isn't there a better solution?
         setTimeout(() => {
@@ -47,10 +45,6 @@ export default class Component {
         }
     }
 
-    get component() {
-        return this.__platformComponent;
-    }
-
     shouldUpdate() {
         return true;
     }
@@ -84,8 +78,6 @@ export default class Component {
     }
 
     forceUpdate() {
-        if (this.__forceUpdate) {
-            this.__forceUpdate(this.props, this.state);
-        }
+        this.__forceUpdate();
     }
 }

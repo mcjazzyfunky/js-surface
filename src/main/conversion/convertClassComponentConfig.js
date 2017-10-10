@@ -37,7 +37,7 @@ export default function convertClassComponentConfig(config) {
     }
 
     const
-        init = (updateView, updateState, platformComponent) => {
+        init = (updateView, updateState) => {
             let
                 component = null,
                 content = null,
@@ -56,7 +56,7 @@ export default function convertClassComponentConfig(config) {
                 }
 
                 if (!component) {
-                    component = new componentClass(props, platformComponent);
+                    component = new componentClass(props);
 
                     if (updateState) {
                         updateState(component.state);
@@ -83,7 +83,7 @@ export default function convertClassComponentConfig(config) {
                     };
 
                     component.onWillMount();
-                    component.forceUpdate(null, null);
+                    component.forceUpdate();
                 } else {
                     component.onWillReceiveProps(props);
 
@@ -105,10 +105,7 @@ export default function convertClassComponentConfig(config) {
             };
 
             const initResult = {
-                receiveProps,
-                forceUpdate: () => {
-                    console.log('forceUpdate')
-                }
+                receiveProps
             };
 
             if (config.publicMethods) {
