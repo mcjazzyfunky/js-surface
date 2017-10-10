@@ -1,4 +1,15 @@
 export default class Component {
+    static get factory() {
+        let ret = this.__factory;
+
+        if (this.__factory !== null) {
+
+        }
+
+        return ret;
+    }
+
+
     constructor(initialProps, platformComponent) {
         this.__props = initialProps;
         this.__state = null;

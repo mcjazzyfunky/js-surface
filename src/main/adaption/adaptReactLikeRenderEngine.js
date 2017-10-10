@@ -1,4 +1,5 @@
 import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig';
+import ComponentController from '../class/ComponentController';
 
 import { Spec } from 'js-spec';
 
@@ -6,7 +7,7 @@ import adaptRenderEngine from '../adaption/adaptRenderEngine';
 
 const
     returnNull = () => null,
-    fakeState = Object.freeze({});
+    stateUpdatedPromise = Promise.resolve(true);
 
 export default function adaptReactLikeRenderEngine(reactLikeConfig) {
     const err =
@@ -21,16 +22,12 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
     }
 
     const
-        CustomComponent = defineCustomComponent(reactLikeConfig.Component),
-        //createFactory = reactLikeConfig.createFactory;
-         
         createFactory =  function(type) {
             const factory = (props, ...children) => {
                 return reactLikeConfig.createElement(type, adjustProps(props), ...children);
             };
 
             factory.type = type;
-
 
             return factory;
         };
@@ -80,64 +77,15 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
             },
 
             defineStandardComponent: config => {
-                // Sorry for that evil eval hack - do not know how to
-                // ExtCustomComponent's class name otherwise
-                // (Babel makes ExtCustomComponent.name read-only).
-                const ExtCustomComponent = eval(
-                    `(function ${config.displayName} (...args) {
-                        CustomComponent.call(this, args, config);
-                    })`);
-
-                ExtCustomComponent.prototype = Object.create(CustomComponent.prototype);
-                ExtCustomComponent.displayName = config.displayName;
-
-                if (config.publicMethods) {
-                    for (let key of config.publicMethods) {
-                        ExtCustomComponent.prototype[key] = function (...args) {
-                            return this.__applyPublicMethod(key, args);
-                        };
-                    }
-                }
-
-                if (config.childInjections) {
-                    ExtCustomComponent.childContextTypes = {};
-
-                    for (let key of config.childInjections) {
-                        ExtCustomComponent.childContextTypes[key] = returnNull;
-                    }
-
-                    ExtCustomComponent.prototype.getChildContext = function() {
-                        return this.__provideChildInjections();
-                    };
-                }
-
-                ExtCustomComponent.displayName = config.displayName;
-
-                const injectPropsNames = [];
-
-                if (config.properties) {
-                    for (let property of Object.keys(config.properties)) {
-                        if (config.properties[property].inject) {
-                            injectPropsNames.push(property);
-                        }
-                    }
-                }
-
-                if (injectPropsNames.length > 0) {
-                    ExtCustomComponent.contextTypes = {};
-
-                    for (let propName of injectPropsNames) {
-                        ExtCustomComponent.contextTypes[propName] = returnNull;
-                    }
-                }
+                const CustomComponent = defineCustomComponent(config, reactLikeConfig.Component);
 
                 // TODO - sorry for that hack
                 if (reactLikeConfig.renderEngineName === 'react-lite') {
-                    ExtCustomComponent.vtype = 4;
+                    CustomComponent.vtype = 4;
                 }
 
-                const factory = createFactory(ExtCustomComponent);
-                factory.component = ExtCustomComponent;
+                const factory = createFactory(CustomComponent);
+                factory.component = CustomComponent;
                 return factory;
             },
 
@@ -161,88 +109,115 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
     return adaptRenderEngine(newConfig);
 }
 
-function defineCustomComponent(ReactLikeComponent) {
-    const customClass = class extends ReactLikeComponent {
-        constructor(superArgs, config) {
-            super(...superArgs);
+function defineCustomComponent(config, ParentComponent) {
+    const CustomComponent = function (...superArgs) {
+        ParentComponent.apply(this, superArgs);
 
-            this.__viewToRender = null;
-            this.__resolveRenderingDone = null;
-            this.__shouldUpdate = false;
-            this.state = fakeState;
+        this.__view = null;
+        this.__viewUpdateResolver = null;
 
-            let initialized = false;
+        const
+            updateView = view => {
+                this.__view = view;
 
-            const
-                { receiveProps, forceUpdate, applyPublicMethod, provideChildInjections } = config.init(
-                    view => {
-                        this.__viewToRender = view;
+                return new Promise(resolve => {
+                    this.__viewUpdateResolver = resolve;
+                    ParentComponent.prototype.forceUpdate.apply(this);
+                });
+            },
 
-                        if (initialized) {
-                            this.__shouldUpdate = true;
-                            this.setState(fakeState);
-                        } else {
-                            initialized  = true;
-                        }
+            updateState = state => {
+                //this.state = state;
 
-                        return buildUpdatedViewPromise(this);
-                    },
-                    state => {
-                        this.state = state;
-                    },
-                    this);
+                // Check whether this has a performance issue
+                this.setState(state);
+                return stateUpdatedPromise;
+            };
 
-            this.__receiveProps = receiveProps;
-            this.__forceUpdate = forceUpdate;
-            this.__applyPublicMethod = applyPublicMethod;
+        this.__ctrl =
+            new ComponentController(config, updateView, updateState);
+    };
 
-            if (provideChildInjections) {
-                this.__provideChildInjections = provideChildInjections;
+    CustomComponent.displayName = config.displayName;
+    CustomComponent.prototype = Object.create(ParentComponent.prototype);
+
+    const injectPropsNames = [];
+
+    if (config.properties) {
+        for (const key of Object.keys(config.properties)) {
+            if (config.properties[key].inject) {
+                injectPropsNames.push(key);
             }
         }
+    }
+
+    if (injectPropsNames.length === 0) {
+        CustomComponent.contextTypes = {};
+
+        for (const key of injectPropsNames) {
+            CustomComponent.contextTypes[key] = returnNull;
+        }
+    }
+
+    if (config.childInjections) {
+        CustomComponent.childContextTypes = {};
+
+        for (let key of config.childInjections) {
+            CustomComponent.childContextTypes[key] = returnNull;
+        }
+
+        CustomComponent.prototype.getChildContext = function () {
+            return this.__ctrl.provideChildInjections();
+        };
+    }
+    
+    Object.assign(CustomComponent.prototype, {
+        forceUpdate() {
+            this.__ctrl.forceUpdate();
+        },
 
         componentWillMount() {
             this.props = mixPropsWithContext(this.props, this.context);
-            this.__receiveProps(this.props);
-        }
+            this.__ctrl.receiveProps(this.props);
+        },
 
         componentDidMount() {
-            if (this.__resolveRenderingDone) {
-                this.__resolveRenderingDone();
+            if (this.__viewUpdateResolver) {
+                this.__viewUpdateResolver(true);
+                this.__viewUpdateResolver = null;
             }
-        }
+        },
 
         componentDidUpdate() {
-            if (this.__resolveRenderingDone) {
-                this.__resolveRenderingDone();
+            if (this.__viewUpdateResolver) {
+                this.__viewUpdateResolver();
+                this.__viewUpdateResolver = null;
             }
-        }
+        },
 
         componentWillUnmount() {
-            this.__receiveProps(undefined);
-        }
+            this.__ctrl.receiveProps(undefined);
+        },
 
         componentWillReceiveProps(nextProps) {
             this.props = mixPropsWithContext(nextProps, this.context);
-            this.__receiveProps(this.props);
-        }
-
-        shouldComponentUpdate() {
-            const ret = this.__shouldUpdate;
-
-            if (ret) {
-                this.__shouldUpdate = false;
-            }
-
-            return ret;
-        }
+            this.__innerCompoennt.receiveProps(this.props);
+        },
 
         render() {
-            return this.__viewToRender;
+            return this.__view;
         }
-    };
+    });
 
-    return customClass;
+    if (config.publicMethods) {
+        for (const methodName of config.publicMethods) {
+            CustomComponent.prototype[methodName] = function (...args) {
+                this.__ctrl.applyPublicMethod(methodName, args);
+            };
+        }
+    }
+
+    return CustomComponent;
 }
 
 function mixPropsWithContext(props, context) {
@@ -287,21 +262,4 @@ function adjustRefCallback(refCallback) {
             involvedElement = null;
         }
     };
-}
-
-function buildUpdatedViewPromise(reactComponent) {
-    let done = false;
-
-    return new Promise(resolve => {
-        if (!done) {
-            reactComponent.__resolveRenderingDone = () => {
-                reactComponent.__resolveRenderingDone = null;
-                resolve(true);
-            };
-
-            done = true;
-        } else {
-            resolve(true);
-        }
-    });
 }

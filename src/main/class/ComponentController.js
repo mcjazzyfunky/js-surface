@@ -1,6 +1,6 @@
 import validateInitResult from '../validation/validateInitResult';
 
-export default class InnerComponent {
+export default class ComponentController {
     constructor(config, updateView, updateState) {
         const
             result = config.init(updateView, updateState),
@@ -17,11 +17,11 @@ export default class InnerComponent {
         this.__provideChildInjections = result.provideChildInjections || null;
     }
 
-    receiveProps(props) {console.log('receiveProps2')
+    receiveProps(props) {
         this.__receiveProps(props);
     }
 
-    forceUpdate() {console.log('forceUpdate2')
+    forceUpdate() {
         this.__forceUpdate();
     }
 

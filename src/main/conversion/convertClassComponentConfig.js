@@ -97,7 +97,7 @@ export default function convertClassComponentConfig(config) {
 
                         updateView(content)
                             .then(
-                                successful => {console.log(4444, successful)
+                                () => {
                                     if (!initialized) {
                                         initialized = true;
                                         component.onDidMount();
