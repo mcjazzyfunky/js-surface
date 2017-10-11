@@ -42,7 +42,24 @@ function reactLiteRender(content, targetNode) {
         ? document.getElementById(targetNode)
         : targetNode;
 
-    return ReactLite.render(content, target);
+    if (target) {
+        var cleanedUp = false;
+        
+        const cleanUp = () => {
+            if (!cleanedUp) {
+                cleanedUp = true;
+                ReactLite.unmountComponentAtNode(target.firstChild.firstChild);
+            }
+        };
+
+        target.innerHTML = '<span></span>';
+        
+        // TODO!!!
+        //target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
+        ReactLite.render(content, target.firstChild);
+
+        return { dispose: cleanUp };
+    }
 }
 
 function reactLiteCreateElement(tag, props, ...children)  {

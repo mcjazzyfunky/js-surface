@@ -9,11 +9,27 @@ function reactRender(content, targetNode) {
             "[render] First argument 'content' has to be a valid element");
     }
 
-    if (typeof targetNode === 'string') {
-        targetNode = document.getElementById(targetNode);
-    }
+    const target =
+        typeof targetNode === 'string'
+            ? document.getElementById(targetNode)
+            : target;
 
-    return ReactDOM.render(content, targetNode);
+    if (target) {
+        let cleanedUp = false;
+
+        const cleanUp = () => {
+            if (!cleanedUp) {
+                cleanedUp = true;
+                ReactDOM.unmountComponentAtNode(target.firstChild);
+            }
+        };
+
+        target.innerHTML = '<span></span>';
+        target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);        
+        ReactDOM.render(content, target.firstChild);
+
+        return { dispose: cleanUp };
+    }
 }
 
 const {

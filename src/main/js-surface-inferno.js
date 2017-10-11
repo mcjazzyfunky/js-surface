@@ -96,5 +96,21 @@ function customRender(content, targetNode) {
         ? document.getElementById(targetNode)
         : targetNode;
 
-    Inferno.render(content, target);
+    if (target) {
+        var cleanedUp = false;
+        
+        const cleanUp = () => {
+            if (!cleanedUp) {
+                cleanedUp = true;
+                Inferno.render(null, target.firstChild);
+            }
+        };
+
+        target.innerHTML = '<span></span>';
+        // TODO!!!
+        //target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
+        Inferno.render(content, target.firstChild);
+
+        return { dispose: cleanUp };
+    }
 }

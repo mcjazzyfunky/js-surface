@@ -118,7 +118,7 @@ function validateProps(props, validations) {
                     errMsg = `Missing mandatory property '${propertyName}'`;
                 } else {
                     const err = validateProperty(prop, propertyName, type, nullable, constraint);
-                
+
                     if (err) {
                         errMsg = err.message;
                     }

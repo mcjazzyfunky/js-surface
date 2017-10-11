@@ -49,11 +49,26 @@ function preactRender(content, targetNode) {
             "[render] First argument 'content' has to be a valid element");
     }
 
-    if (typeof targetNode === 'string') {
-        targetNode = document.getElementById(targetNode);
-    }
+    const target = typeof targetNode === 'string'
+        ? document.getElementById(targetNode)
+        : targetNode;
 
-    return Preact.render(content, targetNode);
+    if (target) {
+        var cleanedUp = false;
+        
+        const cleanUp = () => {
+            if (!cleanedUp) {
+                cleanedUp = true;
+                Preact.render('', target.firstChild);
+            }
+        };
+
+        target.innerHTML = '<span></span>';
+        target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
+        Preact.render(content, target.firstChild);
+
+        return { dispose: cleanUp };
+    }
 }
 
 function preactCreateElement(tag, props, ...children)  {
