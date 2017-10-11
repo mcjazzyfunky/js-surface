@@ -27,7 +27,7 @@ const {
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'inferno',
-    renderEngineAPI: Inferno,
+    renderEngineAPI:  { Inferno },
     Component: Inferno.Component,
     createElement: customCreateElement,
     createFactory: customCreateFactory,
