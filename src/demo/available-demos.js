@@ -30,10 +30,16 @@ export default [
         files: ['clock.js']
     },
     {
-        name: 'speed-test',
-        displayName: 'Speed Test',
-        directory: 'speed-test',
-        files: ['speed-test.js']
+        name: 'performance-test1',
+        displayName: 'Performance Test 1',
+        directory: 'performance-tests',
+        files: ['performance-test1.js']
+    },
+    {
+        name: 'performance-test2',
+        displayName: 'Performance Test 2',
+        directory: 'performance-tests',
+        files: ['performance-test2.js']
     },
     {
         name: 'stop-watch',
