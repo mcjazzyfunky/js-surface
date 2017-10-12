@@ -105,23 +105,24 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
         ACTION_APPLY_CREATE_ELEMENT = 1,
         ACTION_CREATE_HYPERSCRIPT_ELEMENT = 2;
 
-    let
-        action = 0,
-        actionArgs = null;
 
+    return function (/* tag, ...rest */) {
+        const tag = arguments[0];
 
-    return function (tag, ...rest) {
-        let ret = null;
+        let
+            ret = null,
+            action = 0,
+            argCount = arguments.length,
+            additArg = undefined;
 
         if (typeof tag === 'string') {
             let hyperscriptData = hyperscriptCache[tag];
 
             if (hyperscriptData === simpleTagMark) {
                 action = ACTION_APPLY_CREATE_ELEMENT;
-                actionArgs = [tag, ...rest];
             } else if (hyperscriptData) {
                 action = ACTION_CREATE_HYPERSCRIPT_ELEMENT;
-                actionArgs = [tag, rest, hyperscriptData];
+                additArg = hyperscriptData;
             } else {
                 hyperscriptData = parseHyperscript(tag);
 
@@ -136,21 +137,19 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
 
                     hyperscriptCache[tag] = simpleTagMark;
                     action = ACTION_APPLY_CREATE_ELEMENT;
-                    actionArgs = [tag, ...rest];
                 } else {
                     hyperscriptCache[tag] = hyperscriptData;
                     action = ACTION_CREATE_HYPERSCRIPT_ELEMENT;
-                    actionArgs = [tag, rest, hyperscriptData];
+                    additArg = hyperscriptData;
                 }
             }
         } else {
             action = ACTION_APPLY_CREATE_ELEMENT;
-            actionArgs = [tag, ...rest];
         }
 
         if (action === ACTION_APPLY_CREATE_ELEMENT) {
-            const secondArg = actionArgs[1];
-            let secondArgIsAttrs = false; 
+            const secondArg = arguments[1];
+            let secondArgIsAttrs; 
 
             if (secondArg === undefined || secondArg === null) {
                 secondArgIsAttrs = true;
@@ -158,7 +157,7 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
                 || secondArg.constructor !== Object
                 || secondArg[Symbol.iterator]) {
                 
-                // secondArgIsAttrs = false;
+                secondArgIsAttrs = false;
             } else if (!isKnownRenderEngine) {
                 secondArgIsAttrs = !isElement(secondArg);
             } else {
@@ -175,14 +174,23 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
                 }
             }
 
-            if (secondArgIsAttrs) {
-                ret = createElement(...actionArgs);
-            } else {
-                const
-                    [head, ...tail] = actionArgs;
-                
-                ret = createElement(head, null, ...tail);
+            if (!secondArgIsAttrs) {
+                additArg = null;                
             }
+        } 
+        
+        const actionArgs = [tag];
+
+        if (additArg !== undefined) {
+            actionArgs.push(additArg);
+        }
+
+        for (let i = 1; i < argCount; ++i) {
+            actionArgs.push(arguments[i]);
+        }
+
+        if (action === ACTION_APPLY_CREATE_ELEMENT) {
+            ret = createElement.apply(null, actionArgs);
         } else if (action === ACTION_CREATE_HYPERSCRIPT_ELEMENT) {
             ret = createHyperscriptElement.apply(null, actionArgs);
         } else {
@@ -200,7 +208,7 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
                 && !isElement(it);
     }
 
-    function createHyperscriptElement(tag, rest, hyperscriptData) {
+    function createHyperscriptElement(tag, hyperscriptData, head, ...tail) {
         let currElem = null;
         const dataLength = hyperscriptData.length;
 
@@ -214,16 +222,16 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
                     attrs2 = attrs ? Object.assign({}, attrs) : {},
                     className = attrs2.className;
 
-                if (isAttrs(rest[0])) {
-                    Object.assign(attrs2, rest[0]);
+                if (isAttrs(head)) {
+                    Object.assign(attrs2, head);
 
                     if (className !== attrs2.className) {
                         attrs2.className = `${className} ${attrs2.className}`;
                     }
 
-                    currElem = createElement(tag, attrs2, ...rest.slice(1));
+                    currElem = createElement(tag, attrs2, ...tail);
                 } else {
-                    currElem = createElement(tag, attrs2, ...rest); 
+                    currElem = createElement(tag, attrs2, head, ...tail); 
                 }
             }
         } 
