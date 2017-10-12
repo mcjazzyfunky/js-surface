@@ -7,7 +7,7 @@ import {
 }  from 'js-surface';
 
 import { Spec } from 'js-spec';
-
+/*
 const
     framesPerSecond = 240,
     colors = ['red', 'yellow', 'orange'],
@@ -19,18 +19,17 @@ const TileFunctional = defineFunctionalComponent({
     displayName:  'TileFunctional',
     
     properties: ['color', 'width'],
-    /*
-    properties: {
-        color: {
-            type: String,
-            defaultValue: 'white'
-        },
-        width: {
-            type: Number,
-            defaultValue: 3
-        }
-    },
-    */
+    
+    // properties: {
+    //     color: {
+    //         type: String,
+    //         defaultValue: 'white'
+    //     },
+    //     width: {
+    //         type: Number,
+    //         defaultValue: 3
+    //     }
+    // },
     
     render(props) {
         const  
@@ -55,17 +54,15 @@ const TileRowFunctional = defineFunctionalComponent({
     
     properties: ['tileWidth', 'columnCount'],
 
-    /*
-    properties: {
-        tileWidth: {
-            type: Number,
-            defaultValue: 3
-        },
-        columnCount: {
-            type: Number
-        }
-    },
-    */
+    // properties: {
+    //     tileWidth: {
+    //         type: Number,
+    //         defaultValue: 3
+    //     },
+    //     columnCount: {
+    //         type: Number
+    //     }
+    // },
     
     render(props) {
         const
@@ -219,7 +216,9 @@ const SpeedTest = defineClassComponent({
         
         return (
             h('div',
+                null,
                 h('div',
+                    null,
                     `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
                     h('div',
                         { style },
@@ -309,7 +308,7 @@ const TileStandardDirect = defineClassComponent({
             };
         
         return (
-            h('div',
+            htm('div',
                 { style })
         );    
     }
@@ -341,7 +340,7 @@ const TileRowStardardDirect = defineClassComponent({
             tiles.push(TileStandardDirect({ width: tileWidth, color, key: x }));
         }
        
-        return h('div', { style: { clear: 'both' }}, tiles);
+        return htm('div', { style: { clear: 'both' }}, tiles);
     }
 });
 
@@ -415,13 +414,15 @@ const SpeedTestDirect = defineClassComponent({
         }
         
         return (
-            h('div',
-                h('div',
+            htm('div',
+                null,
+                htm('div',
+                    null,
                     `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
                     h('div',
                         { style },
                         rows)),
-                h('p',
+                htm('p',
                     { style: { clear: 'both' } },
                    `(actual frames per second: ${this.__actualFramesPerSecond})`))
         );
@@ -481,3 +482,61 @@ mainContent.innerHTML = `
 `;
 
 mainContent.querySelector('select').addEventListener('change', onSelectTest);
+
+*/
+
+if (RenderEngine.name === 'react-dom' || RenderEngine.name === 'inferno') {
+    const createElement =
+        RenderEngine.name === 'react-dom'
+            ? RenderEngine.api.React.createElement
+            : RenderEngine.api.Inferno.createElement;
+
+    const start = Date.now();
+
+    for (let i = 0; i < 300000; ++i) {
+        createElement('div',
+            { class: 'my-class', id: 'my-id' },
+            createElement('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
+    }
+
+    const end = Date.now();
+
+
+    console.log('Duration:', (end - start) / 1000);
+
+    const start2 = Date.now();
+    //const h2 = (...args) => React.createElement(...args);
+    for (let i = 0; i < 300000; ++i) {
+    //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+        h('div',
+            { className: 'my-class', id: 'my-id' },
+            h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+    }
+
+    const end2 = Date.now();
+
+    console.log('Duration2:', (end2 - start2) / 1000);
+
+    const start3 = Date.now();
+    //const h2 = (...args) => React.createElement(...args);
+    for (let i = 0; i < 300000; ++i) {
+    //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+        h('div#my-id.my-class',
+            null,
+            h('div#my-id2.my-class2', null,  'my-div'));    
+    }
+
+    const end3 = Date.now();
+
+    console.log('Duration3:', (end3 - start3) / 1000);
+
+    const start4 = Date.now();
+    //const h2 = (...args) => React.createElement(...args);
+    for (let i = 0; i < 300000; ++i) {
+        h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+    }
+
+    const end4 = Date.now();
+
+    console.log('Duration4:', (end4 - start4) / 1000);
+}

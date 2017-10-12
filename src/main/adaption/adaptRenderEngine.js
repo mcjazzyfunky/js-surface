@@ -26,20 +26,20 @@ export default function adaptRenderEngine(config) {
     }
     
     const
+        RenderEngine = {
+            name: config.renderEngine.name,
+            api: config.renderEngine.api
+        },
+
         createElement = config.options && config.options.isBrowserBased === false
             ? config.interface.createElement
-            : adaptCreateElement(config.interface.createElement, config.interface.isElement),
+            : adaptCreateElement(config.interface.createElement, config.interface.isElement, RenderEngine),
 
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
         
         defineClassComponent = config => defineStandardComponent(
             convertClassComponentConfig(config)); 
-
-    const RenderEngine = {
-        name: config.renderEngine.name,
-        api: config.renderEngine.api
-    };
 
     Object.freeze(RenderEngine);
 
