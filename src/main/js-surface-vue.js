@@ -10,7 +10,7 @@ const {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } = adaptRenderEngine({
     renderEngine: {
@@ -22,7 +22,7 @@ const {
         defineFunctionalComponent: customDefineFunctionalComponent,
         defineStandardComponent: customDefineStandardComponent,
         isElement: customIsElement,
-        render: customRender
+        mount: customMount
     }
 });
 
@@ -33,7 +33,7 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };
 
@@ -249,7 +249,7 @@ function customIsElement(it) {
     return it && it.isSurfaceElement;
 }
 
-function customRender(content, targetNode) {
+function customMount(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
             "[render] First argument 'content' has to be a valid element");
@@ -290,7 +290,7 @@ function customRender(content, targetNode) {
 
         container.addEventListener('DOMNodeRemoved', cleanUp, false);  
 
-        return { dispose: () => cleanUp() };
+        return { unmount: () => cleanUp() };
     }
 }
 

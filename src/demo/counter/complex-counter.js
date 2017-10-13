@@ -2,7 +2,7 @@ import {
     createElement as h, 
     defineClassComponent,
     defineFunctionalComponent,
-    render
+    mount 
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -139,5 +139,5 @@ const CounterCtrl = defineClassComponent({
     }
 });
 
-render(CounterCtrl(), 'main-content');
+mount(CounterCtrl(), 'main-content');
 

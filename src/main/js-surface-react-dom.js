@@ -3,10 +3,10 @@ import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function reactRender(content, targetNode) {
+function reactMount(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
-            "[render] First argument 'content' has to be a valid element");
+            "[mount] First argument 'content' has to be a valid element");
     }
 
     const target =
@@ -33,7 +33,7 @@ function reactRender(content, targetNode) {
         container.addEventListener('DOMNodeRemoved', cleanUp, false);        
         ReactDOM.render(content, container);
 
-        return { dispose: () => cleanUp() };
+        return { unmount: () => cleanUp() };
     }
 }
 
@@ -44,7 +44,7 @@ const {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-dom',
@@ -52,7 +52,7 @@ const {
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
-    render: reactRender,
+    mount: reactMount,
     Component: React.Component
 });
 
@@ -63,6 +63,6 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };

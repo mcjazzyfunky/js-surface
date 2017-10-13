@@ -2,7 +2,7 @@ import {
     createElement as h,
     defineClassComponent,
     defineFunctionalComponent,
-    render
+    mount 
 } from 'js-surface';
 
 const Parent = defineClassComponent({
@@ -67,4 +67,4 @@ const ChildClassBased = defineClassComponent({
     }
 });
 
-render(Parent({ masterValue: 'the injected value' }), 'main-content');
+mount(Parent({ masterValue: 'the injected value' }), 'main-content');

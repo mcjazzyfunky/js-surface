@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineClassComponent,
-    render
+    mount 
 } from 'js-surface';
 
 const ClickMe = defineClassComponent({
@@ -32,4 +32,4 @@ const ClickMe = defineClassComponent({
 });
 
 
-render(ClickMe({ text: 'Click me!' }), 'main-content');
+mount(ClickMe({ text: 'Click me!' }), 'main-content');

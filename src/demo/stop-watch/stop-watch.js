@@ -1,7 +1,7 @@
 import {
     defineClassComponent,
     createElement as h,
-    render
+    mount 
 }  from 'js-surface';
 
 const StopWatch = defineClassComponent({
@@ -91,4 +91,4 @@ const StopWatch = defineClassComponent({
     }
 });
 
-render(StopWatch(), 'main-content');
+mount(StopWatch(), 'main-content');

@@ -2,7 +2,7 @@ import {
     createElement as h,
     defineFunctionalComponent,
     defineClassComponent,
-    render
+    mount
 } from 'js-surface';
 
 const FunctionalGreeting = defineFunctionalComponent({
@@ -79,4 +79,4 @@ const content =
         h('h6', 'Derived standard component with different default values:'),
         DerivedStandardGreeting());
 
-render(content, 'main-content');
+mount(content, 'main-content');

@@ -51,7 +51,7 @@ export default function adaptRenderEngine(config) {
         defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
-        render: config.interface.render
+        mount: config.interface.mount
     };
 }
 

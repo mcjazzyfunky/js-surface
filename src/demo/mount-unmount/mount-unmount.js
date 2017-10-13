@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineClassComponent,
-    render
+    mount 
 } from 'js-surface';
 
 
@@ -69,4 +69,4 @@ const ComponentB = defineClassComponent({
     }
 });
 
-render(MountUnmount(), 'main-content');
+mount(MountUnmount(), 'main-content');

@@ -2,7 +2,7 @@ import {
     createElement as h,
     defineClassComponent,
     defineFunctionalComponent,
-    render
+    mount 
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -317,4 +317,4 @@ const TodoFilters = defineFunctionalComponent({
     }
 });
 
-render(TodoMVCApp(), 'main-content');
+mount(TodoMVCApp(), 'main-content');

@@ -11,7 +11,7 @@ const {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'preact',
@@ -20,7 +20,7 @@ const {
     createElement: preactCreateElement,
     createFactory: preactCreateFactory,
     isValidElement: preactIsValidElement,
-    render: preactRender
+    mount: preactMount
 });
 
 export {
@@ -30,7 +30,7 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };
 
@@ -43,10 +43,10 @@ function preactIsValidElement(it) {
         && (typeof it !== 'object'|| it instanceof VNode);
 }
 
-function preactRender(content, targetNode) {
+function preactMount(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
-            "[render] First argument 'content' has to be a valid element");
+            "[mount] First argument 'content' has to be a valid element");
     }
 
     const target = typeof targetNode === 'string'
@@ -72,7 +72,7 @@ function preactRender(content, targetNode) {
         container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
         Preact.render(content, container);
 
-        return { dispose: () => cleanUp() };
+        return { unmount: () => cleanUp() };
     }
 }
 

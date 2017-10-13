@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineFunctionalComponent,
-    render
+    mount 
 } from 'js-surface';
 
 const HelloWorld = defineFunctionalComponent({
@@ -22,4 +22,4 @@ const HelloWorld = defineFunctionalComponent({
     }
 });
 
-render(HelloWorld({ name:  'Joan Doe' }), 'main-content');
+mount(HelloWorld({ name:  'Joan Doe' }), 'main-content');

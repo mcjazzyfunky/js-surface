@@ -5,7 +5,7 @@ import {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } from './js-surface-preact';
 
@@ -16,6 +16,6 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };

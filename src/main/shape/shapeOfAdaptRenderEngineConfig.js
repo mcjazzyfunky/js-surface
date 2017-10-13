@@ -14,7 +14,7 @@ export default  {
             defineFunctionalComponent: Spec.function,
             defineStandardComponent: Spec.function,
             isElement: Spec.function,
-            render: Spec.function
+            mount: Spec.function
         }),
 
     options:

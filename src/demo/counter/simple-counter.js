@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineClassComponent,
-    render
+    mount
 } from 'js-surface';
 
 
@@ -79,4 +79,4 @@ const SimpleCounter = defineClassComponent({
     }
 });
 
-render(SimpleCounter({ initialValue: 100 }), 'main-content');
+mount(SimpleCounter({ initialValue: 100 }), 'main-content');

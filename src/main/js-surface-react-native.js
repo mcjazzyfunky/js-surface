@@ -10,7 +10,7 @@ const {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-native',
@@ -18,7 +18,7 @@ const {
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
-    render: reactNativeRender,
+    mount: reactNativeMount,
     Component: React.Component,
     isBrowserBased: false
 });
@@ -30,11 +30,11 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };
 
 
-function reactNativeRender(Component) {
+function reactNativeMount(Component) {
     ReactNative.AppRegistry.registerComponent('AppMainComponent', () => Component);
 }

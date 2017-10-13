@@ -2,7 +2,7 @@ import {
     defineClassComponent,
     defineFunctionalComponent,
     createElement as h,
-    render,
+    mount,
     RenderEngine
 }  from 'js-surface';
 
@@ -438,25 +438,25 @@ function onSelectTest(ev) {
     const testName = ev.target.value;
 
     if (disposal) {
-        disposal.dispose();
+        disposal.unmount();
         disposal = null;
     }
 
     switch (testName) {
     case 'surface-functional':
-        disposal = render(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        disposal = mount(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'surface-standard':
-        disposal = render(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        disposal = mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-functional':
-        disposal = render(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        disposal = mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-standard':
-        disposal = render(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        disposal = mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     

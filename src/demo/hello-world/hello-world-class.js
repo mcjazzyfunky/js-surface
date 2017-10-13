@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineClassComponent,
-    render
+    mount 
 } from 'js-surface';
 
 const HelloWorld = defineClassComponent({
@@ -51,4 +51,4 @@ const HelloWorld = defineClassComponent({
     }
 });
 
-render(HelloWorld({ name: 'John Doe' }), 'main-content');
+mount(HelloWorld({ name: 'John Doe' }), 'main-content');

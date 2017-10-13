@@ -8,7 +8,7 @@ export default  {
     createFactory: Spec.function,
     isBrowserBased: Spec.optional(Spec.boolean),
     isValidElement: Spec.function,
-    render: Spec.function,
+    mount: Spec.function,
     Component: Spec.function
 };
 

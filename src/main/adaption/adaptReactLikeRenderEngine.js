@@ -99,7 +99,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                     && reactLikeConfig.isValidElement(it);
             },
 
-            render: reactLikeConfig.render
+            mount: reactLikeConfig.mount
         },
         options: {
             isBrowserBased: reactLikeConfig.isBrowserBased !== false,

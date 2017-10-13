@@ -1,7 +1,7 @@
 import {
     createElement as h,
     defineClassComponent,
-    render
+    mount
 } from 'js-surface';
 
 const Clock = defineClassComponent({
@@ -50,4 +50,4 @@ const TimeInfo = defineClassComponent({
     }
 });
 
-render(Clock(), 'main-content');
+mount(Clock(), 'main-content');

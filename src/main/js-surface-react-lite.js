@@ -9,7 +9,7 @@ const {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-lite',
@@ -18,7 +18,7 @@ const {
     createElement: reactLiteCreateElement,
     createFactory: ReactLite.createFactory,
     isValidElement: ReactLite.isValidElement,
-    render: reactLiteRender
+    mount: reactLiteMount
 });
 
 export {
@@ -28,14 +28,14 @@ export {
     defineStandardComponent,
     isElement,
     isRenderable,
-    render,
+    mount,
     RenderEngine
 };
 
-function reactLiteRender(content, targetNode) {
+function reactLiteMount(content, targetNode) {
     if (!isElement(content)) {
         throw new TypeError(
-            "[render] First argument 'content' has to be a valid element");
+            "[mount] First argument 'content' has to be a valid element");
     }
 
     const target = typeof targetNode === 'string'
@@ -61,7 +61,7 @@ function reactLiteRender(content, targetNode) {
         container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
         ReactLite.render(content, container);
 
-        return { dispose: () => cleanUp() };
+        return { unmount: () => cleanUp() };
     }
 }
 

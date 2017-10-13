@@ -2,7 +2,7 @@ import {
     defineClassComponent,
     defineFunctionalComponent,
     createElement as h,
-    render
+    mount 
 }  from 'js-surface';
 
 import { Seq } from 'js-essential';
@@ -323,7 +323,7 @@ container.innerHTML =
     + '<div id="section-react" class="col-md-6"></div>'
     + '</div>';
 
-render(
+mount(
     DemoOfPagination(),
     'section-surface');
 
