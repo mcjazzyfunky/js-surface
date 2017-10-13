@@ -20,7 +20,7 @@ const {
     unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
-    renderEngineName: 'react-dom',
+    renderEngineName: 'react',
     renderEngineAPI: { React, ReactDOM },
     createElement: React.createElement,
     createFactory: React.createFactory,

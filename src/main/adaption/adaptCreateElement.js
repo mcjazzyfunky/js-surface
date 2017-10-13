@@ -98,7 +98,7 @@ const
 export default function adaptCreateElement(createElement, isElement, RenderEngine) {
     const
         isKnownRenderEngine = true,
-        isReact = isKnownRenderEngine && RenderEngine.name === 'react-dom',
+        isReact = isKnownRenderEngine && RenderEngine.name === 'react',
         isInferno = isKnownRenderEngine && RenderEngine.name === 'inferno',
         isReactLite = isKnownRenderEngine && RenderEngine.name === 'react-lite',
         ACTION_APPLY_CREATE_ELEMENT = 1,

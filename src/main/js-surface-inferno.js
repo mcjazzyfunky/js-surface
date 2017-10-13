@@ -89,7 +89,7 @@ function customIsValidElement(it) {
 }
 
 function customMount(content, targetNode) {
-    Inferno.render(Inferno.render(content, targetNode));
+    Inferno.render(content, targetNode);
 
     return () => Inferno.render(null, targetNode);
 }

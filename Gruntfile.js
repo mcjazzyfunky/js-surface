@@ -28,12 +28,12 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        /*
-        esdoc : {
-            dist : {
+        esdoc: {
+            dist: {
                 options: {
                     source: 'src/main',
-                    destination: 'dist/v<%= pkg.version %>/docs/api',
+                    destination: 'dist/docs/api',
+                    //destination: 'dist/v<%= pkg.version %>/docs/api',
                     //undocumentIdentifier: false,
                     //unexportIdentifier: true,
                     includeSource: true,
@@ -42,7 +42,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        */
         browserify: {
             jsSurfaceAdapt: {
                 src: 'build/src/main/js-surface-adapt.js',
@@ -88,12 +87,12 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            jsSurfaceReactDOM: {
-                src: 'build/src/main/js-surface-react-dom.js',
-                dest: 'dist/react-dom.js',
+            jsSurfaceReact: {
+                src: 'build/src/main/js-surface-react.js',
+                dest: 'dist/react.js',
                 options: {
                     alias: {
-                        'js-surface': './build/src/main/js-surface-react-dom.js',
+                        'js-surface': './build/src/main/js-surface-react.js',
                     },
                     ignore: ['./node_modules/**'],
                     external: ['js-spec', 'react', 'react-dom'],
@@ -186,9 +185,9 @@ module.exports = function (grunt) {
                 src: ['dist/inferno.js'],
                 dest: 'dist/inferno.min.js'
             },
-            jsSurfaceReactDOM: {
-                src: ['dist/react-dom.js'],
-                dest: 'dist/react-dom.min.js'
+            jsSurfaceReact: {
+                src: ['dist/react.js'],
+                dest: 'dist/react.min.js'
             },
             jsSurfaceReactNative: {
                 src: ['dist/react-native.js'],
@@ -232,13 +231,13 @@ module.exports = function (grunt) {
                 src: ['dist/inferno.min.js'],
                 dest: 'dist/inferno.min.js.gz'
             },
-            jsSurfaceReactDOM: {
+            jsSurfaceReact: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/react-dom.min.js'],
-                dest: 'dist/react-dom.min.js.gz'
+                src: ['dist/react.min.js'],
+                dest: 'dist/react.min.js.gz'
             },
             jsSurfaceReactNative: {
                 options: {

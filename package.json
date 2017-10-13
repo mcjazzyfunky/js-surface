@@ -20,7 +20,7 @@
     "babel-standalone": "^6.20.0",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
-    "esdoc": "^0.5.2",
+    "esdoc": "^1.0.3",
     "eslint": "^3.13.1",
     "fbjs": "^0.8.12",
     "font-awesome": "^4.5.0",
@@ -31,14 +31,13 @@
     "grunt-contrib-compress": "^1.4.3",
     "grunt-contrib-uglify": "^0.11.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-esdoc": "0.0.1",
+    "grunt-esdoc": "0.0.4",
     "grunt-webpack": "^1.0.18",
     "inferno": "^3.9.0",
     "inferno-component": "^3.9.0",
     "inferno-create-element": "^3.9.0",
     "jquery": "^2.2.4",
     "js-essential": "^0.1.2",
-    "js-spec": "^0.1.19",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.2.1",
@@ -56,6 +55,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
-    "grunt": "^1.0.1"
+    "grunt": "^1.0.1",
+    "js-spec": "^0.1.19"
   }
 }
