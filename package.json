@@ -45,7 +45,7 @@
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-lite": "^0.15.37",
+    "react-lite": "^0.15.39",
     "react-native": "^0.45.1",
     "redux": "^3.7.1",
     "systemjs": "^0.20.15",

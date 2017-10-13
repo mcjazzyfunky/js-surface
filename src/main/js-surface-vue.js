@@ -336,12 +336,6 @@ function renderContent(vueCreateElement, content, component) {
         const attrs = Object.assign({}, props);
         const options = { attrs };
 
-        if (attrs.className) {
-            attrs.class = attrs.className;
-            
-            delete(attrs.className);
-        }
-
         if (attrs.style) {
             options.style = attrs.style;
             delete(attrs.style);          

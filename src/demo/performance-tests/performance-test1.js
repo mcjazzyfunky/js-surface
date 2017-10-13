@@ -17,6 +17,10 @@ case 'inferno':
     createElement = RenderEngine.api.Inferno.createElement;
     break;
 
+case 'vue':
+    createElement = h;
+    break;
+
 default:
     throw Error('Not implemented yet');
 }
@@ -45,7 +49,7 @@ tests.push({
         //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
             h('div',
                 { class: 'my-class', id: 'my-id' },
-                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                h('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
         }
     }
 });

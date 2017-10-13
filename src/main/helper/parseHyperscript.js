@@ -45,11 +45,11 @@ export function parseHyperscript(hyperscript) {
             case '.': {
                 const oneClass = it.substr(1);
                 
-                if (!meta.attrs || !meta.attrs.className) {
+                if (!meta.attrs || !meta.attrs.class) {
                     meta.attrs = meta.attrs || {};
-                    meta.attrs.className = oneClass;
+                    meta.attrs.class = oneClass;
                 } else {
-                    meta.attrs.className += ` ${oneClass}`;
+                    meta.attrs.class += ` ${oneClass}`;
                 }
 
                 break;
@@ -81,7 +81,7 @@ export function parseHyperscript(hyperscript) {
                 }
 
                 if (meta.attrs[key] === undefined
-                    && key !== 'className'
+                    && key !== 'class'
                     && key !== 'id') {
 
                     meta.attrs[key] = value;

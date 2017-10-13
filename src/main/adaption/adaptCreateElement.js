@@ -68,13 +68,13 @@ export default function adaptCreateElement(createElement, isElement) {
             } else {
                 const
                     attrs2 = attrs ? Object.assign({}, attrs) : {},
-                    className = attrs2.className;
+                    class = attrs2.class;
 
                 if (isAttrs(rest[0])) {
                     Object.assign(attrs2, rest[0]);
 
-                    if (className !== attrs2.className) {
-                        attrs2.className = `${className} ${attrs2.className}`;
+                    if (class !== attrs2.class) {
+                        attrs2.class = `${class} ${attrs2.class}`;
                     }
 
                     currElem = createElement(tag, attrs2, ...rest.slice(1));
@@ -219,13 +219,13 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
             } else {
                 const
                     attrs2 = attrs ? Object.assign({}, attrs) : {},
-                    className = attrs2.className;
+                    className = attrs2.class;
 
                 if (isAttrs(head)) {
                     Object.assign(attrs2, head);
 
-                    if (className !== attrs2.className) {
-                        attrs2.className = `${className} ${attrs2.className}`;
+                    if (className !== attrs2.class) {
+                        attrs2.class = `${className} ${attrs2.class}`;
                     }
 
                     currElem = createElement(tag, attrs2, ...tail);

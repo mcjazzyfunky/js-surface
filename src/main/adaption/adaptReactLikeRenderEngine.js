@@ -64,7 +64,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                         ret.contextTypes[propName] = returnNull;
                     }
                 }
-
+                
                 if (reactLikeConfig.renderEngineName === 'react-lite') {
                     ret.vtype = 2;
                 }

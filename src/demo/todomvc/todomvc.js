@@ -240,7 +240,7 @@ const TodoList = defineFunctionalComponent({
                 h('ul.todo-list',
                     todos.map(todo => 
                         h('li',
-                            { className: todo.completed ? 'completed' : '' },
+                            { class: todo.completed ? 'completed' : '' },
                             h('div.view',
                                 h('input.toggle[type=checkbox]',
                                     { checked: todo.completed,
@@ -296,17 +296,17 @@ const TodoFilters = defineFunctionalComponent({
                     ' item(s) left'),
                 h('div.filters',
                     h('a',
-                        { className: filter === 'all' ? 'selected' : null,
+                        { class: filter === 'all' ? 'selected' : null,
                             onClick: () => ctrl.setFilter('all') 
                         },
                         'All'),
                     h('a',
-                        { className: filter === 'active' ? 'selected' : null,
+                        { class: filter === 'active' ? 'selected' : null,
                             onClick: () => ctrl.setFilter('active') 
                         },
                         'Active'),
                     h('a',
-                        { className: filter === 'completed' ? 'selected' : null,
+                        { class: filter === 'completed' ? 'selected' : null,
                             onClick: () => ctrl.setFilter('completed') 
                         },
                         'Completed')),

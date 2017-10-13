@@ -22,7 +22,7 @@ export const Pagination = defineFunctionalComponent({
     displayName:  'Pagination',
 
     properties: {
-        className: {
+        class: {
             type: String,
             defaultValue: null
         },
@@ -140,9 +140,9 @@ export const Pagination = defineFunctionalComponent({
 
         return (
             h('div',
-                {className: classNameOuter},
+                {class: classNameOuter},
                 h('ul',
-                    {className: classNameInner},
+                    {class: classNameInner},
                     firstPageLink,
                     precedingEllipsis,
                     buttons.toArray(),
@@ -157,7 +157,7 @@ function buildLinkListItem(text, isActive, moveToPage) {
     return (
         h('li.page-item',
             {
-                className: isActive ? 'active' : '',
+                class: isActive ? 'active' : '',
                 key: text !== '...' ? text + '-' + isActive : undefined
             },
             h('a.page-link',
@@ -180,7 +180,7 @@ const DemoOfPagination = defineClassComponent({
     render() {
         return (
             h('div',
-                {className: 'container-fluid'},
+                {class: 'container-fluid'},
                 Seq.range(1, number).map(() =>
                     h('div',
                         Pagination({
@@ -255,9 +255,9 @@ class RPaginationClass extends React.Component {
 
         return (
             React.createElement('div',
-                {className: classNameOuter},
+                {class: classNameOuter},
                 React.createElement('ul',
-                    {className: classNameInner},
+                    {class: classNameInner},
                     firstPageLink,
                     precedingEllipsis,
                     buttons,
@@ -277,9 +277,9 @@ function buildLinkListItem2(text, isActive, props, pageIndexToMove = null) {
 
     return (
         React.createElement('li',
-            { className: 'page-item ' + (isActive ? 'active' : ''), key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
+            { class: 'page-item ' + (isActive ? 'active' : ''), key: (pageIndexToMove === null ? undefined : pageIndexToMove + text + isActive)},
             React.createElement('a',
-                { className: 'page-link', onClick: onClick },
+                { class: 'page-link', onClick: onClick },
                 text))
     );
 }
@@ -294,10 +294,10 @@ class RDemoOfPaginationClass extends React.Component {
     render() {
         return (
             React.createElement('div',
-                    {className: 'container-fluid'},
+                    {class: 'container-fluid'},
                     ...Seq.range(1, number).map(() =>
                         React.createElement('div',
-                            {className: 'row'},
+                            {class: 'row'},
                             RPagination({
                                 pageIndex: this.state.currPageIdx,
                                 pageSize: pageSize,
