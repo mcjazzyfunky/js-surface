@@ -43,22 +43,25 @@ function reactLiteRender(content, targetNode) {
         : targetNode;
 
     if (target) {
+        target.innerHTML = '<span></span>';
+        
+        const container = target.firstChild;
+
         var cleanedUp = false;
         
-        const cleanUp = () => {
-            if (!cleanedUp) {
+        const cleanUp = event => {
+            if (!cleanedUp && (!event || event.target === container)) {
                 cleanedUp = true;
-                ReactLite.unmountComponentAtNode(target.firstChild.firstChild);
+                container.removeEventListener('DOMNodeRemovedFromDocument', cleanUp);  
+                ReactLite.unmountComponentAtNode(container);
+                container.innerHTML = '';
             }
         };
 
-        target.innerHTML = '<span></span>';
-        
-        // TODO!!!
-        //target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
-        ReactLite.render(content, target.firstChild);
+        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
+        ReactLite.render(content, container);
 
-        return { dispose: cleanUp };
+        return { dispose: () => cleanUp() };
     }
 }
 

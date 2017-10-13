@@ -97,20 +97,24 @@ function customRender(content, targetNode) {
         : targetNode;
 
     if (target) {
+        target.innerHTML = '<span></span>';
+
+        const container = target.firstChild;
+
         var cleanedUp = false;
         
-        const cleanUp = () => {
-            if (!cleanedUp) {
+        const cleanUp = event => {
+            if (!cleanedUp && (!event || event.target === container)) {
                 cleanedUp = true;
-                Inferno.render(null, target.firstChild);
+                container.removeEventListener('DOMNodeRemoved', cleanUp);
+                Inferno.render(null, container);
+                container.innerHTML = '';
             }
         };
 
-        target.innerHTML = '<span></span>';
-        // TODO!!!
-        //target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
-        Inferno.render(content, target.firstChild);
+        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp, false);  
+        Inferno.render(content, container);
 
-        return { dispose: cleanUp };
+        return { dispose: () => cleanUp() };
     }
 }

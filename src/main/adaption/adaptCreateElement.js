@@ -105,7 +105,6 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
         ACTION_APPLY_CREATE_ELEMENT = 1,
         ACTION_CREATE_HYPERSCRIPT_ELEMENT = 2;
 
-
     return function (/* tag, ...rest */) {
         const tag = arguments[0];
 

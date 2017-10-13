@@ -15,20 +15,25 @@ function reactRender(content, targetNode) {
             : target;
 
     if (target) {
+        target.innerHTML = '<span></span>';
+        
+        const container = target.firstChild;
+        
         let cleanedUp = false;
 
-        const cleanUp = () => {
-            if (!cleanedUp) {
+        const cleanUp = event => {
+            if (!cleanedUp && (!event || event.target === container)) {
                 cleanedUp = true;
-                ReactDOM.unmountComponentAtNode(target.firstChild);
+                container.removeEventListener('DOMNodeRemoved', cleanUp);
+                ReactDOM.unmountComponentAtNode(container);
+                container.innerHTML = '';
             }
         };
 
-        target.innerHTML = '<span></span>';
-        target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);        
-        ReactDOM.render(content, target.firstChild);
+        container.addEventListener('DOMNodeRemoved', cleanUp, false);        
+        ReactDOM.render(content, container);
 
-        return { dispose: cleanUp };
+        return { dispose: () => cleanUp() };
     }
 }
 

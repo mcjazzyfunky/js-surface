@@ -243,15 +243,37 @@ function customRender(content, targetNode) {
         : targetNode;
 
     if (target) {
-        target.innerHTML = '';
-        target.appendChild(document.createElement('div'));
+        target.innerHTML = '<span><span></span></span>';
+      
+        const container = target.firstChild;
 
-        new Vue({
-            el: target.children[0],
+        let cleanedUp = false, vueComponent = null;
+
+        const cleanUp = event => {
+            if (!cleanedUp && (!event || event.target === container)) {
+                cleanedUp = true;
+                container.removeEventListener('DOMNodeRemoved', cleanUp, false);
+                vueComponent.destroy();
+                container.innerHTML = '';
+            }
+        };
+
+        vueComponent = new Vue({
+            el: container,
             render(vueCreateElement) {
                 return renderContent(vueCreateElement, content, this);
-            }
+            },
+            methods: {
+                destroy() {
+                    this.$destroy();
+                }
+            },
+            options: {}
         });
+
+        container.addEventListener('DOMNodeRemoved', cleanUp, false);  
+
+        return { dispose: () => cleanUp() };
     }
 }
 

@@ -54,20 +54,25 @@ function preactRender(content, targetNode) {
         : targetNode;
 
     if (target) {
+        target.innerHTML = '<span></span>';
+
+        const container = target.firstChild;
+
         var cleanedUp = false;
         
-        const cleanUp = () => {
-            if (!cleanedUp) {
+        const cleanUp = event => {
+            if (!cleanedUp && (!event || event.target === container)) {
                 cleanedUp = true;
-                Preact.render('', target.firstChild);
+                container.removeEventListener('DOMNodeRemovedFromDocument', cleanUp);  
+                Preact.render('', container);
+                container.innerHTML = '';
             }
         };
 
-        target.innerHTML = '<span></span>';
-        target.firstChild.addEventListener('DOMNodeRemoved', cleanUp);  
-        Preact.render(content, target.firstChild);
+        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
+        Preact.render(content, container);
 
-        return { dispose: cleanUp };
+        return { dispose: () => cleanUp() };
     }
 }
 
