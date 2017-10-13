@@ -31,7 +31,6 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
 
             return factory;
         };
-        
 
     const newConfig = {
         renderEngine: {
@@ -93,7 +92,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                 return reactLikeConfig.createElement(type, adjustProps(props), ...children);
             },
 
-            isElement(it)  {
+            isElement(it) { 
                 return it !== undefined
                     && it !== null
                     && reactLikeConfig.isValidElement(it);
@@ -101,6 +100,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
 
             mount: reactLikeConfig.mount
         },
+
         options: {
             isBrowserBased: reactLikeConfig.isBrowserBased !== false,
         }

@@ -10,6 +10,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-lite',
@@ -29,40 +30,14 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };
 
 function reactLiteMount(content, targetNode) {
-    if (!isElement(content)) {
-        throw new TypeError(
-            "[mount] First argument 'content' has to be a valid element");
-    }
-
-    const target = typeof targetNode === 'string'
-        ? document.getElementById(targetNode)
-        : targetNode;
-
-    if (target) {
-        target.innerHTML = '<span></span>';
-        
-        const container = target.firstChild;
-
-        var cleanedUp = false;
-        
-        const cleanUp = event => {
-            if (!cleanedUp && (!event || event.target === container)) {
-                cleanedUp = true;
-                container.removeEventListener('DOMNodeRemovedFromDocument', cleanUp);  
-                ReactLite.unmountComponentAtNode(container);
-                container.innerHTML = '';
-            }
-        };
-
-        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
-        ReactLite.render(content, container);
-
-        return { unmount: () => cleanUp() };
-    }
+    ReactLite.render(content, targetNode);
+    
+    return () => ReactLite.unmountComponentAtNode(targetNode);
 }
 
 function reactLiteCreateElement(tag, props, ...children)  {

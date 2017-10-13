@@ -12,6 +12,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'preact',
@@ -31,6 +32,7 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };
 
@@ -44,36 +46,9 @@ function preactIsValidElement(it) {
 }
 
 function preactMount(content, targetNode) {
-    if (!isElement(content)) {
-        throw new TypeError(
-            "[mount] First argument 'content' has to be a valid element");
-    }
+    Preact.render(content, targetNode);
 
-    const target = typeof targetNode === 'string'
-        ? document.getElementById(targetNode)
-        : targetNode;
-
-    if (target) {
-        target.innerHTML = '<span></span>';
-
-        const container = target.firstChild;
-
-        var cleanedUp = false;
-        
-        const cleanUp = event => {
-            if (!cleanedUp && (!event || event.target === container)) {
-                cleanedUp = true;
-                container.removeEventListener('DOMNodeRemovedFromDocument', cleanUp);  
-                Preact.render('', container);
-                container.innerHTML = '';
-            }
-        };
-
-        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp);  
-        Preact.render(content, container);
-
-        return { unmount: () => cleanUp() };
-    }
+    return () => Preact.render('', targetNode);
 }
 
 function preactCreateElement(tag, props, ...children)  {

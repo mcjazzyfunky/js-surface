@@ -1,5 +1,6 @@
 import adaptCreateElement from './adaptCreateElement';
 import adaptIsRenderable from './adaptIsRenderable';
+import adaptMount from '../adaption/adaptMount';
 import convertClassComponentConfig from '../conversion/convertClassComponentConfig';
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
@@ -51,7 +52,7 @@ export default function adaptRenderEngine(config) {
         defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
-        mount: config.interface.mount
+        mount: adaptMount(config.interface.mount, config.interface.isElement)
     };
 }
 

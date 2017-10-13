@@ -11,6 +11,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptRenderEngine({
     renderEngine: {
@@ -34,6 +35,7 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };
 
@@ -250,48 +252,21 @@ function customIsElement(it) {
 }
 
 function customMount(content, targetNode) {
-    if (!isElement(content)) {
-        throw new TypeError(
-            "[render] First argument 'content' has to be a valid element");
-    }
+    const vueComponent = new Vue({
+        el: targetNode,
 
-    const target = typeof targetNode === 'string'
-        ? document.getElementById(targetNode)
-        : targetNode;
+        render(vueCreateElement) {
+            return renderContent(vueCreateElement, content, this);
+        },
 
-    if (target) {
-        target.innerHTML = '<span><span></span></span>';
-      
-        const container = target.firstChild;
-
-        let cleanedUp = false, vueComponent = null;
-
-        const cleanUp = event => {
-            if (!cleanedUp && (!event || event.target === container)) {
-                cleanedUp = true;
-                container.removeEventListener('DOMNodeRemoved', cleanUp, false);
-                vueComponent.destroy();
-                container.innerHTML = '';
+        methods: {
+            destroy() {
+                this.$destroy();
             }
-        };
+        }
+    });
 
-        vueComponent = new Vue({
-            el: container,
-            render(vueCreateElement) {
-                return renderContent(vueCreateElement, content, this);
-            },
-            methods: {
-                destroy() {
-                    this.$destroy();
-                }
-            },
-            options: {}
-        });
-
-        container.addEventListener('DOMNodeRemoved', cleanUp, false);  
-
-        return { unmount: () => cleanUp() };
-    }
+    return () => vueComponent.destroy();
 }
 
 function renderContent(vueCreateElement, content, component) {

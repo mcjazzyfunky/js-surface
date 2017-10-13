@@ -4,37 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 function reactMount(content, targetNode) {
-    if (!isElement(content)) {
-        throw new TypeError(
-            "[mount] First argument 'content' has to be a valid element");
-    }
+    ReactDOM.render(content, targetNode);
 
-    const target =
-        typeof targetNode === 'string'
-            ? document.getElementById(targetNode)
-            : target;
-
-    if (target) {
-        target.innerHTML = '<span></span>';
-        
-        const container = target.firstChild;
-        
-        let cleanedUp = false;
-
-        const cleanUp = event => {
-            if (!cleanedUp && (!event || event.target === container)) {
-                cleanedUp = true;
-                container.removeEventListener('DOMNodeRemoved', cleanUp);
-                ReactDOM.unmountComponentAtNode(container);
-                container.innerHTML = '';
-            }
-        };
-
-        container.addEventListener('DOMNodeRemoved', cleanUp, false);        
-        ReactDOM.render(content, container);
-
-        return { unmount: () => cleanUp() };
-    }
+    return () => ReactDOM.unmountComponentAtNode(targetNode);
 }
 
 const {
@@ -45,6 +17,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-dom',
@@ -64,5 +37,6 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };

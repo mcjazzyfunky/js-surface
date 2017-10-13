@@ -11,6 +11,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-native',
@@ -31,6 +32,7 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };
 

@@ -24,6 +24,7 @@ const {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'inferno',
@@ -43,6 +44,7 @@ export {
     isElement,
     isRenderable,
     mount,
+    unmount,
     RenderEngine
 };
 
@@ -87,34 +89,7 @@ function customIsValidElement(it) {
 }
 
 function customMount(content, targetNode) {
-    if (!isElement(content)) {
-        throw new TypeError(
-            "[mount] First argument 'content' has to be a valid element");
-    }
+    Inferno.render(Inferno.render(content, targetNode));
 
-    const target = typeof targetNode === 'string'
-        ? document.getElementById(targetNode)
-        : targetNode;
-
-    if (target) {
-        target.innerHTML = '<span></span>';
-
-        const container = target.firstChild;
-
-        var cleanedUp = false;
-        
-        const cleanUp = event => {
-            if (!cleanedUp && (!event || event.target === container)) {
-                cleanedUp = true;
-                container.removeEventListener('DOMNodeRemoved', cleanUp);
-                Inferno.render(null, container);
-                container.innerHTML = '';
-            }
-        };
-
-        container.addEventListener('DOMNodeRemovedFromDocument', cleanUp, false);  
-        Inferno.render(content, container);
-
-        return { unmount: () => cleanUp() };
-    }
+    return () => Inferno.render(null, targetNode);
 }
