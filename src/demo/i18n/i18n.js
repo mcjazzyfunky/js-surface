@@ -19,52 +19,31 @@ const translations = {
     }
 };
 
-class Translator {
-    constructor(translations) {
-        this.__translations = translations;
-        this.__lang = 'en';
-    }
-
-    setLang(lang) {
-        this.__lang = lang;
-    }
-
-    getLang() {
-        return this.__lang;
-    }
-
-    translate(key) {
-        return this.__translations[this.__lang][key];
-    }
-}
-
 const App = defineClassComponent({
     displayName: 'App',
 
     properties: {
-        defaultLang: {
+        defaultLocale: {
             type: String,
             constraint: Spec.oneOf('en', 'fr', 'de'),
             defaultValue: 'en'
         }
     },
 
-    constructor() {
-        this.__translator = new Translator(translations);
-        this.__translator.setLang(this.props.defaultLang);
+    childInjections: ['locale'],
+
+    constructor(props) {
+        this.setLocale(props.defaultLocale);
     },
-    
-    childInjections: ['translator'],
 
     provideChildInjections() {
         return {
-            translator: this.__translator
+            locale: this.state.locale
         };
     },
 
-    setLang(lang) {
-        this.__translator.setLang(lang);
-        this.forceUpdate();
+    setLocale(locale) {
+        this.state = { locale };
     },
 
     render() {
@@ -73,8 +52,8 @@ const App = defineClassComponent({
                 h('label[for=lang-selector]',
                     'Select language: '),
                 h('select#lang-selector',
-                    {   value: this.__translator.getLang(),
-                        onChange: ev => this.setLang(ev.target.value)
+                    {   value: this.props.locale,
+                        onChange: ev => this.setLocale(ev.target.value)
                     },
                     h('option[value=en]', 'en'),
                     h('option[value=fr]', 'fr'),
@@ -92,16 +71,17 @@ const Text = defineFunctionalComponent({
             type: String,
         },
 
-        translator: {
-            type: Translator,
-            inject: true
+        locale: {
+            type: String, 
+            inject: true,
+            defaultValue: 'en'
         }
     },
 
     render(props) {
         return (
             h('div',
-                props.translator.translate(props.name))
+                translations[props.locale].salutation)
         );
     }
 });

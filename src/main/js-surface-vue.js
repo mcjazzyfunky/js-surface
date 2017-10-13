@@ -101,6 +101,12 @@ function customDefineStandardComponent(config) {
             return ret;
         },
 
+        data() {
+            return {
+                __childInjections: null
+            };
+        },
+
         created() {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
@@ -121,17 +127,28 @@ function customDefineStandardComponent(config) {
                 });
             };
 
+
             this.__updateState = state => {
                 this.__state = state;
+
+                if (this.__provideChildInjections) {
+                    this.__childInjections = this.__provideChildInjections();
+                }
             };
 
             const initResult = config.init(
                  this.__updateView, this.__updateState, this);
 
-            this.__receiveProps = initResult.receiveProps;
-            this.__forceUpdate = initResult.forceUpdate;
+            this.__receiveProps = props => {
+                if (config.childInjection) {
+                    this.__childInjections = this.__provideChildInjections();
+                }
+
+                initResult.receiveProps(props);
+            };
+
             this.__applyPublicMethod = initResult.applyPublicMethod;
-//            this.__provideChildInjections = initResult.provideChildInjections;
+            this.__provideChildInjections = initResult.provideChildInjections;
 
             if (initResult.provideChildInjections) {
                 this.__updateChildInjections = function () {
@@ -171,7 +188,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeUpdate() {
-            handleRefCleanupCallbacks(this);            
+            handleRefCleanupCallbacks(this);
 
             if (!this.__preventForceUpdate) {
                 if (this.__updateChildInjections) {
