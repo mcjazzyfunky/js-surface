@@ -1,5 +1,5 @@
 
-import { createElement as h, RenderEngine } from 'js-surface';
+import { createElement as h, ComponentSystem } from 'js-surface';
 
 const
     iterationCount = 200000,
@@ -8,13 +8,13 @@ const
 
 let createElement;
 
-switch (RenderEngine.name) {
-case 'react-dom':
-    createElement = RenderEngine.api.React.createElement;
+switch (ComponentSystem.adapter.name) {
+case 'react':
+    createElement = ComponentSystem.adapter.api.React.createElement;
     break;
 
 case 'inferno':
-    createElement = RenderEngine.api.Inferno.createElement;
+    createElement = ComponentSystem.adapter.api.Inferno.createElement;
     break;
 
 case 'vue':
@@ -30,7 +30,7 @@ let report = '';
 
 
 tests.push({
-    displayName: `Using '${RenderEngine.name}'`,
+    displayName: `Using '${ComponentSystem.adapter.name}'`,
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {

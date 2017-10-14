@@ -5,6 +5,7 @@ import convertClassComponentConfig from '../conversion/convertClassComponentConf
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
+import { Adapter, ComponentSystem } from '../system/system';
 
 import validateConfigForStandardComponent from '../validation/validateStandardComponentConfig';
 import validateInitResult from '../validation/validateInitResult';
@@ -15,6 +16,10 @@ import shapeOfAdaptRenderEngineConfig
     from './../shape/shapeOfAdaptRenderEngineConfig';
 
 export default function adaptRenderEngine(config) {
+    if (Adapter.name !== null) {
+        throw new Error('[adaptRenderEngine] Function may only be called once');
+    }
+
     const err =
         Spec.shape(shapeOfAdaptRenderEngineConfig)
             .validate(config, '');
@@ -25,16 +30,14 @@ export default function adaptRenderEngine(config) {
             + "function 'adaptRenderEngine':"
             + err);
     }
+
+    Adapter.name = config.renderEngine.name;
+    Adapter.api = config.renderEngine.api;
     
     const
-        RenderEngine = {
-            name: config.renderEngine.name,
-            api: config.renderEngine.api
-        },
-
         createElement = config.options && config.options.isBrowserBased === false
             ? config.interface.createElement
-            : adaptCreateElement(config.interface.createElement, config.interface.isElement, RenderEngine),
+            : adaptCreateElement(config.interface.createElement, config.interface.isElement, Adapter),
 
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
@@ -42,17 +45,15 @@ export default function adaptRenderEngine(config) {
         defineClassComponent = config => defineStandardComponent(
             convertClassComponentConfig(config)); 
 
-    Object.freeze(RenderEngine);
-
     return {
-        RenderEngine: RenderEngine,
         createElement,
         defineFunctionalComponent,
         defineStandardComponent,
         defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
-        mount: adaptMount(config.interface.mount, config.interface.isElement)
+        mount: adaptMount(config.interface.mount, config.interface.isElement),
+        ComponentSystem
     };
 }
 

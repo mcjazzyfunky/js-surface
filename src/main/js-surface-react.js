@@ -18,7 +18,7 @@ const {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react',
     renderEngineAPI: { React, ReactDOM },
@@ -38,5 +38,5 @@ export {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 };

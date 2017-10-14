@@ -13,7 +13,7 @@ const {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'preact',
     renderEngineAPI: Preact,
@@ -33,7 +33,7 @@ export {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 };
 
 function preactCreateFactory(type) {

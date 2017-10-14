@@ -1,6 +1,6 @@
-import { RenderEngine } from 'js-surface';
+import { ComponentSystem } from 'js-surface';
 
-if (RenderEngine.name !== 'vue') {
+if (ComponentSystem.adapter.name !== 'vue') {
     document.getElementById('main-content').innerHTML =
         'This demo only works with Vue.<br/>'
         + 'To start the demo, please switch the adapter to "vue".';

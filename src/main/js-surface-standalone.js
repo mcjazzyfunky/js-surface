@@ -7,7 +7,7 @@ import {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 } from './js-surface-preact';
 
 export {
@@ -19,5 +19,5 @@ export {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem 
 };

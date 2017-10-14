@@ -3,7 +3,7 @@ import {
     defineFunctionalComponent,
     createElement as h,
     mount,
-    RenderEngine
+    ComponentSystem 
 }  from 'js-surface';
 
 import { Spec } from 'js-spec';
@@ -234,13 +234,13 @@ const SpeedTest = defineClassComponent({
 
 let htm = null;
 
-switch (RenderEngine.name) {
+switch (ComponentSystem.adapter.name) {
 case 'inferno':
-    htm = RenderEngine.api.Inferno.createElement;
+    htm = ComponentSystem.adapter.api.Inferno.createElement;
     break;
 
 case 'react-dom':
-    htm = RenderEngine.api.React.createElement;
+    htm = ComponentSystem.adapter.api.React.createElement;
     break;
 }
 
@@ -471,8 +471,8 @@ mainContent.innerHTML = `
         <option value="">Please select...</option>
         <option value="surface-functional">Speed test (js-surface functional)</option>
         <option value="surface-standard">Speed test (js-surface standard)</option>
-        <option value="original-functional">Speed test (${RenderEngine.name} functional)</option>
-        <option value="original-standard">Speed test (${RenderEngine.name} standard)</option>
+        <option value="original-functional">Speed test (${ComponentSystem.adapter.name} functional)</option>
+        <option value="original-standard">Speed test (${ComponentSystem.adapter.name} standard)</option>
     </select>
 
     <br/>

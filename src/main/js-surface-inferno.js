@@ -25,7 +25,7 @@ const {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'inferno',
     renderEngineAPI:  { Inferno },
@@ -45,7 +45,7 @@ export {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem 
 };
 
 // ------------------------------------------------------------------

@@ -12,7 +12,7 @@ const {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem 
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-native',
     renderEngineAPI: { React, ReactNative },
@@ -33,7 +33,7 @@ export {
     isRenderable,
     mount,
     unmount,
-    RenderEngine
+    ComponentSystem 
 };
 
 

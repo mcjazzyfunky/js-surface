@@ -95,12 +95,15 @@ const
     hyperscriptCache = {},
     simpleTagMark = {};
 
-export default function adaptCreateElement(createElement, isElement, RenderEngine) {
+export default function adaptCreateElement(createElement, isElement, Adapter) {
     const
-        isKnownRenderEngine = true,
-        isReact = isKnownRenderEngine && RenderEngine.name === 'react',
-        isInferno = isKnownRenderEngine && RenderEngine.name === 'inferno',
-        isReactLite = isKnownRenderEngine && RenderEngine.name === 'react-lite',
+        // 'Preact' and 'React Native' are not relevant here
+        isReact = Adapter.name === 'react',
+        isReactLite = Adapter.name === 'react-lite',
+        isInferno = Adapter.name === 'inferno',
+        isVue = Adapter.name === 'vue', // TODO
+        isSpecialRenderEngine = isReact || isReactLite || isInferno || isVue,
+
         ACTION_APPLY_CREATE_ELEMENT = 1,
         ACTION_CREATE_HYPERSCRIPT_ELEMENT = 2;
 
@@ -156,7 +159,7 @@ export default function adaptCreateElement(createElement, isElement, RenderEngin
                 || secondArg[Symbol.iterator]) {
                 
                 secondArgIsAttrs = false;
-            } else if (!isKnownRenderEngine) {
+            } else if (!isSpecialRenderEngine) {
                 secondArgIsAttrs = !isElement(secondArg);
             } else {
                 // Preact elements are instances of VNode,
