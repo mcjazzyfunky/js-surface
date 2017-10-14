@@ -28,6 +28,9 @@ default:
 contentContainer.innerHTML = 'Please wait - performance stests are running ...';
 let report = '';
 
+ComponentSystem.config.validateProps = false;
+ComponentSystem.config.validateDefs = false;
+
 
 tests.push({
     displayName: `Using '${ComponentSystem.adapter.name}'`,

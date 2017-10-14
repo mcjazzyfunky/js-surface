@@ -60,7 +60,7 @@ export default function adaptRenderEngine(config) {
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
     const ret = cfg => {
-        if (Config.validateDefinitions) {
+        if (Config.validateDefs) {
             const err = validateFunctionalComponentConfig(cfg);
 
             if (err) {
@@ -75,7 +75,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
             adjustedConfig = {
                 displayName:  config.displayName,
                 properties: config.properties,
-                render: props => config.render(propsAdjuster(props, Config.validateProperties))
+                render: props => config.render(propsAdjuster(props, Config.validateProps))
             };
 
         const factory = defineFunctionalComponent(adjustedConfig);
@@ -90,7 +90,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
     const ret = cfg => {
-        if (Config.validateDefinitions) {
+        if (Config.validateDefs) {
             const err = validateStandardComponentConfig(cfg);
 
             if (err) {
@@ -116,7 +116,7 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                         receiveProps(props) {
                             const props2 = props === undefined
                                 ? undefined
-                                : propsAdjuster(props, Config.validateProperties);
+                                : propsAdjuster(props, Config.validateProps);
 
 
                             result.receiveProps(props2);

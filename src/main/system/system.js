@@ -5,8 +5,8 @@ const
     },
 
     Config = {
-        validateProperties: true,
-        validateDefinitions: true,
+        validateProps: true,
+        validateDefs: true,
         verbosity: 'off'
     },
 
@@ -22,29 +22,29 @@ const
         }),
 
         config: Object.freeze({
-            get validateProperties() {
-                return Config.validateProperties;
+            get validateProps() {
+                return Config.validateProps;
             },
             
-            set validatePropertie(value) {
+            set validateProps(value) {
                 if (typeof value !== 'boolean') {
-                    throw new Error("Configuration parameter 'validateProperties' must be boolean");
+                    throw new Error("Configuration parameter 'validateProps' must be boolean");
                 }
 
-                Config.validateProperties = value;
+                Config.validateProps = value;
             },
 
-            get validateDefinitions() {
-                return Config.validateDefinitions;
+            get validateDefs() {
+                return Config.validateDefs;
             },
 
 
-            set validateDefinitions(value) {
+            set validateDefs(value) {
                 if (typeof value !== 'boolean') {
-                    throw new Error("Configuration parameter 'validateDefinitions' must be boolean");
+                    throw new Error("Configuration parameter 'validateDefs' must be boolean");
                 }
 
-                Config.validateDefinitions = value;
+                Config.validateDefs = value;
             },
 
             get verbosity() {
