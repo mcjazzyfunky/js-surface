@@ -47,7 +47,7 @@ export default function createPropsAdjuster(config) {
             }
         }
 
-        ret = props => {
+        ret = (props, validating) => {
             let adjustedProps = props;
             
             if (hasDefaults) {
@@ -59,19 +59,21 @@ export default function createPropsAdjuster(config) {
                     }
                 }
             }
-            
-            const err = validateProps(adjustedProps, validations);
 
-            if (err) { console.log("-----------\nprops:\n", props, "\n----------------\nadjustedProps:\n", adjustedProps, "\n---------------\ndefaults:\n", defaults, "\n-----------------\n")
-                const errMsg = 'Error while validating props for ' 
-                    +  `'${componentName}': ${err.message}`;
+            if (validating) {
+                const err = validateProps(adjustedProps, validations);
 
-                warn(errMsg);
+                if (err) {
+                    const errMsg = 'Error while validating props for ' 
+                        +  `'${componentName}': ${err.message}`;
 
-                warn(`Negatively validated props for '${componentName}':`,
-                    props);
+                    warn(errMsg);
 
-                throw new Error(errMsg);
+                    warn(`Negatively validated props for '${componentName}':`,
+                        props);
+
+                    throw new Error(errMsg);
+                }
             }
 
             return adjustedProps;

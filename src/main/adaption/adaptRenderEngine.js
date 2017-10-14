@@ -5,9 +5,10 @@ import convertClassComponentConfig from '../conversion/convertClassComponentConf
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
-import { Adapter, ComponentSystem } from '../system/system';
+import { Adapter, Config, ComponentSystem } from '../system/system';
 
-import validateConfigForStandardComponent from '../validation/validateStandardComponentConfig';
+import validateStandardComponentConfig from '../validation/validateStandardComponentConfig';
+import validateFunctionalComponentConfig from '../validation/validateFunctionalComponentConfig';
 import validateInitResult from '../validation/validateInitResult';
 
 import { Spec } from 'js-spec';
@@ -59,6 +60,14 @@ export default function adaptRenderEngine(config) {
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
     const ret = cfg => {
+        if (Config.validateDefinitions) {
+            const err = validateFunctionalComponentConfig(cfg);
+
+            if (err) {
+                throw err;
+            }
+        }
+
         const
             config = normalizeComponentConfig(cfg),
             propsAdjuster = createPropsAdjuster(config),
@@ -66,7 +75,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
             adjustedConfig = {
                 displayName:  config.displayName,
                 properties: config.properties,
-                render: props => config.render(propsAdjuster(props))
+                render: props => config.render(propsAdjuster(props, Config.validateProperties))
             };
 
         const factory = defineFunctionalComponent(adjustedConfig);
@@ -81,10 +90,12 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
     const ret = cfg => {
-        const err = validateConfigForStandardComponent(cfg);
+        if (Config.validateDefinitions) {
+            const err = validateStandardComponentConfig(cfg);
 
-        if (err) {
-            throw err;
+            if (err) {
+                throw err;
+            }
         }
 
         const
@@ -105,7 +116,7 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                         receiveProps(props) {
                             const props2 = props === undefined
                                 ? undefined
-                                : propsAdjuster(props);
+                                : propsAdjuster(props, Config.validateProperties);
 
 
                             result.receiveProps(props2);

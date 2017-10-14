@@ -52,10 +52,12 @@ const
             },
 
             set verbositiy(value) {
-                if (value !== 'off' && value !== 'low' && value !== 'heigh') {
+                if (value !== 'off' && value !== 'low'
+                    && value !== 'medium' && value !== 'heigh') {
+                
                     throw new Error(
                         "Configuration parameter 'verbosity' must be "
-                        + "'off', 'low' or 'high'");
+                        + "'off', 'low'. 'medium' or 'high'");
                 }
 
                 Config.verbosity = value;

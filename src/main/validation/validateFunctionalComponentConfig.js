@@ -7,7 +7,7 @@ import shapeOfFunctionalComponentConfig
     from '../shape/shapeOfFunctionalComponentConfig';
 
 
-export default function validateFunctionalComponentConfig(config) {
+export default function validateFunctionalComponentConfig(config) {console.log(config)
     const error =
         Spec.shape(shapeOfFunctionalComponentConfig)
             .validate(config, '');
