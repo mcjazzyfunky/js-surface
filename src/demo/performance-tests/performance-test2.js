@@ -237,14 +237,23 @@ const SpeedTest = defineClassComponent({
 let htm = null;
 
 switch (ComponentSystem.adapter.name) {
+case 'react':
+    htm = ComponentSystem.adapter.api.React.createElement;
+    break;
+
+case 'react-lite':
+    htm = ComponentSystem.adapter.api.createElement;
+    break;
+
+case 'preact':
+    htm = ComponentSystem.adapter.api.h;
+    break;
+
 case 'inferno':
     htm = ComponentSystem.adapter.api.Inferno.createElement;
     break;
-
-case 'react-dom':
-    htm = ComponentSystem.adapter.api.React.createElement;
-    break;
 }
+
 
 
 function TileFunctionalDirect(props) {
