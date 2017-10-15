@@ -49,7 +49,7 @@ if (adapterName !== 'vue') {
 }
 
 tests.push({
-    displayName: 'Using js-surface without hyperscript',
+    displayName: 'Using js-surface with createElement',
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
@@ -66,10 +66,9 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-        //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
-            hyperscript('div#my-id.my-class',
-                null,
-                hyperscript('div#my-id2.my-class2', null,  'my-div'));    
+            hyperscript('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+//            hyperscript('div#my-id.my-class',
+//                hyperscript('div#my-id2.my-class2',  'my-div'));    
         }
     }
 });

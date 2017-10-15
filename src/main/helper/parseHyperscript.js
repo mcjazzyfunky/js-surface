@@ -23,7 +23,7 @@ export function parseHyperscript(hyperscript) {
 
         let meta = {
             tag: 'div', // div is default if no tag is given
-            attrs: null
+            attrs: null,
         };
 
         ret.push(meta);
@@ -40,6 +40,7 @@ export function parseHyperscript(hyperscript) {
 
                 meta.attrs = meta.attrs || {};
                 meta.attrs.id = it.substr(1);
+                
                 break;
             }
             case '.': {
@@ -98,6 +99,10 @@ export function parseHyperscript(hyperscript) {
             if (ret === null) {
                 break;
             }
+        }
+
+        if (meta && meta.attrs) {
+            meta.entries = Object.entries(meta.attrs);
         }
 
         if (ret === null) {

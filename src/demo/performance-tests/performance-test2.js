@@ -8,6 +8,8 @@ import {
 
 import { Spec } from 'js-spec';
 
+ComponentSystem.config.validateProps = false;
+
 const
     framesPerSecond = 240,
     colors = ['red', 'yellow', 'orange'],
