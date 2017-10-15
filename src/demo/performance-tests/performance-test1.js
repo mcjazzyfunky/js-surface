@@ -4,25 +4,27 @@ import { createElement as h, hyperscript, ComponentSystem } from 'js-surface';
 const
     iterationCount = 200000,
     contentContainer = document.getElementById('main-content'),
+    adapterName = ComponentSystem.adapter.name,
     tests = [];
 
-let createElement;
+let createElement = null;
 
-switch (ComponentSystem.adapter.name) {
+switch (adapterName) {
 case 'react':
     createElement = ComponentSystem.adapter.api.React.createElement;
+    break;
+
+case 'react-lite':
+    createElement = ComponentSystem.adapter.api.createElement;
+    break;
+
+case 'preact':
+    createElement = ComponentSystem.adapter.api.h;
     break;
 
 case 'inferno':
     createElement = ComponentSystem.adapter.api.Inferno.createElement;
     break;
-
-case 'vue':
-    createElement = h;
-    break;
-
-default:
-    throw Error('Not implemented yet');
 }
 
 contentContainer.innerHTML = 'Please wait - performance stests are running ...';
@@ -32,17 +34,19 @@ ComponentSystem.config.validateProps = false;
 ComponentSystem.config.validateDefs = false;
 
 
-tests.push({
-    displayName: `Using '${ComponentSystem.adapter.name}'`,
+if (adapterName !== 'vue') {
+    tests.push({
+        displayName: `Using '${ComponentSystem.adapter.name}'`,
 
-    run() {
-        for (let i = 0; i < iterationCount; ++i) {
-            createElement('div',
-                { class: 'my-class', id: 'my-id' },
-                createElement('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
+        run() {
+            for (let i = 0; i < iterationCount; ++i) {
+                createElement('div',
+                    { class: 'my-class', id: 'my-id' },
+                    createElement('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
+            }
         }
-    }
-});
+    });
+}
 
 tests.push({
     displayName: 'Using js-surface without hyperscript',
