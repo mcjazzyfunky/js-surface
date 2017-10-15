@@ -80,6 +80,7 @@ export default function adaptHyperscript(createElement, isElement) {
                     className = attrs.class,
                     hasProps = isAttrs(args[1]);
 
+                // This is faster then Object.assign
                 for (let i = 0; i < entries.length; ++i) {
                     const entry = entries[i];
                     attrs2[entry[0]] = entry[1];
@@ -91,15 +92,20 @@ export default function adaptHyperscript(createElement, isElement) {
                     if (className !== attrs2.class) {
                         attrs2.class = `${className} ${attrs2.class}`;
                     }
+
+                    // Modifying args array is ugly but runs faster than other solutions
+                    args[0] = tag;
+                    args[1] = attrs2;
+                    currElem = createElement(...args);
+                } else {
+                    const args2 = [tag, attrs2];
+
+                    for (let i = 1; i < args.length; ++i) {
+                        args2.push(args[i]);                    
+                    }
+
+                    currElem = createElement(...args2);
                 }
-
-                const args2 = [tag, attrs2];
-
-                for (let i = (hasProps ? 2 : 1); i < args.length; ++i) {
-                    args2.push(args[i]);                    
-                }
-
-                currElem = createElement(...args2);
             }
         } 
 
