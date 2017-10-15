@@ -77,7 +77,7 @@ export default function adaptHyperscript(createElement, isElement) {
                 const
                    // attrs2 = attrs ? Object.assign({}, attrs) : {},
                     attrs2 = {},
-                    className = attrs.class,
+                    className = attrs && attrs.class ? attrs.class : null,
                     hasProps = isAttrs(args[1]);
 
                 // This is faster then Object.assign

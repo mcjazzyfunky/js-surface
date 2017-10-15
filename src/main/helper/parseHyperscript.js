@@ -101,8 +101,11 @@ export function parseHyperscript(hyperscript) {
             }
         }
 
-        if (meta && meta.attrs) {
-            meta.entries = Object.entries(meta.attrs);
+        if (meta) {
+            meta.entries =
+                meta.attrs
+                ? Object.entries(meta.attrs)
+                : [];
         }
 
         if (ret === null) {
