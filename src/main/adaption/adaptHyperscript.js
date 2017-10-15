@@ -105,6 +105,21 @@ export default function adaptHyperscript(createElement, isElement) {
                     }
 
                     currElem = createElement(...args2);
+
+/*                    
+                    args[0] = tag;
+                    args.push(null);
+
+                    const length = args.length;
+
+                    for (let i = 1; i < args.length; ++i) {
+                        args[length - i] = args[length - i - 1]; 
+                    }
+
+                    args[1] = attrs2;
+                    
+                    currElem = createElement(...args);
+*/
                 }
             }
         } 
