@@ -1,242 +1,132 @@
-/*
-import { parseHyperscript } from '../helper/parseHyperscript';
+export default function adaptCreateElement(createElement, adapterName) {
+    if (!(['react', 'react-native', 'react-lite', 'preact', 'inferno', 'vue'])
+        .includes(adapterName)) {
 
-const
-    hyperscriptCache = {},
-    simpleTagMark = {};
-
-export default function adaptCreateElement(createElement, isElement) {
-    return function (tag, ...rest) {
-        let ret = null;
-
-        if (typeof tag === 'string') {
-            let hyperscriptData = hyperscriptCache[tag];
-
-            if (hyperscriptData === simpleTagMark) {
-                ret = applyCreateElement(tag, ...rest);
-            } else if (hyperscriptData) {
-                ret = createHyperscriptElement(tag, rest, hyperscriptData);
-            } else {
-                hyperscriptData = parseHyperscript(tag);
-
-                if (hyperscriptData === null) {
-                    throw new Error(
-                        "[createElement] First argument 'tag' "
-                        + `is not in valid hyperscript format ('${tag}')`);
-                }
-                
-                if (hyperscriptData.length === 1
-                    && !hyperscriptData[0].attrs) {
-
-                    hyperscriptCache[tag] = simpleTagMark;
-                    ret = applyCreateElement(tag, ...rest);
-                } else {
-                    hyperscriptCache[tag] = hyperscriptData;
-                    ret = createHyperscriptElement(tag, rest, hyperscriptData);
-                }
-            }
-        } else {
-            ret = applyCreateElement(tag, ...rest);
-        }
-
-        return ret;
-    };
-
-    function isAttrs(it) {
-        return  it === undefined
-            || it === null
-            || typeof it === 'object'
-                && !it[Symbol.iterator]
-                && !isElement(it);
+        throw new Error("Function 'adaptCreateElement' has to be modified to "
+            + `support render engine adapter '${adapterName}'`);
     }
 
-    function applyCreateElement(tag, ...rest) {
-        return isAttrs(rest[0]) 
-            ? createElement(tag, ...rest)
-            : createElement(tag, null, ...rest);
-    }
-
-    function createHyperscriptElement(tag, rest, hyperscriptData) {
-        let currElem = null;
-        const dataLength = hyperscriptData.length;
-
-        for (let i = dataLength - 1; i >= 0; --i) {
-            const { tag, attrs } = hyperscriptData[i];
-
-            if (i < dataLength - 1) {
-                currElem = createElement(tag, attrs, currElem);
-            } else {
-                const
-                    attrs2 = attrs ? Object.assign({}, attrs) : {},
-                    class = attrs2.class;
-
-                if (isAttrs(rest[0])) {
-                    Object.assign(attrs2, rest[0]);
-
-                    if (class !== attrs2.class) {
-                        attrs2.class = `${class} ${attrs2.class}`;
-                    }
-
-                    currElem = createElement(tag, attrs2, ...rest.slice(1));
-                } else {
-                    currElem = createElement(tag, attrs2, ...rest); 
-                }
-            }
-        } 
-
-        return currElem;
-    }
-}
-*/
-
-import { parseHyperscript } from '../helper/parseHyperscript';
-
-const
-    hyperscriptCache = {},
-    simpleTagMark = {};
-
-export default function adaptCreateElement(createElement, isElement, Adapter) {
     const
-        // 'Preact' and 'React Native' are not relevant here
-        isReact = Adapter.name === 'react',
-        isReactLite = Adapter.name === 'react-lite',
-        isInferno = Adapter.name === 'inferno',
-        isVue = Adapter.name === 'vue', // TODO
-        isSpecialRenderEngine = isReact || isReactLite || isInferno || isVue,
+        isReact = adapterName === 'react',
+        isReactNative = adapterName === 'react-native',
+        isReactLite = adapterName === 'react-lite',
+        isPreact = adapterName === 'preact',
+        isInferno = adapterName === 'inferno',
+        isVue = adapterName === 'vue';
 
-        ACTION_APPLY_CREATE_ELEMENT = 1,
-        ACTION_CREATE_HYPERSCRIPT_ELEMENT = 2;
+    let ret;
 
-    return function (/* tag, ...rest */) {
-        const tag = arguments[0];
+    if (isReactNative || isVue) {
+        ret = createElement; // no adaption needed here
+    } else if (isReact || isVue) {
+        ret = function(...args)  {
+            const
+                type = args[0],
+                props = args[1];
 
-        let
-            ret = null,
-            action = 0,
-            argCount = arguments.length,
-            additArg = undefined;
+            // TODO - add logic for vue
+            if (isReact && props) {
+                if (typeof type === 'string') {
+                    if (type === 'label') {
+                        if (props.for && props.htmlFor === undefined) {
+                            args[1] = Object.assign({}, props);
+                            args[1].htmlFor = props.for;
+                        }
+                    } 
 
-        if (typeof tag === 'string') {
-            let hyperscriptData = hyperscriptCache[tag];
+                    if (props && props.innerHTML) {
+                        if (args[1] === props) {
+                            args[1] = Object.assign({}, props);
+                        }
 
-            if (hyperscriptData === simpleTagMark) {
-                action = ACTION_APPLY_CREATE_ELEMENT;
-            } else if (hyperscriptData) {
-                action = ACTION_CREATE_HYPERSCRIPT_ELEMENT;
-                additArg = hyperscriptData;
-            } else {
-                hyperscriptData = parseHyperscript(tag);
-
-                if (hyperscriptData === null) {
-                    throw new Error(
-                        "[createElement] First argument 'tag' "
-                        + `is not in valid hyperscript format ('${tag}')`);
-                }
-                
-                if (hyperscriptData.length === 1
-                    && !hyperscriptData[0].attrs) {
-
-                    hyperscriptCache[tag] = simpleTagMark;
-                    action = ACTION_APPLY_CREATE_ELEMENT;
-                } else {
-                    hyperscriptCache[tag] = hyperscriptData;
-                    action = ACTION_CREATE_HYPERSCRIPT_ELEMENT;
-                    additArg = hyperscriptData;
-                }
-            }
-        } else {
-            action = ACTION_APPLY_CREATE_ELEMENT;
-        }
-
-        if (action === ACTION_APPLY_CREATE_ELEMENT) {
-            const secondArg = arguments[1];
-            let secondArgIsAttrs; 
-
-            if (secondArg === undefined || secondArg === null) {
-                secondArgIsAttrs = true;
-            } else if (typeof secondArg !== 'object'
-                || secondArg.constructor !== Object
-                || secondArg[Symbol.iterator]) {
-                
-                secondArgIsAttrs = false;
-            } else if (!isSpecialRenderEngine) {
-                secondArgIsAttrs = !isElement(secondArg);
-            } else {
-                // Preact elements are instances of VNode,
-                // in that case secondArg.constructor !== Object has already mathed
-                if (isReact) {
-                    secondArgIsAttrs = !secondArg.$$typeof;
-                } else if (isInferno) {
-                    secondArgIsAttrs = (secondArg.flags & (28 | 3970)) === 0; // 28: component, 3970: element
-                } else if (isReactLite) {
-                    secondArgIsAttrs = !secondArg.vtype || !secondArg.type;
-                } else {
-                    secondArgIsAttrs = isAttrs(secondArg);
-                }
-            }
-
-            if (!secondArgIsAttrs) {
-                additArg = null;                
-            }
-        } 
-        
-        const actionArgs = [tag];
-
-        if (additArg !== undefined) {
-            actionArgs.push(additArg);
-        }
-
-        for (let i = 1; i < argCount; ++i) {
-            actionArgs.push(arguments[i]);
-        }
-
-        if (action === ACTION_APPLY_CREATE_ELEMENT) {
-            ret = createElement.apply(null, actionArgs);
-        } else if (action === ACTION_CREATE_HYPERSCRIPT_ELEMENT) {
-            ret = createHyperscriptElement.apply(null, actionArgs);
-        } else {
-            throw 'This should never happen';
-        }
-
-        return ret;
-    };
-
-    function isAttrs(it) {
-        return  it === undefined
-            || it === null
-            || typeof it === 'object'
-                && !it[Symbol.iterator]
-                && !isElement(it);
-    }
-
-    function createHyperscriptElement(tag, hyperscriptData, head, ...tail) {
-        let currElem = null;
-        const dataLength = hyperscriptData.length;
-
-        for (let i = dataLength - 1; i >= 0; --i) {
-            const { tag, attrs } = hyperscriptData[i];
-
-            if (i < dataLength - 1) {
-                currElem = createElement(tag, attrs, currElem);
-            } else {
-                const
-                    attrs2 = attrs ? Object.assign({}, attrs) : {},
-                    className = attrs2.class;
-
-                if (isAttrs(head)) {
-                    Object.assign(attrs2, head);
-
-                    if (className !== attrs2.class) {
-                        attrs2.class = `${className} ${attrs2.class}`;
+                        args[1].dangerouslySetInnerHTML = props.innerHTML;
+                        delete args[1].innerHTML; 
                     }
-
-                    currElem = createElement(tag, attrs2, ...tail);
-                } else {
-                    currElem = createElement(tag, attrs2, head, ...tail); 
                 }
             }
-        } 
 
-        return currElem;
+            return createElement(...args);
+        };
+    } else {
+        ret = function (...args)  {
+            let ret;
+            
+            const
+                type = args[0],
+                props = args[1];
+
+            if (args.length > 2) {
+                const length = args.length; 
+            
+                for (let i = 2; i < length; ++i) {
+                    const child = args[i];
+
+                    if (child && typeof child !== 'string'
+                        && typeof child[Symbol.iterator] === 'function') {
+                        
+                        args[i] = iterableToArray(child);
+                    } 
+                }
+            }
+
+            // TODO - add logic for label.for / innerHTML etc.
+            if (isReactLite) {
+                if (props && typeof type === 'string') {
+                    if (props.class) {
+                        const adjustedProps = Object.assign({}, props);
+                        
+                        adjustedProps.className = props.class;
+                        delete adjustedProps.class;
+
+                        args[1] = adjustedProps;
+                    }
+                }
+            }
+            
+
+            ret = createElement(...args);
+
+            return ret;
+        };
     }
+
+    return ret;
+}
+
+function iterableToArray(iterable) {
+    let ret = null;
+
+    if (iterable instanceof Array) {
+        const length = iterable.length;
+
+        for (let i = 0; i < length; ++i) {
+            const item = iterable[i];
+    
+            if (item && typeof item === 'object' && typeof item[Symbol.iterator] === 'function') {
+                if (ret === null) {
+                    ret = Array.from(iterable);
+                }
+
+                ret[i] = iterableToArray(item);
+            } else {
+                ret.push(item);
+            }
+        }
+
+        if (ret === null) {
+            ret = iterable;
+        }
+    } else {
+        ret = [];
+
+        for (const item of iterable) {
+            if (item && typeof item === 'object' && typeof item[Symbol.iterator] === 'function') {
+                ret.push(iterableToArray(item));
+            } else {
+                ret.push(item);
+            }
+        } 
+    }
+
+    return ret;
 }

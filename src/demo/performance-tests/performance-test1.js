@@ -1,5 +1,5 @@
 
-import { createElement as h, ComponentSystem } from 'js-surface';
+import { createElement as h, hyperscript, ComponentSystem } from 'js-surface';
 
 const
     iterationCount = 200000,
@@ -63,9 +63,9 @@ tests.push({
     run() {
         for (let i = 0; i < iterationCount; ++i) {
         //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
-            h('div#my-id.my-class',
+            hyperscript('div#my-id.my-class',
                 null,
-                h('div#my-id2.my-class2', null,  'my-div'));    
+                hyperscript('div#my-id2.my-class2', null,  'my-div'));    
         }
     }
 });

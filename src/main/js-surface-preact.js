@@ -9,6 +9,7 @@ const {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
+    hyperscript,
     isElement,
     isRenderable,
     mount,
@@ -18,7 +19,7 @@ const {
     renderEngineName: 'preact',
     renderEngineAPI: Preact,
     Component: Preact.Component,
-    createElement: preactCreateElement,
+    createElement: Preact.createElement,
     createFactory: preactCreateFactory,
     isValidElement: preactIsValidElement,
     mount: preactMount
@@ -29,6 +30,7 @@ export {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
+    hyperscript,
     isElement,
     isRenderable,
     mount,
@@ -49,33 +51,4 @@ function preactMount(content, targetNode) {
     Preact.render(content, targetNode);
 
     return () => Preact.render('', targetNode);
-}
-
-function preactCreateElement(tag, props, ...children)  {
-    // TODO: For performance reasons
-    if (tag === null || tag === undefined || typeof tag !== 'string' && !preactIsValidElement(tag)) {
-        throw new TypeError(
-            '[createElement] '
-            + "First argument 'tag' must not be undefined or null");
-    }
-
-    let ret;
-
-    if (!children) {
-        ret = preactCreateElement.apply(null, arguments);
-    } else {
-        const newArguments = [tag, props];
-
-        for (let child of children) {
-            if (child && !Array.isArray(child) && typeof child[Symbol.iterator] === 'function') {
-                newArguments.push(Array.from(child));
-            } else {
-                newArguments.push(child);
-            }
-        }
-
-        ret = Preact.h.apply(null, newArguments);
-    }
-
-    return ret;
 }

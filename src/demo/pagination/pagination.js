@@ -1,7 +1,7 @@
 import {
     defineClassComponent,
     defineFunctionalComponent,
-    createElement as h,
+    hyperscript as h,
     mount 
 }  from 'js-surface';
 

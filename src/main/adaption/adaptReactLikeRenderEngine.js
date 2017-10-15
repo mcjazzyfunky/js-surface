@@ -1,3 +1,4 @@
+import adaptCreateElement from './adaptCreateElement';
 import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig';
 import ComponentController from '../class/ComponentController';
 
@@ -64,6 +65,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                     }
                 }
                 
+                // TODO
                 if (reactLikeConfig.renderEngineName === 'react-lite') {
                     ret.vtype = 2;
                 }
@@ -88,9 +90,7 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
                 return factory;
             },
 
-            createElement(type, props, ...children) {
-                return reactLikeConfig.createElement(type, adjustProps(props), ...children);
-            },
+            createElement: adaptCreateElement(reactLikeConfig.createElement, reactLikeConfig.renderEngineName),
 
             isElement(it) { 
                 return it !== undefined

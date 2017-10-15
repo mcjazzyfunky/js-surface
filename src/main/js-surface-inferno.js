@@ -21,6 +21,7 @@ const {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
+    hyperscript,
     isElement,
     isRenderable,
     mount,
@@ -30,7 +31,7 @@ const {
     renderEngineName: 'inferno',
     renderEngineAPI:  { Inferno },
     Component: Inferno.Component,
-    createElement: customCreateElement,
+    createElement: Inferno.createElement,
     createFactory: customCreateFactory,
     isValidElement: customIsValidElement,
     mount: customMount
@@ -41,6 +42,7 @@ export {
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
+    hyperscript,
     isElement,
     isRenderable,
     mount,
@@ -49,35 +51,6 @@ export {
 };
 
 // ------------------------------------------------------------------
-
-function customCreateElement(tag, props, ...children)  {
-    // TODO: For performance reasons
-    if (tag === null || tag === undefined || typeof tag !== 'string' && !customIsValidElement(tag)) {
-        throw new TypeError(
-            '[createElement] '
-            + "First argument 'tag' must not be undefined or null");
-    }
-
-    let ret;
-
-    if (!children) {
-        ret = customCreateElement.apply(null, arguments);
-    } else {
-        const newArguments = [tag, props];
-
-        for (let child of children) {
-            if (child && !Array.isArray(child) && typeof child[Symbol.iterator] === 'function') {
-                newArguments.push(Array.from(child));
-            } else {
-                newArguments.push(child);
-            }
-        }
-
-        ret = Inferno.createElement.apply(null, newArguments);
-    }
-
-    return ret;
-}
 
 function customCreateFactory(type) {
     return createElement.bind(null, type);

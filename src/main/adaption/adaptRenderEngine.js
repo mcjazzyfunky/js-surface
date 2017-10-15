@@ -1,4 +1,4 @@
-import adaptCreateElement from './adaptCreateElement';
+import adaptHyperscript from './adaptHyperscript';
 import adaptIsRenderable from './adaptIsRenderable';
 import adaptMount from '../adaption/adaptMount';
 import convertClassComponentConfig from '../conversion/convertClassComponentConfig';
@@ -36,9 +36,10 @@ export default function adaptRenderEngine(config) {
     Adapter.api = config.renderEngine.api;
     
     const
-        createElement = config.options && config.options.isBrowserBased === false
-            ? config.interface.createElement
-            : adaptCreateElement(config.interface.createElement, config.interface.isElement, Adapter),
+        hyperscript = 
+            config.options && config.options.isBrowserBased === false
+                ? null
+                : adaptHyperscript(config.interface.createElement, config.interface.isElement, Adapter),
 
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
@@ -46,8 +47,8 @@ export default function adaptRenderEngine(config) {
         defineClassComponent = config => defineStandardComponent(
             convertClassComponentConfig(config)); 
 
-    return {
-        createElement,
+    const ret = {
+        createElement: config.interface.createElement,
         defineFunctionalComponent,
         defineStandardComponent,
         defineClassComponent,
@@ -56,6 +57,12 @@ export default function adaptRenderEngine(config) {
         mount: adaptMount(config.interface.mount, config.interface.isElement),
         ComponentSystem
     };
+
+    if (hyperscript) {
+        ret.hyperscript = hyperscript;
+    }
+
+    return ret;
 }
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
