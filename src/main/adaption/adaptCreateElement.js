@@ -108,9 +108,7 @@ function iterableToArray(iterable) {
                 }
 
                 ret[i] = iterableToArray(item);
-            } else {
-                ret.push(item);
-            }
+            } 
         }
 
         if (ret === null) {
