@@ -98,7 +98,7 @@ function customDefineStandardComponent(config) {
 
             if (config.provides) {
                 for (const key of config.provides) {
-                    ret[key] = new Injection(() => this.__provides[key]);
+                    ret[key] = new Injection(() => this.__childInjections[key]);
                 }
             }
 
@@ -107,7 +107,7 @@ function customDefineStandardComponent(config) {
 
         data() {
             return {
-                __provides: null
+                __childInjections: null
             };
         },
 
@@ -134,20 +134,15 @@ function customDefineStandardComponent(config) {
 
             this.__setState = state => {
                 this.__state = state;
-
-                if (this.__provideChildInjections) {
-                    this.__provides = this.__provideChildInjections();
-                }
             };
 
             const initResult = config.init(
-                 this.__setView, this.__setState, this);
+                this.__setView, this.__setState, childInjections => {
+                    this.__childInjections = childInjections;
+                    this.$forceUpdate;
+                });
 
             this.__setProps = props => {
-                if (config.childInjection) {
-                    this.__provides = this.__provideChildInjections();
-                }
-
                 initResult.setProps(props);
             };
 
@@ -156,7 +151,7 @@ function customDefineStandardComponent(config) {
 
             if (initResult.provideChildInjections) {
                 this.__updateChildInjections = function () {
-                    this.__provides = initResult.provideChildInjections();
+                    this.__childInjections = initResult.provideChildInjections();
                 };
             }
 

@@ -1,9 +1,9 @@
 import validateInitResult from '../validation/validateInitResult';
 
 export default class ComponentController {
-    constructor(config, setView, setState) {
+    constructor(config, setView, setState, setProvisions) {
         const
-            result = config.init(setView, setState),
+            result = config.init(setView, setState, setProvisions),
             error = validateInitResult(result, config);
 
         if (error) {
@@ -13,7 +13,6 @@ export default class ComponentController {
         this.__config = config;
         this.__setProps = result.setProps;
         this.__applyMethod = result.applyMethod || null;
-        this.__provideChildInjections = result.provideChildInjections || null;
     }
 
     setProps(props) {
@@ -28,11 +27,5 @@ export default class ComponentController {
         }
 
         return this.__applyMethod(methodName, args);
-    }
-
-    provideChildInjections() {
-        return this.__provideChildInjections
-            ? this.__provideChildInjections()
-            : null;
     }
 }

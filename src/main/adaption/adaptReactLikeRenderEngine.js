@@ -137,10 +137,19 @@ function defineCustomComponent(config, ParentComponent) {
             setState = state => {
                 this.setState(state);
                 return stateUpdatedPromise;
+            },
+
+            setProvisions = provisions => {
+                // TODO - chck provisions
+                this.__childContext = provisions;
+
+                if (this.__initialized) {
+                    this.forceUpdate();
+                }
             };
 
         this.__ctrl =
-            new ComponentController(config, setView, setState);
+            new ComponentController(config, setView, setState, setProvisions);
     };
 
     CustomComponent.displayName = config.displayName;
@@ -172,7 +181,7 @@ function defineCustomComponent(config, ParentComponent) {
         }
 
         CustomComponent.prototype.getChildContext = function () {
-            return this.__ctrl.provideChildInjections();
+            return this.__childContext;
         };
     }
 

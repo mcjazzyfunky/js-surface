@@ -41,8 +41,8 @@ if (adapterName !== 'vue') {
         run() {
             for (let i = 0; i < iterationCount; ++i) {
                 createElement('div',
-                    { class: 'my-class', id: 'my-id' },
-                    createElement('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                    { className: 'my-class', id: 'my-id' },
+                    createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
             }
         }
     });
@@ -55,8 +55,8 @@ tests.push({
         for (let i = 0; i < iterationCount; ++i) {
         //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
             h('div',
-                { class: 'my-class', id: 'my-id' },
-                h('div', { class: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                { className: 'my-class', id: 'my-id' },
+                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
         }
     }
 });

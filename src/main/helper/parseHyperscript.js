@@ -46,11 +46,11 @@ export function parseHyperscript(hyperscript) {
             case '.': {
                 const oneClass = it.substr(1);
                 
-                if (!meta.attrs || !meta.attrs.class) {
+                if (!meta.attrs || !meta.attrs.className) {
                     meta.attrs = meta.attrs || {};
-                    meta.attrs.class = oneClass;
+                    meta.attrs.className = oneClass;
                 } else {
-                    meta.attrs.class += ` ${oneClass}`;
+                    meta.attrs.className += ` ${oneClass}`;
                 }
 
                 break;

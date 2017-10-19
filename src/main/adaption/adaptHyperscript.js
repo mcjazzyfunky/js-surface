@@ -77,7 +77,7 @@ export default function adaptHyperscript(createElement, isElement) {
                 const
                    // attrs2 = attrs ? Object.assign({}, attrs) : {},
                     attrs2 = {},
-                    className = attrs && attrs.class ? attrs.class : null,
+                    className = attrs && attrs.className ? attrs.className : null,
                     hasProps = isAttrs(args[1]);
 
                 // This is faster then Object.assign
@@ -89,8 +89,8 @@ export default function adaptHyperscript(createElement, isElement) {
                 if (hasProps) {
                     Object.assign(attrs2, args[1]);
 
-                    if (className !== attrs2.class) {
-                        attrs2.class = `${className} ${attrs2.class}`;
+                    if (className !== attrs2.className) {
+                        attrs2.className = `${className} ${attrs2.className}`;
                     }
 
                     // Modifying args array is ugly but runs faster than other solutions

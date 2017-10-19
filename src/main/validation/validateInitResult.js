@@ -20,24 +20,11 @@ export default function validateInitResult(initResult, config) {
     }
 
     if (!errMsg) {
-        if (config.provides) {
-            if (typeof initResult.provideChildInjections !== 'function') {
-                errMsg = "Parameter 'provideChildInjections' must be a function"; 
-            }
-        } else if (initResult.provideChildInjections !== undefined) {
-            errMsg = "Unnecessary parameter 'provideChildInjections'";
-        }
-    }
-
-    if (!errMsg) {
         const keys = Object.keys(initResult);
 
-        if (keys.length > 1 + !!config.methods + !!config.provides) {
+        if (keys.length > 1 + !!config.methods) {
             for (const key of keys) {
-                if (key !== 'setProps'
-                    && key !== 'applyMethod'
-                    && key !== 'provideChildInjections') {
-
+                if (key !== 'setProps' && key !== 'applyMethod') {
                     errMsg = `Invalid parameter '${key}'`;
                     break;
                 }
@@ -46,7 +33,6 @@ export default function validateInitResult(initResult, config) {
     }
 
     if (errMsg) {
-        console.log(initResult)
         error = new Error(
             `Init function of component '${config.displayName}' `
             + `has returned an invalid value => ${errMsg}`);

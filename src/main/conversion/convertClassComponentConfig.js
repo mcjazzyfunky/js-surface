@@ -36,8 +36,10 @@ export default function convertClassComponentConfig(config) {
         }
     }
 
+    let childInjections = null;
+
     const
-        init = (setView, setState) => {
+        init = (setView, setState, setProvisions) => {
             let
                 component = null,
                 content = null,
@@ -67,6 +69,11 @@ export default function convertClassComponentConfig(config) {
                     let initialized = false;
 
                     component.__forceUpdate = function (prevProps, prevState) {
+                        if (config.provides) {
+                            const newChildInjections = component.provideChildInjections();
+                            // check whether childInjections have changed
+                            setProvisions(newChildInjections);
+                        }
                         content = component.render();
 
                         setView(content)
@@ -111,10 +118,6 @@ export default function convertClassComponentConfig(config) {
             if (config.publicMethods) {
                 initResult.applyMethod = (methodName, args) => 
                     component[methodName](...args);
-            }
-
-            if (config.provides) {
-                initResult.provideChildInjections = () => component.provideChildInjections();
             }
 
             return initResult;

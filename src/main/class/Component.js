@@ -77,6 +77,10 @@ export default class Component {
         return null;
     }
 
+    provideChildInjections() {
+        return null;
+    }
+
     forceUpdate() {
         this.__forceUpdate();
     }
