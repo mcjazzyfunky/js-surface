@@ -119,7 +119,7 @@ function defineCustomComponent(config, ParentComponent) {
         this.__mustBeRerendered = false;
 
         const
-            updateView = view => {
+            setView = view => {
                 this.__view = view;
                 this.__mustBeRerendered = true;
 
@@ -134,13 +134,13 @@ function defineCustomComponent(config, ParentComponent) {
                 });
             },
 
-            updateState = state => {
+            setState = state => {
                 this.setState(state);
                 return stateUpdatedPromise;
             };
 
         this.__ctrl =
-            new ComponentController(config, updateView, updateState);
+            new ComponentController(config, setView, setState);
     };
 
     CustomComponent.displayName = config.displayName;
@@ -164,10 +164,10 @@ function defineCustomComponent(config, ParentComponent) {
         }
     }
 
-    if (config.childInjections) {
+    if (config.provides) {
         CustomComponent.childContextTypes = {};
 
-        for (let key of config.childInjections) {
+        for (let key of config.provides) {
             CustomComponent.childContextTypes[key] = returnNull;
         }
 
@@ -178,7 +178,7 @@ function defineCustomComponent(config, ParentComponent) {
 
     Object.assign(CustomComponent.prototype, {
         componentWillMount() {
-            this.__ctrl.receiveProps(mixPropsWithContext(this.props, this.context));
+            this.__ctrl.setProps(mixPropsWithContext(this.props, this.context));
         },
 
         componentDidMount() {
@@ -196,11 +196,11 @@ function defineCustomComponent(config, ParentComponent) {
         },
 
         componentWillUnmount() {
-            this.__ctrl.receiveProps(undefined);
+            this.__ctrl.setProps(undefined);
         },
 
         componentWillReceiveProps(nextProps) {
-            this.__ctrl.receiveProps(mixPropsWithContext(nextProps, this.context));
+            this.__ctrl.setProps(mixPropsWithContext(nextProps, this.context));
         },
 
         shouldComponentUpdate() {
@@ -213,10 +213,10 @@ function defineCustomComponent(config, ParentComponent) {
         }
     });
 
-    if (config.publicMethods) {
-        for (const methodName of config.publicMethods) {
+    if (config.methods) {
+        for (const methodName of config.methods) {
             CustomComponent.prototype[methodName] = function (...args) {
-                this.__ctrl.applyPublicMethod(methodName, args);
+                this.__ctrl.applyMethod(methodName, args);
             };
         }
     }

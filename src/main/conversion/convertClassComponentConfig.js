@@ -37,13 +37,13 @@ export default function convertClassComponentConfig(config) {
     }
 
     const
-        init = (updateView, updateState) => {
+        init = (setView, setState) => {
             let
                 component = null,
                 content = null,
                 done = false;
 
-            const receiveProps = props => {
+            const setProps = props => {
                 if (done) {
                     return;
                 } else if (props === undefined) {
@@ -58,10 +58,10 @@ export default function convertClassComponentConfig(config) {
                 if (!component) {
                     component = new componentClass(props);
 
-                    if (updateState) {
-                        updateState(component.state);
+                    if (setState) {
+                        setState(component.state);
 
-                        component.__onStateUpdate = state => updateState(state);
+                        component.__onStateUpdate = state => setState(state);
                     } 
                     
                     let initialized = false;
@@ -69,7 +69,7 @@ export default function convertClassComponentConfig(config) {
                     component.__forceUpdate = function (prevProps, prevState) {
                         content = component.render();
 
-                        updateView(content)
+                        setView(content)
                             .then(
                                 () => {
                                     if (!initialized) {
@@ -105,15 +105,15 @@ export default function convertClassComponentConfig(config) {
             };
 
             const initResult = {
-                receiveProps
+                setProps
             };
 
             if (config.publicMethods) {
-                initResult.applyPublicMethod = (methodName, args) => 
+                initResult.applyMethod = (methodName, args) => 
                     component[methodName](...args);
             }
 
-            if (config.childInjections) {
+            if (config.provides) {
                 initResult.provideChildInjections = () => component.provideChildInjections();
             }
 
@@ -127,12 +127,12 @@ export default function convertClassComponentConfig(config) {
         init
     };
 
-    if (config.childInjections) {
-        stdConfig.childInjections = config.childInjections; 
+    if (config.provides) {
+        stdConfig.provides = config.provides; 
     }
 
     if (config.publicMethods) {
-        stdConfig.publicMethods = config.publicMethods; 
+        stdConfig.methods = config.publicMethods; 
     }
 
     return stdConfig;

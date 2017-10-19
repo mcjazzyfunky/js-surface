@@ -93,12 +93,12 @@ function customDefineStandardComponent(config) {
         inject: determineInjectionKeys(config),
         methods: determineMethods(config),
 
-        provide: !config.childInjections ? null : function () {
+        provide: !config.provides ? null : function () {
             const ret = {};
 
-            if (config.childInjections) {
-                for (const key of config.childInjections) {
-                    ret[key] = new Injection(() => this.__childInjections[key]);
+            if (config.provides) {
+                for (const key of config.provides) {
+                    ret[key] = new Injection(() => this.__provides[key]);
                 }
             }
 
@@ -107,7 +107,7 @@ function customDefineStandardComponent(config) {
 
         data() {
             return {
-                __childInjections: null
+                __provides: null
             };
         },
 
@@ -115,7 +115,7 @@ function customDefineStandardComponent(config) {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
             this.__resolveRenderingDone = null;
-            this.__updateView = content => {
+            this.__setView = content => {
                 this.__content = content;
 
                 if (!this.__preventForceUpdate) {
@@ -132,31 +132,31 @@ function customDefineStandardComponent(config) {
             };
 
 
-            this.__updateState = state => {
+            this.__setState = state => {
                 this.__state = state;
 
                 if (this.__provideChildInjections) {
-                    this.__childInjections = this.__provideChildInjections();
+                    this.__provides = this.__provideChildInjections();
                 }
             };
 
             const initResult = config.init(
-                 this.__updateView, this.__updateState, this);
+                 this.__setView, this.__setState, this);
 
-            this.__receiveProps = props => {
+            this.__setProps = props => {
                 if (config.childInjection) {
-                    this.__childInjections = this.__provideChildInjections();
+                    this.__provides = this.__provideChildInjections();
                 }
 
-                initResult.receiveProps(props);
+                initResult.setProps(props);
             };
 
-            this.__applyPublicMethod = initResult.applyPublicMethod;
+            this.__applyMethod = initResult.applyMethod;
             this.__provideChildInjections = initResult.provideChildInjections;
 
             if (initResult.provideChildInjections) {
                 this.__updateChildInjections = function () {
-                    this.__childInjections = initResult.provideChildInjections();
+                    this.__provides = initResult.provideChildInjections();
                 };
             }
 
@@ -169,7 +169,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeMount() {
-            this.__receiveProps(
+            this.__setProps(
                 mixProps(
                     this.$options.propsData,
                     this._events,
@@ -199,7 +199,7 @@ function customDefineStandardComponent(config) {
                     this.__updateChildInjections();
                 }
 
-                this.__receiveProps(
+                this.__setProps(
                     mixProps(
                         this.$options.propsData,
                         this._events,
@@ -219,7 +219,7 @@ function customDefineStandardComponent(config) {
         },
 
         beforeDestroy() {
-            this.__receiveProps(undefined);
+            this.__setProps(undefined);
             handleRefCleanupCallbacks(this);
         },
 
@@ -462,12 +462,12 @@ function determineInjectionKeys(config) {
 function determineMethods(config) {
     let ret = null;
 
-    if (config.publicMethods) {
+    if (config.methods) {
         ret = {};
 
-        for (let key of config.publicMethods) {
+        for (let key of config.methods) {
             ret[key] = function (...args) {
-                return this.__applyPublicMethod(key, args);
+                return this.__applyMethod(key, args);
             };
         }
     }

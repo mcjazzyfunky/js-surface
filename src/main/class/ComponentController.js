@@ -1,9 +1,9 @@
 import validateInitResult from '../validation/validateInitResult';
 
 export default class ComponentController {
-    constructor(config, updateView, updateState) {
+    constructor(config, setView, setState) {
         const
-            result = config.init(updateView, updateState),
+            result = config.init(setView, setState),
             error = validateInitResult(result, config);
 
         if (error) {
@@ -11,23 +11,23 @@ export default class ComponentController {
         }
 
         this.__config = config;
-        this.__receiveProps = result.receiveProps;
-        this.__applyPublicMethod = result.applyPublicMethod || null;
+        this.__setProps = result.setProps;
+        this.__applyMethod = result.applyMethod || null;
         this.__provideChildInjections = result.provideChildInjections || null;
     }
 
-    receiveProps(props) {
-        this.__receiveProps(props);
+    setProps(props) {
+        this.__setProps(props);
     }
 
-    applyPublicMethod(methodName, args) {
-        if (!this.__config.publicMethods || !this.__config.publicMethods.includes(methodName)) {
+    applyMethod(methodName, args) {
+        if (!this.__config.methods || !this.__config.methods.includes(methodName)) {
             throw new Error(
                 `Tried to call unknown public method '${methodName}' `
                 + `on component of type '${this.__config.displayName}'`);
         }
 
-        return this.__applyPublicMethod(methodName, args);
+        return this.__applyMethod(methodName, args);
     }
 
     provideChildInjections() {

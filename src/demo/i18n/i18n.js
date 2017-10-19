@@ -30,7 +30,7 @@ const App = defineClassComponent({
         }
     },
 
-    childInjections: ['locale'],
+    provides: ['locale'],
 
     constructor(props) {
         this.setLocale(props.defaultLocale);

@@ -8,14 +8,14 @@ export default Object.assign({},
     {   
         init: Spec.function,
 
-        publicMethods:
+        methods:
             Spec.optional(
                 Spec.arrayOf(
                     Spec.and(
                         Spec.match(REGEX_METHOD_NAME),
                          Spec.notIn(FORBIDDEN_METHOD_NAMES)))),
 
-        childInjections:
+        provides:
             Spec.optional(
                 Spec.arrayOf(
                     Spec.match(REGEX_INJECTION_NAME)))

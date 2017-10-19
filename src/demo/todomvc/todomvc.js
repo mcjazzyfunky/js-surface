@@ -111,7 +111,7 @@ const TodoMVCApp = defineClassComponent({
         }
     },
 
-    childInjections: ['ctrl'],
+    provides: ['ctrl'],
 
     constructor({ initialState }) {
         this.state = fromJSToAppState(initialState);

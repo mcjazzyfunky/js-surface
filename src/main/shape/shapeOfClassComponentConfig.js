@@ -14,7 +14,7 @@ export default Object.assign(
                         Spec.match(REGEX_METHOD_NAME),
                          Spec.notIn(FORBIDDEN_METHOD_NAMES)))),
         
-        childInjections:
+        provides:
             Spec.optional(
                 Spec.arrayOf(
                     Spec.match(REGEX_INJECTION_NAME)))

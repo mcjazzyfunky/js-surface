@@ -14,10 +14,10 @@ const HelloWorld = defineStandardComponent({
         }
     },
 
-    init(updateView) {
+    init(setView) {
         return {
-            receiveProps(props) {
-                updateView(h('div', 'Hello ' + props.name + '!'));
+            setProps(props) {
+                setView(h('div', 'Hello ' + props.name + '!'));
             }
         };
     }

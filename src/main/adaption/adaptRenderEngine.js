@@ -120,13 +120,13 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                     }
 
                     return Object.assign({}, result, {
-                        receiveProps(props) {
+                        setProps(props) {
                             const props2 = props === undefined
                                 ? undefined
                                 : propsAdjuster(props, Config.validateProps);
 
 
-                            result.receiveProps(props2);
+                            result.setProps(props2);
                         }
                     });
                 }

@@ -5,7 +5,7 @@ export default function normalizeComponentConfig(config) {
 
     if (!config
         || (!Array.isArray(config.properties)
-            && !Array.isArray(config.childInjections))) {
+            && !Array.isArray(config.provides))) {
 
         ret = config;
     } else {

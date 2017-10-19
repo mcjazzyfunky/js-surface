@@ -15,7 +15,7 @@ const Parent = defineClassComponent({
         }
     },
 
-    childInjections: ['value'],
+    provides: ['value'],
     
     provideChildInjections() {
         return {

@@ -5,22 +5,22 @@ export default function validateInitResult(initResult, config) {
     
     if (initResult === null || typeof initResult !== 'object') {
         errMsg = 'Must be an object';
-    } else if (typeof initResult.receiveProps !== 'function') {
-        errMsg = "Parameter 'receiveProps' must be a function";
+    } else if (typeof initResult.setProps !== 'function') {
+        errMsg = "Parameter 'setProps' must be a function";
     }
 
     if (!errMsg) {
-        if (config.publicMethods) {
-            if (typeof initResult.applyPublicMethod !== 'function') {
-                errMsg = "Parameter 'applyPublicMethod' must be a function"; 
+        if (config.methods) {
+            if (typeof initResult.applyMethod !== 'function') {
+                errMsg = "Parameter 'applyMethod' must be a function"; 
             }
-        } else if (initResult.applyPublicMethod !== undefined) {
-            errMsg = "Unnecessary parameter 'applyPublicMethod'";
+        } else if (initResult.applyMethod !== undefined) {
+            errMsg = "Unnecessary parameter 'applyMethod'";
         }
     }
 
     if (!errMsg) {
-        if (config.childInjections) {
+        if (config.provides) {
             if (typeof initResult.provideChildInjections !== 'function') {
                 errMsg = "Parameter 'provideChildInjections' must be a function"; 
             }
@@ -32,10 +32,10 @@ export default function validateInitResult(initResult, config) {
     if (!errMsg) {
         const keys = Object.keys(initResult);
 
-        if (keys.length > 1 + !!config.publicMethods + !!config.childInjections) {
+        if (keys.length > 1 + !!config.methods + !!config.provides) {
             for (const key of keys) {
-                if (key !== 'receiveProps'
-                    && key !== 'applyPublicMethod'
+                if (key !== 'setProps'
+                    && key !== 'applyMethod'
                     && key !== 'provideChildInjections') {
 
                     errMsg = `Invalid parameter '${key}'`;
