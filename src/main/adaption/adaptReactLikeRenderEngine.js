@@ -6,9 +6,7 @@ import { Spec } from 'js-spec';
 
 import adaptRenderEngine from '../adaption/adaptRenderEngine';
 
-const
-    returnNull = () => null,
-    stateUpdatedPromise = Promise.resolve(true);
+const returnNull = () => null;
 
 export default function adaptReactLikeRenderEngine(reactLikeConfig) {
     const err =
@@ -119,8 +117,9 @@ function defineCustomComponent(config, ParentComponent) {
         this.__mustBeRerendered = false;
 
         const
-            setView = view => {
+            updateView = (view, childContext) => {
                 this.__view = view;
+                this.__childContext = childContext;
                 this.__mustBeRerendered = true;
 
                 if (this.__initialized) {
@@ -134,22 +133,13 @@ function defineCustomComponent(config, ParentComponent) {
                 });
             },
 
-            setState = state => {
+            updateState = state => {
                 this.setState(state);
-                return stateUpdatedPromise;
-            },
-
-            setProvisions = provisions => {
-                // TODO - chck provisions
-                this.__childContext = provisions;
-
-                if (this.__initialized) {
-                    this.forceUpdate();
-                }
             };
 
+
         this.__ctrl =
-            new ComponentController(config, setView, setState, setProvisions);
+            new ComponentController(config, updateView, updateState);
     };
 
     CustomComponent.displayName = config.displayName;
@@ -205,7 +195,7 @@ function defineCustomComponent(config, ParentComponent) {
         },
 
         componentWillUnmount() {
-            this.__ctrl.setProps(undefined);
+            this.__ctrl.close();
         },
 
         componentWillReceiveProps(nextProps) {

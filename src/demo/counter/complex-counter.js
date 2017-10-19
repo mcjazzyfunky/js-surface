@@ -131,7 +131,7 @@ const CounterCtrl = defineClassComponent({
                     { onClick: () => counterInstance.resetCounter(0) },
                     'Set to 0'),
                     ' ',
-                    Counter({ ref: it => { counterInstance = it; } }),
+                    Counter({ key: Math.random(), ref: it => { counterInstance = it; } }),
                     ' ',
                     h('button.btn.btn-info',
                         { onClick: () => counterInstance.resetCounter(100) },

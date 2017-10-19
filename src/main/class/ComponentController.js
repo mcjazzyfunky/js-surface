@@ -1,9 +1,9 @@
 import validateInitResult from '../validation/validateInitResult';
 
 export default class ComponentController {
-    constructor(config, setView, setState, setProvisions) {
+    constructor(config, updateView, updateState) {
         const
-            result = config.init(setView, setState, setProvisions),
+            result = config.init(updateView, updateState),
             error = validateInitResult(result, config);
 
         if (error) {
@@ -12,6 +12,7 @@ export default class ComponentController {
 
         this.__config = config;
         this.__setProps = result.setProps;
+        this.__close = result.close;
         this.__applyMethod = result.applyMethod || null;
     }
 
@@ -27,5 +28,9 @@ export default class ComponentController {
         }
 
         return this.__applyMethod(methodName, args);
+    }
+
+    close() {
+        this.__close();
     }
 }

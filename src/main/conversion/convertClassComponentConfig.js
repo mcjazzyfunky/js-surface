@@ -39,81 +39,85 @@ export default function convertClassComponentConfig(config) {
     let childInjections = null;
 
     const
-        init = (setView, setState, setProvisions) => {
+        init = (updateView, updateState) => {
             let
                 component = null,
                 content = null,
                 done = false;
 
-            const setProps = props => {
-                if (done) {
-                    return;
-                } else if (props === undefined) {
+            const
+                close = () => {
+                    done = true;
+                    
                     if (component) {
                         component.onWillUnmount();
                     }
+                },
 
-                    done = true;
-                    return;
-                }
+                setProps = props => {
+                    if (done) {
+                        return;
+                    }
 
-                if (!component) {
-                    component = new componentClass(props);
+                    if (!component) {
+                        component = new componentClass(props);
 
-                    if (setState) {
-                        setState(component.state);
+                        if (updateState) {
+                            updateState(component.state);
 
-                        component.__onStateUpdate = state => setState(state);
-                    } 
-                    
-                    let initialized = false;
+                            component.__onStateUpdate = state => updateState(state);
+                        } 
+                        
+                        let initialized = false;
 
-                    component.__forceUpdate = function (prevProps, prevState) {
-                        if (config.provides) {
-                            const newChildInjections = component.provideChildInjections();
-                            // check whether childInjections have changed
-                            setProvisions(newChildInjections);
+                        component.__forceUpdate = function (prevProps, prevState) {
+                            content = component.render();
+
+                            const
+                                childInjections =
+                                    config.provides
+                                    ? component.provideChildInjections()
+                                    : null,
+
+                                callbackWhenUpdated =
+                                    () => {
+                                        if (!initialized) {
+                                            initialized = true;
+                                            component.onDidMount();
+                                        } else {
+                                            component.onDidUpdate(prevProps, prevState);
+                                        }
+                                    };
+
+                            updateView(content, childInjections, callbackWhenUpdated);
+                        };
+
+                        component.onWillMount();
+                        component.forceUpdate();
+                    } else {
+                        component.onWillReceiveProps(props);
+
+                        const shouldUpdate = component.shouldUpdate(props, component.state);
+
+                        if (shouldUpdate) {
+                            component.onWillUpdate(props, component.state);
                         }
-                        content = component.render();
 
-                        setView(content)
-                            .then(
-                                () => {
-                                    if (!initialized) {
-                                        initialized = true;
-                                        component.onDidMount();
-                                    } else {
-                                        component.onDidUpdate(prevProps, prevState);
-                                    }
-                                }
-                            );
-                    };
+                        const prevProps = component.props;
 
-                    component.onWillMount();
-                    component.forceUpdate();
-                } else {
-                    component.onWillReceiveProps(props);
+                        // Sorry for that :-(
+                        component.__props = props;
 
-                    const shouldUpdate = component.shouldUpdate(props, component.state);
-
-                    if (shouldUpdate) {
-                        component.onWillUpdate(props, component.state);
+                        if (shouldUpdate) {
+                            component.forceUpdate(prevProps, component.state);
+                        }
                     }
+                },
 
-                    const prevProps = component.props;
-
-                    // Sorry for that :-(
-                    component.__props = props;
-
-                    if (shouldUpdate) {
-                        component.forceUpdate(prevProps, component.state);
-                    }
-                }
-            };
-
-            const initResult = {
-                setProps
-            };
+                initResult = {
+                    setProps,
+                    close
+                };
 
             if (config.publicMethods) {
                 initResult.applyMethod = (methodName, args) => 

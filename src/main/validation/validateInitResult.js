@@ -7,6 +7,8 @@ export default function validateInitResult(initResult, config) {
         errMsg = 'Must be an object';
     } else if (typeof initResult.setProps !== 'function') {
         errMsg = "Parameter 'setProps' must be a function";
+    } else if (typeof initResult.close !== 'function') {
+        errMsg = "Parameter 'close' must be a function";
     }
 
     if (!errMsg) {
@@ -24,7 +26,7 @@ export default function validateInitResult(initResult, config) {
 
         if (keys.length > 1 + !!config.methods) {
             for (const key of keys) {
-                if (key !== 'setProps' && key !== 'applyMethod') {
+                if (key !== 'setProps' && key !== 'close' && key !== 'applyMethod') {
                     errMsg = `Invalid parameter '${key}'`;
                     break;
                 }

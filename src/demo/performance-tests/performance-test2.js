@@ -127,6 +127,10 @@ const TileRowStandard = defineClassComponent({
             type: Number
         }
     },
+
+    onWillUnmount() {
+        console.log('juhu');
+    },
     
     render() {
         const

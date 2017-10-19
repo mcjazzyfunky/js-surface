@@ -114,53 +114,38 @@ function customDefineStandardComponent(config) {
         created() {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
-            this.__resolveRenderingDone = null;
-            this.__setView = content => {
+            this.__content = null;
+            this.__callbackWhenUpdated = null;
+            
+            this.__updateView = (content, provisions, callbackWhenUpdated) => {
                 this.__content = content;
+
+                if (config.provides) {
+                    this.__childInjections = provisions;
+                }
+
+                this.__callbackWhenUpdated = callbackWhenUpdated;
 
                 if (!this.__preventForceUpdate) {
                     this.__preventForceUpdate = true;
                     this.$forceUpdate();
                 }
-
-                return new Promise(resolve => {
-                    this.__resolveRenderingDone = () => {
-                        this.__resolveRenderingDone = null;
-                        resolve(true);
-                    };
-                });
             };
 
 
-            this.__setState = state => {
+            this.__updateState = state => {
                 this.__state = state;
             };
 
             const initResult = config.init(
-                this.__setView, this.__setState, childInjections => {
-                    this.__childInjections = childInjections;
-                    this.$forceUpdate;
-                });
+                this.__updateView, this.__updateState);
 
             this.__setProps = props => {
                 initResult.setProps(props);
             };
 
+            this.__close = initResult.close;
             this.__applyMethod = initResult.applyMethod;
-            this.__provideChildInjections = initResult.provideChildInjections;
-
-            if (initResult.provideChildInjections) {
-                this.__updateChildInjections = function () {
-                    this.__childInjections = initResult.provideChildInjections();
-                };
-            }
-
-            Object.defineProperty(this, 'props', {
-                get() {
-                    // TODO - Add children?
-                    return this.$options.propsData;
-                }
-            });
         },
 
         beforeMount() {
@@ -179,8 +164,8 @@ function customDefineStandardComponent(config) {
         mounted() {
             this.__preventForceUpdate = false;
             
-            if (this.__resolveRenderingDone) {
-                this.__resolveRenderingDone();
+            if (this.__callbackWhenUpdated) {
+                this.__callbackWhenUpdated(null);
             }
 
             handleRefCallbacks(this);
@@ -206,15 +191,15 @@ function customDefineStandardComponent(config) {
         updated() {
             this.__preventForceUpdate = false;
             
-            if (this.__resolveRenderingDone) {
-                this.__resolveRenderingDone();
+            if (this.__callbackWhenUpdated) {
+                this.__callbackWhenUpdated();
             }
 
             handleRefCallbacks(this);
         },
 
         beforeDestroy() {
-            this.__setProps(undefined);
+            this.__close();
             handleRefCleanupCallbacks(this);
         },
 
@@ -331,6 +316,11 @@ function renderContent(vueCreateElement, content, component) {
         if (refName) {
             options.ref = refName;
             delete(options.attrs.ref);
+        }
+
+        if (props && props.className && !props.class) {
+            options.attrs.class = props.className;
+            delete options.attrs.className;
         }
 
         ret = vueCreateElement(type, options, children); 
