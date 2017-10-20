@@ -1,12 +1,46 @@
 import {
     hyperscript as h,
     defineFunctionalComponent,
-    mount 
+    defineClassComponent,
+    mount,
+    Component
 } from 'js-unity';
 
 import PropTypes from 'prop-types';
 
-const HelloWorld = defineFunctionalComponent({
+/*
+const meta = {
+    displayName: 'MyClassCompnent',
+
+    properties: {
+        name: {
+            type: String,
+            defaultValue: 'Hallo'
+        }
+    }
+};
+
+class HelloWord extends Component {
+    componentWillMount(...args) {
+        console.log('willMount', ...args);
+    }
+
+    componentDidMlount(...args) {
+        console.log('didMount', ...args);
+    }
+
+    render() {
+        return h('div',
+            'Hello ',
+            this.props.name,
+            '!');
+    }
+}
+
+const HelloWorld = defineComponent(HelloWorld, meta);
+
+*/
+const meta = {
     displayName:  'HelloWorld',
 
     properties: {
@@ -14,36 +48,16 @@ const HelloWorld = defineFunctionalComponent({
             type: String,
             defaultValue: 'World'
         }
-    },
-
-    render({ name }) {
-        return (
-            h('div',
-                { style: { display: 'block' } },
-                `Hello ${name}!`));
     }
-});
+};
 
-function HelloWorld2({ name }) {
+function HelloWorldComp({ name }) {
     return (
         h('div',
             { style: { display: 'block' } },
             `Hello ${name}!`));
 }
 
+const HelloWorld = defineFunctionalComponent(HelloWorldComp, meta);
 
-HelloWorld2.displayName = 'HelloW';
-
-HelloWorld2.propTypes = {
-    name: PropTypes.string
-};
-
-HelloWorld2.defaultProps = {
-    name: 'xxx'
-};
-
-
-const HelloWorld3 = defineFunctionalComponent(HelloWorld2); 
-
-
-mount(HelloWorld3({  }), 'main-content');
+mount(HelloWorld({ name: 'John Doe'  }), 'main-content');

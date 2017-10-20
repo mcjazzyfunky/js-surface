@@ -1,41 +1,29 @@
-import determineDisplayName from 
-    '../internal/helper/determineDisplayName';
-
-import determinePropertiesConfig from 
-    '../internal/helper/determinePropertiesConfig';
+import determineComponentMeta from 
+    '../internal/helper/determineComponentMeta';
 
 import { defineFunctionalComponent as defineComponent } from 'js-surface';
 
-export default function defineFunctionalComponent(classOrConfig) {
-    const
-        type = typeof classOrConfig,
-        isFunction = type === 'function',
-        isObject = classOrConfig && type === 'object';
-
-    if (!isFunction && !isObject) {
-        throw '[defineFunctionComponent] First argument must either be '
-            + 'a render function or a configuration object';
-    } else if (isFunction && classOrConfig.contextTypes !== undefined) {
-        throw "Illegal static class member 'contextTypes' (feature not supported)";
+export default function defineFunctionalComponent(renderFunction, meta = null) {
+    if (typeof renderFunction !== 'function') {
+        throw new Error(
+            '[defineFunctionalComponent] '
+            + "First argument 'renderFunction' must be a function");
+    } else if (typeof meta !== 'object') { 
+        throw new Error(
+            '[defineFunctionalComponent] '
+            + "Second argument 'meta' must be an object, null or undefined");
     }
 
-    let ret;
-
-    if (isObject) {
-        ret = defineComponent(classOrConfig);
-    } else {  
-        const 
-            displayName = determineDisplayName(classOrConfig),
-            properties = determinePropertiesConfig(classOrConfig),
-            render = classOrConfig,
-            config = { displayName, render };
-
-        if (properties) {
-            config.properties = properties;
-        }
-
-        ret = defineComponent(config);
+    let adjustedMeta;
+    
+    try {
+        adjustedMeta =
+            determineComponentMeta(meta ? meta : renderFunction, true);
+    } catch (error) {
+        throw new Error('[defineFunctionComponent] ' + error.message);
     }
 
-    return ret;
+    const config = Object.assign({ render: renderFunction }, adjustedMeta);
+
+    return  defineComponent(config);
 }

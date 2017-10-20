@@ -1,7 +1,7 @@
 export default [
     {
         name: 'test',
-        displayName: 'Name',
+        displayName: 'Test',
         directory: 'test',
         files: ['test.js']
     },

@@ -3,15 +3,17 @@ import Component from './Component';
 import { defineStandardComponent } from 'js-surface';
 import { checkPropTypes } from 'prop-types';
 
-export function defineClassComponent(configOrClass) {
+export default function defineClassComponent(configOrClass) {
     let ret;
     
     const
         type = typeof configOrClass,
         isObject = type === 'object' && configOrClass !== null,
         isFunction = type === 'function',
-        isComponentClass = isFunction && configOrClass.prototype instanceof Component;
-    
+        isComponentClass = isFunction
+            && typeof configOrClass.constructor === 'function'
+            && configOrClass.constructor.prototype instanceof Component;
+
     if (!isObject && !isComponentClass) {
         throw new Error(
             '[defineClassComponent] First argument must either be an '
@@ -45,7 +47,7 @@ function defineClassComponentByConfig(config) {
         
         throw "Configuration parameter 'properties' must be "
             + 'either be an object or undefined';
-    } else if (typeof config.methods !== undefined
+    } else if (config.methods !== undefined
         && !Array.isArray(config.properties)) {
         
         throw "Configuration parameter 'methods' must be "
@@ -59,11 +61,13 @@ function defineClassComponentByConfig(config) {
         throw "Configuration must not have a parameter 'init'";
     }
 
-    const adjustedConfig = Object.assign({}, config);
+    const stdConfig = Object.assign({}, config);
 
-    adjustedConfig.init = buildInitFunction(config);
+    delete stdConfig.class;
 
-    return defineStandardComponent(config);
+    stdConfig.init = buildInitFunction(config);
+
+    return defineStandardComponent(stdConfig);
 }
 
 function defineClassComponentByClass(componentClass) {
@@ -132,5 +136,54 @@ function convertPropType(propType, propName, componentDisplayName) {
 }
 
 function buildInitFunction(config) {
+    return (updateView, updateState) => {
+        let
+            component = null,
+            initialized = false;
 
+        const
+            setProps = props => {
+                if (!component) {
+                    component = new config.class(props);
+
+                    component.componentWillMount();
+                } else {
+                    component.componentWillUpdate();
+                }
+
+                updateView(
+                    component.render(),
+                    config.provides ? component.getChildContext() : null,
+                    callbackWhenUpdated);
+            },
+
+            close = () => {
+                if (component) {
+                    component.componentWillUnmount();
+                    component = null;
+                }
+            },
+
+            callbackWhenUpdated = () => {console.log('callback')
+                if (!initialized) {
+                    initialized = true;
+
+                    component.componentDidMount();
+                } else {
+                    component.componentDidUpdate();
+                }
+            };
+
+        const ret = { setProps, close };
+
+        if (config.methods) {
+            ret.applyMethod = (methodName, args) => {
+                return component
+                    ? component[methodName](...args)
+                    : undefined; 
+            };
+        }
+
+        return ret;
+    };
 }
