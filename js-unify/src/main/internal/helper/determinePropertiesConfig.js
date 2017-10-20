@@ -12,10 +12,7 @@ function determinePropertiesConfig(componentClass) {
 
     if (propTypes && typeof propTypes === 'object') {
         for (let key of Object.keys(propTypes)) {
-            properties[key] = {
-                nullable: true,
-                defaultValue: undefined
-            };
+            properties[key] = { defaultValue: undefined };
 
             const propType = propTypes[key];
 
@@ -32,7 +29,7 @@ function determinePropertiesConfig(componentClass) {
         for (let key of Object.keys(defaultProps)) {
             properties[key] =
                 properties[key]
-                || { nullable: true, defaultValue: undefined };
+                || { defaultValue: undefined };
             
             properties[key].defaultValue = defaultProps[key];
         }

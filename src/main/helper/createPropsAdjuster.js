@@ -20,36 +20,47 @@ export default function createPropsAdjuster(config) {
         for (let key of  Object.keys(propertiesConfig)) {
             const
                 type = propertiesConfig[key].type,
-                nullable = propertiesConfig[key].nullable || false,
+                
+                nullable =
+                    typeof propertiesConfig[key].nullable === 'boolean' 
+                    ? propertiesConfig[key].nullable
+                    : null,
+
                 constraint = propertiesConfig[key].constraint || null,
                 defaultValue = propertiesConfig[key].defaultValue,
                 getDefaultValue = propertiesConfig[key].getDefaultValue,
 
-                defaultValueProvider = getDefaultValue
-                    ? getDefaultValue
-                    : (defaultValue !== undefined ? () => defaultValue : null);
+                hasDefaultValue = 
+                    propertiesConfig[key].hasOwnProperty('defaultValue')
+                    || !!getDefaultValue,
 
-            hasDefaults = hasDefaults || defaultValueProvider !== null;
+                defaultValueProvider =
+                    getDefaultValue
+                        ? getDefaultValue
+                        : (hasDefaultValue ? () => defaultValue : null);
+                
+            hasDefaults = hasDefaults || hasDefaultValue;
 
             validations.push([
                 key,
                 type,
                 nullable,
                 constraint ? SpecValidator.from(constraint) : null,
-                defaultValueProvider]);
+                defaultValueProvider
+            ]);
 
             if (getDefaultValue) {
                 Object.defineProperty(defaults, key, {
                     get: getDefaultValue
                 });
-            } else if (defaultValue !== undefined) {
+            } else if (hasDefaultValue) {
                 defaults[key] = defaultValue;
             }
         }
 
         ret = (props, validating) => {
             let adjustedProps = props;
-            
+
             if (hasDefaults) {
                 adjustedProps = Object.assign({}, props); // TODO: really necessary?
 
@@ -100,30 +111,29 @@ function validateProps(props, validations) {
 
     //try {
         for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
-            const defaultValue = defaultValueProvider
-                ? defaultValueProvider() : undefined;
+            const defaultValue =
+                defaultValueProvider
+                    ? defaultValueProvider()
+                    : undefined;
 
-            if (defaultValueProvider && defaultValue === undefined) {
-                errMsg = 'Default prop provider must not return undefined';
-                break;
+            let prop = props[propertyName];
+
+            keysToBeChecked.delete(propertyName);
+        
+            // TODO!!!
+            /*
+            if (defaultValueProvider && prop === defaultValue) {
+                // TODO - shall the default value always be fine???
+                // everything fine
+            } else */if (nullable === true && prop === null) {
+                // everything fine
+            } else if (!defaultValueProvider && props[propertyName] === undefined) {
+                errMsg = `Missing mandatory property '${propertyName}'`;
             } else {
-                let prop = props[propertyName];
+                const err = validateProperty(prop, propertyName, type, nullable, constraint);
 
-                keysToBeChecked.delete(propertyName);
-
-                if (defaultValue !== undefined && prop === defaultValue) {
-                    // TODO - shall the default value always be fine???
-                    // everything fine
-                } else if (nullable && prop === null) {
-                    // everything fine
-                } else if (defaultValue === undefined && props[propertyName] === undefined) {
-                    errMsg = `Missing mandatory property '${propertyName}'`;
-                } else {
-                    const err = validateProperty(prop, propertyName, type, nullable, constraint);
-
-                    if (err) {
-                        errMsg = err.message;
-                    }
+                if (err) {
+                    errMsg = err.message;
                 }
             }
             

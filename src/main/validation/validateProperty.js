@@ -1,11 +1,11 @@
-import { SpecValidator } from 'js-spec';
-
 export default function validateProperty(it, propertyName, typeConstr, nullable, constraint) {
     let
         ret = null,
         errMsg = null;
 
-    if (it === null && !nullable) {
+    if (it === null && nullable === true) {
+        // Perfectly fine
+    } else if (it === null && nullable === false) {
         errMsg = `Property '${propertyName}' must not be null`;
     } else if (typeConstr !== undefined && typeConstr !== null) {
         const type = typeof it;
@@ -49,9 +49,9 @@ export default function validateProperty(it, propertyName, typeConstr, nullable,
 
     if (!errMsg && constraint) {
         let err =
-            constraint instanceof SpecValidator
-            ? constraint.validate(it, '')
-            : constraint(it);
+            typeof constraint === 'function' 
+                ? constraint(it)
+                : constraint.validate(it);
         
         if (err === false) {
             errMsg = `Illegal value for property '${propertyName}'`;

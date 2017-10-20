@@ -38,6 +38,11 @@ HelloWorld2.propTypes = {
     name: PropTypes.string
 };
 
+HelloWorld2.defaultProps = {
+    name: 'xxx'
+};
+
+
 const HelloWorld3 = defineFunctionalComponent(HelloWorld2); 
 
 
