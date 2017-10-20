@@ -1,4 +1,4 @@
-import createElement from './api/creatElement';
+import createElement from './api/createElement';
 import defineClassComponent from './api/defineClassComponent';
 import defineFunctionalComponent from './api/defineFunctionalComponent';
 import hyperscript from './api/hyperscript';

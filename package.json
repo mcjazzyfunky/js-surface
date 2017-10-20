@@ -41,7 +41,7 @@
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.2.1",
-    "prop-types": "^15.5.10",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-lite": "^0.15.39",

@@ -111,7 +111,7 @@ function validateProps(props, validations) {
 
                 keysToBeChecked.delete(propertyName);
 
-                if (type === undefined || defaultValue !== undefined && prop === defaultValue) {
+                if (defaultValue !== undefined && prop === defaultValue) {
                     // TODO - shall the default value always be fine???
                     // everything fine
                 } else if (nullable && prop === null) {

@@ -4,7 +4,7 @@ export default function validateProperty(it, propertyName, typeConstr, nullable,
     let
         ret = null,
         errMsg = null;
-    
+
     if (it === null && !nullable) {
         errMsg = `Property '${propertyName}' must not be null`;
     } else if (typeConstr !== undefined && typeConstr !== null) {
@@ -40,35 +40,35 @@ export default function validateProperty(it, propertyName, typeConstr, nullable,
             break;
             
         default:
-            if (!(it instanceof typeConstr)) {
+            if (typeConstr && !(it instanceof typeConstr)) {
                 errMsg = `The property '${propertyName}' must be of type '`
                     + typeConstr.name + "'";
             }
         }
-        
-        if (!errMsg && constraint) {
-            let err =
-                constraint instanceof SpecValidator
-                ? constraint.validate(it, '')
-                : constraint(it);
-            
-            if (err === false) {
-                errMsg = `Illegal value for property '${propertyName}'`;
-            } else if (typeof err === 'string') {
-                errMsg = `Invalid value for property '${propertyName}' => ${err}`;
-            } else if (err && typeof err.message === 'string') {
-                errMsg = `Invalid value for property '${propertyName}' => `
-                    + err.message;
-            } else if (err) {
-                errMsg = String(err);
-            }
-        }
-        
-        
-        if (errMsg) {
-            ret = new Error(errMsg);
-        } 
     }
+
+    if (!errMsg && constraint) {
+        let err =
+            constraint instanceof SpecValidator
+            ? constraint.validate(it, '')
+            : constraint(it);
+        
+        if (err === false) {
+            errMsg = `Illegal value for property '${propertyName}'`;
+        } else if (typeof err === 'string') {
+            errMsg = `Invalid value for property '${propertyName}' => ${err}`;
+        } else if (err && typeof err.message === 'string') {
+            errMsg = `Invalid value for property '${propertyName}' => `
+                + err.message;
+        } else if (err) {
+            errMsg = String(err);
+        }
+    }
+    
+    
+    if (errMsg) {
+        ret = new Error(errMsg);
+    } 
     
     return ret;
 }
