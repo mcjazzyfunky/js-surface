@@ -1,19 +1,24 @@
 import Component from './Component';
 import determineComponentMeta from '../internal/helper/determineComponentMeta';
 import buildInitFunction from '../internal/helper/buildInitFunction';
+import buildComponentClass from '../internal/helper/buildComponentClass';
 
 import { defineStandardComponent } from 'js-surface';
 
-export default function defineClassComponent(componentClass, meta = null) {
-    if (typeof componentClass !== 'function') {
+export default function defineClassComponent(config, meta = null) {
+    const
+        configType = typeof config,
+        configIsObject = config !== null && configType === 'object',
+        configIsFunction = configType === 'function';
+
+    if (!configIsObject
+        && (!configIsFunction
+            || !(config.prototype instanceof Component))) {
+
         throw new Error(
             '[defineFunctionalComponent] '
-            + "First argument 'componentFunction' must be a constructor function");
-    } else if (!(componentClass.prototype instanceof Component)) {
-        throw new Error(
-            '[defineFunctionalComponent] '
-            + "First argument 'componentFunction' must be a class "
-            + "that extends class 'Component'");
+            + "First argument 'cofig' must be "
+            + "an object or a class that extends class 'Component'");
     } else if (typeof meta !== 'object') { 
         throw new Error(
             '[defineFunctionalComponent] '
@@ -24,15 +29,25 @@ export default function defineClassComponent(componentClass, meta = null) {
     
     try {
         adjustedMeta =
-            determineComponentMeta(meta ? meta : componentClass, false);
+            determineComponentMeta(meta ? meta : config, false, !!meta);
     } catch (error) {
         throw new Error('[defineClassComponent] ' + error.message);
     }
 
-    const config = Object.assign(
-        { init: buildInitFunction(componentClass, adjustedMeta) },
+    let clazz;
+
+    if (configIsObject && config.class) {
+        clazz = config.class;
+    } else if (configIsObject) {
+        clazz = buildComponentClass(config);
+    } else {
+        clazz = config;
+    }
+
+    const jsSurfaceConfig = Object.assign(
+        { init: buildInitFunction(clazz, adjustedMeta) },
         adjustedMeta);
 
-    return  defineStandardComponent(config);
+    return  defineStandardComponent(jsSurfaceConfig);
 }
 

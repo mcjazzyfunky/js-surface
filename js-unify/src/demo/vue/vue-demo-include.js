@@ -2,7 +2,7 @@ import {
     hyperscript as h,
     defineFunctionalComponent,
     defineClassComponent
-} from 'js-surface';
+} from 'js-unify';
 
 import { Spec } from 'js-spec';
 

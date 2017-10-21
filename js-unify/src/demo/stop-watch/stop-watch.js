@@ -21,13 +21,13 @@ class CustomComponent extends Component {
     setTime(time) {
         const running = this.state.running;
 
-        this.setState({ time, running });
+        this.state = { time, running };
     }
 
     setRunning(running) {
         const time = this.state.time;
 
-        this.setState({ time, running });
+        this.state = { time, running };
     }
 
     startTimer() {

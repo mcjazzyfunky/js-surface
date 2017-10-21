@@ -4,7 +4,7 @@ import {
     hyperscript as h,
     mount,
     ComponentSystem 
-}  from 'js-surface';
+}  from 'js-unify';
 
 import { Spec } from 'js-spec';
 

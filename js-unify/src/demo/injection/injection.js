@@ -3,7 +3,7 @@ import {
     defineClassComponent,
     defineFunctionalComponent,
     mount 
-} from 'js-surface';
+} from 'js-unify';
 
 const Parent = defineClassComponent({
     displayName: 'Parent',

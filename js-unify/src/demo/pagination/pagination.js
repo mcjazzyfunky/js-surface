@@ -3,7 +3,7 @@ import {
     defineFunctionalComponent,
     hyperscript as h,
     mount 
-}  from 'js-surface';
+}  from 'js-unify';
 
 import { Seq } from 'js-essential';
 

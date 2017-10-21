@@ -22,6 +22,7 @@ function render({ name }) {
             `Hello ${name}!`));
 }
 
-const HelloWorld = defineFunctionalComponent(render, meta);
+//const HelloWorld = defineFunctionalComponent(render, meta);
+const HelloWorld = defineFunctionalComponent(Object.assign({ render }, meta));
 
 mount(HelloWorld({ name:  'Joan Doe' }), 'main-content');

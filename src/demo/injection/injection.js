@@ -2,10 +2,11 @@ import {
     hyperscript as h,
     defineClassComponent,
     defineFunctionalComponent,
-    mount 
-} from 'js-surface';
+    mount,
+    Component
+} from 'js-unify';
 
-const Parent = defineClassComponent({
+const parentMeta = {
     displayName: 'Parent',
 
     properties: {
@@ -16,12 +17,14 @@ const Parent = defineClassComponent({
     },
 
     provides: ['value'],
-    
+};
+
+class ParentComponent extends Component {
     provideChildInjections() {
         return {
             value: this.props.masterValue
         };
-    },
+    }
 
     render() {
         return h('div',
@@ -33,7 +36,9 @@ const Parent = defineClassComponent({
                 ChildFunctionBased({ value: 'with explicit value' }),
                 ChildClassBased({ value: 'with another explicit value' })));
     }
-});
+}
+
+const Parent = defineClassComponent(ParentComponent, parentMeta);
 
 const ChildFunctionBased = defineFunctionalComponent({
     displayName: 'ChildFunctionBased',

@@ -1,8 +1,8 @@
 import {
     hyperscript as h,
     defineClassComponent,
-    render
-} from 'js-surface';
+    mount
+} from 'js-unify';
 
 const App = defineClassComponent({
     displayName: 'App',
@@ -33,4 +33,4 @@ const App = defineClassComponent({
     }
 });
 
-render(App(), document.getElementById('main-content'));
+mount(App(), document.getElementById('main-content'));

@@ -5,9 +5,18 @@ export default class Component {
         this.___prevProps = undefined;
         this.___prevState = undefined;
         this.___updateView = null;
+        this.___updateState = null;
         this.___hasChildContext = false;
         this.___initialized = false;
 
+        for (const key of Object.keys(Object.getPrototypeOf(this))) {
+            const value = this[key];
+
+            if (typeof value === 'function') {
+                this[key] = value.bind(this);
+            }
+        }
+        
         this.___callbackWhenUpdated =
             this.___callbackWhenUpdated.bind(this);
     }
@@ -20,50 +29,37 @@ export default class Component {
         return this.___state;
     }
 
-    set state(nextState) {
-        if (this.___updateView) {
-            throw new Error(
-                "It's not allowed to modify property 'state' directly outside "
-                + "of the constructor - please use method 'setState' instead");
-        }
-
-        this.___state = nextState;
-    }
-
-    setState(nextState) {
+    set state(state) {
         if (!this.___updateView) {
-            throw new Error(
-                "It's not allowed to modify property 'state' via 'setState' "
-                + 'inside of the constructor - please set state '
-                + 'directly instead');
+            this.___state = state;
+        } else {
+            this.___update(this.___props, state, false);
         }
-
-        this.___update(this.___props, nextState, false);
     }
 
-    componentWillMount() {
+    onWillMount() {
     }
 
-    componentDidMount() {
+    onDidMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    onWillReceiveProps(nextProps) {
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldUpdate(nextProps, nextState) {
         return true;
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    onWillUpdate(nextProps, nextState) {
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    onDidUpdate(prevProps, prevState) {
     }
 
-    componentWillUnmount() {
+    onWillUnmount() {
     }
 
-    componentDidCatch(error, info) {
+    onDidCatch(error, info) {
         // TODO!!!
     }
 
@@ -77,23 +73,33 @@ export default class Component {
         return null;
     }
 
-    ___init(updateView) {
+    provide() {
+        return null;
+    }
+
+    ___init(updateView, updateState) {
         this.___updateView = updateView;
+        this.___updateState = updateState;
+        updateState(this.___state);
     }
 
     ___update(nextProps, nextState, force) {
         const needsUpdate =
             force
-            || this.shouldComponentUpdate(nextProps, nextState);
+            || this.shouldUpdate(nextProps, nextState);
         
         if (needsUpdate) {
-            this.componentWillUpdate(nextProps, nextState);
+            this.onWillUpdate(nextProps, nextState);
         }
 
         this.___prevProps = this.___props;
         this.___prevState = this.___state;
         this.___props = nextProps;
         this.___state = nextState;
+
+        if (this.___updateState) {
+            this.___updateState(nextState);
+        }
 
         if (needsUpdate) {        
             this.___updateView(
@@ -106,9 +112,9 @@ export default class Component {
     ___callbackWhenUpdated() {
         if (!this.___initialized) {
             this.___initialized = true;
-            this.componentDidMount();
+            this.onDidMount();
         } else {
-            this.componentDidUpdate(this.___prevProps, this.___prevState);
+            this.onDidUpdate(this.___prevProps, this.___prevState);
         }
     }
 }

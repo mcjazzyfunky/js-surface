@@ -3,7 +3,7 @@ import {
     defineFunctionalComponent,
     defineClassComponent,
     mount
-} from 'js-surface';
+} from 'js-unify';
 
 const FunctionalGreeting = defineFunctionalComponent({
     displayName: 'Greeting',

@@ -2,7 +2,7 @@ import {
     hyperscript as h,
     defineClassComponent,
     mount 
-} from 'js-surface';
+} from 'js-unify';
 
 
 const MountUnmount = defineClassComponent({

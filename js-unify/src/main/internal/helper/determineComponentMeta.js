@@ -5,7 +5,7 @@ const
         ['displayName', 'properties', 'methods', 'provides',
             'propTypes', 'defaultProps']);
 
-export default function determineComponentMeta(subject, functional) {
+export default function determineComponentMeta(subject, functional, forbidFurtherKeys = false) {
     const
         subjectType = typeof subject,
         subjectIsFunction = subjectType === 'function',
@@ -73,11 +73,11 @@ export default function determineComponentMeta(subject, functional) {
             + 'is not allowed for functional components');
     }
 
-    if (subjectIsObject) {
+    if (forbidFurtherKeys) {
         for (const key of Object.keys(subject)) {
             if (!allowedMetaFieldNames.has(key)) {
                 throw new Error(
-                    "Meta information with key '${key}' is not allowed");
+                    `Meta information with key '${key}' is not allowed`);
             }
         }
     }

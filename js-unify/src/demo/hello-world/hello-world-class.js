@@ -23,29 +23,29 @@ class CustomComponent extends Component {
         console.log('constructor', props);
     }
 
-    shouldComponentUpdate() {
-        console.log('shouldComponentUpdate');
+    shouldUpdate() {
+        console.log('shouldUpdate');
 
         return true;
     }
 
-    componentWillReceiveProps(...args) {
+    onWillReceiveProps(...args) {
         console.log('onWillRecieveProps', ...args);
     }
 
-    componentWillMount(...args) {
+    onWillMount(...args) {
         console.log('onWillMount', ...args);
     }
 
-    componentDidMount(...args) {
+    onDidMount(...args) {
         console.log('onDidMount', ...args);
     }
 
-    componentWillUpdate(...args) {
+    onWillUpdate(...args) {
         console.log('onWillUpdate', ...args);
     }
 
-    componentDidUpdate(...args) {
+    onDidUpdate(...args) {
         console.log('onDidUpdate', ...args);
     }
 

@@ -8,34 +8,30 @@ export default function buildInitFunction(componentClass, meta) {
     CustomComponent.prototype.___meta = meta;
 
     return (updateView, updateState) => {
-        let
-            component = null,
-            initialized = false;
+        let component = null;
 
         const
             setProps = props => {
-                let performUpdate = true;
-
                 if (!component) {
                     component = new CustomComponent(props);
-                    component.___init(updateView);
-                    component.componentWillMount();
+                    component.___init(updateView, updateState);
+                    component.onWillMount();
                 } else {
 
-                    if (component.shouldComponentUpdate(props, this.state)) {
-                        component.componentWillUpdate();
+                    if (component.shouldUpdate(props, this.state)) {
+                        component.onWillUpdate();
                     }
                 }
 
                 updateView(
                     component.render(),
-                    meta.provides ? component.getChildContext() : null,
+                    meta.provides ? component.provide() : null,
                     component.___callbackWhenUpdated);
             },
 
             close = () => {
                 if (component) {
-                    component.componentWillUnmount();
+                    component.onWillUnmount();
                     component = null;
                 }
             };

@@ -1,4 +1,4 @@
-import { ComponentSystem } from 'js-surface';
+import { ComponentSystem } from 'js-unify';
 
 if (ComponentSystem.adapter.name !== 'vue') {
     document.getElementById('main-content').innerHTML =

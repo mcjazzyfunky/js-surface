@@ -3,11 +3,17 @@ import determineComponentMeta from
 
 import { defineFunctionalComponent as defineComponent } from 'js-surface';
 
-export default function defineFunctionalComponent(renderFunction, meta = null) {
-    if (typeof renderFunction !== 'function') {
+export default function defineFunctionalComponent(config, meta = null) {
+    const
+        configType = typeof config,
+        configIsObject = config !== null && configType === 'object',
+        configIsFunction = configType === 'function';
+
+    if (!configIsFunction && !configIsObject) {
         throw new Error(
             '[defineFunctionalComponent] '
-            + "First argument 'renderFunction' must be a function");
+            + "First argument 'config' must either be an object "
+            + 'or an render function');
     } else if (typeof meta !== 'object') { 
         throw new Error(
             '[defineFunctionalComponent] '
@@ -18,12 +24,14 @@ export default function defineFunctionalComponent(renderFunction, meta = null) {
     
     try {
         adjustedMeta =
-            determineComponentMeta(meta ? meta : renderFunction, true);
+            determineComponentMeta(meta ? meta : config, true, !!meta);
     } catch (error) {
         throw new Error('[defineFunctionComponent] ' + error.message);
     }
 
-    const config = Object.assign({ render: renderFunction }, adjustedMeta);
+    const
+        render = configIsObject ? config.render : config,
+        stdConfig = Object.assign({ render }, adjustedMeta);
 
-    return  defineComponent(config);
+    return  defineComponent(stdConfig);
 }
