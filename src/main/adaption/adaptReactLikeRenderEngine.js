@@ -112,14 +112,15 @@ function defineCustomComponent(config, ParentComponent) {
         ParentComponent.apply(this, superArgs);
 
         this.__view = null;
-        this.__viewUpdateResolver = null;
         this.__initialized = false;
         this.__mustBeRerendered = false;
+        this.__callbackWhenUpdated = null;
 
         const
-            updateView = (view, childContext) => {
+            updateView = (view, childContext, callbackWhenUpdated) => {
                 this.__view = view;
                 this.__childContext = childContext;
+                this.__callbackWhenUpdated = callbackWhenUpdated;
                 this.__mustBeRerendered = true;
 
                 if (this.__initialized) {
@@ -127,10 +128,6 @@ function defineCustomComponent(config, ParentComponent) {
                 } else {
                     this.__initialized = true;
                 }
-
-                return new Promise(resolve => {
-                    this.__viewUpdateResolver = resolve;
-                });
             },
 
             updateState = state => {
@@ -181,16 +178,16 @@ function defineCustomComponent(config, ParentComponent) {
         },
 
         componentDidMount() {
-            if (this.__viewUpdateResolver) {
-                this.__viewUpdateResolver(true);
-                this.__viewUpdateResolver = null;
+            if (this.__callbackWhenUpdated) {
+                this.__callbackWhenUpdated(null);
+                this.__callbackWhenUpdated = null;
             }
         },
 
         componentDidUpdate() {
-            if (this.__viewUpdateResolver) {
-                this.__viewUpdateResolver();
-                this.__viewUpdateResolver = null;
+            if (this.__callbackWhenUpdated) {
+                this.__callbackWhenUpdated(null);
+                this.__callbackWhenUpdated = null;
             }
         },
 

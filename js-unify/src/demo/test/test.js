@@ -8,38 +8,59 @@ import {
 
 import PropTypes from 'prop-types';
 
-/*
+
 const meta = {
-    displayName: 'MyClassCompnent',
+    displayName: 'Clock',
 
     properties: {
-        name: {
+        label: {
             type: String,
-            defaultValue: 'Hallo'
+            defaultValue: 'Counter:'
         }
     }
 };
 
-class HelloWord extends Component {
+class CounterClass extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { counter: 0 };
+    }
+
     componentWillMount(...args) {
         console.log('willMount', ...args);
     }
 
-    componentDidMlount(...args) {
+    componentDidMount(...args) {
         console.log('didMount', ...args);
+    }
+
+    componentWillUpdate(...args) {
+        console.log('willUpdate', ...args);
+    }
+
+    componentDidUpdate(...args) {
+        console.log('didUpdate', ...args);
+    }
+
+    incrementCounter(n = 1) {
+        this.setState({ counter: this.state.counter + n });
     }
 
     render() {
         return h('div',
-            'Hello ',
-            this.props.name,
-            '!');
+            this.props.label,
+            ' ',
+            h('button', { onClick: () => this.incrementCounter(-1) }, '-'),
+            this.state.counter, 
+            h('button', { onClick: () => this.incrementCounter(1) }, '+'))
     }
 }
 
-const HelloWorld = defineComponent(HelloWorld, meta);
+const Clock = defineClassComponent(CounterClass, meta);
 
-*/
+
+/*
 const meta = {
     displayName:  'HelloWorld',
 
@@ -59,5 +80,5 @@ function HelloWorldComp({ name }) {
 }
 
 const HelloWorld = defineFunctionalComponent(HelloWorldComp, meta);
-
-mount(HelloWorld({ name: 'John Doe'  }), 'main-content');
+*/
+mount(Clock({ label: 'Counter:'  }), 'main-content');

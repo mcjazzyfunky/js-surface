@@ -1,11 +1,5 @@
 export default [
     {
-        name: 'test',
-        displayName: 'Test',
-        directory: 'test',
-        files: ['test.js']
-    },
-    {
         name: 'hello-wold-functional',
         displayName: 'Hello World (functional)',
         directory: 'hello-world',
@@ -114,3 +108,4 @@ export default [
         files: ['deriving.js']
     }
 ];
+
