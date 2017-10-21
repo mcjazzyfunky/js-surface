@@ -219,12 +219,18 @@ function customDefineStandardComponent(config) {
 }
 
 function customCreateElement(tag, props, ...children) {
-    const ret = {
-        type: tag,
-        props,
-        children,
-        isSurfaceElement: true
-    };
+    let ret;
+    
+    if (tag && tag.meta) { // TODO: tag.meta checks for factory - find better solution!
+        ret = tag(props, ...children);
+    } else {
+        ret = {
+            type: tag,
+            props,
+            children,
+            isSurfaceElement: true
+        };
+    }
 
     return ret;
 }
@@ -323,7 +329,7 @@ function renderContent(vueCreateElement, content, component) {
             delete options.attrs.className;
         }
 
-        ret = vueCreateElement(type, options, children); 
+        ret = vueCreateElement(type, options, children);
     } else {
         const options = { props };
 
@@ -332,7 +338,12 @@ function renderContent(vueCreateElement, content, component) {
             delete(options.props.ref);
         }
 
-        ret = vueCreateElement(type, options, children);
+        if (type && type.meta) {
+            ret = type(options, ...children);
+            console.log(options, children)
+        } else {
+            ret = vueCreateElement(type, options, children);
+        }
     }
 
     return ret;

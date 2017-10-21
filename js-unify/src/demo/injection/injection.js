@@ -17,7 +17,7 @@ const Parent = defineClassComponent({
 
     provides: ['value'],
     
-    provideChildInjections() {
+    provide() {
         return {
             value: this.props.masterValue
         };

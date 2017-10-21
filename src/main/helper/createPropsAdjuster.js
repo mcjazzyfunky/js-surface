@@ -13,7 +13,7 @@ export default function createPropsAdjuster(config) {
         defaults = {};
 
     let hasDefaults = false;
-
+    
     for (let key of  Object.keys(propertiesConfig)) {
         const
             type = propertiesConfig[key].type,
@@ -107,15 +107,10 @@ function validateProps(props, validations) {
 
     //try {
         for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
-            const defaultValue =
-                defaultValueProvider
-                    ? defaultValueProvider()
-                    : undefined;
-
             let prop = props[propertyName];
 
             keysToBeChecked.delete(propertyName);
-        
+
             // TODO!!!
             /*
             if (defaultValueProvider && prop === defaultValue) {

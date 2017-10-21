@@ -24,6 +24,11 @@ export default function adaptCreateElement(createElement, adapterName) {
                 type = args[0],
                 props = args[1];
 
+            // TODO - that could be done better!!!
+            if (type && type.meta) {
+                return type.call(...args);
+            }
+
             // TODO - add logic for vue
             if (isReact && props) {
                 if (typeof type === 'string') {
@@ -54,6 +59,11 @@ export default function adaptCreateElement(createElement, adapterName) {
             const
                 type = args[0],
                 props = args[1];
+
+            // TODO - that could be done better!!!
+            if (type && type.meta) {
+                return type.call(...args);
+            }
 
             if (args.length > 2) {
                 const length = args.length; 

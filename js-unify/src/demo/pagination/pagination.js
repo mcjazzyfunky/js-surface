@@ -24,21 +24,25 @@ export const Pagination = defineFunctionalComponent({
     properties: {
         className: {
             type: String,
+            nullable: true,
             defaultValue: null
         },
 
         pageIndex: {
             type: Number,
+            nullable: true,
             defaultValue: null
         },
 
         pageSize: {
             type: Number,
+            nullable: true,
             defaultValue: null
         },
 
         totalItemCount: {
             type: Number,
+            nullable: true,
             defaultValue: null
         },
 

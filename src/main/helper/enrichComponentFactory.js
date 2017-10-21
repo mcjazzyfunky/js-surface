@@ -50,7 +50,6 @@ export default function enrichCompnentFactory(factory, config, componentFactoryC
         
         const newFactory = componentFactoryCreator(newConfig);
         newFactory.meta.type = factory.meta.type;
-        console.log(newConfig)
         return newFactory;
     };
 }

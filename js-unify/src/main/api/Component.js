@@ -104,7 +104,7 @@ export default class Component {
         if (needsUpdate) {        
             this.___updateView(
                 this.render(),
-                this.___meta.provides ? this.getChildContext() : null,
+                this.___meta.provides ? this.provide() : null,
                 this.___callbackWhenUpdated);
         }
     }
