@@ -93,6 +93,14 @@ export default defineComponent({
                 new Date(new Date().toDateString())
         },
 
+        name: {
+            type: String,
+            constraint: Spec.match(/^[a-z]+$/),
+                        // 3rd-party spec lib
+            nullable: true,
+            defaultValue: null
+        }
+
         localizer: {
             type: Localizer,
             inject: true,
@@ -107,8 +115,6 @@ export default defineComponent({
     },
 
     methods: ['focus', 'blur'],
-
-
 
     init(updateView, forwardState) {
         // ... to complicated to show here ....
@@ -155,4 +161,3 @@ In case that the DOM element `target` could not be found then `null` will be ret
 jsSurface will NOT hide all UI libraries specialities. For example different UI libraries may use different event systems on top of the usual DOM event system (for example "SyntheticEvents" in React).
 jsSurface will only normalize the different behaviors if this normalization will not generate too much code (jsSurface should stay as small as possible).
 Please keep that in mind.
-
