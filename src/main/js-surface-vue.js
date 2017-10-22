@@ -111,7 +111,7 @@ function customDefineStandardComponent(config) {
             };
         },
 
-        created() {console.log('created')
+        created() {
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
             this.__content = null;
