@@ -89,7 +89,10 @@
 
             meta: {
                 '*.js': {
- 		            presets: ['es2015',  'es2016', 'es2017']
+                     presets: ['es2015',  'es2016', 'es2017'],
+                     babelOptions: {
+                         react: true
+                     }
                 },
                 '../../node_modules/bootstrap/dist/js/bootstrap.js': {
                     format: 'global',

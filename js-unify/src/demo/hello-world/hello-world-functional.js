@@ -1,7 +1,11 @@
 import {
     hyperscript as h,
     defineFunctionalComponent,
-    mount 
+    mount,
+
+    /** @jsx createElement */
+    // eslint-disable-next-line no-unused-vars
+    createElement 
 } from 'js-unify';
 
 const meta = {
@@ -17,12 +21,12 @@ const meta = {
 
 function render({ name }) {
     return (
-        h('div',
-            { style: { display: 'block' } },
-            `Hello ${name}!`));
+        <div style={{ display: 'block' }}>
+             Hello { name }
+        </div>
+    );
 }
 
-//const HelloWorld = defineFunctionalComponent(render, meta);
-const HelloWorld = defineFunctionalComponent(Object.assign({ render }, meta));
+const HelloWorld = defineFunctionalComponent(render, meta);
 
 mount(HelloWorld({ name:  'Joan Doe' }), 'main-content');
