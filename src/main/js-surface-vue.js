@@ -14,7 +14,8 @@ const {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem
+    Adapter,
+    Config
 } = adaptRenderEngine({
     renderEngine: {
         name: 'vue',
@@ -40,7 +41,8 @@ export {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem
+    Adapter,
+    Config
 };
 
 // ------------------------------------------------------------------

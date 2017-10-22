@@ -1,14 +1,14 @@
+import { mount, Adapter, Config } from 'js-surface';
+
 import {
     defineClassComponent,
     defineFunctionalComponent,
-    hyperscript as h,
-    mount,
-    ComponentSystem 
+    hyperscript as h
 }  from 'js-unify';
 
 import { Spec } from 'js-spec';
 
-ComponentSystem.config.validateProps = false;
+Config.validateProps = false;
 
 const
     framesPerSecond = 240,
@@ -240,21 +240,21 @@ const SpeedTest = defineClassComponent({
 
 let htm = null;
 
-switch (ComponentSystem.adapter.name) {
+switch (Adapter.name) {
 case 'react':
-    htm = ComponentSystem.adapter.api.React.createElement;
+    htm = Adapter.api.React.createElement;
     break;
 
 case 'react-lite':
-    htm = ComponentSystem.adapter.api.createElement;
+    htm = Adapter.api.createElement;
     break;
 
 case 'preact':
-    htm = ComponentSystem.adapter.api.h;
+    htm = Adapter.api.h;
     break;
 
 case 'inferno':
-    htm = ComponentSystem.adapter.api.Inferno.createElement;
+    htm = Adapter.api.Inferno.createElement;
     break;
 }
 
@@ -486,8 +486,8 @@ mainContent.innerHTML = `
         <option value="">Please select...</option>
         <option value="surface-functional">Speed test (js-surface functional)</option>
         <option value="surface-standard">Speed test (js-surface standard)</option>
-        <option value="original-functional">Speed test (${ComponentSystem.adapter.name} functional)</option>
-        <option value="original-standard">Speed test (${ComponentSystem.adapter.name} standard)</option>
+        <option value="original-functional">Speed test (${Adapter.name} functional)</option>
+        <option value="original-standard">Speed test (${Adapter.name} standard)</option>
     </select>
 
     <br/>

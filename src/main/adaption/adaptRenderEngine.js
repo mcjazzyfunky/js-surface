@@ -6,7 +6,7 @@ import convertClassComponentConfig from '../conversion/convertClassComponentConf
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
-import { Adapter, Config, ComponentSystem } from '../system/system';
+import { Adapter, Config, AdapterValues, ConfigValues } from '../system/system';
 
 import validateStandardComponentConfig from '../validation/validateStandardComponentConfig';
 import validateFunctionalComponentConfig from '../validation/validateFunctionalComponentConfig';
@@ -18,7 +18,7 @@ import shapeOfAdaptRenderEngineConfig
     from './../shape/shapeOfAdaptRenderEngineConfig';
 
 export default function adaptRenderEngine(config) {
-    if (Adapter.name !== null) {
+    if (AdapterValues.name !== null) {
         throw new Error('[adaptRenderEngine] Function may only be called once');
     }
 
@@ -33,8 +33,8 @@ export default function adaptRenderEngine(config) {
             + err);
     }
 
-    Adapter.name = config.renderEngine.name;
-    Adapter.api = config.renderEngine.api;
+    AdapterValues.name = config.renderEngine.name;
+    AdapterValues.api = config.renderEngine.api;
     
     const
         hyperscript = 
@@ -60,7 +60,8 @@ export default function adaptRenderEngine(config) {
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
         mount: adaptMount(config.interface.mount, config.interface.isElement),
-        ComponentSystem
+        Adapter,
+        Config
     };
 
     if (hyperscript) {
@@ -72,7 +73,7 @@ export default function adaptRenderEngine(config) {
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
     const ret = cfg => {
-        if (Config.validateDefs) {
+        if (ConfigValues.validateDefs) {
             const err = validateFunctionalComponentConfig(cfg);
 
             if (err) {
@@ -87,7 +88,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
             adjustedConfig = {
                 displayName:  config.displayName,
                 properties: config.properties,
-                render: props => config.render(propsAdjuster(props, Config.validateProps))
+                render: props => config.render(propsAdjuster(props, ConfigValues.validateProps))
             };
 
         const factory = defineFunctionalComponent(adjustedConfig);
@@ -102,7 +103,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
     const ret = cfg => {
-        if (Config.validateDefs) {
+        if (ConfigValues.validateDefs) {
             const err = validateStandardComponentConfig(cfg);
 
             if (err) {
@@ -128,7 +129,7 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
                         setProps(props) {
                             const props2 = props === undefined
                                 ? undefined
-                                : propsAdjuster(props, Config.validateProps);
+                                : propsAdjuster(props, ConfigValues.validateProps);
 
 
                             result.setProps(props2);

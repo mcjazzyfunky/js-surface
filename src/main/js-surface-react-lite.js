@@ -13,7 +13,8 @@ const {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem 
+    Adapter,
+    Config
 } = adaptReactLikeRenderEngine({
     renderEngineName: 'react-lite',
     renderEngineAPI: ReactLite,
@@ -35,7 +36,8 @@ export {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem 
+    Adapter,
+    Config
 };
 
 function reactLiteMount(content, targetNode) {

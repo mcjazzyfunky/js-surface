@@ -9,7 +9,8 @@ import {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem
+    Adapter,
+    Config
 } from './js-surface-preact';
 
 export {
@@ -23,5 +24,6 @@ export {
     isRenderable,
     mount,
     unmount,
-    ComponentSystem 
+    Adapter,
+    Config
 };
