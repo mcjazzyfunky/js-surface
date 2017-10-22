@@ -3,7 +3,7 @@ import determineComponentMeta from '../internal/helper/determineComponentMeta';
 import buildInitFunction from '../internal/helper/buildInitFunction';
 import buildComponentClass from '../internal/helper/buildComponentClass';
 
-import { defineStandardComponent } from 'js-surface';
+import { defineComponent } from 'js-surface';
 
 export default function defineClassComponent(config, meta = null) {
     const
@@ -48,6 +48,6 @@ export default function defineClassComponent(config, meta = null) {
         { init: buildInitFunction(clazz, adjustedMeta) },
         adjustedMeta);
 
-    return  defineStandardComponent(jsSurfaceConfig);
+    return  defineComponent(jsSurfaceConfig);
 }
 

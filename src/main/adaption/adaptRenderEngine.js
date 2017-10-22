@@ -1,3 +1,4 @@
+import adaptDefineComponent from './adaptDefineComponent';
 import adaptHyperscript from './adaptHyperscript';
 import adaptIsRenderable from './adaptIsRenderable';
 import adaptMount from '../adaption/adaptMount';
@@ -44,11 +45,15 @@ export default function adaptRenderEngine(config) {
         defineFunctionalComponent = enhanceDefineFunctionalComponent(config.interface.defineFunctionalComponent),
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
         
+        defineComponent = adaptDefineComponent(
+            defineFunctionalComponent, defineStandardComponent),
+        
         defineClassComponent = config => defineStandardComponent(
             convertClassComponentConfig(config)); 
 
     const ret = {
         createElement: config.interface.createElement,
+        defineComponent,
         defineFunctionalComponent,
         defineStandardComponent,
         defineClassComponent,
@@ -141,3 +146,4 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
     
     return ret;
 }
+

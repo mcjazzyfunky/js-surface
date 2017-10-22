@@ -1,7 +1,7 @@
 import determineComponentMeta from 
     '../internal/helper/determineComponentMeta';
 
-import { defineFunctionalComponent as defineComponent } from 'js-surface';
+import { defineComponent } from 'js-surface';
 
 export default function defineFunctionalComponent(config, meta = null) {
     const

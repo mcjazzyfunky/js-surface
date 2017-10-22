@@ -18,6 +18,7 @@ for (const key of Object.keys(Inferno)) {
 
 const {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
@@ -39,6 +40,7 @@ const {
 
 export {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,

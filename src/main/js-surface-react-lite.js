@@ -4,6 +4,7 @@ import ReactLite from 'react-lite';
 
 const {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
@@ -25,6 +26,7 @@ const {
 
 export {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,

@@ -11,6 +11,7 @@ function reactMount(content, targetNode) {
 
 const {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
@@ -32,6 +33,7 @@ const {
 
 export {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,

@@ -5,10 +5,11 @@ import hyperscript from './api/hyperscript';
 import mount from './api/mount';
 import unmount from './api/unmount';
 import Component from './api/Component';
-import { ComponentSystem } from 'js-surface';
+import { defineComponent, ComponentSystem } from 'js-surface';
 
 export {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     hyperscript,

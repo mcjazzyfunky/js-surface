@@ -1,10 +1,10 @@
 import {
-    hyperscript as h,
-    defineStandardComponent,
+    createElement as h,
+    defineComponent,
     mount
-} from 'js-unify';
+} from 'js-surface';
 
-const HelloWorld = defineStandardComponent({
+const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
 
     properties: {
@@ -14,10 +14,13 @@ const HelloWorld = defineStandardComponent({
         }
     },
 
-    init(setView) {
+    init(updateView) {
         return {
             setProps(props) {
-                setView(h('div', 'Hello ' + props.name + '!'));
+                updateView(
+                    h('div',
+                        null,
+                        'Hello ' + props.name + '!'));
             },
             close() {
                 // Nothing to do here

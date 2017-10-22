@@ -1,5 +1,6 @@
 import {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
@@ -13,6 +14,7 @@ import {
 
 export {
     createElement,
+    defineComponent,
     defineClassComponent,
     defineFunctionalComponent,
     defineStandardComponent,
