@@ -1,4 +1,4 @@
-import { mount, Adapter, Config } from 'js-surface';
+import { createElement, mount, Adapter, Config } from 'js-surface';
 
 import {
     defineClassComponent,
@@ -129,7 +129,6 @@ const TileRowStandard = defineClassComponent({
     },
 
     onWillUnmount() {
-        console.log('juhu');
     },
     
     render() {
@@ -144,7 +143,7 @@ const TileRowStandard = defineClassComponent({
            
             tiles.push(TileStandard({ width: tileWidth, color, key: x }));
         }
-       
+
         return h('div', { style: { clear: 'both' }}, tiles);
     }
 });
@@ -255,6 +254,10 @@ case 'preact':
 
 case 'inferno':
     htm = Adapter.api.Inferno.createElement;
+    break;
+
+case 'vue':
+    htm = createElement;
     break;
 }
 
