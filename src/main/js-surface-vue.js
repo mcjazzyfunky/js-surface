@@ -80,7 +80,7 @@ function customDefineFunctionalComponent(config) {
         return ret;
     };
 
-    factory.component = component;
+    factory.type = component;
 
     return factory;
 }
@@ -111,7 +111,7 @@ function customDefineStandardComponent(config) {
             };
         },
 
-        created() {
+        created() {console.log('created')
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
             this.__content = null;
@@ -214,7 +214,7 @@ function customDefineStandardComponent(config) {
         return ret;
     };
 
-    factory.component = component;
+    factory.type = component;
     return factory;
 }
 
@@ -248,6 +248,10 @@ function customMount(content, targetNode) {
         },
 
         methods: {
+            create() {
+                console.log('crete');
+            },
+
             destroy() {
                 this.$destroy();
             }

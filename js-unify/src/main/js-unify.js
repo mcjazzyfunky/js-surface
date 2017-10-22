@@ -5,6 +5,7 @@ import hyperscript from './api/hyperscript';
 import mount from './api/mount';
 import unmount from './api/unmount';
 import Component from './api/Component';
+import { ComponentSystem } from 'js-surface';
 
 export {
     createElement,
@@ -13,5 +14,6 @@ export {
     hyperscript,
     mount,
     unmount,
-    Component
+    Component,
+    ComponentSystem
 };

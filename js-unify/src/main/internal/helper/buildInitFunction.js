@@ -17,8 +17,7 @@ export default function buildInitFunction(componentClass, meta) {
                     component.___init(updateView, updateState);
                     component.onWillMount();
                 } else {
-
-                    if (component.shouldUpdate(props, this.state)) {
+                    if (component.shouldUpdate(props, component.state)) {
                         component.onWillUpdate();
                     }
                 }

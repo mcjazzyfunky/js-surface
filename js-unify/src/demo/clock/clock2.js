@@ -9,16 +9,16 @@ const Clock = defineClassComponent({
 
     constructor() {
         this.interval = null;
-        this.setState();
+        this.setTime();
     },
 
-    setState() {
+    setTime() {
         this.state = { time: new Date().toLocaleTimeString() };
     },
 
     onDidMount() {
         this.interval = setInterval(() => {
-            this.setState(); 
+            this.setTime(); 
         }, 1000);
     },
 

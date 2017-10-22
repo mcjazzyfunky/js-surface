@@ -10,12 +10,6 @@ import Vue from 'vue';
 
 document.getElementById('main-content').innerHTML = '<div><vue-demo/></div>';
 
-/*
-window.Vue = Vue;
-Vue.config.debug = true;
-Vue.config.devtools = true;
-*/        
-
 // ==============================================
 // js-surface components
 // ==============================================
@@ -70,7 +64,7 @@ const SurfaceCounter = defineClassComponent({
         }
     },
 
-    publicMethods: ['reset'],
+    methods: ['reset'],
 
     constructor(props) {
         this.state = { counterValue: props.initialValue };
@@ -164,12 +158,12 @@ const SurfaceClock = defineClassComponent({
 // Vue portion
 // ==============================================
 
-Vue.component('surface-button', SurfaceButton.component);
-Vue.component('surface-counter', SurfaceCounter.component);
-Vue.component('surface-clock', SurfaceClock.component);
+Vue.component('surface-button', SurfaceButton.type);
+Vue.component('surface-counter', SurfaceCounter.type);
+Vue.component('surface-clock', SurfaceClock.type);
 
 Vue.component('vue-demo', {
-    publicMethods: {
+    methods: {
         buttonClicked() {
             alert('Thank you very much for clicking the button!');
         },

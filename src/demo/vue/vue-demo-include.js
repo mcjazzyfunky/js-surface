@@ -169,7 +169,7 @@ Vue.component('surface-counter', SurfaceCounter.component);
 Vue.component('surface-clock', SurfaceClock.component);
 
 Vue.component('vue-demo', {
-    publicMethods: {
+    methods: {
         buttonClicked() {
             alert('Thank you very much for clicking the button!');
         },

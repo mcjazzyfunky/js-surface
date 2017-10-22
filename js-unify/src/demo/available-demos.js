@@ -24,10 +24,16 @@ export default [
         files: ['click-me.js']
     },
     {
-        name: 'clock',
-        displayName: 'Clock',
+        name: 'clock1',
+        displayName: 'Clock 1',
         directory: 'clock',
-        files: ['clock.js']
+        files: ['clock1.js']
+    },
+    {
+        name: 'clock2',
+        displayName: 'Clock 2',
+        directory: 'clock',
+        files: ['clock1.js']
     },
     {
         name: 'performance-test1',
