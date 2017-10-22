@@ -56,22 +56,25 @@ export default function adaptHyperscript(createElement, isElement) {
 
         const
             secondArg = arguments[1],
-
+            secondArgIsAttrs = isAttrs(secondArg);
+            /*
             isAttrs =
                 secondArg === undefined
                     || secondArg === null
                     || typeof secondArg === 'object'
                         && !secondArg[Symbol.iterator]
                         && !isElement(secondArg);
-
-        if (isAttrs) {
+            */
+        if (secondArgIsAttrs) {
             ret = createElement.apply(null, arguments);
         } else {
             const firstArg = arguments[0];
 
             arguments[0] = null;
-            Array.prototype.unshift.call(arguments, firstArg);
-            ret = createElement.apply(null, arguments);
+            //Array.prototype.unshift.call(arguments, firstArg);
+            //ret = createElement.apply(null, arguments);
+
+            ret = createElement.call(null, firstArg, null, arguments[1], arguments[2], arguments[3], arguments[4])
         }
 
         return ret;

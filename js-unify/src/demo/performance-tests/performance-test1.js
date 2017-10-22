@@ -1,5 +1,4 @@
-import { createElement as h, Adapter, Config } from 'js-surface';
-import { hyperscript } from 'js-unify';
+import { createElement as ce, hyperscript as h, Adapter, Config } from 'js-surface';
 
 const
     iterationCount = 200000,
@@ -54,9 +53,9 @@ tests.push({
     run() {
         for (let i = 0; i < iterationCount; ++i) {
         //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
-            h('div',
+            ce('div',
                 { className: 'my-class', id: 'my-id' },
-                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                ce('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
         }
     }
 });
