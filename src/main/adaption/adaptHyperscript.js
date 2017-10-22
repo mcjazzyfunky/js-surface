@@ -5,8 +5,8 @@ const
     simpleTagMark = {};
 
 export default function adaptHyperscript(createElement, isElement) {
-    return function (...args) {
-        const tag = args[0];
+    return function (/* arguments */) {
+        const tag = arguments[0];
 
         let ret = null;
 
@@ -14,9 +14,9 @@ export default function adaptHyperscript(createElement, isElement) {
             let hyperscriptData = hyperscriptCache[tag];
 
             if (hyperscriptData === simpleTagMark) {
-                ret = applyCreateElement(...args);
+                ret = applyCreateElement.apply(null, arguments);
             } else if (hyperscriptData) {
-                ret = createHyperscriptElement(args, hyperscriptData);
+                ret = createHyperscriptElement(arguments, hyperscriptData);
             } else {
                 hyperscriptData = parseHyperscript(tag);
 
@@ -30,14 +30,14 @@ export default function adaptHyperscript(createElement, isElement) {
                     && !hyperscriptData[0].attrs) {
 
                     hyperscriptCache[tag] = simpleTagMark;
-                    ret = applyCreateElement(...args);
+                    ret = applyCreateElement.apply(null, arguments);
                 } else {
                     hyperscriptCache[tag] = hyperscriptData;
-                    ret = createHyperscriptElement(args, hyperscriptData);
+                    ret = createHyperscriptElement(arguments, hyperscriptData);
                 }
             }
         } else {
-            ret = applyCreateElement(...args);
+            ret = applyCreateElement(arguments);
         }
 
         return ret;
@@ -51,13 +51,27 @@ export default function adaptHyperscript(createElement, isElement) {
                 && !isElement(it);
     }
 
-    function applyCreateElement(...args) {
+    function applyCreateElement(/* arguments */) {
         let ret = null;
 
-        if (isAttrs(args[1])) {
-            ret = createElement(...args);
+        const
+            secondArg = arguments[1],
+
+            isAttrs =
+                secondArg === undefined
+                    || secondArg === null
+                    || typeof secondArg === 'object'
+                        && !secondArg[Symbol.iterator]
+                        && !isElement(secondArg);
+
+        if (isAttrs) {
+            ret = createElement.apply(null, arguments);
         } else {
-            ret = createElement(args[0], null, ...args.slice(1));
+            const firstArg = arguments[0];
+
+            arguments[0] = null;
+            Array.prototype.unshift.call(arguments, firstArg);
+            ret = createElement.apply(null, arguments);
         }
 
         return ret;
