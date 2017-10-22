@@ -7,7 +7,7 @@ const
     elementPattern = `(${tagPattern}|${idPattern}|${classPattern}|${attrPattern})`,
     elementRegex = new RegExp(elementPattern, 'g');
 
-export function parseHyperscript(hyperscript) {
+export default function parseHyperscript(hyperscript) {
     const items =
         hyperscript
             .split(/\s*>\s*/)

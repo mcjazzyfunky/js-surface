@@ -65,11 +65,11 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+      //      h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
        
-       //     hyperscript('div',
-       //         { className: 'my-class', id: 'my-id' },
-       //         hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+            h('div',
+                { className: 'my-class', id: 'my-id' },
+                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
         
         //    hyperscript('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
 //            hyperscript('div#my-id.my-class',
