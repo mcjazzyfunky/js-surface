@@ -33,7 +33,7 @@ export default [
         name: 'clock2',
         displayName: 'Clock 2',
         directory: 'clock',
-        files: ['clock1.js']
+        files: ['clock2.js']
     },
     {
         name: 'performance-test1',

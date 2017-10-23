@@ -19,10 +19,6 @@ for (const key of Object.keys(Inferno)) {
 const {
     createElement,
     defineComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
     isElement,
     isRenderable,
     mount,
@@ -42,10 +38,6 @@ const {
 export {
     createElement,
     defineComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
     isElement,
     isRenderable,
     mount,

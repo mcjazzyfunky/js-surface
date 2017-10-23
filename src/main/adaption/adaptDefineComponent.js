@@ -1,11 +1,14 @@
+import validateComponentConfig from '../validation/validateComponentConfig';
+
 export default function adaptDefineComponentFunction(
     defineFunctionalComponent,
     defineStandardComponent) {
 
     return function defineComponent(config) {
-        if (!config || typeof config !== 'object') {
-            throw new Error(
-                "[defineComponent] First argument 'config' must be an object");
+        const error = validateComponentConfig(config);
+
+        if (error) {
+            throw new Error(`[defineComponent] ${error.message}`);
         }
 
         const

@@ -35,10 +35,6 @@ const {
 export {
     createElement,
     defineComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
-    hyperscript,
     isElement,
     isRenderable,
     mount,

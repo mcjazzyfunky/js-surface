@@ -1,11 +1,13 @@
 import {
-    hyperscript as h,
-    defineFunctionalComponent,
     mount,
 
     /** @jsx createElement */
     // eslint-disable-next-line no-unused-vars
     createElement 
+} from 'js-surface';
+
+import {
+    defineFunctionalComponent,
 } from 'js-unify';
 
 const meta = {

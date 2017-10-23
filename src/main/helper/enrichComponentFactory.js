@@ -1,6 +1,6 @@
 import validateProperty from '../validation/validateProperty';
 
-export default function enrichCompnentFactory(factory, config, componentFactoryCreator) {
+export default function enrichComponentFactory(factory, config, defineComponent) {
     const
         functional = typeof config.render === 'function',
         type = factory;
@@ -48,7 +48,7 @@ export default function enrichCompnentFactory(factory, config, componentFactoryC
             newConfig.properties[keyOfDefault].defaultValue = valueOfDefault;
         }
         
-        const newFactory = componentFactoryCreator(newConfig);
+        const newFactory = defineComponent(newConfig);
         newFactory.meta.type = factory.meta.type;
         return newFactory;
     };

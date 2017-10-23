@@ -1,7 +1,10 @@
 import {
-    hyperscript as h,
-    defineClassComponent,
+    createElement as h,
     mount 
+} from 'js-surface';
+
+import {
+    defineClassComponent
 } from 'js-unify';
 
 

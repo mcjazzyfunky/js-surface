@@ -1,4 +1,9 @@
-import { createElement as ce, hyperscript as h, Adapter, Config } from 'js-surface';
+import {
+    createElement as ce,
+    createElement as h, // TODO
+    Adapter,
+    Config
+} from 'js-surface';
 
 const
     iterationCount = 200000,

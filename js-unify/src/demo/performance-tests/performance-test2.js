@@ -1,9 +1,14 @@
-import { createElement, mount, Adapter, Config } from 'js-surface';
+import {
+    createElement,
+    createElement as h, // TODO
+    mount,
+    Adapter,
+    Config
+} from 'js-surface';
 
 import {
     defineClassComponent,
-    defineFunctionalComponent,
-    hyperscript as h
+    defineFunctionalComponent
 }  from 'js-unify';
 
 import { Spec } from 'js-spec';

@@ -1,17 +1,13 @@
 import adaptCreateElement from './adaptCreateElement';
-import shapeOfAdaptReactLikeRenderEngineConfig from '../shape/shapeOfAdaptReactLikeRenderEngineConfig';
 import ComponentController from '../class/ComponentController';
 
-import { Spec } from 'js-spec';
 
 import adaptRenderEngine from '../adaption/adaptRenderEngine';
 
 const returnNull = () => null;
 
 export default function adaptReactLikeRenderEngine(reactLikeConfig) {
-    const err =
-        Spec.shape(shapeOfAdaptReactLikeRenderEngineConfig)
-            .validate(reactLikeConfig, '');
+    const err = null // TODO!!!!
 
     if (err) {
         throw new Error(

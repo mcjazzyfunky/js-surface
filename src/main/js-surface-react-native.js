@@ -6,9 +6,6 @@ import ReactNative from 'react-native';
 const {
     createElement,
     defineComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
     isElement,
     isRenderable,
     mount,
@@ -29,9 +26,6 @@ const {
 export {
     createElement,
     defineComponent,
-    defineClassComponent,
-    defineFunctionalComponent,
-    defineStandardComponent,
     isElement,
     isRenderable,
     mount,

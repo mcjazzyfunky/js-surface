@@ -1,10 +1,10 @@
 import {
     createElement,
-    defineStandardComponent,
+    defineComponent,
     mount
 } from 'js-surface';
 
-const Clock = defineStandardComponent({
+const Clock = defineComponent({
     displayName: 'Clock',
 
     properties: {

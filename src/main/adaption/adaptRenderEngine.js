@@ -2,29 +2,22 @@ import adaptDefineComponent from './adaptDefineComponent';
 import adaptHyperscript from './adaptHyperscript';
 import adaptIsRenderable from './adaptIsRenderable';
 import adaptMount from '../adaption/adaptMount';
-import convertClassComponentConfig from '../conversion/convertClassComponentConfig';
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
-import { Adapter, Config, AdapterValues, ConfigValues } from '../system/system';
+import Adapter from '../system/Adapter';
+import AdapterValues from '../system/AdapterValues';
+import Config from '../system/Config';
+import ConfigValues from '../system/ConfigValues';
 
-import validateStandardComponentConfig from '../validation/validateStandardComponentConfig';
-import validateFunctionalComponentConfig from '../validation/validateFunctionalComponentConfig';
 import validateInitResult from '../validation/validateInitResult';
-
-import { Spec } from 'js-spec';
-
-import shapeOfAdaptRenderEngineConfig
-    from './../shape/shapeOfAdaptRenderEngineConfig';
 
 export default function adaptRenderEngine(config) {
     if (AdapterValues.name !== null) {
         throw new Error('[adaptRenderEngine] Function may only be called once');
     }
 
-    const err =
-        Spec.shape(shapeOfAdaptRenderEngineConfig)
-            .validate(config, '');
+    const err = null; // TODO
 
     if (err) {
         throw new Error(
@@ -46,17 +39,11 @@ export default function adaptRenderEngine(config) {
         defineStandardComponent = enhanceDefineStandardComponent(config.interface.defineStandardComponent),
         
         defineComponent = adaptDefineComponent(
-            defineFunctionalComponent, defineStandardComponent),
+            defineFunctionalComponent, defineStandardComponent);
         
-        defineClassComponent = config => defineStandardComponent(
-            convertClassComponentConfig(config)); 
-
     const ret = {
-        createElement: config.interface.createElement,
+        createElement: hyperscript || config.interface.createElement,
         defineComponent,
-        defineFunctionalComponent,
-        defineStandardComponent,
-        defineClassComponent,
         isElement: config.interface.isElement,
         isRenderable: adaptIsRenderable(config.interface.isElement),
         mount: adaptMount(config.interface.mount, config.interface.isElement),
@@ -74,8 +61,8 @@ export default function adaptRenderEngine(config) {
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
     const ret = cfg => {
         if (ConfigValues.validateDefs) {
-            const err = validateFunctionalComponentConfig(cfg);
-
+            const err = null; // TODO!!!
+            
             if (err) {
                 throw err;
             }
@@ -104,7 +91,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 function enhanceDefineStandardComponent(defineStandardComponent) {
     const ret = cfg => {
         if (ConfigValues.validateDefs) {
-            const err = validateStandardComponentConfig(cfg);
+            const err =  null; // TODO
 
             if (err) {
                 throw err;

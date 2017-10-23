@@ -29,7 +29,7 @@ export default function adaptHyperscript(createElement, isElement, Adapter) {
                     || typeof secondArg === 'object'
                         && !secondArg[Symbol.iterator];
 
-                if (secondArgIsAttrs) {
+                if (secondArg && secondArgIsAttrs) {
                     if (isReact) {
                         secondArgIsAttrs = !secondArg.$$typeof;
                     } else if (isInferno) {

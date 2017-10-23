@@ -1,8 +1,11 @@
 import {
-    hyperscript as h,
+    createElement as h,
+    mount
+} from 'js-surface';
+
+import {
     defineFunctionalComponent,
     defineClassComponent,
-    mount
 } from 'js-unify';
 
 const FunctionalGreeting = defineFunctionalComponent({
