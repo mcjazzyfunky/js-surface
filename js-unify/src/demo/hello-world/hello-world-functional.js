@@ -1,13 +1,9 @@
 import {
-    mount,
-
     /** @jsx createElement */
     // eslint-disable-next-line no-unused-vars
-    createElement 
-} from 'js-surface';
-
-import {
+    createElement,
     defineFunctionalComponent,
+    mount
 } from 'js-unify';
 
 const meta = {

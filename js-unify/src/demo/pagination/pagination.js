@@ -1,11 +1,8 @@
 import {
     createElement as h,
-    mount
-} from 'js-surface';
-
-import {
     defineClassComponent,
-    defineFunctionalComponent
+    defineFunctionalComponent,
+    mount
 }  from 'js-unify';
 
 import { Seq } from 'js-essential';

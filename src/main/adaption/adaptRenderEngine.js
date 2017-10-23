@@ -1,6 +1,5 @@
 import adaptDefineComponent from './adaptDefineComponent';
 import adaptHyperscript from './adaptHyperscript';
-import adaptIsRenderable from './adaptIsRenderable';
 import adaptMount from '../adaption/adaptMount';
 import enrichComponentFactory from '../helper/enrichComponentFactory';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
@@ -45,8 +44,8 @@ export default function adaptRenderEngine(config) {
         createElement: hyperscript || config.interface.createElement,
         defineComponent,
         isElement: config.interface.isElement,
-        isRenderable: adaptIsRenderable(config.interface.isElement),
         mount: adaptMount(config.interface.mount, config.interface.isElement),
+        unmount,
         Adapter,
         Config
     };
@@ -135,3 +134,16 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
     return ret;
 }
 
+function unmount(node) {
+    let ret = false;
+    
+    if (node && node.tagName) {
+        const unmountComponent = node[Symbol.for('js-surface:unmount')];
+
+        if (typeof unmountComponent === 'function') {
+            unmountComponent();            
+        }
+    }
+    
+    return ret;
+}

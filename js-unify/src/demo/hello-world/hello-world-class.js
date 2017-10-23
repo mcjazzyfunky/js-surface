@@ -1,10 +1,8 @@
-import {
-    createElement as h,
-    mount
-} from 'js-surface';
 
 import {
+    createElement as h,
     defineClassComponent,
+    mount,
     Component 
 } from 'js-unify';
 

@@ -39,7 +39,6 @@ export {
     createElement,
     defineComponent,
     isElement,
-    isRenderable,
     mount,
     unmount,
     Adapter,

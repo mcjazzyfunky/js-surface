@@ -1,9 +1,19 @@
 export default function adaptMount(mount, isElement) {
-    return function (content, target) {
+    return function (content, target, onWillUnmount = null) {
         if (!isElement(content)) {
             throw new TypeError(
                 "[mount] First argument 'content' has to be a valid element");
+        } else if (typeof target !== 'string' && (!target || !target.tagName)) {
+            throw new TypeError(
+                "[mount] Second argument 'target' has to be "
+                    + 'a string or a DOM element');
+        } else if (onWillUnmount !== null && typeof onWillUnmount !== 'function' ) {
+            throw new TypeError(
+                "[mount] Third argument 'content' has to be "
+                    + 'a callback function (optional)');
         }
+
+        let ret = false;
 
         const targetNode =
             typeof target === 'string'
@@ -32,11 +42,17 @@ export default function adaptMount(mount, isElement) {
 
                 cleanUp = () => {
                     if (!cleanedUp) {
-                        cleanedUp = true;
-                        container.removeEventListener('DOMNodeRemoved', onDOMNodeRemoved);
-                        unmount();
-                        delete targetNode.__unmount;
-                        container.innerHTML = '';
+                        try {
+                            if (onWillUnmount) {
+                                onWillUnmount(targetNode);
+                            }
+                        } finally {
+                            cleanedUp = true;
+                            container.removeEventListener('DOMNodeRemoved', onDOMNodeRemoved);
+                            unmount();
+                            delete targetNode.__unmount;
+                            container.innerHTML = '';
+                        }
                     }
                 };
 
@@ -47,12 +63,11 @@ export default function adaptMount(mount, isElement) {
                     '[mount] Return value of wrapped mount function must be a function');
             }
 
-            targetNode.__unmount = cleanUp;
+            targetNode[Symbol.for('js-surface:unmount')] = cleanUp;
 
-            return {
-                node: targetNode,
-                unmount: cleanUp
-            };
+            ret = true; 
         }
+
+        return ret;
     };
 }
