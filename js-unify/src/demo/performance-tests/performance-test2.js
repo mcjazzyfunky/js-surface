@@ -2,6 +2,7 @@ import {
     createElement,
     createElement as h, // TODO
     mount,
+    unmount,
     defineClassComponent,
     defineFunctionalComponent,
     Adapter,
@@ -452,31 +453,26 @@ const SpeedTestDirect = defineClassComponent({
 
 const mainContent = document.getElementById('main-content');
 
-let disposal = null;
-
 function onSelectTest(ev) {
     const testName = ev.target.value;
-
-    if (disposal) {
-        disposal.unmount();
-        disposal = null;
-    }
+    
+    unmount('speed-test');
 
     switch (testName) {
     case 'surface-functional':
-        disposal = mount(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'surface-standard':
-        disposal = mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-functional':
-        disposal = mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-standard':
-        disposal = mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     

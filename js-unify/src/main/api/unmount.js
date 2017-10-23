@@ -1,3 +1,3 @@
-import { mount } from 'js-surface';
+import { unmount } from 'js-surface';
 
-export default mount;
+export default unmount;
