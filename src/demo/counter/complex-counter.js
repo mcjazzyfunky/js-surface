@@ -1,13 +1,12 @@
 import {
-    hyperscript as h, 
-    defineClassComponent,
-    defineFunctionalComponent,
+    createElement as h, 
+    defineComponent,
     mount 
 } from 'js-surface';
 
 import { Spec } from 'js-spec';
 
-const CounterInfo = defineFunctionalComponent({
+const CounterInfo = defineComponent({
     displayName:  'CounterInfo',
 
     properties: {
@@ -26,7 +25,7 @@ const CounterInfo = defineFunctionalComponent({
 
 // --------------------------------------------------------------------
 
-const Counter = defineClassComponent({
+const Counter = defineComponent({
     displayName: 'Counter',
 
     properties: {
@@ -43,100 +42,70 @@ const Counter = defineClassComponent({
         }
     },
 
-    publicMethods: ['resetCounter'],
+    methods: ['resetCounter'],
 
-    constructor() {
-        this.state = { counterValue: this.props.initialValue };
-    },
+    init(updateView) {
+        let counterValue = 0;
 
-    increaseCounter(delta) {
-        this.state = { counterValue: this.state.counterValue + delta };
-    },
+        const
+            increaseCounter = n => {
+                counterValue += n;
+                updateView(render());
+            },
 
-    shouldUpdate() {
-        console.log('[needsUpdate]', arguments);
-        return true;
-    },
+            render = () => {
+                return (
+                    h('span.counter',
+                        h('button.btn.btn-default',
+                            { onClick: () => increaseCounter(-1) },
+                            '-'),
+                        h('div',
+                            { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
+                            CounterInfo({ value: counterValue })),
+                        h('button.btn.btn-default',
+                            { onClick: () => increaseCounter(1) },
+                            '+'))
+                );
+            };
+        
+        return {
+            setProps() {
+                updateView(render());
+            },
+            applyMethod(name, args) {
+                if (name === 'resetCounter') {
+                    const [n = 0] = args;
 
-    onWillReceiveProps(nextProps) {
-        console.log('[onWillReceiveProps]', arguments);
-    },
-
-    onWillChangeState(nextState) {
-        console.log('[onWillChangeState]', arguments);
-    },
-
-    onDidChangeState(prevState) {
-        console.log('[onDidChangeState]', arguments);
-
-        if (this.props.onChange) {
-            this.props.onChange({
-                type: 'change',
-                value: this.state.counterValue
-            });
-        }
-    },
-
-    onWillMount() {
-        console.log('[onWillMount]', arguments);
-    },
-
-    onDidMount() {
-        console.log('[onDidMount]', arguments);
-    },
-
-    onWillUpdate() {
-        console.log('[onWillUpdate]', arguments);
-    },
-
-    onDidUpdate() {
-        console.log('[onDidUpdate]', arguments);
-    },
-
-    onWillUnmount() {
-        console.log('[onWillUnmount]:', arguments);
-    },
-
-    resetCounter(value = 0) {
-        this.state = { counterValue: value };
-    },
-
-    render() {
-        return (
-            h('span.counter',
-                h('button.btn.btn-default',
-                    { onClick: () => this.increaseCounter(-1) },
-                    '-'),
-                h('div',
-                    { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
-                    CounterInfo({ value: this.state.counterValue })),
-                h('button.btn.btn-default',
-                    { onClick: () => this.increaseCounter(1) },
-                    '+'))
-        );
+                    counterValue = n;
+                    updateView(render());
+                }
+            }
+        };
     }
 });
 
 // --------------------------------------------------------------------
 
-const CounterCtrl = defineClassComponent({
+const CounterCtrl = defineComponent({
     displayName: 'CounterCtrl',
 
-    render() {
-        let counterInstance = null;
+    init: updateView => ({
+        setProps() {
+            let counterInstance = null;
 
-        return (
-            h('div.counter-ctrl',
-                h('button.btn.btn-info',
-                    { onClick: () => counterInstance.resetCounter(0) },
-                    'Set to 0'),
-                    ' ',
-                    Counter({ ref: it => { counterInstance = it; } }),
-                    ' ',
+            updateView(
+                h('div.counter-ctrl',
                     h('button.btn.btn-info',
-                        { onClick: () => counterInstance.resetCounter(100) },
-                        'Set to 100')));
-    }
+                        { onClick: () => counterInstance.resetCounter(0) },
+                        'Set to 0'),
+                        ' ',
+                        Counter({ ref: it => { counterInstance = it; } }),
+                        ' ',
+                        h('button.btn.btn-info',
+                            { onClick: () => counterInstance.resetCounter(100) },
+                            'Set to 100')));
+        }
+    })
 });
 
 mount(CounterCtrl(), 'main-content');

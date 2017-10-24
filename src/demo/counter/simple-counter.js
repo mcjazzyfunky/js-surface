@@ -1,11 +1,11 @@
 import {
-    hyperscript as h,
-    defineClassComponent,
+    createElement as h,
+    defineComponent,
     mount
 } from 'js-surface';
 
 
-const SimpleCounter = defineClassComponent({
+const SimpleCounter = defineComponent({
     displayName: 'SimpleCounter',
 
     properties: {
@@ -13,70 +13,52 @@ const SimpleCounter = defineClassComponent({
             type: String,
             defaultValue: 'Counter:'
         },
+
         initialValue: {
             type: Number,
             defaultValue: 0
         }
     },
 
-    constructor(props) {
-        this.state = { counterValue: props.initialValue };
-    },
+    init(updateView) {
+        let
+            props = null,
+            counterValue = null;
+        
+        const
+            incrementCounter = n => {
+                counterValue += n;
+                updateView(render());
+            },
 
-    incrementCounter(delta) {
-        this.state = {
-            counterValue: this.state.counterValue + delta
+            render = () => {
+                return (
+                    h('div.simple-counter',
+                        h('label.simple-counter-label.btn',
+                            props.label),
+                        h('button.simple-counter-decrease-button.btn.btn-default',
+                            { onClick: () => incrementCounter(-1) },
+                            '-'),
+                        h('div.simple-counter-value.btn',
+                            counterValue),
+                        h('button.simple-counter-increase-button.btn.btn-default',
+                            { onClick: () => incrementCounter(1) },
+                            '+'))
+                );
+            };
+
+        return {
+            setProps(nextProps) {
+                props = nextProps;
+                
+                if (counterValue === null) {
+                    counterValue = props.initialValue;
+                }
+
+                updateView(render());
+            }
         };
     },
-
-    onWillMount() {
-        console.log('onWillMount');
-        //alert('onWillMount');
-    },
-
-    onDidMount() {
-        console.log('onDidMount');
-        //alert('onDidMount');
-    },
-
-    onWillUpdate() {
-        console.log('onWillUpdate');
-        //alert('onWillUpdate');
-    },
-
-    onDidUpdate() {
-        console.log('onDidUpdate');
-        //alert('onDidUpdate');
-    },
-
-    onWillChangeState(nextState) {
-        console.log('onWillChangeState', 'current state:', this.state, 'next state:', nextState);
-    },
-
-    onDidChangeState(prevState) {
-        console.log('onDidChangeState', 'current state', this.state, 'previous state:', prevState);
-    },
-
-    shouldUpdate(...args) {
-        console.log('should update', 'args:', args);
-        return true;
-    },
-
-    render() {
-        return (
-            h('div.simple-counter',
-                h('label.simple-counter-label.btn',
-                    this.props.label),
-                h('button.simple-counter-decrease-button.btn.btn-default',
-                    { onClick: () => this.incrementCounter(-1) },
-                    '-'),
-                h('div.simple-counter-value.btn',
-                    this.state.counterValue),
-                h('button.simple-counter-increase-button.btn.btn-default',
-                    { onClick: () => this.incrementCounter(1) },
-                    '+'))
-        );
-    }
 });
 
 mount(SimpleCounter({ initialValue: 100 }), 'main-content');

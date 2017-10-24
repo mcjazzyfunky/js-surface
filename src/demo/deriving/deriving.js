@@ -1,11 +1,10 @@
 import {
-    hyperscript as h,
-    defineFunctionalComponent,
-    defineClassComponent,
+    createElement as h,
+    defineComponent,
     mount
 } from 'js-surface';
 
-const FunctionalGreeting = defineFunctionalComponent({
+const FunctionalGreeting = defineComponent({
     displayName: 'Greeting',
 
     properties: {
@@ -35,7 +34,7 @@ const DerivedFunctionalGreeting = FunctionalGreeting.withDefaults({
     locale: 'fr'
 });
 
-const StandardGreeting = defineClassComponent({
+const StandardGreeting = defineComponent({
     displayName: 'Greeting',
 
     properties: {
@@ -50,14 +49,16 @@ const StandardGreeting = defineClassComponent({
         }
     },
 
-    render() {
-        const text =
-            this.props.locale === 'fr'
-            ? `Bonjour ${this.props.name}!`
-            : `Hello ${this.props.name}!`;
-
-        return h('div', text);
-    }
+    init: updateView => ({
+        setProps(props) {
+            const text =
+                props.locale === 'fr'
+                ? `Bonjour ${props.name}!`
+                : `Hello ${props.name}!`;
+            
+            updateView(h('div', text));
+        }
+    })
 });
 
 const DerivedStandardGreeting = StandardGreeting.withDefaults({

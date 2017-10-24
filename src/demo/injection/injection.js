@@ -1,12 +1,10 @@
 import {
-    hyperscript as h,
-    defineClassComponent,
-    defineFunctionalComponent,
-    mount,
-    Component
-} from 'js-unify';
+    createElement as h,
+    defineComponent,
+    mount
+} from 'js-surface';
 
-const parentMeta = {
+const Parent = defineComponent({
     displayName: 'Parent',
 
     properties: {
@@ -17,30 +15,24 @@ const parentMeta = {
     },
 
     provides: ['value'],
-};
 
-class ParentComponent extends Component {
-    provideChildInjections() {
-        return {
-            value: this.props.masterValue
-        };
-    }
+    init: updateView => ({
+        setProps(props) {
+            updateView(
+                h('div',
+                    h('div', 'Provided value: ', props.masterValue),
+                    h('br'),
+                    h('div',
+                        ChildFunctionBased(),
+                        ChildClassBased(),
+                        ChildFunctionBased({ value: 'with explicit value' }),
+                        ChildClassBased({ value: 'with another explicit value' }))),
+                { value: props.masterValue });
+        }
+    })
+});
 
-    render() {
-        return h('div',
-            h('div', 'Provided value: ', this.props.masterValue),
-            h('br'),
-            h('div',
-                ChildFunctionBased(),
-                ChildClassBased(),
-                ChildFunctionBased({ value: 'with explicit value' }),
-                ChildClassBased({ value: 'with another explicit value' })));
-    }
-}
-
-const Parent = defineClassComponent(ParentComponent, parentMeta);
-
-const ChildFunctionBased = defineFunctionalComponent({
+const ChildFunctionBased = defineComponent({
     displayName: 'ChildFunctionBased',
 
     properties: {
@@ -56,7 +48,7 @@ const ChildFunctionBased = defineFunctionalComponent({
     }
 });
 
-const ChildClassBased = defineClassComponent({
+const ChildClassBased = defineComponent({
     displayName: 'ChildClassBased',
 
     properties: {
@@ -67,9 +59,12 @@ const ChildClassBased = defineClassComponent({
         }
     },
 
-    render() {
-        return h('div', 'ChildClassBased(', this.props.value, ')');
-    }
+    init: updateView => ({
+        setProps(props) {
+            updateView(
+                h('div', 'ChildClassBased(', props.value, ')'));
+        }
+    })
 });
 
 mount(Parent({ masterValue: 'the injected value' }), 'main-content');

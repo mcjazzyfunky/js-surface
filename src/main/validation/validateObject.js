@@ -25,7 +25,9 @@ export default function validateObject(
                     error = `Illegal key '${key}'`;
                     
                     const message =
-                        String(validationResult.message || validationResult).trim();
+                        typeof validationResult === 'object'
+                            ? String(validationResult.message || validationResult).trim()
+                            : null;
 
                     if (message) {
                         error += `: ${message}`;
@@ -45,7 +47,9 @@ export default function validateObject(
                     error = `Illegal value for key '${key}'`;
 
                     const message =
-                        String(validationResult.message || validationResult).trim();
+                        typeof validationResult === 'object'
+                            ? String(validationResult.message || validationResult).trim()
+                            : null;
 
                     if (message) {
                         error += `: ${message}`;

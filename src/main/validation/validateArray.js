@@ -22,7 +22,9 @@ export default function validateArray(
                 error = `Illegal value at index ${i}`;
                 
                 const message =
-                    String(validationResult.message || validationResult).trim();
+                    typeof validationResult === 'object'
+                        ? String(validationResult.message || validationResult).trim()
+                        : null;
 
                 
                 if (message) {

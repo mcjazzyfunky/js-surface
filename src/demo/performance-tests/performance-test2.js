@@ -1,14 +1,15 @@
 import {
-    defineClassComponent,
-    defineFunctionalComponent,
-    hyperscript as h,
+    createElement as h,
+    defineComponent,
     mount,
-    ComponentSystem 
+    unmount,
+    Config,
+    Adapter 
 }  from 'js-surface';
 
 import { Spec } from 'js-spec';
 
-ComponentSystem.config.validateProps = false;
+Config.validateProps = false;
 
 const
     framesPerSecond = 240,
@@ -17,21 +18,19 @@ const
     columnCount = 20,
     rowCount = 20;
 
-const TileFunctional = defineFunctionalComponent({
+const TileFunctional = defineComponent({
     displayName:  'TileFunctional',
     
-    properties: ['color', 'width'],
-    
-    // properties: {
-    //     color: {
-    //         type: String,
-    //         defaultValue: 'white'
-    //     },
-    //     width: {
-    //         type: Number,
-    //         defaultValue: 3
-    //     }
-    // },
+    properties: {
+        color: {
+            type: String,
+            defaultValue: 'white'
+        },
+        width: {
+            type: Number,
+            defaultValue: 3
+        }
+    },
     
     render(props) {
         const  
@@ -51,20 +50,18 @@ const TileFunctional = defineFunctionalComponent({
     }
 });
 
-const TileRowFunctional = defineFunctionalComponent({
+const TileRowFunctional = defineComponent({
     displayName:  'TileRowFunctional',
-    
-    properties: ['tileWidth', 'columnCount'],
-
-    // properties: {
-    //     tileWidth: {
-    //         type: Number,
-    //         defaultValue: 3
-    //     },
-    //     columnCount: {
-    //         type: Number
-    //     }
-    // },
+   
+    properties: {
+        tileWidth: {
+            type: Number,
+            defaultValue: 3
+        },
+        columnCount: {
+            type: Number
+        }
+    },
     
     render(props) {
         const
@@ -83,7 +80,7 @@ const TileRowFunctional = defineFunctionalComponent({
     }
 });
 
-const TileStandard = defineClassComponent({
+const TileStandard = defineComponent({
     displayName:  'TileStandard',
     
     properties: {
@@ -97,25 +94,26 @@ const TileStandard = defineClassComponent({
         }
     },
     
-    render() {
-        const
-            { width, color } = this.props,
-        
-            style = {
-                float: 'left',
-                width: width + 'px',
-                height: width + 'px',
-                backgroundColor: color
-            };
-        
-        return (
-            h('div',
-                { style })
-        );    
+    init(updateView) {
+        return {
+            setProps(props) {
+                const
+                    { width, color } = props,
+                
+                    style = {
+                        float: 'left',
+                        width: width + 'px',
+                        height: width + 'px',
+                        backgroundColor: color
+                    };
+                
+                updateView(h('div', { style }));
+            }
+        };
     }
 });
 
-const TileRowStandard = defineClassComponent({
+const TileRowStandard = defineComponent({
     displayName:  'TileRowStandard',
     
     properties: {
@@ -128,24 +126,28 @@ const TileRowStandard = defineClassComponent({
         }
     },
     
-    render() {
-        const
-            { tileWidth, columnCount } = this.props, 
-            tiles = [];
-       
-        for (let x = 0; x < columnCount; ++x) {
-            const
-                colorIdx = Math.floor(Math.random() * colors.length),           
-                color = colors[colorIdx];
-           
-            tiles.push(TileStandard({ width: tileWidth, color, key: x }));
-        }
-       
-        return h('div', { style: { clear: 'both' }}, tiles);
+    init(updateView) {
+        return {
+            setProps(props) {
+                const
+                    { tileWidth, columnCount } = props, 
+                    tiles = [];
+            
+                for (let x = 0; x < columnCount; ++x) {
+                    const
+                        colorIdx = Math.floor(Math.random() * colors.length),           
+                        color = colors[colorIdx];
+                
+                    tiles.push(TileStandard({ width: tileWidth, color, key: x }));
+                }
+            
+                updateView(h('div', { style: { clear: 'both' }}, tiles));
+            }
+        };
     }
 });
 
-const SpeedTest = defineClassComponent({
+const SpeedTest = defineComponent({
     displayName: 'SpeedTest',
 
     properties: {
@@ -165,92 +167,96 @@ const SpeedTest = defineClassComponent({
         }
     },
         
-    constructor() {
-        this.__startTime = null;
-        this.__frameCount = 0;
-        this.__actualFramesPerSecond = '0';
-    },
-    
-    onDidMount() {
-        this.__startTime = Date.now();
+    init(updateView) {
+        let
+            props = null,
+            startTime = Date.now(),
+            frameCount = 0,
+            actualFramesPerSecond = '0',
 
-        this.intervalID = setInterval(() => {
-            ++this.__frameCount;
-            this.forceUpdate();
+            render = props => {
+                const
+                    tileRowFactory = props.type === 'functional'
+                        ? TileRowFunctional
+                        : TileRowStandard,
 
-            if (this.__frameCount % 10 === 0) {
-                this.__actualFramesPerSecond =
-                    (this.__frameCount * 1000.0 /
-                        (Date.now() - this.__startTime)).toFixed(2);
-            }
-        }, 1000 / framesPerSecond);
-    },
-    
-    onWillUnmount() {
-        clearInterval(this.intervalID);
-        this.__startTime = null;
-        this.__frameCount = 0;
-    },
-    
-    render() {
-        const
-            tileRowFactory = this.props.type === 'functional'
-                ? TileRowFunctional
-                : TileRowStandard,
+                    rows = [],
+                    
+                    style = {
+                        marginTop: 40,
+                        marginLeft: 40
+                    };
 
-            rows = [],
-            
-            style = {
-                marginTop: 40,
-                marginLeft: 40
-            };
-
-        
-
-        for (let y = 0; y < this.props.rowCount; ++y) {
-            rows.push(
-                tileRowFactory({
-                    tileWidth: this.props.tileWidth,
-                    columnCount: this.props.columnCount,
-                    key: y
-                }));
-        }
-        
-        return (
-            h('div',
-                null,
-                h('div',
-                    null,
-                    `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
+                for (let y = 0; y < props.rowCount; ++y) {
+                    rows.push(
+                        tileRowFactory({
+                            tileWidth: props.tileWidth,
+                            columnCount: props.columnCount,
+                            key: y
+                        }));
+                }
+                
+                return (
                     h('div',
-                        { style },
-                        rows)),
-                h('p',
-                    { style: { clear: 'both' } },
-                   `(actual frames per second: ${this.__actualFramesPerSecond})`))
-        );
-    }
+                        null,
+                        h('div',
+                            null,
+                            `Rows: ${props.rowCount}, columns: ${props.columnCount}`,
+                            h('div',
+                                { style },
+                                rows)),
+                        h('p',
+                            { style: { clear: 'both' } },
+                        `(actual frames per second: ${actualFramesPerSecond})`))
+                );
+            },
+
+            intervalId = setInterval(() => {
+                ++frameCount;
+                updateView(render(props)); 
+
+                if (frameCount % 10 === 0) {
+                    actualFramesPerSecond =
+                        (frameCount * 1000.0 /
+                            (Date.now() - startTime)).toFixed(2);
+                }
+            }, 1000 / framesPerSecond);
+
+        return {
+            setProps(nextProps) {
+                props = nextProps;
+                updateView(render(props));
+            },
+
+            close() {
+                clearInterval(intervalId);
+                intervalId = null,
+                startTime = null;
+                frameCount = 0;
+            }
+        };
+    },
 });
 
 // ------------------------------------------------------
-
+/*
 let htm = null;
 
-switch (ComponentSystem.adapter.name) {
+switch (Adapter.name) {
 case 'react':
-    htm = ComponentSystem.adapter.api.React.createElement;
+    htm = Adapter.api.React.createElement;
     break;
 
 case 'react-lite':
-    htm = ComponentSystem.adapter.api.createElement;
+    htm = Adapter.api.createElement;
     break;
 
 case 'preact':
-    htm = ComponentSystem.adapter.api.h;
+    htm = Adapter.api.h;
     break;
 
 case 'inferno':
-    htm = ComponentSystem.adapter.api.Inferno.createElement;
+    htm = Adapter.api.Inferno.createElement;
     break;
 }
 
@@ -293,7 +299,7 @@ function TileRowFunctionalDirect(props) {
 
 TileRowFunctionalDirect.displayName = 'TileRowFunctionalDirect';
 
-const TileStandardDirect = defineClassComponent({
+const TileStandardDirect = defineComponent({
     displayName:  'TileStardardDirect',
     
     properties: {
@@ -325,7 +331,7 @@ const TileStandardDirect = defineClassComponent({
     }
 });
 
-const TileRowStardardDirect = defineClassComponent({
+const TileRowStardardDirect = defineComponent({
     displayName:  'TileRowStardardDirect',
     
     properties: {
@@ -355,7 +361,7 @@ const TileRowStardardDirect = defineClassComponent({
     }
 });
 
-const SpeedTestDirect = defineClassComponent({
+const SpeedTestDirect = defineComponent({
     displayName: 'SpeedTestDirect',
 
     properties: {
@@ -440,34 +446,30 @@ const SpeedTestDirect = defineClassComponent({
     }
 });
 
+*/
 
 const mainContent = document.getElementById('main-content');
-
-let disposal = null;
 
 function onSelectTest(ev) {
     const testName = ev.target.value;
 
-    if (disposal) {
-        disposal.unmount();
-        disposal = null;
-    }
+    unmount('main-content');
 
     switch (testName) {
     case 'surface-functional':
-        disposal = mount(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTest({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'surface-standard':
-        disposal = mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-functional':
-        disposal = mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     case 'original-standard':
-        disposal = mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
+        mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
     
@@ -482,8 +484,8 @@ mainContent.innerHTML = `
         <option value="">Please select...</option>
         <option value="surface-functional">Speed test (js-surface functional)</option>
         <option value="surface-standard">Speed test (js-surface standard)</option>
-        <option value="original-functional">Speed test (${ComponentSystem.adapter.name} functional)</option>
-        <option value="original-standard">Speed test (${ComponentSystem.adapter.name} standard)</option>
+        <!-- option value="original-functional">Speed test (${Adapter.name} functional)</option -->
+        <!-- option value="original-standard">Speed test (${Adapter.name} standard)</option -->
     </select>
 
     <br/>
@@ -491,6 +493,7 @@ mainContent.innerHTML = `
     <div id="speed-test">
     </div>
 `;
+
 
 mainContent.querySelector('select').addEventListener('change', onSelectTest);
 

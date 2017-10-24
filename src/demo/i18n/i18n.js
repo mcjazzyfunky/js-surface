@@ -1,7 +1,6 @@
 import {
-    hyperscript as h,
-    defineClassComponent,
-    defineFunctionalComponent,
+    createElement as h,
+    defineComponent,
     mount 
 } from 'js-surface';
 
@@ -19,7 +18,7 @@ const translations = {
     }
 };
 
-const App = defineClassComponent({
+const App = defineComponent({
     displayName: 'App',
 
     properties: {
@@ -32,38 +31,42 @@ const App = defineClassComponent({
 
     provides: ['locale'],
 
-    constructor(props) {
-        this.setLocale(props.defaultLocale);
-    },
+    init(updateView) {
+        let locale = null;
 
-    provideChildInjections() {
+        const
+            render = () => {
+                return (
+                    h('div',
+                        h('label[for=lang-selector]',
+                            'Select language: '),
+                        h('select#lang-selector',
+                            { value: locale,
+                                onChange: ev => {
+                                    locale = ev.target.value;
+                                    updateView(render(), { locale });
+                                }
+                            },
+                            h('option[value=en]', 'en'),
+                            h('option[value=fr]', 'fr'),
+                            h('option[value=de]', 'de')),
+                        h('div', Text({ name: 'salutation'})))
+                );
+            };
+
         return {
-            locale: this.state.locale
+            setProps(props) {
+                if (!locale) {
+                    locale = props.defaultLocale;
+                }
+
+                updateView(render(), { locale });
+            }
         };
-    },
-
-    setLocale(locale) {
-        this.state = { locale };
-    },
-
-    render() {
-        return (
-            h('div',
-                h('label[for=lang-selector]',
-                    'Select language: '),
-                h('select#lang-selector',
-                    {   value: this.props.locale,
-                        onChange: ev => this.setLocale(ev.target.value)
-                    },
-                    h('option[value=en]', 'en'),
-                    h('option[value=fr]', 'fr'),
-                    h('option[value=de]', 'de')),
-                h('div', Text({ name: 'salutation'})))
-        );
     }
 });
 
-const Text = defineFunctionalComponent({
+const Text = defineComponent({
     displayName: 'Text',
 
     properties: {

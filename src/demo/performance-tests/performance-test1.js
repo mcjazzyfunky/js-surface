@@ -1,42 +1,46 @@
-
-import { createElement as h, hyperscript, ComponentSystem } from 'js-surface';
+import {
+    createElement as h,
+    createElement as hyperscript, // TODO
+    Adapter,
+    Config
+} from 'js-surface';
 
 const
     iterationCount = 200000,
     contentContainer = document.getElementById('main-content'),
-    adapterName = ComponentSystem.adapter.name,
+    adapterName = Adapter.name,
     tests = [];
 
 let createElement = null;
 
 switch (adapterName) {
 case 'react':
-    createElement = ComponentSystem.adapter.api.React.createElement;
+    createElement = Adapter.api.React.createElement;
     break;
 
 case 'react-lite':
-    createElement = ComponentSystem.adapter.api.createElement;
+    createElement = Adapter.api.createElement;
     break;
 
 case 'preact':
-    createElement = ComponentSystem.adapter.api.h;
+    createElement = Adapter.api.h;
     break;
 
 case 'inferno':
-    createElement = ComponentSystem.adapter.api.Inferno.createElement;
+    createElement = Adapter.api.Inferno.createElement;
     break;
 }
 
 contentContainer.innerHTML = 'Please wait - performance stests are running ...';
 let report = '';
 
-ComponentSystem.config.validateProps = false;
-ComponentSystem.config.validateDefs = false;
+Config.validateProps = false;
+Config.validateDefs = false;
 
 
 if (adapterName !== 'vue') {
     tests.push({
-        displayName: `Using '${ComponentSystem.adapter.name}'`,
+        displayName: `Using '${Adapter.name}'`,
 
         run() {
             for (let i = 0; i < iterationCount; ++i) {

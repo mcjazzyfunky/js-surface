@@ -1,10 +1,10 @@
 import {
-    hyperscript as h,
-    defineFunctionalComponent,
+    createElement as h,
+    defineComponent,
     mount 
 } from 'js-surface';
 
-const HelloWorld = defineFunctionalComponent({
+const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
 
     properties: {

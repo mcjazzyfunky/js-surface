@@ -1,42 +1,51 @@
 import {
-    hyperscript as h,
-    defineClassComponent,
+    createElement as h,
+    defineComponent,
     mount
 } from 'js-surface';
 
-const Clock = defineClassComponent({
+const Clock = defineComponent({
     displayName: 'Clock',
 
-    constructor() {
-        this.interval = null;
-        this.setState();
-    },
+    init(updateView) {
+        let
+            time = null,
+            intervalId = null;
 
-    setState() {
-        this.state = { time: new Date().toLocaleTimeString() };
-    },
+        const
+            updateTime = () => {
+                time = new Date().toLocaleTimeString();
+            },
 
-    onDidMount() {
-        this.interval = setInterval(() => {
-            this.setState(); 
+            render = () => {
+                return (
+                    h('div',
+                        h('h3', 'Current time'),
+                        TimeInfo({ time }))
+                );
+            };
+    
+        updateTime();
+        
+        intervalId = setInterval(() => {
+            updateTime();
+            updateView(render());
         }, 1000);
-    },
 
-    onWillUnmount() {
-        clearInterval(this.interval);
-        this.interval = null;
-    },
+        return {
+            setProps() {
+                updateView(render());
+            },
 
-    render() {
-        return (
-            h('div',
-                h('h3', 'Current time'),
-                TimeInfo({time: this.state.time, ref: (it, that) => console.log(it, that) }))
-        );
+            close() {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        };
     }
 });
 
-const TimeInfo = defineClassComponent({
+const TimeInfo = defineComponent({
     displayName: 'TimeInfo',
     
     properties: {
@@ -45,8 +54,8 @@ const TimeInfo = defineClassComponent({
         }
     },
 
-    render() {
-        return h('div', this.props.time);
+    render(props) {
+        return h('div', props.time);
     }
 });
 

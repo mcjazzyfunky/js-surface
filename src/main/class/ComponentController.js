@@ -12,7 +12,7 @@ export default class ComponentController {
 
         this.__config = config;
         this.__setProps = result.setProps;
-        this.__close = result.close;
+        this.__close = result.close || null;
         this.__applyMethod = result.applyMethod || null;
     }
 
@@ -31,6 +31,8 @@ export default class ComponentController {
     }
 
     close() {
-        this.__close();
+        if (this.__close) {
+            this.__close();
+        }
     }
 }

@@ -7,8 +7,11 @@ export default function validateInitResult(initResult, config) {
         errMsg = 'Must be an object';
     } else if (typeof initResult.setProps !== 'function') {
         errMsg = "Parameter 'setProps' must be a function";
-    } else if (typeof initResult.close !== 'function') {
-        errMsg = "Parameter 'close' must be a function";
+    } else if (initResult.close !== undefined
+            && initResult.close !== null
+            && typeof initResult.close !== 'function') {
+
+        errMsg = "Parameter 'close' must be a function or empty";
     }
 
     if (!errMsg) {
