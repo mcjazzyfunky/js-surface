@@ -16,18 +16,20 @@ export default function validateObject(
 
         for (let key of keys) {
             if (keyValidator) {
-                const validationResult = keyValidator(key);
+                const result = keyValidator(key);
 
-                if (validationResult !== undefined
-                    && validationResult !== null
-                    && validationResult !== true) {
+                if (result !== undefined
+                    && result !== null
+                    && result !== true) {
                     
                     error = `Illegal key '${key}'`;
                     
-                    const message =
-                        typeof validationResult === 'object'
-                            ? String(validationResult.message || validationResult).trim()
-                            : null;
+                    let message =
+                        typeof result === 'string'
+                            ? result.trim()
+                            : (typeof result === 'object'
+                                ? String(result.message || result)
+                                : null);
 
                     if (message) {
                         error += `: ${message}`;
@@ -38,18 +40,19 @@ export default function validateObject(
             }
 
             if (valueValidator) {
-                const validationResult = valueValidator(object[key]);
+                const result = valueValidator(object[key]);
 
-                if (validationResult !== undefined
-                    && validationResult !== null
-                    && validationResult !== true) {
-
+                if (result !== undefined
+                    && result !== null && result !== true) {
+                    
                     error = `Illegal value for key '${key}'`;
 
-                    const message =
-                        typeof validationResult === 'object'
-                            ? String(validationResult.message || validationResult).trim()
-                            : null;
+                    let message =
+                        typeof result === 'string'
+                            ? result.trim()
+                            : (typeof result === 'object'
+                                ? String(result.message || result)
+                                : null);
 
                     if (message) {
                         error += `: ${message}`;

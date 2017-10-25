@@ -10,22 +10,21 @@ export default function validateArray(
     } else if (!mayBeEmpty && array.length === 0) {
         error = 'Must not be empty';
     } else {
-        let validationResult = null;
-
         for (let i = 0; i < array.length; ++i) {
-            validationResult = itemValidator(array[i]);
+            const result = itemValidator(array[i]);
 
-            if (validationResult !== undefined
-                && validationResult !== null
-                && validationResult !== true) {
+            if (result !== undefined
+                && result !== null
+                && result !== true) {
 
                 error = `Illegal value at index ${i}`;
                 
-                const message =
-                    typeof validationResult === 'object'
-                        ? String(validationResult.message || validationResult).trim()
-                        : null;
-
+                let message =
+                    typeof result === 'string'
+                        ? result.trim()
+                        : (typeof result === 'object'
+                            ? String(result.message || result)
+                            : null);
                 
                 if (message) {
                     error += `:  ${message}`;

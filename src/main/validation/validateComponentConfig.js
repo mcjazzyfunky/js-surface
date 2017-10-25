@@ -59,6 +59,13 @@ const
             && typeof it.inject !== 'boolean') {
             
             error = "Property parameter 'inject' must be boolean or empty";
+        } else  {
+            for (const key of Object.keys(it)) {
+                if (!allowedPropertyConfigKeys.has(key)) {
+                    error = `Illegal property parameter '${key}'`;
+                    break;
+                }
+            }
         }
 
         return error;
@@ -167,13 +174,20 @@ export default function validateComponentConfig(config) {
         const message =
             error && error.message
                 ? error.message
-                : String(error);
+                : String(error),
+
+            // TODO: This is surely pretty ugly (but makes the error message
+            // more understandable) - has to be replaced by a better solution
+            tokens = message.split(/.*?'([^']+)'.*?/).filter(it => it),
+            path = tokens.slice(0, -1).join('.'),
+            shortMessage = message.replace(/^.*:\s*/, ''),   
+            info = `at '${path}': ${shortMessage}`;
 
         if (!config || typeof config.displayName !== 'string') {
-            ret = new Error(`Invalid component configuration => ${message}`);
+            ret = new Error(`Invalid component configuration ${info}`);
         } else {
             ret = new Error('Invalid component configuration '
-                + `for '${config.displayName}' => ${message}`);
+                + `for '${config.displayName}' ${info}`);
         }
     }
 
