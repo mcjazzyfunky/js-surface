@@ -243,7 +243,6 @@ function customMount(content, targetNode) {
 
         methods: {
             create() {
-                console.log('crete');
             },
 
             destroy() {
@@ -338,7 +337,6 @@ function renderContent(vueCreateElement, content, component) {
 
         if (type && type.meta) {
             ret = type(options, ...children);
-            console.log(options, children)
         } else {
             ret = vueCreateElement(type, options, children);
         }

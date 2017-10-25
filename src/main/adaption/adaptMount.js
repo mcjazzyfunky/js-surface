@@ -3,7 +3,7 @@ export default function adaptMount(mount, isElement) {
         if (!isElement(content)) {
             throw new TypeError(
                 "[mount] First argument 'content' has to be a valid element");
-        } else if (typeof target !== 'string' && (!target || !target.tagName)) {console.log(target)
+        } else if (typeof target !== 'string' && (!target || !target.tagName)) {
             throw new TypeError(
                 "[mount] Second argument 'target' has to be "
                     + 'a string or a DOM element');

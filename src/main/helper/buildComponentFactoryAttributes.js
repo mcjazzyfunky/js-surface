@@ -1,13 +1,14 @@
 import validateProperty from '../validation/validateProperty';
 
-export default function enrichComponentFactory(factory, config, defineComponent) {
+export default function buildComponentFactoryAttributes(factory, config, defineComponent) {
     const
+        ret = {},
         functional = typeof config.render === 'function',
         type = factory;
 
-    factory.meta = Object.assign({ functional, type }, config);
+    ret.meta = Object.assign({ functional, type }, config);
     
-    factory.withDefaults = defaultProps => {
+    ret.withDefaults = defaultProps => {
         if (!defaultProps || typeof defaultProps !== 'object') {
             throw new Error(`[${config.displayName}.withDefaults] `
                 + "First argument 'defaultProps' must be an object");
@@ -52,4 +53,6 @@ export default function enrichComponentFactory(factory, config, defineComponent)
         newFactory.meta.type = factory.meta.type;
         return newFactory;
     };
+
+    return ret;
 }

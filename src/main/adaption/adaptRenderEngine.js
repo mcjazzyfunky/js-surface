@@ -1,9 +1,10 @@
 import adaptDefineComponent from './adaptDefineComponent';
 import adaptHyperscript from './adaptHyperscript';
 import adaptMount from '../adaption/adaptMount';
-import enrichComponentFactory from '../helper/enrichComponentFactory';
+import buildComponentFactoryAttributes from '../helper/buildComponentFactoryAttributes';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
+import validateRenderEngineConfig from '../validation/validateRenderEngineConfig';
 import Adapter from '../system/Adapter';
 import AdapterValues from '../system/AdapterValues';
 import Config from '../system/Config';
@@ -16,11 +17,11 @@ export default function adaptRenderEngine(config) {
         throw new Error('[adaptRenderEngine] Function may only be called once');
     }
 
-    const err = null; // TODO
+    const err = validateRenderEngineConfig(config);
 
     if (err) {
-        throw new Error(
-            "Illegal first argument 'config' for "
+        throw new TypeError(
+            "[adaptRenderEngine] Illegal first argument 'config' for "
             + "function 'adaptRenderEngine':"
             + err);
     }
@@ -59,13 +60,7 @@ export default function adaptRenderEngine(config) {
 
 function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
     const ret = cfg => {
-        if (ConfigValues.validateDefs) {
-            const err = null; // TODO!!!
-            
-            if (err) {
-                throw err;
-            }
-        }
+        // cfg has already been validated
 
         const
             config = normalizeComponentConfig(cfg),
@@ -79,7 +74,10 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
         const factory = defineFunctionalComponent(adjustedConfig);
 
-        enrichComponentFactory(factory, config, ret);
+        const factoryAttributes =
+            buildComponentFactoryAttributes(factory, config, ret);
+
+        Object.assign(factory, factoryAttributes);
 
         return factory;
     };
@@ -89,13 +87,7 @@ function enhanceDefineFunctionalComponent(defineFunctionalComponent) {
 
 function enhanceDefineStandardComponent(defineStandardComponent) {
     const ret = cfg => {
-        if (ConfigValues.validateDefs) {
-            const err =  null; // TODO
-
-            if (err) {
-                throw err;
-            }
-        }
+        // cfg has already been validated
 
         const
             config = normalizeComponentConfig(cfg),
@@ -126,7 +118,10 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
 
         const factory = defineStandardComponent(adjustedConfig);
         
-        enrichComponentFactory(factory, config, ret);
+        const factoryAttributes =
+            buildComponentFactoryAttributes(factory, config, ret);
+        
+        Object.assign(factory, factoryAttributes);
 
         return factory;
     };
