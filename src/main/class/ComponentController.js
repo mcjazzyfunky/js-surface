@@ -1,9 +1,9 @@
 import validateInitResult from '../validation/validateInitResult';
 
 export default class ComponentController {
-    constructor(config, updateView, updateState) {
+    constructor(config, updateView, forwardState) {
         const
-            result = config.init(updateView, updateState),
+            result = config.init(updateView, forwardState),
             error = validateInitResult(result, config);
 
         if (error) {

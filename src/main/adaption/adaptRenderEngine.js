@@ -102,9 +102,9 @@ function enhanceDefineStandardComponent(defineStandardComponent) {
             propsAdjuster = createPropsAdjuster(config),
     
             adjustedConfig = Object.assign({}, config, {
-                init: (updateView, updateState) => {
+                init: (updateView, forwardState) => {
                     const
-                        result = config.init(updateView, updateState),
+                        result = config.init(updateView, forwardState),
                         err = validateInitResult(result, config);
 
                     if (err) {

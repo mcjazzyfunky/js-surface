@@ -44,12 +44,17 @@ const Counter = defineComponent({
 
     methods: ['resetCounter'],
 
-    init(updateView) {
-        let counterValue = 0;
+    init(updateView, forwardState) {
+        let counterValue;
 
         const
+            setCounterValue = n => {
+                counterValue = n;
+                forwardState({ counterValue });
+            },
+
             increaseCounter = n => {
-                counterValue += n;
+                setCounterValue(counterValue + n);
                 updateView(render());
             },
 
@@ -67,11 +72,14 @@ const Counter = defineComponent({
                             '+'))
                 );
             };
-        
+       
+        setCounterValue(0);
+
         return {
             setProps() {
                 updateView(render());
             },
+
             applyMethod(name, args) {
                 if (name === 'resetCounter') {
                     const [n = 0] = args;

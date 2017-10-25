@@ -126,13 +126,16 @@ function defineCustomComponent(config, ParentComponent) {
                 }
             },
 
-            updateState = state => {
-                this.setState(state);
+            forwardState = state => {
+                if (!this.__ctrl) {
+                    this.state = state;
+                } else {
+                    this.setState(state);
+                }
             };
 
-
         this.__ctrl =
-            new ComponentController(config, updateView, updateState);
+            new ComponentController(config, updateView, forwardState);
     };
 
     CustomComponent.displayName = config.displayName;
