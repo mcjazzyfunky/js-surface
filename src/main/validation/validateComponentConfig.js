@@ -1,7 +1,8 @@
 import {
     REGEX_DISPLAY_NAME,
+    REGEX_PROPERTY_NAME,
     REGEX_METHOD_NAME,
-    REGEX_PROPERTY_NAME
+    FORBIDDEN_METHOD_NAMES
 } from '../constant/constants';
 
 import validateArray from './validateArray';
@@ -147,7 +148,8 @@ export default function validateComponentConfig(config) {
     if (!error && config.methods) {
         const validationResult = validateArray(
             config.methods,
-            it => REGEX_METHOD_NAME.test(it),
+            it => REGEX_METHOD_NAME.test(it)
+                && !FORBIDDEN_METHOD_NAMES.has(it),
             true,
             true);
 
