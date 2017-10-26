@@ -19,7 +19,7 @@ const {
     isValidElement: React.isValidElement,
     mount: reactNativeMount,
     Component: React.Component,
-    needsHyperscript: false
+    browserBased: false
 });
 
 export {

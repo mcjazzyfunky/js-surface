@@ -25,7 +25,7 @@ const {
     isValidElement: React.isValidElement,
     mount: reactMount,
     Component: React.Component,
-    needsHyperscript: true
+    browserBased: true
 });
 
 export {

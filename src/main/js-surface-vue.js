@@ -18,7 +18,7 @@ const {
     defineComponent: customDefineComponent,
     isElement: customIsElement,
     mount: customMount,
-    needsHyperscript: true
+    browserBased: true
 });
 
 export {

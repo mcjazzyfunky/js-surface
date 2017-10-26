@@ -18,7 +18,7 @@ const {
     createFactory: ReactLite.createFactory,
     isValidElement: ReactLite.isValidElement,
     mount: reactLiteMount,
-    needsHyperscript: true
+    browserBased: true
 });
 
 export {

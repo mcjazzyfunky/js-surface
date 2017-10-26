@@ -5,19 +5,23 @@ import validateComponentSystemConfig from '../validation/validateComponentSystem
 import Adapter from '../system/Adapter';
 import AdapterValues from '../system/AdapterValues';
 import Config from '../system/Config';
+import warn from '../helper/warn';
 
 export default function adaptComponentSystem(config) {
     if (AdapterValues.name !== null) {
         throw new Error('[adaptComponentSystem] Function may only be called once');
     }
 
-    const err = validateComponentSystemConfig(config);
+    const error = validateComponentSystemConfig(config);
 
-    if (err) {
+    if (error) {
+        warn('[adaptComponentSystem] ' + error.message);
+        warn('[adaptComponentSystem] Negatively validated '
+            + 'component system configuration:', config);
+
         throw new TypeError(
-            "[adaptComponentSystem] Illegal first argument 'config' for "
-            + "function 'adaptComponentSystem':"
-            + err);
+            "[adaptComponentSystem] Illegal first argument 'config': "
+            + error.message);
     }
 
     AdapterValues.name = config.name;
@@ -25,7 +29,7 @@ export default function adaptComponentSystem(config) {
     
     const
         hyperscript = 
-            config.needsHyperscript === false
+            config.browserBased === false
                 ? null
                 : adaptHyperscript(config.createElement, config.isElement, Adapter),
 

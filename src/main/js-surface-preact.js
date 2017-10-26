@@ -20,7 +20,7 @@ const {
     createFactory: preactCreateFactory,
     isValidElement: preactIsValidElement,
     mount: preactMount,
-    needsHyperscript: true
+    browserBased: true
 });
 
 export {

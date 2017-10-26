@@ -32,7 +32,7 @@ const {
     createFactory: customCreateFactory,
     isValidElement: customIsValidElement,
     mount: customMount,
-    needsHyperscript: true 
+    browserBased: true 
 });
 
 export {

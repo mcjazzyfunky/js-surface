@@ -86,7 +86,7 @@ export default function adaptReactLikeComponentSystem(reactLikeConfig) {
         },
 
         mount: reactLikeConfig.mount,
-        needsHyperscript: reactLikeConfig.needsHyperscript !== false,
+        browserBased: reactLikeConfig.browserBased !== false,
     };
 
     return adaptComponentSystem(newConfig);

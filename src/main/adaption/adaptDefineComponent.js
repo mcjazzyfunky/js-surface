@@ -26,27 +26,13 @@ export default function adaptDefineComponentFunction(defineComponent) {
             const error = validateComponentConfig(config);
 
             if (error) {
-                warn(error.message);
+                warn('[defineComponent]' + error.message);
 
-                warn('Negatively validated component configuration:',
-                    config);
+                warn('[defineComponent] Negatively validated '
+                    + 'component configuration:',
+                        config);
 
                 throw new Error(`[defineComponent] ${error.message}`);
-            }
-
-
-            if (!hasRender && !hasInit) {
-                throw new Error(
-                    "[defineComponent] Config must either provide a function 'init' or a function 'render'");
-            } else if (hasRender && hasInit) {
-                throw new Error(
-                    "[defineComponent] Config must not provide both functions 'init' and 'render'");      
-            } else if (hasRender && !isFunctional) {
-                throw new Error(
-                    "[defineComponent] Config parameter 'render' has to be a function");
-            } else if (hasInit && !isStandard) {
-                throw new Error(
-                    "[defineComponent] Config parameter 'init' has to be a function");
             }
         }
 
