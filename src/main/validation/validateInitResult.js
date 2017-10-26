@@ -19,7 +19,7 @@ export default function validateInitResult(initResult, config) {
             if (typeof initResult.applyMethod !== 'function') {
                 errMsg = "Parameter 'applyMethod' must be a function"; 
             }
-        } else if (initResult.applyMethod !== undefined) {
+        } else if (initResult.applyMethod) {
             errMsg = "Unnecessary parameter 'applyMethod'";
         }
     }

@@ -26,7 +26,7 @@ export default function adaptDefineComponentFunction(defineComponent) {
             const error = validateComponentConfig(config);
 
             if (error) {
-                warn('[defineComponent]' + error.message);
+                warn('[defineComponent] ' + error.message);
 
                 warn('[defineComponent] Negatively validated '
                     + 'component configuration:',

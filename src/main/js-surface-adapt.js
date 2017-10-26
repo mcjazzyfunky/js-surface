@@ -1,5 +1,5 @@
 import SUPPORTED_RENDER_ENGINES from './constant/constants';
-import adaptRE from './adaption/adaptComponentSystem';
+import adaptCompSys from './adaption/adaptComponentSystem';
 
 export default function adaptComponentSystem(config) {
     if (config && typeof config === 'object' && typeof config.name === 'string'
@@ -11,5 +11,5 @@ export default function adaptComponentSystem(config) {
              + "' is not allowed");
     }
 
-    return adaptRE(config);
+    return adaptCompSys(config);
 }

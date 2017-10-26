@@ -105,42 +105,38 @@ function validateProps(props, validations) {
     // Ignore children
     keysToBeChecked.delete('children');
 
-    //try {
-        for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
-            let prop = props[propertyName];
+    for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
+        let prop = props[propertyName];
 
-            keysToBeChecked.delete(propertyName);
+        keysToBeChecked.delete(propertyName);
 
-            // TODO!!!
-            /*
-            if (defaultValueProvider && prop === defaultValue) {
-                // TODO - shall the default value always be fine???
-                // everything fine
-            } else */if (nullable === true && prop === null) {
-                // everything fine
-            } else if (!defaultValueProvider && props[propertyName] === undefined) {
-                errMsg = `Missing mandatory property '${propertyName}'`;
-            } else {
-                const err = validateProperty(prop, propertyName, type, nullable, constraint);
+        // TODO!!!
+        /*
+        if (defaultValueProvider && prop === defaultValue) {
+            // TODO - shall the default value always be fine???
+            // everything fine
+        } else */if (nullable === true && prop === null) {
+            // everything fine
+        } else if (!defaultValueProvider && props[propertyName] === undefined) {
+            errMsg = `Missing mandatory property '${propertyName}'`;
+        } else {
+            const err = validateProperty(prop, propertyName, type, nullable, constraint);
 
-                if (err) {
-                    errMsg = err.message;
-                }
-            }
-            
-            if (errMsg) {
-                break;
+            if (err) {
+                errMsg = err.message;
             }
         }
-
-        if (!errMsg && keysToBeChecked.size > 0) {
-            const joined = Array.from(keysToBeChecked.values()).join(', ');
-
-            errMsg = `Illegal property key(s): ${joined}`;
+        
+        if (errMsg) {
+            break;
         }
-    //} catch (err) {
-    //    errMsg = String(err);
-    //}
+    }
+
+    if (!errMsg && keysToBeChecked.size > 0) {
+        const joined = Array.from(keysToBeChecked.values()).join(', ');
+
+        errMsg = `Illegal property key(s): ${joined}`;
+    }
 
     return errMsg ? new Error(errMsg) : null;
 }

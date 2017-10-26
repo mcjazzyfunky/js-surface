@@ -20,8 +20,7 @@ export default function adaptComponentSystem(config) {
             + 'component system configuration:', config);
 
         throw new TypeError(
-            "[adaptComponentSystem] Illegal first argument 'config': "
-            + error.message);
+            '[adaptComponentSystem] ' + error.message);
     }
 
     AdapterValues.name = config.name;
