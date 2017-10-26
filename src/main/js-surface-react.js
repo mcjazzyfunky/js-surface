@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
+import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -17,14 +17,15 @@ const {
     unmount,
     Adapter,
     Config
-} = adaptReactLikeRenderEngine({
-    renderEngineName: 'react',
-    renderEngineAPI: { React, ReactDOM },
+} = adaptReactLikeComponentSystem({
+    name: 'react',
+    api: { React, ReactDOM },
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
     mount: reactMount,
-    Component: React.Component
+    Component: React.Component,
+    needsHyperscript: true
 });
 
 export {

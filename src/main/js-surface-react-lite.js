@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
+import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
 
 import ReactLite from 'react-lite';
 
@@ -10,14 +10,15 @@ const {
     unmount,
     Adapter,
     Config
-} = adaptReactLikeRenderEngine({
-    renderEngineName: 'react-lite',
-    renderEngineAPI: ReactLite,
+} = adaptReactLikeComponentSystem({
+    name: 'react-lite',
+    api: ReactLite,
     Component: ReactLite.Component,
     createElement: ReactLite.createElement,
     createFactory: ReactLite.createFactory,
     isValidElement: ReactLite.isValidElement,
-    mount: reactLiteMount
+    mount: reactLiteMount,
+    needsHyperscript: true
 });
 
 export {

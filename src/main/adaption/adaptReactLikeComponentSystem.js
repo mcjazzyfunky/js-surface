@@ -1,21 +1,10 @@
 import adaptCreateElement from './adaptCreateElement';
 import ComponentController from '../class/ComponentController';
-
-
-import adaptRenderEngine from '../adaption/adaptRenderEngine';
+import adaptComponentSystem from '../adaption/adaptComponentSystem';
 
 const returnNull = () => null;
 
-export default function adaptReactLikeRenderEngine(reactLikeConfig) {
-    const err = null // TODO!!!!
-
-    if (err) {
-        throw new Error(
-            "Illegal first argument 'reactLikeConfig' for "
-            + "function 'adaptReactLikeRenderEngine':"
-            + err);
-    }
-
+export default function adaptReactLikeComponentSystem(reactLikeConfig) {
     const
         createFactory =  function(type) {
             const factory = (props, ...children) => {
@@ -25,82 +14,82 @@ export default function adaptReactLikeRenderEngine(reactLikeConfig) {
             factory.type = type;
 
             return factory;
+        },
+    
+        defineFunctionalComponent = config => {
+            let ret;
+            const injectPropsNames = [];
+
+            if (config.properties) {
+                for (let property of Object.keys(config.properties)) {
+                    if (config.properties[property].inject) {
+                        injectPropsNames.push(property);
+                    }
+                }
+            }
+
+            if (injectPropsNames.length === 0) {
+                ret = props => config.render(props);
+            } else {
+                ret = (props, context) => {
+                    return config.render(mixPropsWithContext(props, context));
+                };
+
+                ret.contextTypes = {};
+
+                for (let propName of injectPropsNames) {
+                    ret.contextTypes[propName] = returnNull;
+                }
+            }
+            
+            // TODO
+            if (reactLikeConfig.name === 'react-lite') {
+                ret.vtype = 2;
+            }
+
+            ret.displayName = config.displayName;
+
+            const factory = createFactory(ret);
+            factory.component = ret;
+            return factory;
+        },
+
+        defineStandardComponent = config => {
+            const CustomComponent = defineCustomComponent(config, reactLikeConfig.Component);
+
+            // TODO - sorry for that hack
+            if (reactLikeConfig.name === 'react-lite') {
+                CustomComponent.vtype = 4;
+            }
+
+            const factory = createFactory(CustomComponent);
+            factory.component = CustomComponent;
+            return factory;
         };
 
     const newConfig = {
-        renderEngine: {
-            name: reactLikeConfig.renderEngineName,
-            api: reactLikeConfig.renderEngineAPI,
-        },
-        interface: {
-            defineFunctionalComponent: config => {
-                let ret;
-                const injectPropsNames = [];
+        name: reactLikeConfig.name,
+        api: reactLikeConfig.api,
 
-                if (config.properties) {
-                    for (let property of Object.keys(config.properties)) {
-                        if (config.properties[property].inject) {
-                            injectPropsNames.push(property);
-                        }
-                    }
-                }
-
-                if (injectPropsNames.length === 0) {
-                    ret = props => config.render(props);
-                } else {
-                    ret = (props, context) => {
-                        return config.render(mixPropsWithContext(props, context));
-                    };
-
-                    ret.contextTypes = {};
-
-                    for (let propName of injectPropsNames) {
-                        ret.contextTypes[propName] = returnNull;
-                    }
-                }
-                
-                // TODO
-                if (reactLikeConfig.renderEngineName === 'react-lite') {
-                    ret.vtype = 2;
-                }
-
-                ret.displayName = config.displayName;
-
-                const factory = createFactory(ret);
-                factory.component = ret;
-                return factory;
-            },
-
-            defineStandardComponent: config => {
-                const CustomComponent = defineCustomComponent(config, reactLikeConfig.Component);
-
-                // TODO - sorry for that hack
-                if (reactLikeConfig.renderEngineName === 'react-lite') {
-                    CustomComponent.vtype = 4;
-                }
-
-                const factory = createFactory(CustomComponent);
-                factory.component = CustomComponent;
-                return factory;
-            },
-
-            createElement: adaptCreateElement(reactLikeConfig.createElement, reactLikeConfig.renderEngineName),
-
-            isElement(it) { 
-                return it !== undefined
-                    && it !== null
-                    && reactLikeConfig.isValidElement(it);
-            },
-
-            mount: reactLikeConfig.mount
+        defineComponent: config => {
+            return config.render
+                ? defineFunctionalComponent(config)
+                : defineStandardComponent(config); 
         },
 
-        options: {
-            isBrowserBased: reactLikeConfig.isBrowserBased !== false,
-        }
+        createElement: adaptCreateElement(reactLikeConfig.createElement, reactLikeConfig.name),
+
+        isElement(it) { 
+            return it !== undefined
+                && it !== null
+                && reactLikeConfig.isValidElement(it);
+        },
+
+        mount: reactLikeConfig.mount,
+        needsHyperscript: reactLikeConfig.needsHyperscript !== false,
     };
 
-    return adaptRenderEngine(newConfig);
+    return adaptComponentSystem(newConfig);
 }
 
 function defineCustomComponent(config, ParentComponent) {

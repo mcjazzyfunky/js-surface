@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
+import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
 
 import InfernoCore from 'inferno';
 import createInfernoElement from 'inferno-create-element';
@@ -20,19 +20,19 @@ const {
     createElement,
     defineComponent,
     isElement,
-    isRenderable,
     mount,
     unmount,
     Adapter,
     Config
-} = adaptReactLikeRenderEngine({
-    renderEngineName: 'inferno',
-    renderEngineAPI:  { Inferno },
+} = adaptReactLikeComponentSystem({
+    name: 'inferno',
+    api:  { Inferno },
     Component: Inferno.Component,
     createElement: Inferno.createElement,
     createFactory: customCreateFactory,
     isValidElement: customIsValidElement,
-    mount: customMount
+    mount: customMount,
+    needsHyperscript: true 
 });
 
 export {

@@ -1,5 +1,5 @@
-import adaptRenderEngine from
-    './adaption/adaptRenderEngine';
+import adaptComponentSystem from
+    './adaption/adaptComponentSystem';
 
 import Vue from 'vue';
 
@@ -11,18 +11,14 @@ const {
     unmount,
     Adapter,
     Config
-} = adaptRenderEngine({
-    renderEngine: {
-        name: 'vue',
-        api: { Vue },
-    },
-    interface: {
-        createElement: customCreateElement,
-        defineFunctionalComponent: customDefineFunctionalComponent,
-        defineStandardComponent: customDefineStandardComponent,
-        isElement: customIsElement,
-        mount: customMount
-    }
+} = adaptComponentSystem({
+    name: 'vue',
+    api: { Vue },
+    createElement: customCreateElement,
+    defineComponent: customDefineComponent,
+    isElement: customIsElement,
+    mount: customMount,
+    needsHyperscript: true
 });
 
 export {
@@ -50,6 +46,12 @@ function getNextRefName() {
     }
 
     return ret;
+}
+
+function customDefineComponent(config) {
+    return config.render
+        ? customDefineFunctionalComponent(config)
+        : customDefineStandardComponent(config); 
 }
 
 function customDefineFunctionalComponent(config) {

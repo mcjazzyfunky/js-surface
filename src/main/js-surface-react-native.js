@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
+import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
 
 import React from 'react';
 import ReactNative from 'react-native';
@@ -11,15 +11,15 @@ const {
     unmount,
     Adapter,
     Config 
-} = adaptReactLikeRenderEngine({
-    renderEngineName: 'react-native',
-    renderEngineAPI: { React, ReactNative },
+} = adaptReactLikeComponentSystem({
+    name: 'react-native',
+    api: { React, ReactNative },
     createElement: React.createElement,
     createFactory: React.createFactory,
     isValidElement: React.isValidElement,
     mount: reactNativeMount,
     Component: React.Component,
-    isBrowserBased: false
+    needsHyperscript: false
 });
 
 export {

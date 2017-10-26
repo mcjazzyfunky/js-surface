@@ -1,4 +1,4 @@
-import adaptReactLikeRenderEngine from './adaption/adaptReactLikeRenderEngine';
+import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
 
 import Preact from 'preact';
 
@@ -12,14 +12,15 @@ const {
     unmount,
     Adapter,
     Config
-} = adaptReactLikeRenderEngine({
-    renderEngineName: 'preact',
-    renderEngineAPI: Preact,
+} = adaptReactLikeComponentSystem({
+    name: 'preact',
+    api: Preact,
     Component: Preact.Component,
     createElement: Preact.createElement,
     createFactory: preactCreateFactory,
     isValidElement: preactIsValidElement,
-    mount: preactMount
+    mount: preactMount,
+    needsHyperscript: true
 });
 
 export {
