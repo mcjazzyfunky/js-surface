@@ -14,44 +14,55 @@ const componentConfigSpec =
             
             properties:
                 Spec.optional(
-                    Spec.and(
-                        Spec.object,
-                        Spec.keysOf(Spec.match(REGEX_PROPERTY_NAME)),
+                    Spec.or(
+                        {
+                            when: Spec.array,
+                            check: Spec.arrayOf(Spec.match(REGEX_PROPERTY_NAME))
 
-                        Spec.valuesOf(
-                            Spec.and(
-                                Spec.shape({
-                                    type:
-                                        Spec.optional(Spec.function),
-                                    
-                                    constraint:
-                                        Spec.optional(
-                                            Spec.or(
-                                                Spec.function,
-                                                Spec.struct({
-                                                    validate: Spec.function
-                                                }))
-                                                .usingHint(
-                                                    'Must either be function or an'
-                                                        + 'object containing a '
-                                                        + "function 'validate'")),
+                        },
+                        {
+                            when: Spec.object,
 
-                                    nullable: Spec.optional(Spec.boolean),
+                            check:
+                                Spec.and(
+                                    Spec.object,
+                                    Spec.keysOf(Spec.match(REGEX_PROPERTY_NAME)),
 
-                                    defaultValue:
-                                        Spec.optional(Spec.any),
-                                        
-                                    getDefaultValue:
-                                        Spec.optional(Spec.function),
+                                    Spec.valuesOf(
+                                        Spec.and(
+                                            Spec.shape({
+                                                type:
+                                                    Spec.optional(Spec.function),
+                                                
+                                                constraint:
+                                                    Spec.optional(
+                                                        Spec.or(
+                                                            Spec.function,
+                                                            Spec.struct({
+                                                                validate: Spec.function
+                                                            }))
+                                                            .usingHint(
+                                                                'Must either be function or an'
+                                                                    + 'object containing a '
+                                                                    + "function 'validate'")),
+
+                                                nullable: Spec.optional(Spec.boolean),
+
+                                                defaultValue:
+                                                    Spec.optional(Spec.any),
                                                     
-                                    inject:
-                                        Spec.optional(Spec.boolean)
-                                }),
-                            
-                                Spec.valid(it => !it.getDefaultValue
-                                    || !it.hasOwnProperty('defaultValue'))
-                                    .usingHint("Not allowed to provide 'defaultValue' "
-                                        + "and 'getDefaultValue' at the same time"))))),
+                                                getDefaultValue:
+                                                    Spec.optional(Spec.function),
+                                                                
+                                                inject:
+                                                    Spec.optional(Spec.boolean)
+                                            }),
+                                        
+                                            Spec.valid(it => !it.getDefaultValue
+                                                || !it.hasOwnProperty('defaultValue'))
+                                                .usingHint("Not allowed to provide 'defaultValue' "
+                                                    + "and 'getDefaultValue' at the same time"))))
+                        })),
                                 
             render:
                 Spec.optional(Spec.function),
