@@ -47,9 +47,6 @@ module.exports = function (grunt) {
                 src: 'build/src/main/js-surface-adapt.js',
                 dest: 'dist/adapt.js',
                 options: {
-                    alias: {
-                        'js-surface': './build/src/main/js-surface-inferno.js'
-                    },
                     ignore: ['./node_modules/**'],
                     external: ['js-spec'],
 
