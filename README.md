@@ -33,7 +33,7 @@ The API of jsSurface is highly based on "virtual DOM" techniques. Unfortunatelly
 jsSurface tries to provide a minimalistic API to describe UI components in a framework-agnostic way.
 But that does not mean that componenent developer will directly this minimalistic API.
 Instead, to implement complex components you have to use some third-party libraries/APIs that are built upon jsSurface.
-For example if you like to implement components in a React-like object-oriented way, then maybe you want try to use the sister-project "jsUnify" (in development - currently in a subfolder of the jsSurface sources).
+For example if you like to implement components in a React-like object-oriented way, then maybe you want try to use the sister-project "jsGlow" (in development - currently in a subfolder of the jsSurface sources).
 
 ### jsSurface API
 
