@@ -3,7 +3,7 @@ import determineComponentMeta from
 
 import { defineComponent } from 'js-surface';
 
-export default function defineFunctionalComponent(config, meta = null) {
+export default function defineFunctionalComponent(config) {
     const
         configType = typeof config,
         configIsObject = config !== null && configType === 'object',
@@ -12,26 +12,21 @@ export default function defineFunctionalComponent(config, meta = null) {
     if (!configIsFunction && !configIsObject) {
         throw new Error(
             '[defineFunctionalComponent] '
-            + "First argument 'config' must either be an object "
-            + 'or an render function');
-    } else if (typeof meta !== 'object') { 
-        throw new Error(
-            '[defineFunctionalComponent] '
-            + "Second argument 'meta' must be an object, null or undefined");
+                + "First argument 'config' must either be an object "
+                + 'or an render function');
     }
 
-    let adjustedMeta;
+    let meta;
     
     try {
-        adjustedMeta =
-            determineComponentMeta(meta ? meta : config, true, !!meta);
+        meta = determineComponentMeta(config, true);
     } catch (error) {
         throw new Error('[defineFunctionComponent] ' + error.message);
     }
 
     const
         render = configIsObject ? config.render : config,
-        stdConfig = Object.assign({ render }, adjustedMeta);
+        jsSurfaceConfig = Object.assign({ render }, meta);
 
-    return  defineComponent(stdConfig);
+    return  defineComponent(jsSurfaceConfig);
 }

@@ -5,7 +5,7 @@ import buildComponentClass from '../internal/helper/buildComponentClass';
 
 import { defineComponent } from 'js-surface';
 
-export default function defineClassComponent(config, meta = null) {
+export default function defineClassComponent(config) {
     const
         configType = typeof config,
         configIsObject = config !== null && configType === 'object',
@@ -17,19 +17,14 @@ export default function defineClassComponent(config, meta = null) {
 
         throw new Error(
             '[defineFunctionalComponent] '
-            + "First argument 'cofig' must be "
+            + "First argument 'config' must be "
             + "an object or a class that extends class 'Component'");
-    } else if (typeof meta !== 'object') { 
-        throw new Error(
-            '[defineFunctionalComponent] '
-            + "Second argument 'meta' must be an object, null or undefined");
     }
 
-    let adjustedMeta;
+    let meta;
     
     try {
-        adjustedMeta =
-            determineComponentMeta(meta ? meta : config, false, !!meta);
+        meta = determineComponentMeta(config, false);
     } catch (error) {
         throw new Error('[defineClassComponent] ' + error.message);
     }
@@ -45,8 +40,8 @@ export default function defineClassComponent(config, meta = null) {
     }
 
     const jsSurfaceConfig = Object.assign(
-        { init: buildInitFunction(clazz, adjustedMeta) },
-        adjustedMeta);
+        { init: buildInitFunction(clazz, meta) },
+        meta);
 
     return  defineComponent(jsSurfaceConfig);
 }
