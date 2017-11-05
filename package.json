@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.1.29",
+  "version": "0.1.31",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/react.js",
@@ -20,6 +20,7 @@
     "babel-types": "^6.26.0",
     "bootstrap": "^4.0.0-alpha.6",
     "browserify": "^14.5.0",
+    "browserify-zlib": "^0.2.0",
     "core-js": "^2.4.1",
     "esdoc": "^1.0.3",
     "eslint": "^3.13.1",
@@ -33,10 +34,7 @@
     "grunt-contrib-uglify": "^0.11.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-esdoc": "0.0.4",
-    "grunt-webpack": "^1.0.18",
-    "inferno": "^3.10.1",
-    "inferno-component": "^3.10.1",
-    "inferno-create-element": "^3.10.1",
+    "grunt-webpack": "^3.0.2",
     "invariant": "^2.2.2",
     "jquery": "^2.2.4",
     "js-essential": "^0.1.2",
@@ -45,22 +43,26 @@
     "json5": "^0.5.1",
     "less": "^2.7.1",
     "object-assign": "^4.1.1",
-    "preact": "^8.2.1",
     "prop-types": "^15.6.0",
+    "redux": "^3.7.2",
+    "systemjs": "^0.20.15",
+    "systemjs-plugin-babel": "0.0.25",
+    "typescript": "^2.4.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "inferno": "^3.10.1",
+    "inferno-component": "^3.10.1",
+    "inferno-create-element": "^3.10.1",
+    "js-spec": "^0.1.19",
+    "preact": "^8.2.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-lite": "^0.15.39",
     "react-native": "^0.45.1",
-    "redux": "^3.7.1",
-    "systemjs": "^0.20.15",
-    "systemjs-plugin-babel": "0.0.25",
-    "typescript": "^2.4.2",
-    "vue": "^2.5.2",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2"
-  },
-  "dependencies": {
-    "grunt": "^1.0.1",
-    "js-spec": "^0.1.19"
+    "redux-saga": "^0.16.0",
+    "vue": "^2.5.2"
   }
 }

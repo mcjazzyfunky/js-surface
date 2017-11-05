@@ -42,6 +42,75 @@ module.exports = function (grunt) {
                 }
             }
         },
+        webpack: {
+            inferno: {
+                entry: ['./build/src/main/js-surface-inferno.js'],
+                output: {
+                    filename: './dist/inferno.js',
+                    libraryTarget: 'umd'
+                },  
+                externals: {
+                    'inferno': true,
+                    'inferno-component': true,
+                    'inferno-create-element': true,
+                    'js-spec': true
+                },
+            },
+            preact: {
+                entry: ['./build/src/main/js-surface-preact.js'],
+                output: {
+                    filename: './dist/preact.js',
+                    libraryTarget: 'umd'
+                },   
+                externals: {
+                    'preact': true,
+                    'js-spec': true
+                }
+            },
+            react: {
+                entry: ['./build/src/main/js-surface-react.js'],
+                output: {
+                    filename: './dist/react.js',
+                    libraryTarget: 'umd'
+                },   
+                externals: {
+                    'react': true,
+                    'react-dom': true,
+                    'js-spec': true
+                }
+            },
+            /*
+            reactNative: {
+                entry: ['./build/src/main/js-surface-react-native.js'],
+                output: {
+                    filename: './dist/react-native.js',
+                    libraryTarget: 'umd'
+                }   
+            },
+            */
+            reactLite: {
+                entry: ['./build/src/main/js-surface-react-lite.js'],
+                output: {
+                    filename: './dist/react-lite.js',
+                    libraryTarget: 'umd'
+                },   
+                externals: {
+                    'vue': true,
+                    'js-spec': true
+                }
+            },
+            vue: {
+                entry: ['./build/src/main/js-surface-vue.js'],
+                output: {
+                    filename: './dist/vue.js',
+                    libraryTarget: 'umd'
+                },
+                externals: {
+                    vue: true,
+                    'js-spec': true
+                }
+            }
+        },
         browserify: {
             jsSurfaceAdapt: {
                 src: 'build/src/main/js-surface-adapt.js',
@@ -289,18 +358,18 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
-    grunt.loadNpmTasks('grunt-browserify');
+    //grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');
     //grunt.loadNpmTasks('grunt-asciidoctor');
-    grunt.loadNpmTasks('grunt-esdoc');
-    grunt.loadNpmTasks('grunt-webpack');
+    //grunt.loadNpmTasks('grunt-esdoc');
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
-    grunt.registerTask('dist', ['clean', 'babel', 'browserify', 'uglify', 'compress'/*, 'esdoc'*/]);
+    grunt.registerTask('dist', ['clean', 'babel', 'webpack', 'uglify', 'compress'/*, 'esdoc'*/]);
     grunt.registerTask('default', ['dist']);
 };
