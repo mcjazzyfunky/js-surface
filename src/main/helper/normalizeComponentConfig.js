@@ -81,5 +81,9 @@ export default function normalizeComponentConfig(config) {
         ret.provides = config.provides;
     }
 
+    if (config.isErrorBoundary) {
+        ret.isErrorBoundary = true;
+    }
+
     return ret;
 }

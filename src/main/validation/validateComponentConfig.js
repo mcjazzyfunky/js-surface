@@ -85,7 +85,10 @@ const componentConfigSpec =
                 Spec.optional(
                     Spec.and(
                         Spec.arrayOf(Spec.match(REGEX_PROPERTY_NAME),
-                        Spec.uniqe)))
+                        Spec.uniqe))),
+
+            isErrorBoundary:
+                Spec.optional(Spec.boolean)
         }),
 
         Spec.valid(config => config.render || config.init)

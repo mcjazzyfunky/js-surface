@@ -197,6 +197,12 @@ function defineCustomComponent(config, ParentComponent) {
         }
     });
 
+    if (config.isErrorBoundary) {
+        CustomComponent.prototype.componentDidCatch = function (error, info) {
+            this.__ctrl.handleError(error, info);
+        };
+    }
+
     if (config.methods) {
         for (const methodName of config.methods) {
             CustomComponent.prototype[methodName] = function (...args) {

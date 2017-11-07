@@ -14,6 +14,7 @@ export default class ComponentController {
         this.__setProps = result.setProps;
         this.__close = result.close || null;
         this.__applyMethod = result.applyMethod || null;
+        this.__handleError = result.handleError || null;
     }
 
     setProps(props) {
@@ -33,6 +34,12 @@ export default class ComponentController {
     close() {
         if (this.__close) {
             this.__close();
+        }
+    }
+
+    handleError(error, info) {
+        if (this.__handleError) {
+            this.__handleError(error, info);
         }
     }
 }

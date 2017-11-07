@@ -142,6 +142,11 @@ function customDefineStandardComponent(config) {
 
             this.__close = initResult.close;
             this.__applyMethod = initResult.applyMethod;
+
+            if (config.isErrorBoundary) {
+                this.__isErrorBoundary = true;
+                this.__handleError = initResult.handleError;
+            }
         },
 
         beforeMount() {
@@ -201,6 +206,17 @@ function customDefineStandardComponent(config) {
 
         render(vueCreateElement) {
             return renderContent(vueCreateElement, this.__content, this);
+        },
+
+        errorCaptured(error, vm, info) {
+            const ret = config.isErrorBoundary ? false : null;
+
+            if (config.isErrorBoundary) {
+                //console.log('>>>', config.displayName, error, vm, info)
+                this.__handleError(error);
+            }
+
+            return ret;
         }
     });
 

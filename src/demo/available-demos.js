@@ -60,6 +60,12 @@ export default [
         files: ['i18n.js']
     },
     {
+        name: 'error-boundary',
+        displayName: 'Error Boundary',
+        directory: 'error-boundary',
+        files: ['error-boundary.js']
+    },
+    {
         name: 'deriving',
         displayName: 'Component deriving',
         directory: 'deriving',
