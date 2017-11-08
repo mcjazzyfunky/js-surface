@@ -132,8 +132,10 @@ export default function adaptHyperscript(createElement, isElement, Adapter) {
                     }
 
                     // Modifying args array is ugly but runs faster than other solutions
+                    args = Array.from(args); // TODO: Check this for performance
                     args[0] = tag;
                     args[1] = attrs2;
+
                     currElem = createElement(...args);
                 } else {
                     const args2 = [tag, attrs2];
