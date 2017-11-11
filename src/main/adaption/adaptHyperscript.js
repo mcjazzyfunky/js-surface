@@ -159,7 +159,10 @@ export default function adaptHyperscript(createElement, isElement, Adapter) {
                 } else {
                     const
                         attrs = args[1],
-                        attrsClassName = attrs.className || null;
+                        attrsClassName =
+                            attrs && attrs.className
+                                ? attrs.className
+                                : null;
 
                     let className =
                         props && props.className
