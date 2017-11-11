@@ -102,6 +102,100 @@ export default function adaptHyperscript(createElement, isElement, Adapter) {
     }
 
     function createHyperscriptElement(args, hyperscriptData) {
+        const
+            argCount = args.length,
+            secondArgIsAttrs = argCount > 1 && isAttrs(args[1]),
+            dataLength = hyperscriptData.length;
+        
+        let
+            child = null,
+            newArgs = null;
+
+        if (argCount > 2) {
+            const offset = secondArgIsAttrs ? 0 : 1;
+
+            newArgs = Array(argCount + offset);
+
+            for (let j = 0; j < argCount; ++j) {
+                newArgs[j + offset] = args[j];
+            }
+        }
+
+        for (let i = 0; i < dataLength; ++i) {
+            const
+                node = hyperscriptData[i],
+                entries = node[entries];
+            
+            let props = null;
+
+            if (i > 0 || !entries || !secondArgIsAttrs) {
+                props = node.attrs;
+            } else if (entries && entries.length > 0) {
+                props = {};
+                
+                if (entries) {
+                    props = {};
+
+                    for (let j = 0; j < node.entries.length; ++j) {
+                        const entry = node.entries[j];
+
+                        props[entry[0]] = entry[1];
+                    }
+                }
+            }
+
+            if (i === 0) {
+                if (argCount === 1) {
+                    child = createElement(node.tag, props); 
+                } else if (!secondArgIsAttrs) {
+                    if (argCount === 2) {
+                        child = createElement(node.tag, props, args[1]);
+                    } else {
+                        newArgs[0] = node.tag,
+                        newArgs[1] = props,
+
+                        child = createElement.apply(null, newArgs);
+                    }
+                } else {
+                    const
+                        attrs = args[1],
+                        attrsClassName = attrs.className || null;
+
+                    let className =
+                        props && props.className
+                            ? props.className
+                            : null;
+
+                    if (attrsClassName) {
+                        if (className) {
+                            className = className + ' ' + attrsClassName;
+                        } else {
+                            className = attrsClassName;
+                        }
+                    }
+
+                    props = !props
+                        ? attrs
+                        : Object.assign(props, attrs);
+
+                    if (className) {
+                        props.className = className;
+                    }
+
+                    newArgs[0] = node.tag;
+                    newArgs[1] = props;
+
+                    child = createElement.apply(null, newArgs);
+                }
+            } else {
+                child = createElement(node.tag, props, child);
+            }
+        }
+
+        return child;
+    }
+
+    function createHyperscriptElement2(args, hyperscriptData) {
         let currElem = null;
         
         const dataLength = hyperscriptData.length;
