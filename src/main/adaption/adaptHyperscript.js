@@ -66,12 +66,12 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
             isHyperscript = false; // will possibly be updated later
 
         const
-            tag = arguments[0],
-            tagIsString = typeof tag === 'string',
+            type = arguments[0],
+            typeIsString = typeof type === 'string',
             argCount = arguments.length,
             secondArg = argCount > 1 ? arguments[1] : undefined,
 
-            secondArgIsAttrs =
+            secondArgIsProps =
                 argCount > 1
                     && secondArg === undefined
                         || secondArg === null
@@ -79,28 +79,28 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
                             && !secondArg[Symbol.iterator]
                             && !isElement(secondArg);
 
-        if (tagIsString) {
-            hyperscriptData = hyperscriptCache[tag];
+        if (typeIsString) {
+            hyperscriptData = hyperscriptCache[type];
 
             if (!hyperscriptData) {
-                hyperscriptData = parseHyperscript(tag);
+                hyperscriptData = parseHyperscript(type);
         
                 if (hyperscriptData === null) {
                     throw new Error(
                         "[createElement] First argument 'tag' "
-                        + `is not in valid hyperscript format ('${tag}')`);
+                        + `is not in valid hyperscript format ('${type}')`);
                 }
                     
                 if (hyperscriptData.length === 1 && !hyperscriptData[0].attrs) {
-                    hyperscriptCache[tag] = simpleTagMark;
-                    tagName = tag;
+                    hyperscriptCache[type] = simpleTagMark;
+                    tagName = type;
                 } else {
-                    hyperscriptCache[tag] = hyperscriptData;
+                    hyperscriptCache[type] = hyperscriptData;
                     tagName = hyperscriptData[hyperscriptData.length - 1].tag;
                     isHyperscript = true;
                 }
             } else if (hyperscriptData === simpleTagMark) {
-                tagName = tag;
+                tagName = type;
             } else {
                 tagName = hyperscriptData[hyperscriptData.length - 1].tag;
                 isHyperscript = true;
@@ -112,16 +112,16 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
         if (!isFirefox
             && !flattenArgs
             && !isHyperscript
-            && (tagName && tagName !== tag)
-            && (argCount < 2 || secondArgIsAttrs)) {
+            && (tagName && tagName !== type)
+            && (argCount < 2 || secondArgIsProps)) {
 
             args = arguments;
         } else {
-            const offset = argCount > 1 && !secondArgIsAttrs ? 1 : 0;
+            const offset = argCount > 1 && !secondArgIsProps ? 1 : 0;
 
             args = new Array(arguments.length + offset);
 
-            args[0] = tagName ? tagName : tag;
+            args[0] = tagName ? tagName : type;
 
             for (let i = 1; i < arguments.length; ++i) {
                 args[i + offset] = arguments[i];
