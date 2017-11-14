@@ -4,263 +4,169 @@ const
     hyperscriptCache = {},
     simpleTagMark = {};
 
-export default function adaptHyperscript(createElement, isElement, Adapter) {
+export default function adaptHyperscript(createElement2, isElement, Adapter) {
     const
+        isFirefox = typeof InstallTrigger !== 'undefined',
         isReact = Adapter.name === 'react',
-        isInferno = Adapter.name === 'inferno';
-    
-    return function (/* arguments */) {
-        const tag = arguments[0];
+        isInferno = Adapter.name === 'inferno',
+        isPreact = Adapter.name === 'preact',
+        isReactLite = Adapter.name === 'react-lite',
+        isVue = Adapter.name === 'vue',
+        flattenArgs = !isReact;
 
-        let ret = null;
+    let createElement;
 
-        if (typeof tag === 'string') {
-            let hyperscriptData =
-                tag === 'div' || tag === 'span' // Special cases for performance reasons
-                    ? simpleTagMark    
-                    : hyperscriptCache[tag];
+    if (isReact) {
+        createElement = Adapter.api.React.createElement;
+    } else if (isInferno) {
+        createElement = Adapter.api.Inferno.createElement;
+    } else if (isPreact) {
+        createElement = Adapter.api.Preact.createElement;
+    } else if (isReactLite) {
+        createElement = Adapter.api.ReactLite.createElement;
+    } else if (isVue) {
+        //createElement = createElement2;
+        createElement = function (/* arguments */) {
+            const
+                argCount = arguments.length,
+                type = arguments[0],
+                typeIsFactory = typeof type === 'function' && type.type && type.meta,
+                props = argCount > 1 ? arguments[1] : null;
 
-            // Inlined for performance reasons
-            if (hyperscriptData === simpleTagMark) {
-                const secondArg = arguments[1]; 
-                
-                let secondArgIsAttrs = secondArg === undefined
-                    || secondArg === null
-                    || typeof secondArg === 'object'
-                        && !secondArg[Symbol.iterator];
+            let children = null;
 
-                if (secondArg && secondArgIsAttrs) {
-                    if (isReact) {
-                        secondArgIsAttrs = !secondArg.$$typeof;
-                    } else if (isInferno) {
-                        secondArgIsAttrs =
-                            !secondArg.type || !(secondArg.flags & 3998); // 28: component, 3970: element
-                    } else {
-                        secondArgIsAttrs = !isElement(secondArg);
-                    }
+            if (argCount > 1) {
+                children = new Array(argCount);
+
+                for (let i = 2; i < argCount; ++i) {
+                    children[i - 2] = arguments[i];
                 }
 
-                if (secondArgIsAttrs) {
-                    ret = createElement.apply(null, arguments);
-                } else {
-                    ret = applyCreateElement(arguments);
+                if (typeIsFactory) {
+                    children[0] = props;
                 }
-            } else if (hyperscriptData) {
-                ret = createHyperscriptElement(arguments, hyperscriptData);
-            } else {
+            }
+
+            return {
+                type: typeIsFactory ? type.type : type,
+                props,
+                children,
+                isSurfaceElement: true
+            };
+        };
+    } else {
+        throw new Error(`Unknown component sytem adapter '${Adapter.name}'`);
+    }
+
+    return function(/* arguments */) {
+        let
+            ret,
+            tagName = null, // wil possibly be updated later to real tag
+            hyperscriptData = null, // will possibly be updated later
+            isHyperscript = false; // will possibly be updated later
+
+        const
+            tag = arguments[0],
+            tagIsString = typeof tag === 'string',
+            argCount = arguments.length,
+            secondArg = argCount > 1 ? arguments[1] : undefined,
+            secondArgIsAttrs = argCount > 1 && isAttrs(secondArg);
+
+        if (tagIsString) {
+            hyperscriptData = hyperscriptCache[tag];
+
+            if (!hyperscriptData) {
                 hyperscriptData = parseHyperscript(tag);
-
+        
                 if (hyperscriptData === null) {
                     throw new Error(
                         "[createElement] First argument 'tag' "
                         + `is not in valid hyperscript format ('${tag}')`);
                 }
-                
-                if (hyperscriptData.length === 1
-                    && !hyperscriptData[0].attrs) {
-
+                    
+                if (hyperscriptData.length === 1 && !hyperscriptData[0].attrs) {
                     hyperscriptCache[tag] = simpleTagMark;
-                    ret = applyCreateElement(arguments);
+                    tagName = tag;
                 } else {
                     hyperscriptCache[tag] = hyperscriptData;
-                    ret = createHyperscriptElement(arguments, hyperscriptData);
+                    tagName = hyperscriptData[hyperscriptData.length - 1].tag;
+                    isHyperscript = true;
+                }
+            } else if (hyperscriptData === simpleTagMark) {
+                tagName = tag;
+            } else {
+                tagName = hyperscriptData[hyperscriptData.length - 1].tag;
+                isHyperscript = true;
+            }
+        }
+
+        let args;
+
+        if (!isFirefox
+            && !flattenArgs
+            && !isHyperscript
+            && (tagName && tagName !== tag)
+            && (argCount < 2 || secondArgIsAttrs)) {
+
+            args = arguments;
+        } else {
+            const offset = argCount > 1 && !secondArgIsAttrs ? 1 : 0;
+
+            args = new Array(arguments.length + offset);
+
+            args[0] = tagName ? tagName : tag;
+
+            for (let i = 1; i < arguments.length; ++i) {
+                args[i + offset] = arguments[i];
+            }
+
+            if (offset) {
+                args[1] = null;
+            }
+
+            if (isHyperscript) {
+                const
+                    data = hyperscriptData[hyperscriptData.length - 1],
+                    entries = data.entries;
+
+                if (entries) {
+                    if (offset) {
+                        args[1] = data.attrs; 
+                    } else {
+                        for (let i = 0; i < entries.length; ++i) {
+                            const entry = entries[i];
+
+                            args[1][entry[0]] = entry[1];
+                        }
+                    }
                 }
             }
+        }
+
+        if (isFirefox) {
+            ret = createElement(...args);
         } else {
-            ret = applyCreateElement(arguments);
+            ret = createElement.apply(null, args);
+        }
+
+        if (isHyperscript) {
+            const length = hyperscriptData.length;
+
+            for (let i = 1; i < length; ++i) {
+                let node = hyperscriptData[length - 1 - i];
+
+                ret = createElement(node.tag, node.attrs, ret);
+            }
         }
 
         return ret;
     };
+}
 
-    function isAttrs(it) {
-        return  it === undefined
-            || it === null
-            || typeof it === 'object'
-                && !it[Symbol.iterator]
-                && !isElement(it);
-    }
-
-    function applyCreateElement(args) {
-        let ret = null;
-
-        const
-            secondArg = args[1],
-            secondArgIsAttrs = isAttrs(secondArg);
-            
-        if (secondArgIsAttrs) {
-            ret = createElement.apply(null, args);
-        } else {
-            const firstArg = args[0];
-
-            args[0] = null;
-            Array.prototype.unshift.call(args, firstArg);
-            ret = createElement.apply(null, args);
-        }
-
-        return ret;
-    }
-
-    function createHyperscriptElement(args, hyperscriptData) {
-        const
-            argCount = args.length,
-            secondArgIsAttrs = argCount > 1 && isAttrs(args[1]),
-            dataLength = hyperscriptData.length;
-        
-        let
-            child = null,
-            newArgs = null;
-
-        if (argCount > 2) {
-            const offset = secondArgIsAttrs ? 0 : 1;
-
-            newArgs = Array(argCount + offset);
-
-            for (let j = 0; j < argCount; ++j) {
-                newArgs[j + offset] = args[j];
-            }
-        }
-
-        for (let i = 0; i < dataLength; ++i) {
-            const
-                node = hyperscriptData[i],
-                entries = node[entries];
-            
-            let props = null;
-
-            if (i > 0 || !entries || !secondArgIsAttrs) {
-                props = node.attrs;
-            } else if (entries && entries.length > 0) {
-                props = {};
-                
-                if (entries) {
-                    props = {};
-
-                    for (let j = 0; j < node.entries.length; ++j) {
-                        const entry = node.entries[j];
-
-                        props[entry[0]] = entry[1];
-                    }
-                }
-            }
-
-            if (i === 0) {
-                if (argCount === 1) {
-                    child = createElement(node.tag, props); 
-                } else if (!secondArgIsAttrs) {
-                    if (argCount === 2) {
-                        child = createElement(node.tag, props, args[1]);
-                    } else {
-                        newArgs[0] = node.tag,
-                        newArgs[1] = props,
-
-                        child = createElement.apply(null, newArgs);
-                    }
-                } else {
-                    const
-                        attrs = args[1],
-                        attrsClassName =
-                            attrs && attrs.className
-                                ? attrs.className
-                                : null;
-
-                    let className =
-                        props && props.className
-                            ? props.className
-                            : null;
-
-                    if (attrsClassName) {
-                        if (className) {
-                            className = className + ' ' + attrsClassName;
-                        } else {
-                            className = attrsClassName;
-                        }
-                    }
-
-                    props = !props
-                        ? attrs
-                        : Object.assign(props, attrs);
-
-                    if (className) {
-                        props.className = className;
-                    }
-
-                    newArgs[0] = node.tag;
-                    newArgs[1] = props;
-
-                    child = createElement.apply(null, newArgs);
-                }
-            } else {
-                child = createElement(node.tag, props, child);
-            }
-        }
-
-        return child;
-    }
-
-    function createHyperscriptElement2(args, hyperscriptData) {
-        let currElem = null;
-        
-        const dataLength = hyperscriptData.length;
-
-        for (let i = dataLength - 1; i >= 0; --i) {
-            const { tag, attrs, entries } = hyperscriptData[i];
-
-            if (i < dataLength - 1) {
-                currElem = createElement(tag, attrs, currElem);
-            } else {
-                const
-                   // attrs2 = attrs ? Object.assign({}, attrs) : {},
-                    attrs2 = {},
-                    className = attrs && attrs.className ? attrs.className : null,
-                    hasProps = isAttrs(args[1]);
-
-                // This is faster then Object.assign
-                for (let i = 0; i < entries.length; ++i) {
-                    const entry = entries[i];
-                    attrs2[entry[0]] = entry[1];
-                }
-
-                if (hasProps) {
-                    Object.assign(attrs2, args[1]);
-
-                    if (className !== attrs2.className) {
-                        attrs2.className = `${className} ${attrs2.className}`;
-                    }
-
-                    // Modifying args array is ugly but runs faster than other solutions
-                    args = Array.from(args); // TODO: Check this for performance
-                    args[0] = tag;
-                    args[1] = attrs2;
-
-                    currElem = createElement(...args);
-                } else {
-                    const args2 = [tag, attrs2];
-
-                    for (let i = 1; i < args.length; ++i) {
-                        args2.push(args[i]);                    
-                    }
-
-                    currElem = createElement(...args2);
-
-/*                    
-                    args[0] = tag;
-                    args.push(null);
-
-                    const length = args.length;
-
-                    for (let i = 1; i < args.length; ++i) {
-                        args[length - i] = args[length - i - 1]; 
-                    }
-
-                    args[1] = attrs2;
-                    
-                    currElem = createElement(...args);
-*/
-                }
-            }
-        } 
-
-        return currElem;
-    }
+function isAttrs(it) {
+    return  it === undefined
+        || it === null
+        || typeof it === 'object'
+            && !it[Symbol.iterator]
+           // && !isElement(it); // TODO
 }

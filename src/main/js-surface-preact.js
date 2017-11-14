@@ -14,7 +14,7 @@ const {
     Config
 } = adaptReactLikeComponentSystem({
     name: 'preact',
-    api: Preact,
+    api: { Preact },
     Component: Preact.Component,
     createElement: Preact.createElement,
     createFactory: preactCreateFactory,
