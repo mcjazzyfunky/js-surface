@@ -70,7 +70,14 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
             tagIsString = typeof tag === 'string',
             argCount = arguments.length,
             secondArg = argCount > 1 ? arguments[1] : undefined,
-            secondArgIsAttrs = argCount > 1 && isAttrs(secondArg);
+
+            secondArgIsAttrs =
+                argCount > 1
+                    && secondArg === undefined
+                        || secondArg === null
+                        || typeof secondArg === 'object'
+                            && !secondArg[Symbol.iterator]
+                            && !isElement(secondArg);
 
         if (tagIsString) {
             hyperscriptData = hyperscriptCache[tag];
@@ -150,10 +157,10 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
         }
 
         if (isHyperscript) {
-            const length = hyperscriptData.length;
+            const hyperscriptDataLength = hyperscriptData.length;
 
-            for (let i = 1; i < length; ++i) {
-                let node = hyperscriptData[length - 1 - i];
+            for (let i = 1; i < hyperscriptDataLength; ++i) {
+                let node = hyperscriptData[hyperscriptDataLength - 1 - i];
 
                 ret = createElement(node.tag, node.attrs, ret);
             }
@@ -161,12 +168,4 @@ export default function adaptHyperscript(createElement2, isElement, Adapter) {
 
         return ret;
     };
-}
-
-function isAttrs(it) {
-    return  it === undefined
-        || it === null
-        || typeof it === 'object'
-            && !it[Symbol.iterator]
-           // && !isElement(it); // TODO
 }
