@@ -10,7 +10,8 @@ export default function unmount(target) {
         const unmountComponent = targetNode[Symbol.for('js-surface:unmount')];
 
         if (typeof unmountComponent === 'function') {
-            unmountComponent();            
+            unmountComponent();
+            ret = true;            
         }
     }
     

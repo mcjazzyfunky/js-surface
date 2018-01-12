@@ -1,25 +1,28 @@
-import adaptComponentSystem from
-    './adaption/adaptComponentSystem';
+import adaptCreateElement from './adapt/adaptCreateElement.js';
+import adaptDefineComponent from './adapt/adaptDefineComponent.js';
+import adaptMount from './adapt/adaptMount.js';
+import unmount from './component/unmount.js';
+import Config from './system/Config';
 
 import Vue from 'vue';
 
-const {
-    createElement,
-    defineComponent,
-    isElement,
-    mount,
-    unmount,
-    Adapter,
-    Config
-} = adaptComponentSystem({
-    name: 'vue',
-    api: { Vue },
-    createElement: customCreateElement,
-    defineComponent: customDefineComponent,
-    isElement: customIsElement,
-    mount: customMount,
-    browserBased: true
-});
+const
+    defineComponent = adaptDefineComponent({
+        defineFunctionalComponent,
+        defineStandardComponent
+    }),
+
+    createElement = adaptCreateElement({
+        createElement: customCreateElement,
+        isElement
+    }),
+
+    mount = adaptMount(customMount, isElement),
+
+    Adapter = {
+        name: 'vue',
+        api: { Vue }
+    };
 
 export {
     createElement,
@@ -30,6 +33,7 @@ export {
     Adapter,
     Config
 };
+
 
 // ------------------------------------------------------------------
 
@@ -48,13 +52,7 @@ function getNextRefName() {
     return ret;
 }
 
-function customDefineComponent(config) {
-    return config.render
-        ? customDefineFunctionalComponent(config)
-        : customDefineStandardComponent(config); 
-}
-
-function customDefineFunctionalComponent(config) {
+function defineFunctionalComponent(config) {
     const defaultValues = determineDefaultValues(config);
 
     const component = Vue.extend({
@@ -81,7 +79,7 @@ function customDefineFunctionalComponent(config) {
     return factory;
 }
 
-function customDefineStandardComponent(config) {
+function defineStandardComponent(config) {
     const defaultValues = determineDefaultValues(config);
 
     const component = Vue.extend({
@@ -247,7 +245,7 @@ function customCreateElement(tag, props, ...children) {
     return ret;
 }
 
-function customIsElement(it) {
+function isElement(it) {
     return it && it.isSurfaceElement;
 }
 

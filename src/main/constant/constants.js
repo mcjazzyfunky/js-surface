@@ -1,6 +1,6 @@
 const
     SUPPORTED_RENDER_ENGINES = new Set([
-        'react', 'react-native', 'react-lite', 'preact', 'inferno', 'vue'
+        'react', 'react-native', 'preact', 'inferno', 'vue'
     ]),
 
     FORBIDDEN_METHOD_NAMES = new Set([

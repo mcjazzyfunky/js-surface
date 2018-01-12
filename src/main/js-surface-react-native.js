@@ -1,38 +1,34 @@
-import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
+import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
+import Config from './system/Config';
 
 import React from 'react';
 import ReactNative from 'react-native';
 
-const {
-    createElement,
-    defineComponent,
-    isElement,
-    mount,
-    unmount,
-    Adapter,
-    Config 
-} = adaptReactLikeComponentSystem({
-    name: 'react-native',
-    api: { React, ReactNative },
-    createElement: React.createElement,
-    createFactory: React.createFactory,
-    isValidElement: React.isValidElement,
-    mount: reactNativeMount,
-    Component: React.Component,
-    browserBased: false
-});
+const
+    defineComponent = adaptReactifiedDefineComponent({
+        createElement: React.createElement,
+        ComponentClass: React.Component
+    }),
+
+    createElement = React.createElement, 
+
+    isElement = React.isValidElement,
+
+    mount = ComponentClass => {
+        ReactNative.AppRegistry.registerComponent(
+            'AppMainComponent', () => ComponentClass);
+    },
+
+    Adapter = {
+        name: 'react',
+        api: { React, ReactNative }
+    };
 
 export {
     createElement,
     defineComponent,
     isElement,
     mount,
-    unmount,
     Adapter,
     Config
 };
-
-
-function reactNativeMount(Component) {
-    ReactNative.AppRegistry.registerComponent('AppMainComponent', () => Component);
-}

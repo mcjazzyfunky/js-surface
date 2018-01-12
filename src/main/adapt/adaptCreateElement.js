@@ -1,4 +1,4 @@
-import parseHyperscript from './parseHyperscript';
+import parseHyperscript from '../util/parseHyperscript';
 
 const
     hyperscriptCache = {},

@@ -101,18 +101,6 @@ module.exports = function (grunt) {
             }
         },
         browserify: {
-            jsSurfaceAdapt: {
-                src: 'build/src/main/js-surface-adapt.js',
-                dest: 'dist/adapt.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    external: ['js-spec'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurface'
-                    }
-                }
-            },
             jsSurfaceStandalone: {
                 src: 'build/src/main/js-surface-standalone.js',
                 dest: 'dist/standalone.js',
@@ -213,10 +201,6 @@ module.exports = function (grunt) {
                         + ' Licencse: New BSD License\n'
                         + '*/\n'
             },
-            jsSurfaceAdapt: {
-                src: ['dist/adapt.js'],
-                dest: 'dist/adapt.min.js'
-            },
             jsSurfaceStandalone: {
                 src: ['dist/standalone.js'],
                 dest: 'dist/standalone.min.js'
@@ -243,14 +227,6 @@ module.exports = function (grunt) {
             }
         },
         compress: {
-            jsSurfaceAdapt: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/adapt.min.js'],
-                dest: 'dist/adapt.min.js.gz'
-            },
             jsSurfaceStandalone: {
                 options: {
                     mode: 'gzip',

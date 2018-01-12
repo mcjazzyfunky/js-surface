@@ -1,8 +1,8 @@
-import adaptCreateElement from './util/adaptCreateElement.js';
-import adaptReactifiedDefineComponent from './util/adaptReactifiedDefineComponent';
-import adaptMount from './util/adaptMount.js';
+import adaptCreateElement from './adapt/adaptCreateElement.js';
+import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
+import adaptMount from './adapt/adaptMount.js';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
-import unmount from './util/unmount.js';
+import unmount from './component/unmount.js';
 import Config from './system/Config';
 
 import Inferno from 'inferno';
