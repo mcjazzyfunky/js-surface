@@ -1,11 +1,16 @@
-import adaptReactLikeComponentSystem from './adaption/adaptReactLikeComponentSystem';
+import adaptCreateElement from './util/adaptCreateElement.js';
+import adaptReactifiedDefineComponent from './util/adaptReactifiedDefineComponent';
+import adaptMount from './util/adaptMount.js';
+import convertIterablesToArrays from './util/convertIterablesToArrays';
+import unmount from './util/unmount.js';
+import Config from './system/Config';
 
-import InfernoCore from 'inferno';
-import createInfernoElement from 'inferno-create-element';
+import Inferno from 'inferno';
+import infernoCreateElement from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
 
-const Inferno = Object.assign({}, InfernoCore, {
-    createElement: createInfernoElement,
+const InfernoAPI = Object.assign({}, Inferno, {
+    createElement: infernoCreateElement,
     Component: InfernoComponent    
 });
 
@@ -16,24 +21,39 @@ for (const key of Object.keys(Inferno)) {
     }
 }
 
-const {
-    createElement,
-    defineComponent,
-    isElement,
-    mount,
-    unmount,
-    Adapter,
-    Config
-} = adaptReactLikeComponentSystem({
-    name: 'inferno',
-    api:  { Inferno },
-    Component: Inferno.Component,
-    createElement: Inferno.createElement,
-    createFactory: customCreateFactory,
-    isValidElement: customIsValidElement,
-    mount: customMount,
-    browserBased: true 
-});
+const
+    defineComponent = adaptReactifiedDefineComponent({
+        createElement: infernoCreateElement, 
+        ComponentClass: InfernoComponent 
+    }),
+
+    isElement = it =>
+        !!it && typeof it === 'object' && !!(it.flags & (28 | 3970)),
+        // 28: component, 3970: element
+
+    adjustedCreateElement = (...args) => {
+        const convertedArgs = convertIterablesToArrays(args);
+
+        return infernoCreateElement.apply(null, convertedArgs);
+    },
+
+    createElement = adaptCreateElement({
+        createElement: adjustedCreateElement,
+        isElement
+    }),
+
+    infernoMount = (content, targetNode) => {
+        Inferno.render(content, targetNode);
+
+        return () => Inferno.render(null, targetNode);
+    },
+
+    mount = adaptMount(infernoMount, isElement),
+
+    Adapter = {
+        name: 'inferno',
+        api: { Inferno: InfernoAPI }
+    };
 
 export {
     createElement,
@@ -44,20 +64,3 @@ export {
     Adapter,
     Config
 };
-
-// ------------------------------------------------------------------
-
-function customCreateFactory(type) {
-    return createElement.bind(null, type);
-}
-
-function customIsValidElement(it) {
-    return it !== undefined && it !== null
-        && (typeof it !== 'object' || !!(it.flags & (28 | 3970))); // 28: component, 3970: element
-}
-
-function customMount(content, targetNode) {
-    Inferno.render(content, targetNode);
-
-    return () => Inferno.render(null, targetNode);
-}
