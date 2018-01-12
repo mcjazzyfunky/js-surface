@@ -88,17 +88,6 @@ module.exports = function (grunt) {
                 }   
             },
             */
-            reactLite: {
-                entry: ['./build/src/main/js-surface-react-lite.js'],
-                output: {
-                    filename: './dist/react-lite.js',
-                    libraryTarget: 'umd'
-                },   
-                externals: {
-                    'vue': true,
-                    'js-spec': true
-                }
-            },
             vue: {
                 entry: ['./build/src/main/js-surface-vue.js'],
                 output: {
@@ -183,21 +172,6 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            jsSurfaceReactLite: {
-                src: 'build/src/main/js-surface-react-lite.js',
-                dest: 'dist/react-lite.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    alias: {
-                        'js-surface': './build/src/main/js-surface-react-lite.js'
-                    },
-                    external: ['js-spec', 'react-lite'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurface'
-                    }
-                }
-            },
             jsSurfacePreact: {
                 src: 'build/src/main/js-surface-preact.js',
                 dest: 'dist/preact.js',
@@ -259,10 +233,6 @@ module.exports = function (grunt) {
                 src: ['dist/react-native.js'],
                 dest: 'dist/react-native.min.js'
             },
-            jsSurfaceReactLite: {
-                src: ['dist/react-lite.js'],
-                dest: 'dist/react-lite.min.js'
-            },
             jsSurfacePreact: {
                 src: ['dist/preact.js'],
                 dest: 'dist/preact.min.js'
@@ -312,14 +282,6 @@ module.exports = function (grunt) {
                 },
                 src: ['dist/react-native.min.js'],
                 dest: 'dist/react-native.min.js.gz'
-            },
-            jsSurfaceReactLite: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/react-lite.min.js'],
-                dest: 'dist/react-lite.min.js.gz'
             },
             jsSurfacePreact: {
                 options: {

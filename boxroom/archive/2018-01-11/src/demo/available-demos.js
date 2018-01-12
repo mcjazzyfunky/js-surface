@@ -12,12 +12,6 @@ export default [
         files: ['hello-world-standard.js']
     },
     {
-        name: 'iterator-support',
-        displayName: 'Iterator Support',
-        directory: 'iterator-support',
-        files: ['iterator-support.js']
-    },
-    {
         name: 'clock',
         displayName: 'Clock',
         directory: 'clock',

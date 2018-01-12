@@ -57,12 +57,12 @@
     "inferno-component": "^3.10.1",
     "inferno-create-element": "^3.10.1",
     "js-spec": "^0.1.19",
-    "preact": "^8.2.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-lite": "^0.15.39",
+    "preact": "^8.2.7",
+    "preact-compat": "^3.17.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-native": "^0.45.1",
     "redux-saga": "^0.16.0",
-    "vue": "^2.5.3"
+    "vue": "^2.5.13"
   }
 }

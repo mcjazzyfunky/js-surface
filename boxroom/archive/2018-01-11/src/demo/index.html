@@ -59,6 +59,10 @@
                     module: 'js-surface-preact'
                 },
                 {
+                    name: 'react-lite',
+                    module: 'js-surface-react-lite'
+                },
+                {
                     name: 'vue',
                     module: 'js-surface-vue'
                 },
@@ -93,7 +97,7 @@
  		            presets: ['es2017']
                 },
                 'js-surface': {
-                    deps: ['js-spec', 'react', 'react-dom', 'preact', 'inferno', 'inferno-component', 'inferno-create-element', 'vue']
+                    deps: ['js-spec', 'react', 'react-dom', 'react-lite', 'preact', 'inferno', 'inferno-component', 'inferno-create-element', 'vue']
                 }
             },
             map: {
@@ -116,6 +120,7 @@
                 // 'prop-types': 'node_modules/prop-types/index.js',
                 // 'prop-types/checkPropTypes': 'node_modules/prop-types/checkPropTypes.js',
 
+                'react-lite': 'node_modules/react-lite/dist/react-lite.min.js',
                 'preact': 'node_modules/preact/dist/preact.min.js',
 
                 'inferno': 'node_modules/inferno/dist/inferno.min.js',
@@ -134,6 +139,7 @@
                 // 'prop-types': 'node_modules/prop-types/index.js',
                 // 'prop-types/checkPropTypes': 'node_modules/prop-types/checkPropTypes.js',
 
+                'react-lite': 'node_modules/react-lite/dist/react-lite.min.js',
                 'preact': 'node_modules/preact/dist/preact.min.js',
 
                 'inferno': 'node_modules/inferno/dist/inferno.min.js',
