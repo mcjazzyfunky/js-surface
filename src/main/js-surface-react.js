@@ -2,7 +2,7 @@ import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
-import Config from './system/Config';
+import Config from './config/Config';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -15,7 +15,10 @@ const
 
     createElement = adaptCreateElement({
         createElement: React.createElement,
-        isElement: React.isValidElement
+        isElement: React.isValidElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { 'for': 'htmlFor' } }
     }),
 
     isElement = React.isValidElement,
@@ -28,10 +31,10 @@ const
 
     mount = adaptMount(reactMount, isElement),
 
-    Adapter = {
+    Adapter = Object.freeze({
         name: 'react',
         api: { React, ReactDOM }
-    };
+    });
 
 export {
     createElement,

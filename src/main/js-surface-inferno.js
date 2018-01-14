@@ -1,9 +1,9 @@
 import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
-import adaptMount from './adapt/adaptMount.js';
+import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
 import unmount from './component/unmount.js';
-import Config from './system/Config';
+import Config from './config/Config';
 
 import Inferno from 'inferno';
 import infernoCreateElement from 'inferno-create-element';
@@ -39,7 +39,10 @@ const
 
     createElement = adaptCreateElement({
         createElement: adjustedCreateElement,
-        isElement
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: { innerHTML: 'dangerouslySetInnerHTML' },
+        attributeAliasesByTagName: { label: { 'htmlFor': 'for' } }
     }),
 
     infernoMount = (content, targetNode) => {
@@ -50,10 +53,10 @@ const
 
     mount = adaptMount(infernoMount, isElement),
 
-    Adapter = {
-        name: 'inferno',
+    Adapter = Object.freeze({
+        name: 'inferno', 
         api: { Inferno: InfernoAPI }
-    };
+    });
 
 export {
     createElement,

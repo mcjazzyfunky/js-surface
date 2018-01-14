@@ -1,5 +1,5 @@
 import validateComponentConfig from '../validation/validateComponentConfig';
-import ConfigValues from '../system/ConfigValues';
+import ConfigValues from '../config/ConfigValues';
 import warn from '../helper/warn';
 import buildComponentFactoryAttributes from '../helper/buildComponentFactoryAttributes';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';

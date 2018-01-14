@@ -1,5 +1,5 @@
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
-import Config from './system/Config';
+import Config from './config/Config';
 
 import React from 'react';
 import ReactNative from 'react-native';
@@ -19,10 +19,10 @@ const
             'AppMainComponent', () => ComponentClass);
     },
 
-    Adapter = {
+    Adapter = Object.freeze({
         name: 'react',
         api: { React, ReactNative }
-    };
+    });
 
 export {
     createElement,

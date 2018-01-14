@@ -1,8 +1,4 @@
 const
-    SUPPORTED_RENDER_ENGINES = new Set([
-        'react', 'react-native', 'preact', 'inferno', 'vue'
-    ]),
-
     FORBIDDEN_METHOD_NAMES = new Set([
         'props', 'state', 'shouldComponentUpdate',
         'setState', 'componentWillReceiveProps',
@@ -22,6 +18,5 @@ export {
     REGEX_DISPLAY_NAME,
     REGEX_PROPERTY_NAME,
     REGEX_CALLBACK_PROPERTY_NAME,
-    REGEX_METHOD_NAME,
-    SUPPORTED_RENDER_ENGINES
+    REGEX_METHOD_NAME
 };

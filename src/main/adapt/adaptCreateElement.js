@@ -9,6 +9,9 @@ export default function adaptCreateElement(
         createElement,
         isElement,
         flattenArgs = false,
+        classAttributeName = 'className',
+        attributeAliases = null,
+        attributeAliasesByTagName = null,
         optimizeForFirefox = typeof InstallTrigger !== 'undefined' 
     }) {
 
@@ -37,7 +40,9 @@ export default function adaptCreateElement(
             hyperscriptData = hyperscriptCache[type];
 
             if (!hyperscriptData) {
-                hyperscriptData = parseHyperscript(type);
+                hyperscriptData = parseHyperscript(
+                    type, classAttributeName, attributeAliases,
+                    attributeAliasesByTagName);
         
                 if (hyperscriptData === null) {
                     throw new Error(

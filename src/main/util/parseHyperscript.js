@@ -5,7 +5,10 @@ const
     attrValuePattern = '([a-zA-Z0-9_-]*|"[^">\\\\]*"|\'[^\'>\\\\]*\')',
     attrPattern =  `\\[[a-z][a-zA-Z-]*(=${attrValuePattern})?\\]`,
     elementPattern = `(${tagPattern}|${idPattern}|${classPattern}|${attrPattern})`,
-    elementRegex = new RegExp(elementPattern, 'g');
+    elementRegex = new RegExp(elementPattern, 'g'),
+
+    forbiddenAttributes = new Set(
+        ['id', 'class', 'className', 'innerHTML', 'dangerouslySetInnerHTML']);
 
 export default function parseHyperscript(
     hyperscript,
@@ -51,7 +54,7 @@ export default function parseHyperscript(
             case '.': {
                 const oneClass = it.substr(1);
                 
-                if (!meta.attrs || !meta.attrs.className) {
+                if (!meta.attrs || !meta.attrs[classAttributeName]) {
                     meta.attrs = meta.attrs || {};
                     meta.attrs[classAttributeName] = oneClass;
                 } else {
@@ -65,9 +68,7 @@ export default function parseHyperscript(
                     [key, ...tokens] = it.substr(1, it.length - 2).split('='),
                     value = tokens ? tokens.join('=') : true;
 
-                if (key === 'class'
-                    || key === 'className'
-                    || key === 'id'
+                if (forbiddenAttributes.has(key)
                     || key === classAttributeName) {
 
                     ret = null;

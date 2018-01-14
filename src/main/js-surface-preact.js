@@ -1,9 +1,9 @@
 import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
-import adaptMount from './adapt/adaptMount.js';
+import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
 import unmount from './component/unmount.js';
-import Config from './system/Config';
+import Config from './config/Config';
 
 import Preact from 'preact';
 
@@ -25,7 +25,10 @@ const
 
     createElement = adaptCreateElement({
         createElement: adjustedCreateElement,
-        isElement
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { 'htmlFor': 'for' } }
     }),
 
     preactMount = (content, targetNode) => {
@@ -36,10 +39,10 @@ const
 
     mount = adaptMount(preactMount, isElement),
 
-    Adapter = {
+    Adapter = Object.freeze({
         name: 'preact',
         api: { Preact }
-    };
+    });
 
 export {
     createElement,

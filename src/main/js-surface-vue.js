@@ -2,7 +2,7 @@ import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptDefineComponent from './adapt/adaptDefineComponent.js';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
-import Config from './system/Config';
+import Config from './config/Config';
 
 import Vue from 'vue';
 
@@ -19,10 +19,10 @@ const
 
     mount = adaptMount(customMount, isElement),
 
-    Adapter = {
+    Adapter = Object.freeze({
         name: 'vue',
         api: { Vue }
-    };
+    });
 
 export {
     createElement,
