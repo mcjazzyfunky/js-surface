@@ -7,7 +7,12 @@ const
     elementPattern = `(${tagPattern}|${idPattern}|${classPattern}|${attrPattern})`,
     elementRegex = new RegExp(elementPattern, 'g');
 
-export default function parseHyperscript(hyperscript, propAliases = null) {
+export default function parseHyperscript(
+    hyperscript,
+    classAttributeName = 'className',
+    attributeAliases = null,
+    attributeAliasesByTagName = null) {
+
     const items =
         hyperscript
             .split(/\s*>\s*/)
@@ -48,43 +53,48 @@ export default function parseHyperscript(hyperscript, propAliases = null) {
                 
                 if (!meta.attrs || !meta.attrs.className) {
                     meta.attrs = meta.attrs || {};
-                    meta.attrs.className = oneClass;
+                    meta.attrs[classAttributeName] = oneClass;
                 } else {
-                    meta.attrs.className += ` ${oneClass}`;
+                    meta.attrs[classAttributeName] += ` ${oneClass}`;
                 }
 
                 break;
             }
             case '[': {
-                const keyValue = it.substr(1, it.length - 2);
-                    
-                let key, value, tokens;
+                let
+                    [key, ...tokens] = it.substr(1, it.length - 2).split('='),
+                    value = tokens ? tokens.join('=') : true;
 
-                if (keyValue.indexOf('=') === -1) {
-                    key = keyValue;
-                    value = true;
-                } else {
-                    [key, ...tokens] = keyValue.split('=');
-                    value = tokens.join('=');
-                    
-                    if (meta.attrs === null) {
-                        meta.attrs = {};
-                    }
+                if (key === 'class'
+                    || key === 'className'
+                    || key === 'id'
+                    || key === classAttributeName) {
 
-                    if (value[0] === '"' || value[0] === "'") {
-                        value = value.substr(1, value.length - 2);
+                    ret = null;
+                    break;
+                }
+
+                if (value[0] === '"' || value[0] === "'") {
+                    value = value.substr(1, value.length - 2);
+                }
+
+                if (meta.attrs === null) {
+                    meta.attrs = {};
+                }
+
+                if (attributeAliases) {
+                    key = attributeAliases[key] || key;
+                }
+
+                if (attributeAliasesByTagName) {
+                    const aliases = attributeAliasesByTagName[meta.tag];
+
+                    if (aliases) {
+                        key = aliases[key] || key;
                     }
                 }
 
-                // TODO?
-                if (key === 'for') {
-                    key = 'htmlFor';
-                }
-
-                if (meta.attrs[key] === undefined
-                    && key !== 'class'
-                    && key !== 'id') {
-
+                if (meta.attrs[key] === undefined) {
                     meta.attrs[key] = value;
                 } else {
                     ret = null;
