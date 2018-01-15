@@ -18,6 +18,18 @@ export default [
         files: ['iterator-support.js']
     },
     {
+        name: 'label-for-input-element',
+        displayName: 'Label for input element',
+        directory: 'label-for-input-element',
+        files: ['label-for-input-element.js']
+    },
+    {
+        name: 'inner-html',
+        displayName: 'Testing innerHTML',
+        directory: 'inner-html',
+        files: ['inner-html.js']
+    },
+    {
         name: 'clock',
         displayName: 'Clock',
         directory: 'clock',

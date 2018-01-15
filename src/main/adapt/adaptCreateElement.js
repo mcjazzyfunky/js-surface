@@ -15,6 +15,24 @@ export default function adaptCreateElement(
         optimizeForFirefox = typeof InstallTrigger !== 'undefined' 
     }) {
 
+    let
+        attributeAliasesEntries = null,
+        attributeAliasesEntriesByTagName = null;
+
+    if (attributeAliases) {
+        attributeAliasesEntries = Object.entries(attributeAliases);
+    }
+
+    if (attributeAliasesByTagName) {
+        attributeAliasesEntriesByTagName = {};
+
+        for (const key of Object.keys(attributeAliasesByTagName)) {
+            const entries = Object.entries(attributeAliasesByTagName[key]);
+
+            attributeAliasesEntriesByTagName[key] = entries;
+        }
+    }
+
     return function(/* arguments */) {
         let
             ret,
@@ -96,7 +114,7 @@ export default function adaptCreateElement(
                     entries = data.entries;
 
                 if (entries) {
-                    if (offset) {
+                    if (offset || args.length === 1) {
                         args[1] = data.attrs; 
                     } else {
                         for (let i = 0; i < entries.length; ++i) {
@@ -107,6 +125,52 @@ export default function adaptCreateElement(
                     }
                 }
             }
+        }
+
+
+        // TODO: Optimize this block
+        if (tagName && args[1] && (attributeAliases || attributeAliasesByTagName)) {
+            let props = args[1];
+
+            if (attributeAliases) {
+                for (let i = 0; i < attributeAliasesEntries.length; ++i) {
+                    const
+                        [key, alias] = attributeAliasesEntries[i],
+                        value = props[key];
+
+                    if (value !== undefined) {
+                        if (props === args[1]) {
+                            props = Object.assign({}, props);
+                        }
+
+                        delete props[key];
+                        props[alias] = value;
+                    }
+                }
+            }
+
+            if (attributeAliasesByTagName) {
+                const entries = attributeAliasesEntriesByTagName[tagName];
+
+                if (entries) {
+                    for (let i = 0; i < entries.length; ++i) {
+                        const
+                            [key, alias] = entries[i],
+                            value = props[key];
+
+                        if (value !== undefined) {
+                            if (props === args[1]) {
+                                props = Object.assign({}, props);
+                            }
+
+                            delete props[key];
+                            props[alias] = value;
+                        }
+                    }
+                }
+            }
+
+            args[1] = props;
         }
 
         if (optimizeForFirefox) {

@@ -6,12 +6,19 @@ import unmount from './component/unmount.js';
 import Config from './config/Config';
 
 import Inferno from 'inferno';
-import infernoCreateElement from 'inferno-create-element';
+import iceExport from 'inferno-create-element';
 import InfernoComponent from 'inferno-component';
+
+// This is just that both Inferno 3.x and Infero 4.x is supported.
+// Just a temporary solution.
+const infernoCreateElement =
+    typeof iceExport === 'function'
+        ? iceExport
+        : iceExport.createElement; 
 
 const InfernoAPI = Object.assign({}, Inferno, {
     createElement: infernoCreateElement,
-    Component: InfernoComponent    
+    Component: InfernoComponent     
 });
 
 // Get rid of internal functions
@@ -41,8 +48,8 @@ const
         createElement: adjustedCreateElement,
         isElement,
         classAttributeName: 'className',
-        attributeAliases: { innerHTML: 'dangerouslySetInnerHTML' },
-        attributeAliasesByTagName: { label: { 'htmlFor': 'for' } }
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { htmlFor: 'for' } }
     }),
 
     infernoMount = (content, targetNode) => {

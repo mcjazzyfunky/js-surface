@@ -28,7 +28,7 @@ const
         isElement,
         classAttributeName: 'className',
         attributeAliases: null,
-        attributeAliasesByTagName: { label: { 'htmlFor': 'for' } }
+        attributeAliasesByTagName: null
     }),
 
     preactMount = (content, targetNode) => {

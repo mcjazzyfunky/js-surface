@@ -14,7 +14,10 @@ const
 
     createElement = adaptCreateElement({
         createElement: customCreateElement,
-        isElement
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: null
     }),
 
     mount = adaptMount(customMount, isElement),
@@ -335,6 +338,13 @@ function renderContent(vueCreateElement, content, component) {
         if (refName) {
             options.ref = refName;
             delete(options.attrs.ref);
+        }
+
+        if (attrs.dangerouslySetInnerHTML) {
+            const innerHTML =
+                String(attrs.dangerouslySetInnerHTML.__html || '');
+
+            options.domProps = { innerHTML };
         }
 
         if (props && props.className && !props.class) {
