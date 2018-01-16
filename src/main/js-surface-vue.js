@@ -1,4 +1,5 @@
 import adaptCreateElement from './adapt/adaptCreateElement.js';
+import adaptHyperscript from './adapt/adaptHyperscript.js';
 import adaptDefineComponent from './adapt/adaptDefineComponent.js';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
@@ -19,6 +20,14 @@ const
         attributeAliases: null,
         attributeAliasesByTagName: null
     }),
+    
+    hyperscript = adaptHyperscript({
+        createElement: customCreateElement,
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: null
+    }),
 
     mount = adaptMount(customMount, isElement),
 
@@ -30,6 +39,7 @@ const
 export {
     createElement,
     defineComponent,
+    hyperscript,
     isElement,
     mount,
     unmount,

@@ -1,4 +1,5 @@
-import adaptCreateElement from './adapt/adaptCreateElement.js';
+import adaptCreateElement from './adapt/adaptCreateElement';
+import adaptHyperscript from './adapt/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
@@ -14,6 +15,14 @@ const
     }),
 
     createElement = adaptCreateElement({
+        createElement: React.createElement,
+        isElement: React.isValidElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { 'for': 'htmlFor' } }
+    }),
+    
+    hyperscript = adaptHyperscript({
         createElement: React.createElement,
         isElement: React.isValidElement,
         classAttributeName: 'className',
@@ -39,6 +48,7 @@ const
 export {
     createElement,
     defineComponent,
+    hyperscript,
     isElement,
     mount,
     unmount,

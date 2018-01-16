@@ -6,6 +6,8 @@ export default function buildComponentFactoryAttributes(factory, config, defineC
         functional = typeof config.render === 'function',
         type = factory;
 
+    ret.isComponentFactory = true,
+
     ret.meta = Object.assign({ functional, type }, config);
     
     ret.withDefaults = defaultProps => {

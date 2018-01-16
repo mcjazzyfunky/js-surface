@@ -1,4 +1,5 @@
-import adaptCreateElement from './adapt/adaptCreateElement.js';
+import adaptCreateElement from './adapt/adaptCreateElement';
+import adaptHyperscript from './adapt/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
@@ -31,6 +32,14 @@ const
         attributeAliasesByTagName: null
     }),
 
+    hyperscript = adaptHyperscript({
+        createElement: adjustedCreateElement,
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: null
+    }),
+
     preactMount = (content, targetNode) => {
         Preact.render(content, targetNode);
 
@@ -47,6 +56,7 @@ const
 export {
     createElement,
     defineComponent,
+    hyperscript,
     isElement,
     mount,
     unmount,

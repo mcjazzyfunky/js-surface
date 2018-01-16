@@ -1,6 +1,7 @@
 import {
     createElement,
     defineComponent,
+    hyperscript,
     isElement,
     mount,
     unmount,
@@ -11,6 +12,7 @@ import {
 export {
     createElement,
     defineComponent,
+    hyperscript,
     isElement,
     mount,
     unmount,

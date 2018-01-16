@@ -1,5 +1,5 @@
 import {
-    createElement as h,
+    hyperscript as h,
     defineComponent,
     mount,
     unmount,
