@@ -5,6 +5,7 @@ import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
 import unmount from './component/unmount.js';
 import Config from './config/Config';
+import ElementWrapper from './helper/ElementWrapper';
 
 import Preact from 'preact';
 
@@ -51,11 +52,22 @@ const
         api: { Preact }
     }),
 
-    Component = adaptComponentClass(defineComponent);
+    element = obj => {
+        let ret = null;
+
+        if (isElement(obj)) {
+            ret = new ElementWrapper(obj.type, obj.props);
+        }
+
+        return ret;
+    },
+
+    Component = adaptComponentClass(defineComponent)
 
 export {
     createElement,
     defineComponent,
+    element,
     hyperscript,
     isElement,
     mount,

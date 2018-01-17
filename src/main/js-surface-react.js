@@ -4,6 +4,7 @@ import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineCompone
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
 import Config from './config/Config';
+import ElementWrapper from './helper/ElementWrapper';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -65,12 +66,23 @@ const
         name: 'react',
         api: { React, ReactDOM }
     }),
+
+    element = obj => {
+        let ret = null;
+
+        if (React.isElement(obj)) {
+            ret = new ElementWrapper(obj.type, obj.props);
+        }
+
+        return ret;
+    },
     
     Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
     defineComponent,
+    element,
     hyperscript,
     isElement,
     mount,

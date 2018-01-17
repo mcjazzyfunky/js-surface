@@ -1,10 +1,10 @@
 import adaptComponentClass from './adapt/adaptComponentClass';
-import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptHyperscript from './adapt/adaptHyperscript.js';
 import adaptDefineComponent from './adapt/adaptDefineComponent.js';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
 import Config from './config/Config';
+import ElementWrapper from './helper/ElementWrapper';
 
 import Vue from 'vue';
 
@@ -14,7 +14,7 @@ const
         defineStandardComponent
     }),
 
-    createElement = adaptCreateElement({
+    createElement = adaptHyperscript({
         createElement: customCreateElement,
         isElement,
         classAttributeName: 'className',
@@ -29,19 +29,30 @@ const
         attributeAliases: null,
         attributeAliasesByTagName: null
     }),
-
+    
     mount = adaptMount(customMount, isElement),
 
     Adapter = Object.freeze({
         name: 'vue',
         api: { Vue }
     }),
+    
+    element = obj => {
+        let ret = null;
 
-    Component = adaptComponentClass();
+        if (isElement(obj)) {
+            ret = new ElementWrapper(obj.type, obj.props);
+        }
+
+        return ret;
+    },
+
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
     defineComponent,
+    element,
     hyperscript,
     isElement,
     mount,
