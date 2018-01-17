@@ -4,7 +4,7 @@ import adaptDefineComponent from './adapt/adaptDefineComponent.js';
 import adaptMount from './adapt/adaptMount.js';
 import unmount from './component/unmount.js';
 import Config from './config/Config';
-import ElementWrapper from './helper/ElementWrapper';
+import ElementInspector from './helper/ElementInspector';
 
 import Vue from 'vue';
 
@@ -37,11 +37,11 @@ const
         api: { Vue }
     }),
     
-    element = obj => {
+    inspectElement = obj => {
         let ret = null;
 
         if (isElement(obj)) {
-            ret = new ElementWrapper(obj.type, obj.props);
+            ret = new ElementInspector(obj.type, obj.props);
         }
 
         return ret;
@@ -52,7 +52,7 @@ const
 export {
     createElement,
     defineComponent,
-    element,
+    inspectElement,
     hyperscript,
     isElement,
     mount,

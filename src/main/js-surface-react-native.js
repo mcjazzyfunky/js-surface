@@ -1,7 +1,7 @@
 import adaptComponentClass from './adapt/adaptComponentClass';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import Config from './config/Config';
-import ElementWrapper from './helper/ElementWrapper';
+import ElementInspector from './helper/ElementInspector';
 
 import React from 'react';
 import ReactNative from 'react-native';
@@ -26,11 +26,11 @@ const
         api: { React, ReactNative }
     }),
     
-    element = obj => {
+    inspectElement = obj => {
         let ret = null;
 
         if (React.isElement(obj)) {
-            ret = new ElementWrapper(obj.type, obj.props);
+            ret = new ElementInspector(obj.type, obj.props);
         }
 
         return ret;
@@ -41,7 +41,7 @@ const
 export {
     createElement,
     defineComponent,
-    element,
+    inspectElement,
     isElement,
     mount,
     Adapter,

@@ -5,7 +5,7 @@ import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
 import unmount from './component/unmount.js';
 import Config from './config/Config';
-import ElementWrapper from './helper/ElementWrapper';
+import ElementInspector from './helper/ElementInspector';
 
 import Inferno from 'inferno';
 import iceExport from 'inferno-create-element';
@@ -92,11 +92,11 @@ const
         api: { Inferno: InfernoAPI }
     }),
     
-    element = obj => {
+    inspectElement = obj => {
         let ret = null;
 
         if (isElement(obj)) {
-            ret = new ElementWrapper(obj.type, obj.props);
+            ret = new ElementInspector(obj.type, obj.props);
         }
 
         return ret;
@@ -107,8 +107,8 @@ const
 export {
     createElement,
     defineComponent,
-    element,
     hyperscript,
+    inspectElement,
     isElement,
     mount,
     unmount,

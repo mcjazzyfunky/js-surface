@@ -1,4 +1,4 @@
-export default class ElementWrapper {
+export default class ElementInspector {
     constructor(type, props) {
         this.__type = type;
 
@@ -30,5 +30,11 @@ export default class ElementWrapper {
 
     getChildren() {
         return this.__props ? this.__props.children || null : null;
+    }
+
+    getChild(index = 0) {
+        return this.__props && this.__props.children
+            ? this.props.children[index] || null
+            : null;
     }
 }

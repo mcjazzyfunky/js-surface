@@ -1,8 +1,8 @@
 import {
     createElement,
     defineComponent,
-    element,
     hyperscript,
+    inspectElement,
     isElement,
     mount,
     unmount,
@@ -14,8 +14,8 @@ import {
 export {
     createElement,
     defineComponent,
-    element,
     hyperscript,
+    inspectElement,
     isElement,
     mount,
     unmount,
