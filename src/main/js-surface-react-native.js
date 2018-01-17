@@ -1,3 +1,4 @@
+import adaptComponentClass from './adapt/adaptComponentClass';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import Config from './config/Config';
 
@@ -22,7 +23,9 @@ const
     Adapter = Object.freeze({
         name: 'react',
         api: { React, ReactNative }
-    });
+    }),
+    
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
@@ -30,5 +33,6 @@ export {
     isElement,
     mount,
     Adapter,
+    Component,
     Config
 };

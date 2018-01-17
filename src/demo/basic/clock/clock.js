@@ -1,5 +1,5 @@
 import {
-    hyperscript as h,
+    createElement as h,
     defineComponent,
     mount
 } from 'js-surface';
@@ -19,8 +19,9 @@ const Clock = defineComponent({
 
             render = () => {
                 return (
-                    h('div',
-                        h('h3', 'Current time'),
+                    h('div', null,
+                        h('h3', null,
+                            'Current time'),
                         TimeInfo({ time }))
                 );
             };
@@ -55,7 +56,7 @@ const TimeInfo = defineComponent({
     },
 
     render(props) {
-        return h('div', props.time);
+        return h('div', null, props.time);
     }
 });
 

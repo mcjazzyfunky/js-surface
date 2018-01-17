@@ -1,3 +1,4 @@
+import adaptComponentClass from './adapt/adaptComponentClass';
 import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptHyperscript from './adapt/adaptHyperscript.js';
 import adaptDefineComponent from './adapt/adaptDefineComponent.js';
@@ -34,7 +35,9 @@ const
     Adapter = Object.freeze({
         name: 'vue',
         api: { Vue }
-    });
+    }),
+
+    Component = adaptComponentClass();
 
 export {
     createElement,
@@ -44,6 +47,7 @@ export {
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };
 

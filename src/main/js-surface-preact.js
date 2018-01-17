@@ -1,4 +1,4 @@
-import adaptCreateElement from './adapt/adaptCreateElement';
+import adaptComponentClass from './adapt/adaptComponentClass';
 import adaptHyperscript from './adapt/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount';
@@ -18,22 +18,20 @@ const
 
     isElement = it => it instanceof VNode,
 
-    adjustedCreateElement = (...args) => {
-        const convertedArgs = convertIterablesToArrays(args);
+    createElement = (...args) => {
+        const
+            type = args[0],
+            convArgs = convertIterablesToArrays(args);
+        
+        if (type && type.isComponentFactory === true) {
+            convArgs[0] = type.type;
+        } 
 
-        return Preact.h.apply(null, convertedArgs);
+        return Preact.h(...convArgs);
     },
 
-    createElement = adaptCreateElement({
-        createElement: adjustedCreateElement,
-        isElement,
-        classAttributeName: 'className',
-        attributeAliases: null,
-        attributeAliasesByTagName: null
-    }),
-
     hyperscript = adaptHyperscript({
-        createElement: adjustedCreateElement,
+        createElement,
         isElement,
         classAttributeName: 'className',
         attributeAliases: null,
@@ -51,7 +49,9 @@ const
     Adapter = Object.freeze({
         name: 'preact',
         api: { Preact }
-    });
+    }),
+
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
@@ -61,5 +61,6 @@ export {
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

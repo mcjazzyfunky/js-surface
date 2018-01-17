@@ -1,5 +1,5 @@
 import {
-    hyperscript as h, 
+    createElement as h, 
     defineComponent,
     mount 
 } from 'js-surface';
@@ -18,7 +18,9 @@ const CounterInfo = defineComponent({
     render(props) {
         return (
             h('label',
+                null,
                 h('b',
+                    null,
                     props.value)));
     }
 });
@@ -60,15 +62,22 @@ const Counter = defineComponent({
 
             render = () => {
                 return (
-                    h('span.counter',
-                        h('button.btn.btn-default',
-                            { onClick: () => increaseCounter(-1) },
+                    h('span',
+                        { className: 'counter' },
+                        h('button',
+                            {
+                                className: 'btn btn-default',
+                                onClick: () => increaseCounter(-1)
+                            },
                             '-'),
                         h('div',
                             { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
                             CounterInfo({ value: counterValue })),
-                        h('button.btn.btn-default',
-                            { onClick: () => increaseCounter(1) },
+                        h('button',
+                            {
+                                className: 'btn btn-default',
+                                onClick: () => increaseCounter(1)
+                            }, 
                             '+'))
                 );
             };
@@ -102,16 +111,23 @@ const CounterCtrl = defineComponent({
             let counterInstance = null;
 
             updateView(
-                h('div.counter-ctrl',
-                    h('button.btn.btn-info',
-                        { onClick: () => counterInstance.resetCounter(0) },
+                h('div',
+                    { className: 'counter-ctrl' },
+                    h('button',
+                        {
+                            className: 'btn btn-info',
+                            onClick: () => counterInstance.resetCounter(0)
+                        },
                         'Set to 0'),
-                        ' ',
-                        Counter({ ref: it => { counterInstance = it; } }),
-                        ' ',
-                        h('button.btn.btn-info',
-                            { onClick: () => counterInstance.resetCounter(100) },
-                            'Set to 100')));
+                    ' ',
+                    Counter({ ref: it => { counterInstance = it; } }),
+                    ' ',
+                    h('button',
+                        {
+                            className: 'btn btn-info',
+                            onClick: () => counterInstance.resetCounter(100)
+                        },
+                        'Set to 100')));
         }
     })
 });

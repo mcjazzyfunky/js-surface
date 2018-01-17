@@ -1,4 +1,4 @@
-import adaptCreateElement from './adapt/adaptCreateElement';
+import adaptComponentClass from './adapt/adaptComponentClass';
 import adaptHyperscript from './adapt/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount';
@@ -45,13 +45,30 @@ const
         return infernoCreateElement.apply(null, convertedArgs);
     },
 
-    createElement = adaptCreateElement({
-        createElement: adjustedCreateElement,
-        isElement,
-        classAttributeName: 'className',
-        attributeAliases: null,
-        attributeAliasesByTagName: { label: { htmlFor: 'for' } }
-    }),
+    createElement = function (...args) {
+        const
+            type = args[0],
+            convArgs = convertIterablesToArrays(args);
+        
+        let ret;
+        
+        if (type && type.isComponentFactory === true) {
+            const
+                length = args.length,
+                newArgs = new Array(length - 1);
+
+            for (let i = 1; i < length; ++i) {
+                newArgs[i] = convArgs[i];
+            }
+
+            ret = type(...newArgs);
+        } else {
+            ret = infernoCreateElement(...convArgs);
+        }
+
+        return ret;
+    },
+
 
     hyperscript = adaptHyperscript({
         createElement: adjustedCreateElement,
@@ -72,7 +89,9 @@ const
     Adapter = Object.freeze({
         name: 'inferno', 
         api: { Inferno: InfernoAPI }
-    });
+    }),
+
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
@@ -82,5 +101,6 @@ export {
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

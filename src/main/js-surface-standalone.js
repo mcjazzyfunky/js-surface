@@ -6,6 +6,7 @@ import {
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 } from './js-surface-preact';
 
@@ -17,5 +18,6 @@ export {
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

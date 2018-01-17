@@ -1,6 +1,6 @@
 import {
-    hyperscript as h,
-    hyperscript as hyperscript, // TODO
+    createElement as h,
+    hyperscript, 
     Adapter,
     Config
 } from 'js-surface';
