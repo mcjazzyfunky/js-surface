@@ -9,10 +9,11 @@ export default function adaptComponentClass(defineComponent) {
             this.___forwardState = null;
             this.___initialized = false;
 
-            // this.___callbackWhenUpdated =
-            //    this.___callbackWhenUpdated.bind(this);
+            this.___callbackWhenUpdated =
+                this.___callbackWhenUpdated.bind(this);
 
-            for (const key in this) {
+            // TODO - this is NOT working properly!!!
+            for (const key in this.constructor.prototype) {
                 if (typeof this[key] === 'function') {
                     this[key] = this[key].bind(this);
                 }
