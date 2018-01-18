@@ -1,7 +1,7 @@
 export default function adaptComponentClass(defineComponent) {
     class Component {
-        constructor(props) {
-            this.___props = props;
+        constructor() {
+            this.___props = undefined;
             this.___state = undefined;
             this.___prevProps = undefined;
             this.___prevState = undefined;
@@ -9,8 +9,14 @@ export default function adaptComponentClass(defineComponent) {
             this.___forwardState = null;
             this.___initialized = false;
 
-            this.___callbackWhenUpdated =
-                this.___callbackWhenUpdated.bind(this);
+            // this.___callbackWhenUpdated =
+            //    this.___callbackWhenUpdated.bind(this);
+
+            for (const key in this) {
+                if (typeof this[key] === 'function') {
+                    this[key] = this[key].bind(this);
+                }
+            }
         }
 
         get props() {
@@ -195,6 +201,7 @@ export default function adaptComponentClass(defineComponent) {
                 setProps = props => {
                     if (!component) {
                         component = new CustomComponent(props);
+                        component.___props = props;
                         component.___init(updateView, forwardState);
                         component.onWillMount();
                     } else {
