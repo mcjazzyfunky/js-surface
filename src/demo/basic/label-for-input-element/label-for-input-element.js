@@ -1,5 +1,5 @@
 import {
-    hyperscript as h,
+    createElement as h,
     defineComponent,
     mount 
 } from 'js-surface';
@@ -10,10 +10,16 @@ const Demo = defineComponent({
     render() {
         return (
             h('div',
-                h('label',
-                    { htmlFor: 'text-field' },
-                    'Text field: '),
-                h('input#text-field')));
+                h('div',
+                    h('label[htmlFor=first-name]',
+                        'First name:'),
+                    h('input#first-name'),
+                h('div',
+                    h('label',
+                        { htmlFor: 'last-name' },
+                        'Last name: '),
+                    h('input#last-name'))))
+        );
     }
 });
 

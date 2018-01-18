@@ -1,4 +1,5 @@
 import adaptComponentClass from './adapt/adaptComponentClass';
+import adaptCreateElement from './adapt/adaptCreateElement.js';
 import adaptHyperscript from './adapt/adaptHyperscript.js';
 import adaptDefineComponent from './adapt/adaptDefineComponent.js';
 import adaptMount from './adapt/adaptMount.js';
@@ -14,12 +15,13 @@ const
         defineStandardComponent
     }),
 
-    createElement = adaptHyperscript({
+    createElement = adaptCreateElement({
         createElement: customCreateElement,
         isElement,
         classAttributeName: 'className',
         attributeAliases: null,
-        attributeAliasesByTagName: null
+        attributeAliasesByTagName: null,
+        argumentsMapper: null
     }),
     
     hyperscript = adaptHyperscript({
@@ -27,7 +29,8 @@ const
         isElement,
         classAttributeName: 'className',
         attributeAliases: null,
-        attributeAliasesByTagName: null
+        attributeAliasesByTagName: null,
+        argumentsMapper: null
     }),
     
     mount = adaptMount(customMount, isElement),

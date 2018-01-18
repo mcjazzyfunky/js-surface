@@ -1,5 +1,5 @@
 import {
-    hyperscript as h,
+    createElement as h,
     mount,
     Component 
 }  from 'js-surface';

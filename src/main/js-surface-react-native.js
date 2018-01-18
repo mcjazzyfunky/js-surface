@@ -12,7 +12,15 @@ const
         ComponentClass: React.Component
     }),
 
-    createElement = React.createElement, 
+    createElement = (...args) => {
+        const type = args[0];
+
+        if (type && type.isComponentFactory) {
+            args[0] = type.type;
+        }
+
+        return React.createElement.apply(null, args);
+    },
 
     isElement = React.isValidElement,
 

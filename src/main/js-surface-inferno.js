@@ -1,5 +1,5 @@
 import adaptComponentClass from './adapt/adaptComponentClass';
-import adaptHyperscript from './adapt/adaptHyperscript';
+import adaptCreateElement from './adapt/adaptCreateElement';
 import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
 import adaptMount from './adapt/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
@@ -37,47 +37,27 @@ const
     }),
 
     isElement = it =>
-        !!it && typeof it === 'object' && !!(it.flags & (28 | 3970)),
         // 28: component, 3970: element
+        !!it && typeof it === 'object' && !!(it.flags & (28 | 3970)),
 
-    adjustedCreateElement = (...args) => {
-        const convertedArgs = convertIterablesToArrays(args);
-
-        return infernoCreateElement.apply(null, convertedArgs);
-    },
-
-    createElement = function (...args) {
-        const
-            type = args[0],
-            convArgs = convertIterablesToArrays(args);
-        
-        let ret;
-        
-        if (type && type.isComponentFactory === true) {
-            const
-                length = args.length,
-                newArgs = new Array(length - 1);
-
-            for (let i = 1; i < length; ++i) {
-                newArgs[i] = convArgs[i];
-            }
-
-            ret = type(...newArgs);
-        } else {
-            ret = infernoCreateElement(...convArgs);
-        }
-
-        return ret;
-    },
-
-
-    hyperscript = adaptHyperscript({
-        createElement: adjustedCreateElement,
+    createElement = adaptCreateElement({
+        createElement: infernoCreateElement,
         isElement,
         classAttributeName: 'className',
         attributeAliases: null,
-        attributeAliasesByTagName: { label: { htmlFor: 'for' } }
+        attributeAliasesByTagName: { label: { htmlFor: 'for' } },
+        argumentsMapper:  convertIterablesToArrays
     }),
+
+    hyperscript = adaptCreateElement({
+        createElement: infernoCreateElement,
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { htmlFor: 'for' } },
+        argumentsMapper:  convertIterablesToArrays
+    }),
+
 
     infernoMount = (content, targetNode) => {
         Inferno.render(content, targetNode);

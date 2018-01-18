@@ -1,6 +1,6 @@
 import {
     createElement as h,
-    hyperscript, 
+    hyperscript,
     Adapter,
     Config
 } from 'js-surface';
@@ -53,7 +53,7 @@ if (adapterName !== 'vue') {
 }
 
 tests.push({
-    displayName: 'Using js-surface with createElement',
+    displayName: 'Using js-surface with createElement without hyperscript',
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
@@ -66,7 +66,33 @@ tests.push({
 });
 
 tests.push({
-    displayName: 'Using surface with hyperscript',
+    displayName: 'Using surface with createElement with hyperscript',
+
+    run() {
+        
+        for (let i = 0; i < iterationCount; ++i) {
+ //           hyperscript('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+            h('div#my-id.my-class', { className: 'x' },
+                h('div#my-id2.my-class2', 'my-div'));    
+        }
+    }
+});
+
+tests.push({
+    displayName: 'Using js-surface with hyperscript without hyperscript',
+
+    run() {
+        for (let i = 0; i < iterationCount; ++i) {
+        //    let x = h('div.my-class#my-id > div.my-class2#my-id2', 'my-div');
+            hyperscript('div',
+                { className: 'my-class', id: 'my-id' },
+                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+        }
+    }
+});
+
+tests.push({
+    displayName: 'Using surface with hyperscript with hyperscript',
 
     run() {
         
@@ -78,6 +104,8 @@ tests.push({
     }
 });
 
+let baseDuration = null;
+
 for (let i = 0; i < tests.length; ++i) {
     const
         test = tests[i],
@@ -87,9 +115,18 @@ for (let i = 0; i < tests.length; ++i) {
 
     const
         stopTime = Date.now(),
-        duration = (stopTime - startTime) + ' ms';
+        duration = (stopTime - startTime),
+        factor = baseDuration ? Math.round(duration / baseDuration * 100) / 100 : null;
 
-    const message = `Run time for test '${test.displayName}': ${duration}`;
+    if (i === 0) {
+        baseDuration = duration;
+    }
+
+    let message = `Run time for test '${test.displayName}': ${duration} ms`;
+
+    if (factor) {
+        message += ` => ${factor}x`;
+    }
 
     if (i == 0) {
         report = message;
