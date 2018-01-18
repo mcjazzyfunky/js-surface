@@ -1,4 +1,9 @@
+
 export default function adaptComponentClass(defineComponent) {
+    const methodNamesByClassId = new Map();
+
+    let nextClassId = 1;
+
     class Component {
         constructor() {
             this.___props = undefined;
@@ -12,10 +17,46 @@ export default function adaptComponentClass(defineComponent) {
             this.___callbackWhenUpdated =
                 this.___callbackWhenUpdated.bind(this);
 
-            // TODO - this is NOT working properly!!!
-            for (const key in this.constructor.prototype) {
-                if (typeof this[key] === 'function') {
-                    this[key] = this[key].bind(this);
+            const componentClass = this.constructor;
+
+            let
+                methodNames,
+                classId = componentClass.___id;
+
+            if (!classId) {
+                const methodNameSet = new Set();
+                
+                classId = nextClassId++;
+                componentClass.___id = classId;
+
+                let obj = this;
+
+                do {
+                    const propertyNames = Object.getOwnPropertyNames(obj);
+
+                    for (const methodName of propertyNames) {
+                        if (typeof obj[methodName] === 'function') {
+                            methodNameSet.add(methodName);
+                        }
+                    }
+
+                    obj = Object.getPrototypeOf(obj);
+                } while (obj != Object.prototype);
+
+                methodNames = Array.from(methodNameSet);
+                methodNamesByClassId[classId] = methodNames; 
+            } else {
+                methodNames = methodNamesByClassId[classId]; 
+            }
+
+            for (let i = 0; i < methodNames.length; ++i) {
+                const
+                    methodName = methodNames[i],
+                    method = this[methodName];
+
+                // TODO - auto-binding of methods may cause performance issues
+                if (typeof method === 'function') {
+                    this[methodName] = method.bind(this);
                 }
             }
         }

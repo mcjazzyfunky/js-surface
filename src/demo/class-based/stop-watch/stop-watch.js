@@ -11,8 +11,8 @@ const meta = {
 };
 
 class StopWatchClass extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.timerID = null;
         this.state = { time: 0, running: false };
     }
