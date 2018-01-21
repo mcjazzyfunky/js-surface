@@ -1,5 +1,5 @@
-import adaptComponentClass from './adapt/adaptComponentClass';
-import adaptReactifiedDefineComponent from './adapt/adaptReactifiedDefineComponent';
+import adaptComponentClass from './adaption/adaptComponentClass';
+import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
 import Config from './config/Config';
 import ElementInspector from './helper/ElementInspector';
 
