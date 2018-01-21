@@ -1,14 +1,6 @@
-import parseHyperscript from '../util/parseHyperscript';
-
-const
-    hyperscriptCache = {},
-    simpleTagMark = {};
-
 export default function adaptCreateElement(
     {
         createElement,
-        isElement,
-        classAttributeName = 'className',
         attributeAliases = null,
         attributeAliasesByTagName = null,
         argumentsMapper = null
@@ -16,7 +8,10 @@ export default function adaptCreateElement(
 
     let
         attributeAliasesEntries = null,
-        attributeAliasesEntriesByTagName = null;
+        attributeAliasesEntriesByTagName = null,
+        
+        needsPropNameAdjustment =
+            !!(attributeAliases || attributeAliasesByTagName);
 
     if (attributeAliases) {
         attributeAliasesEntries = Object.entries(attributeAliases);
@@ -37,140 +32,32 @@ export default function adaptCreateElement(
             args = argumentsMapper(args);
         }
 
-        const
-            type = args[0],
-            typeIsString = typeof type === 'string',
-            
-            hyperscriptData = typeIsString
-                ? (type === 'div' || type === 'span'
-                    ? simpleTagMark
-                    : hyperscriptCache[type])
-                : null,
-            
-            secondArg = args[1],
-
-            secondArgIsProps =
-                secondArg === undefined
-                || secondArg === null
-                || (typeof secondArg === 'object'
-                    && !secondArg[Symbol.iterator]
-                    && !isElement(secondArg));
-        
-        let ret;
-       
-        if (type && type.isComponentFactory === true) {
-            args[0] = type.type;
-        }
-
-        if (hyperscriptData === null || hyperscriptData === simpleTagMark) {
-            if (secondArgIsProps) {
-                if (secondArg && (attributeAliases || attributeAliasesByTagName)) {
-                    args[1] = aliasProps(secondArg,
-                        type,
-                        attributeAliasesEntries,
-                        attributeAliasesEntriesByTagName);
-                }
-                
-                ret = createElement.apply(null, args);
-            } else {
-                const newArgs = [args[0], null];
-
-                for (let i = 1; i < args.length; ++i) {
-                    newArgs.push(args[i]);
-                }
-
-                ret = createElement.apply(null, newArgs);
-            }
-        } else if (hyperscriptData === undefined) {
-            const data = parseHyperscript(type, classAttributeName,
-                attributeAliases, attributeAliasesByTagName); 
-            
-            if (!data) {
-                throw new Error('Invalid hyperscript');
-            }
-
-            hyperscriptCache[type] =
-                data.length === 1 && data[0].attrs === null
-                    ? simpleTagMark
-                    : data; 
-
-            ret = adaptedCreateElement.apply(null, args);
-        } else {
+        if (needsPropNameAdjustment) {
             const
-                hyperscriptDataLength = hyperscriptData.length,
-                lastHyperscriptItem = hyperscriptData[hyperscriptDataLength - 1],
-                lastHyperscriptAttrs = lastHyperscriptItem.attrs,
-                lastHyperscriptEntries = lastHyperscriptItem.entries,
-                lastHyperscriptAttrCount = lastHyperscriptEntries.length;
+                type = args[0],
+                props = args[1];
 
-            let attrs = null;
-
-            args[0] = lastHyperscriptItem.tag;
-
-            if (!secondArg || !secondArgIsProps) {
-                attrs = lastHyperscriptAttrs;
-            } else {
-                let props = secondArg;
-                        
-                if (props && (attributeAliases || attributeAliasesByTagName)) {
-                    props = aliasProps(
-                        props, args[0],
-                        attributeAliasesEntries,
-                        attributeAliasesEntriesByTagName);
-                }
-
-
-                if (lastHyperscriptAttrs) {
-                    attrs = {};
+            if (typeof type === 'string'
+                && props
+                && typeof props === 'object') {
                 
-                    for (let i = 0; i < lastHyperscriptAttrCount; ++i) {
-                        const entry = lastHyperscriptEntries[i];
+                const adjustedProps = adjustPropNames(
+                    props, type, attributeAliasesEntries,
+                    attributeAliasesEntriesByTagName);
 
-                        attrs[entry[0]] = entry[1];
-                    }
-
-                    const keys = Object.keys(props);
-
-                    for (let i = 0; i < keys.length; ++i) {
-                        let key = keys[i];
-                        const value = props[key];
-                        attrs[key] = value; 
-                    }
-                } else {
-                    attrs = secondArg;
+                if (adjustedProps !== props) {
+                    args[1] = adjustedProps;
                 }
-            }    
-
-            if (secondArgIsProps) {
-                args[1] = attrs;
-            } else {
-                const newArgs = [args[0], attrs];
-
-                for (let i = 1; i < args.length; ++i) {
-                    newArgs.push(args[i]);
-                }
-
-                args = newArgs;
-            }
-
-         
-            ret = createElement.apply(null, args);
-            
-
-            for (let i = 1; i < hyperscriptDataLength; ++i) {
-                let node = hyperscriptData[hyperscriptDataLength - 1 - i];
-
-                ret = createElement(node.tag, node.attrs, ret);
             }
         }
 
-        return ret;
+        return createElement.apply(null, args);
     };
 
     return adaptedCreateElement;
 }
 
-function aliasProps(
+function adjustPropNames(
     props, tagName,
     attributeAliasesEntries, attributeAliasesEntriesByTagName) {
 

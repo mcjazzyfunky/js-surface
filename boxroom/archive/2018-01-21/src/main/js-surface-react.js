@@ -1,4 +1,6 @@
+import adaptComponentClass from './adaption/adaptComponentClass';
 import adaptCreateElement from './adaption/adaptCreateElement';
+import adaptHyperscript from './adaption/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
 import adaptMount from './adaption/adaptMount.js';
 import unmount from './component/unmount.js';
@@ -16,6 +18,17 @@ const
 
     createElement = adaptCreateElement({
         createElement: React.createElement,
+        isElement: React.isValidElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: null,
+        argumentsMapper: null
+    }),
+
+    hyperscript = adaptHyperscript({
+        createElement: React.createElement,
+        isElement: React.isValidElement,
+        classAttributeName: 'className',
         attributeAliases: null,
         attributeAliasesByTagName: null,
         argumentsMapper: null
@@ -44,15 +57,19 @@ const
         }
 
         return ret;
-    }; 
+    },
+    
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
     defineComponent,
+    hyperscript,
     inspectElement,
     isElement,
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

@@ -1,4 +1,3 @@
-import adaptComponentClass from './adaption/adaptComponentClass';
 import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
 import Config from './config/Config';
 import ElementInspector from './helper/ElementInspector';
@@ -42,9 +41,7 @@ const
         }
 
         return ret;
-    },
-    
-    Component = adaptComponentClass(defineComponent);
+    };
 
 export {
     createElement,
@@ -53,6 +50,5 @@ export {
     isElement,
     mount,
     Adapter,
-    Component,
     Config
 };

@@ -1,4 +1,6 @@
+import adaptComponentClass from './adaption/adaptComponentClass';
 import adaptCreateElement from './adaption/adaptCreateElement';
+import adaptHyperscript from './adaption/adaptHyperscript';
 import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
 import adaptMount from './adaption/adaptMount';
 import convertIterablesToArrays from './util/convertIterablesToArrays';
@@ -20,6 +22,17 @@ const
 
     createElement = adaptCreateElement({
         createElement: Preact.h,
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: null,
+        argumentsMapper: convertIterablesToArrays
+    }),
+
+    hyperscript = adaptHyperscript({
+        createElement: Preact.h,
+        isElement,
+        classAttributeName: 'className',
         attributeAliases: null,
         attributeAliasesByTagName: null,
         argumentsMapper: convertIterablesToArrays
@@ -46,15 +59,19 @@ const
         }
 
         return ret;
-    };
+    },
+
+    Component = adaptComponentClass(defineComponent)
 
 export {
     createElement,
     defineComponent,
     inspectElement,
+    hyperscript,
     isElement,
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

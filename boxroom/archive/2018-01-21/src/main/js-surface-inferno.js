@@ -1,3 +1,4 @@
+import adaptComponentClass from './adaption/adaptComponentClass';
 import adaptCreateElement from './adaption/adaptCreateElement';
 import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
 import adaptMount from './adaption/adaptMount';
@@ -41,10 +42,22 @@ const
 
     createElement = adaptCreateElement({
         createElement: infernoCreateElement,
+        isElement,
+        classAttributeName: 'className',
         attributeAliases: null,
         attributeAliasesByTagName: { label: { htmlFor: 'for' } },
         argumentsMapper:  convertIterablesToArrays
     }),
+
+    hyperscript = adaptCreateElement({
+        createElement: infernoCreateElement,
+        isElement,
+        classAttributeName: 'className',
+        attributeAliases: null,
+        attributeAliasesByTagName: { label: { htmlFor: 'for' } },
+        argumentsMapper:  convertIterablesToArrays
+    }),
+
 
     infernoMount = (content, targetNode) => {
         Inferno.render(content, targetNode);
@@ -67,15 +80,19 @@ const
         }
 
         return ret;
-    };
+    },
+
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
     defineComponent,
+    hyperscript,
     inspectElement,
     isElement,
     mount,
     unmount,
     Adapter,
+    Component,
     Config
 };

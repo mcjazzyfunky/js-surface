@@ -1,12 +1,10 @@
-import adaptCreateElement from './adaption/adaptCreateElement';
+import adaptComponentClass from './adaption/adaptComponentClass';
 import adaptReactifiedDefineComponent from './adaption/adaptReactifiedDefineComponent';
-import adaptMount from './adaption/adaptMount.js';
-import unmount from './component/unmount.js';
 import Config from './config/Config';
 import ElementInspector from './helper/ElementInspector';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactNative from 'react-native';
 
 const
     defineComponent = adaptReactifiedDefineComponent({
@@ -14,28 +12,28 @@ const
         ComponentClass: React.Component
     }),
 
-    createElement = adaptCreateElement({
-        createElement: React.createElement,
-        attributeAliases: null,
-        attributeAliasesByTagName: null,
-        argumentsMapper: null
-    }),
+    createElement = (...args) => {
+        const type = args[0];
+
+        if (type && type.isComponentFactory) {
+            args[0] = type.type;
+        }
+
+        return React.createElement.apply(null, args);
+    },
 
     isElement = React.isValidElement,
 
-    reactMount = (content, targetNode) => {
-        ReactDOM.render(content, targetNode);
-
-        return () => ReactDOM.unmountComponentAtNode(targetNode);
+    mount = ComponentClass => {
+        ReactNative.AppRegistry.registerComponent(
+            'AppMainComponent', () => ComponentClass);
     },
-
-    mount = adaptMount(reactMount, isElement),
 
     Adapter = Object.freeze({
         name: 'react',
-        api: { React, ReactDOM }
+        api: { React, ReactNative }
     }),
-
+    
     inspectElement = obj => {
         let ret = null;
 
@@ -44,7 +42,9 @@ const
         }
 
         return ret;
-    }; 
+    },
+    
+    Component = adaptComponentClass(defineComponent);
 
 export {
     createElement,
@@ -52,7 +52,7 @@ export {
     inspectElement,
     isElement,
     mount,
-    unmount,
     Adapter,
+    Component,
     Config
 };
