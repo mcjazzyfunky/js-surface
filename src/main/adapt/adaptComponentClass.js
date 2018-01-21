@@ -5,8 +5,8 @@ export default function adaptComponentClass(defineComponent) {
     let nextClassId = 1;
 
     class Component {
-        constructor() {
-            this.___props = undefined;
+        constructor(props) {
+            this.___props = props;
             this.___state = undefined;
             this.___prevProps = undefined;
             this.___prevState = undefined;
@@ -35,7 +35,10 @@ export default function adaptComponentClass(defineComponent) {
                     const propertyNames = Object.getOwnPropertyNames(obj);
 
                     for (const methodName of propertyNames) {
-                        if (typeof obj[methodName] === 'function') {
+                        if (typeof obj[methodName] === 'function'
+                                && methodName.startsWith('on')
+                                && methodName[2] >= 'A'
+                                && methodName[2] <= 'Z') {
                             methodNameSet.add(methodName);
                         }
                     }
@@ -54,7 +57,6 @@ export default function adaptComponentClass(defineComponent) {
                     methodName = methodNames[i],
                     method = this[methodName];
 
-                // TODO - auto-binding of methods may cause performance issues
                 if (typeof method === 'function') {
                     this[methodName] = method.bind(this);
                 }
@@ -77,35 +79,35 @@ export default function adaptComponentClass(defineComponent) {
             }
         }
 
-        onWillMount() {
+        componentWillMount() {
         }
 
-        onDidMount() {
+        componentDidMount() {
         }
 
-        onWillReceiveProps(/* nextProps */) {
+        componentWillReceiveProps(/* nextProps */) {
         }
 
-        shouldUpdate(/* nextProps, nextState */) {
+        shouldComponentUpdate(/* nextProps, nextState */) {
             return true;
         }
 
-        onWillUpdate(/* nextProps, nextState */) {
+        componentWillUpdate(/* nextProps, nextState */) {
         }
 
-        onDidUpdate(/* prevProps, prevState */) {
+        componentDidUpdate(/* prevProps, prevState */) {
         }
 
-        onWillChangeState(/* nextState */) {
+        componentWillChangeState(/* nextState */) {
         }
 
-        onDidChangeState(/* prevState */) {
+        componentDidChangeState(/* prevState */) {
         }
 
-        onWillUnmount() {
+        componentWillUnmount() {
         }
 
-        onDidCatchError(/* error, info */) {
+        componentDidCatch(/* error, info */) {
         }
 
         forceUpdate() {
@@ -129,14 +131,14 @@ export default function adaptComponentClass(defineComponent) {
         }
 
         ___update(nextProps, nextState, stateChanged, force) {
-            const needsUpdate = force || this.shouldUpdate(nextProps, nextState);
+            const needsUpdate = force || this.shouldComponentUpdate(nextProps, nextState);
 
             if (needsUpdate) {
-                this.onWillUpdate(nextProps, nextState);
+                this.componentWillUpdate(nextProps, nextState);
             }
             
             if (stateChanged) {
-                this.onWillChangeState(nextState);
+                this.componentWillChangeState(nextState);
             }
             
             this.___prevProps = this.___props;
@@ -145,7 +147,7 @@ export default function adaptComponentClass(defineComponent) {
             this.___state = nextState;
 
             if (stateChanged) {
-                this.onDidChangeState(this.___prevState);
+                this.componentDidChangeState(this.___prevState);
             }
 
             if (needsUpdate) {
@@ -159,22 +161,32 @@ export default function adaptComponentClass(defineComponent) {
         ___callbackWhenUpdated() {
             if (!this.___initialized) {
                 this.___initialized = true;
-                this.onDidMount();
+                this.componentDidMount();
             } else {
-                this.onDidUpdate(this.___prevProps, this.___prevState);
+                this.componentDidUpdate(this.___prevProps, this.___prevState);
             }
         }
     }
 
-    Component.asFactory = function () {
-        const
-            componentClass = this,
-            meta = determineComponentMeta(componentClass),
-            init = buildInitFunction(componentClass),
-            config = Object.assign({ init }, meta);
+    Object.defineProperty(Component, 'factory', {
+        get() {
+            const componentClass = this;
 
-        return defineComponent(config);
-    };
+            let factory = componentFactories.get(componentClass);
+
+            if (!factory) {
+                const
+                    meta = determineComponentMeta(componentClass),
+                    init = buildInitFunction(componentClass),
+                    config = Object.assign({ init }, meta);
+                
+                factory = defineComponent(config);
+                componentFactories.set(componentClass, factory);
+            }
+
+            return factory;
+        }
+    });
 
     function determineComponentMeta(componentClass) {
         const
@@ -214,10 +226,10 @@ export default function adaptComponentClass(defineComponent) {
             ret.provides = provides;
         }
 
-        const onDidCatchError = componentClass.prototype.onDidCatchError;
+        const componentDidCatch = componentClass.prototype.componentDidCatch;
 
-        if (typeof onDidCatchError === 'function'
-            && onDidCatchError !== Component.prototype.onDidCatchError) {
+        if (typeof componentDidCatch === 'function'
+            && componentDidCatch !== Component.prototype.componentDidCatch) {
         
             ret.isErrorBoundary = true;
         }
@@ -245,22 +257,22 @@ export default function adaptComponentClass(defineComponent) {
                         component = new CustomComponent(props);
                         component.___props = props;
                         component.___init(updateView, forwardState);
-                        component.onWillMount();
+                        component.componentWillMount();
                     } else {
-                        if (component.shouldUpdate(props, component.state)) {
-                            component.onWillUpdate();
+                        if (component.shouldComponentUpdate(props, component.state)) {
+                            component.componentWillUpdate();
                         }
                     }
 
                     updateView(
                         component.render(),
-                        meta.provides ? component.provide() : null,
+                        meta.provides ? component.getChildContext() : null,
                         component.___callbackWhenUpdated);
                 },
 
                 close = () => {
                     if (component) {
-                        component.onWillUnmount();
+                        component.componentWillUnmount();
                         component = null;
                     }
                 };
@@ -279,7 +291,7 @@ export default function adaptComponentClass(defineComponent) {
             if (meta.isErrorBoundary) {
                 ret.handleError = (error, info) => {
                     if (component) {
-                        component.onDidCatchError(error, info);
+                        component.componentDidCatch(error, info);
                     }
                 };
             }
@@ -290,3 +302,7 @@ export default function adaptComponentClass(defineComponent) {
 
     return Component;
 }
+
+// --- locals -------------------------------------------------------
+
+const componentFactories = new Map();

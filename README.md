@@ -24,7 +24,6 @@ Also it should provide adapters to the the most important "virtual DOM" based UI
 - Vue
 - Inferno
 - Preact
-- React Lite
 
 The API of jsSurface is highly based on "virtual DOM" techniques. Unfortunatelly "Angular" and "Aurelia" are not based on virtual DOM diffing, that's why writing an adapter for these two fantastic UI framworks would be much more complicated than for those libraries listed above. Therefore providing support for "Angular" and "Aurelia" is currently not planned for jsSurface - but let's see what future holds.
 
@@ -42,9 +41,9 @@ Currently jsSurface API consists of four methods:
 
 #### createElement(type, props, ...children)
 
-`createElement` creates a virtual DOM element basically in the same way like the equally named functions in "React", "Inferno" and "React-Lite".
+`createElement` creates a virtual DOM element basically in the same way like the equally named functions in "React" and "Inferno".
 In "Preact" the corresponding function is called `h`.
-Unfortunatelly "Vue" does not have a global "createElement" counterpart, but only a non-global component "createElement" argument that is provided component-specific by Vue's `render` method. That's why jsSurface provide its own global `createElement` implementation for Vue which generates generic VDOM trees that will later be translated to Vue-specific VDOM tree within the Vue components `render` method.
+Unfortunatelly "Vue" does not have a global `createElement` counterpart, but only a non-global component `createElement` argument that is provided component-specific by Vue's `render` method. That's why jsSurface provide its own global `createElement` implementation for Vue which generates generic VDOM trees that will later be translated to Vue-specific VDOM tree within the Vue components `render` method.
 
 Returns VDOM tree.
 

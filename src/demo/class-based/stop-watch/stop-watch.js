@@ -80,10 +80,10 @@ class StopWatchClass extends Component {
                     h('br'),
                     h('div.btn-group',
                         h('button.btn.btn-primary',
-                            { onClick: () => this.onStartStopClick() },
+                            { onClick: this.onStartStopClick },
                             this.state.running ? 'Stop' : 'Start'),
                         h('button.btn.btn-warning',
-                             { onClick: () => this.onResetClick() },
+                             { onClick: this.onResetClick },
                             'Reset')))
         );
     }
@@ -91,6 +91,6 @@ class StopWatchClass extends Component {
 
 Object.assign(StopWatchClass, meta);
 
-const StopWatch = StopWatchClass.asFactory();
+const StopWatch = StopWatchClass.factory;
 
 mount(StopWatch(), 'main-content');
