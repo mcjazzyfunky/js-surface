@@ -1,3 +1,5 @@
+const symbolType = Symbol.for('js-surface:type');
+
 export default function adaptCreateElement(
     {
         createElement,
@@ -35,12 +37,18 @@ export default function adaptCreateElement(
         if (needsPropNameAdjustment) {
             const
                 type = args[0],
-                props = args[1];
+                props = args[1],
+                typeIsString = typeof type === 'string';
 
-            if (typeof type === 'string'
-                && props
-                && typeof props === 'object') {
-                
+            if (type && !typeIsString) {
+                const realType = type[symbolType];
+
+                if (realType) {
+                    args[0] = realType;
+                }
+            }
+
+            if (typeIsString && props && typeof props === 'object') {
                 const adjustedProps = adjustPropNames(
                     props, type, attributeAliasesEntries,
                     attributeAliasesEntriesByTagName);
