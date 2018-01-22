@@ -34,19 +34,20 @@ export default function adaptCreateElement(
             args = argumentsMapper(args);
         }
 
-        if (needsPropNameAdjustment) {
-            const
-                type = args[0],
-                props = args[1],
-                typeIsString = typeof type === 'string';
+        const
+            type = args[0],
+            typeIsString = typeof type === 'string';
 
-            if (type && !typeIsString) {
-                const realType = type[symbolType];
+        if (type && !typeIsString) {
+            const realType = type[symbolType];
 
-                if (realType) {
-                    args[0] = realType;
-                }
+            if (realType) {
+                args[0] = realType;
             }
+        }
+
+        if (needsPropNameAdjustment) {
+            const props = args[1];
 
             if (typeIsString && props && typeof props === 'object') {
                 const adjustedProps = adjustPropNames(
