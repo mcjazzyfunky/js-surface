@@ -26,21 +26,5 @@ export default Object.freeze({
         }
 
         ConfigValues.validateDefs = value;
-    },
-
-    get verbosity() {
-        return ConfigValues.verbosity;
-    },
-
-    set verbositiy(value) {
-        if (value !== 'off' && value !== 'low'
-            && value !== 'medium' && value !== 'heigh') {
-        
-            throw new Error(
-                "Configuration parameter 'verbosity' must be "
-                + "'off', 'low'. 'medium' or 'high'");
-        }
-
-        ConfigValues.verbosity = value;
     }
 });

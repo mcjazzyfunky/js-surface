@@ -1,5 +1,4 @@
 export default {
     validateProps: true,
-    validateDefs: true,
-    verbosity: 'off'
+    validateDefs: true
 };
