@@ -1,0 +1,59 @@
+{
+  "name": "js-glow",
+  "version": "0.1.5",
+  "license": "LGPL-3.0",
+  "homepage": "https://github.com/js-works/js-glow",
+  "main": "dist/js-glow.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/js-works/js-glow.git"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "bootstrap": "^3.3.7",
+    "browserify": "^14.4.0",
+    "chai": "~3.4.1",
+    "cross-conf-env": "^1.1.2",
+    "inferno": "^3.10.1",
+    "inferno-create-element": "^3.10.1",
+    "js-essential": "^0.1.2",
+    "mocha": "^2.3.4",
+    "ngzip": "^1.1.3",
+    "preact": "^8.2.6",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-lite": "^0.15.39",
+    "shx": "^0.2.2",
+    "systemjs": "^0.20.19",
+    "systemjs-plugin-babel": "0.0.25",
+    "typedoc": "^0.7.1",
+    "uglify-js": "^3.0.24",
+    "uglifyjs": "^2.4.11",
+    "vue": "^2.5.2",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "clean": "node_modules/.bin/shx rm -rf ./build ./dist",
+    "compile": "npm run clean && \"node_modules/.bin/babel\" --presets es2015 --ignore 'node_modules/*' -d build src/main/**/*.js",
+    "xxxbundle": "npm run compile && \"node_modules/.bin/shx\" mkdir -p dist && \"node_modules/.bin/browserify\" build/src/main/js-glow.js -x 'js-spec,js-surface' -s jsGlow -o dist/js-glow.js",
+    "bundle": "npm run compile && \"node_modules/.bin/shx\" mkdir -p dist && \"node_modules/.bin/webpack\"",
+    "minimize": "npm run bundle && \"node_modules/.bin/uglifyjs\" dist/js-glow.js -o dist/js-glow.min.js --compress --mangle",
+    "compress": "npm run minimize && \"node_modules/.bin/ngzip\" -9 dist/js-glow.min.js > dist/js-glow.min.js.gz",
+    "test": "node_modules/.bin/mocha --compilers babel-core/register src/test/**/*.js",
+    "xxdocs": "node_modules/.bin/shx rm -rf ./dist/docs && \"node_modules/.bin/cross-conf-env\" typedoc --options typedoc.json src/main/api/ -name \"js-glow vnpm_package_version\"",
+    "docs": "node_modules/.bin/shx rm -rf ./dist/docs && \"node_modules/.bin/esdoc\" -c esdoc.json",
+    "all": "npm run compress && \"node_modules/.bin/shx\" echo Finished successfully.",
+    "xxxall": "npm run compress && npm run test && npm run docs && \"node_modules/.bin/shx\" echo Finished successfully."
+  },
+  "dependencies": {
+    "js-spec": "^0.1.19",
+    "js-surface": "^0.1.33"
+  }
+}
