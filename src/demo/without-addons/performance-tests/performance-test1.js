@@ -9,7 +9,7 @@ import {
 
 import { Spec } from 'js-spec';
 
-Config.validateProps = false;
+// Config.validateProps = false;
 
 const
     framesPerSecond = 240,

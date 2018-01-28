@@ -44,15 +44,15 @@ const Counter = defineComponent({
         }
     },
 
-    methods: ['resetCounter'],
+    operations: ['resetCounter'],
 
-    init(updateView, forwardState) {
+    init(updateView, updateState) {
         let counterValue;
 
         const
             setCounterValue = n => {
                 counterValue = n;
-                forwardState({ counterValue });
+                updateState({ counterValue });
             },
 
             increaseCounter = n => {
@@ -89,7 +89,7 @@ const Counter = defineComponent({
                 updateView(render());
             },
 
-            applyMethod(name, args) {
+            runOperation(name, args) {
                 if (name === 'resetCounter') {
                     const [n = 0] = args;
 

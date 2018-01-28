@@ -2,42 +2,60 @@ export default [
     {
         name: 'hello-wold-functional',
         displayName: 'Hello World (functional)',
-        directory: 'with-addons/hello-world',
+        directory: 'without-addons/hello-world',
         files: ['hello-world-functional.js']
     },
     {
-        name: 'hello-wold-class',
-        displayName: 'Hello World (class component)',
+        name: 'hello-wold-standard',
+        displayName: 'Hello World (standard)',
+        directory: 'without-addons/hello-world',
+        files: ['hello-world-standard.js']
+    },
+    {
+        name: 'hello-world-class',
+        displayName: 'Hello World (class)',
         directory: 'with-addons/hello-world',
         files: ['hello-world-class.js']
     },
     {
         name: 'click-me',
-        displayName: 'Click Me',
+        displayName: 'Click Me (class)',
         directory: 'with-addons/click-me',
         files: ['click-me.js']
     },
     {
-        name: 'clock',
-        displayName: 'Clock',
+        name: 'clock-standard',
+        displayName: 'Clock (standard)',
+        directory: 'without-addons/clock',
+        files: ['clock.js']
+    },
+    {
+        name: 'clock-class',
+        displayName: 'Clock (class)',
         directory: 'with-addons/clock',
         files: ['clock.js']
     },
     {
-        name: 'performance-test1',
-        displayName: 'Performance Test 1',
+        name: 'performance-test1-standard',
+        displayName: 'Performance Test 1 (standard)',
+        directory: 'without-addons/performance-tests',
+        files: ['performance-test1.js']
+    },
+    {
+        name: 'performance-test1-class',
+        displayName: 'Performance Test 1 (class)',
         directory: 'with-addons/performance-tests',
         files: ['performance-test1.js']
     },
     {
         name: 'performance-test2',
-        displayName: 'Performance Test 2',
+        displayName: 'Performance Test 2 (with addons)',
         directory: 'with-addons/performance-tests',
         files: ['performance-test2.js']
     },
     {
-        name: 'stop-watch',
-        displayName: 'Stop Watch',
+        name: 'stop-watch-class',
+        displayName: 'Stop Watch (class)',
         directory: 'with-addons/stop-watch',
         files: ['stop-watch.js']
     },
@@ -84,8 +102,14 @@ export default [
         files: ['injection.js']
     },
     {
-        name: 'i18n',
-        displayName: 'Internationalization',
+        name: 'i18n-standard',
+        displayName: 'Internationalization (standard)',
+        directory: 'without-addons/i18n',
+        files: ['i18n.js']
+    },
+    {
+        name: 'i18n-class',
+        displayName: 'Internationalization (class)',
         directory: 'with-addons/i18n',
         files: ['i18n.js']
     },

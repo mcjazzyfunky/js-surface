@@ -1,4 +1,4 @@
-import adaptReactExports from '../../adaption/adaptReactExports';
+import adaptReactExports from '../../adaption/react/adaptReactExports';
 import convertIterablesToArrays from '../../util/convertIterablesToArrays';
 
 import Preact from 'preact';

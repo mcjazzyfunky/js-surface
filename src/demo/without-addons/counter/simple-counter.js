@@ -20,7 +20,7 @@ const SimpleCounter = defineComponent({
         }
     },
 
-    init(updateView, forwardState) {
+    init(updateView, updateState) {
         let
             props = null,
             counterValue = null;
@@ -29,7 +29,7 @@ const SimpleCounter = defineComponent({
             updateCounterValue = n => {
                 counterValue = n;
                 updateView(render());
-                forwardState({ counterValue });
+                updateState({ counterValue });
             },
     
             incrementCounter = n => {
@@ -67,7 +67,7 @@ const SimpleCounter = defineComponent({
                 
                 if (counterValue === null) {
                     counterValue = props.initialValue;
-                    forwardState({ counterValue });
+                    updateState({ counterValue });
                 }
 
                 updateView(render());

@@ -63,7 +63,7 @@ const SurfaceCounter = defineComponent({
         }
     },
 
-    methods: ['reset'],
+    operations: ['reset'],
 
     init(updateView) {
         let counterValue = 0;
@@ -103,7 +103,7 @@ const SurfaceCounter = defineComponent({
                 updateView(render());
             },
 
-            applyMethod(name, args) {
+            runOperation(name, args) {
                 if (name === 'reset') {
                     const n = args[0];
 
@@ -123,7 +123,7 @@ Vue.component('surface-button', SurfaceButton.type);
 Vue.component('surface-counter', SurfaceCounter.type);
 
 Vue.component('vue-demo', {
-    methods: {
+    operations: {
         buttonClicked() {
             alert('Thank you very much for clicking the button!');
         },

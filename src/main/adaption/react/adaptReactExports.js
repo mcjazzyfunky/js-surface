@@ -1,10 +1,11 @@
-import adaptCreateElementFunction from './adaptCreateElementFunction';
-import adaptDefineComponentFunction from './adaptDefineComponentFunction';
-import adaptHtmlBuilders from './adaptHtmlBuilders';
-import adaptIsElementFunction from './adaptIsElementFunction';
-import adaptMountFunction from './adaptMountFunction';
-import adaptUnmountFunction from './adaptUnmountFunction';
-import normalizeComponentConfig from '../helper/normalizeComponentConfig';
+import deriveStandardReactComponent from './deriveStandardReactComponent';
+import adaptCreateElementFunction from '../adaptCreateElementFunction';
+import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
+import adaptHtmlBuilders from '../adaptHtmlBuilders';
+import adaptIsElementFunction from '../adaptIsElementFunction';
+import adaptMountFunction from '../adaptMountFunction';
+import adaptUnmountFunction from '../adaptUnmountFunction';
+import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
 export default function adaptReactExport({
         adapterName,
@@ -32,6 +33,7 @@ export default function adaptReactExport({
             adaptedCreateElementFunction: createElement,
             decorateComponentFunction,
             decorateComponentClass,
+            defineStandardComponent,
             Fragment: React.Fragment
         }),
 
@@ -209,6 +211,17 @@ export default function adaptReactExport({
         }
 
         return ret;
+    }
+
+    function defineStandardComponent(config) {
+        const componentClass =
+                deriveStandardReactComponent(React.Component, config);
+
+        const meta = { ...config };
+
+        delete meta.init;
+
+        return decorateComponentClass(componentClass, meta).factory;
     }
 }
 
