@@ -29,7 +29,7 @@ const SimpleCounter = defineComponent({
             updateCounterValue = n => {
                 counterValue = n;
                 updateView(render());
-                updateState({ counterValue });
+                updateState(() => ({ counterValue }));
             },
     
             incrementCounter = n => {

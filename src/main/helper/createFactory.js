@@ -14,6 +14,7 @@ export default function createFactory(type, config, Adapter) {
         ret.meta.config = config;
     }
 
+    ret.___isSurfaceComponentFactory = true;
     Object.freeze(ret.meta);
     Object.freeze(ret);
 
