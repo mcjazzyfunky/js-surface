@@ -1,20 +1,191 @@
-import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction';
-import adaptIsElementFunction from '../../adaption/adaptIsElementFunction';
+import adaptDefineComponent from '../../adaption/adaptDefineComponentFunction';
 import adaptMountFunction from '../../adaption/adaptMountFunction';
+import adaptUnmountFunction from '../../adaption/adaptUnmountFunction';
 
 import Vue from 'vue';
+
+const
+    defineComponent = adaptDefineComponentFunction({
+        BaseComponentClass: Component,
+        adaptedCreateElementFunction: createElement,
+        decorateComponentFunction,
+        decorateComponentClass,
+        defineStandardComponent,
+        Fragment: 'x-fragment' // TODO
+    }),
+
+    createElement = (tag, props, ...children) => {
+        let ret;
+        
+        if (tag && tag.meta) { // TODO: tag.meta checks for factory - find better solution!
+            ret = tag(props, ...children);
+        } else {
+            ret = {
+                type: tag,
+                props,
+                children,
+                isSurfaceElement: true
+            };
+        }
+
+        return ret;
+    },
+
+    isElement = it => {
+        return it && it.isSurfaceElement;
+    },
+
+    baseMount = (content, targetNode)  => {
+        const vueComponent = new Vue({
+            el: targetNode,
+
+            render(vueCreateElement) {
+                return renderContent(vueCreateElement, content, this);
+            },
+
+            methods: {
+                create() {
+                },
+
+                destroy() {
+                    this.$destroy();
+                }
+            }
+        });
+
+        return () => vueComponent.destroy();
+    },
+
+    baseUnmount = node => {
+        let ret = false;
+
+        if (node && node.__mountedVueComponent) {
+            const component = node.__mountedVueComponent;
+            delete node.__mountedVueComponent;
+            component.destroy();
+            ret = true;
+        }
+
+        return ret;
+    },
+
+    mount = adaptMountFunction({
+        mountFunction: baseMount,
+        unmountFunction: baseUnmount
+    }),
+
+    unmount = adaptUnmountFunction({
+        unmountFunction: baseUnmount
+    }),
+
+    inspectElement = obj => {
+        let ret = null;
+
+        if (obj.isSurfaceElement === true) {
+            ret = { type: obj.type, props: obj.props };
+        }
+
+        return ret;
+    },
+
+    Surface = {
+        createElement,
+        defineComponent,
+        inspectElement,
+        isElement,
+        mount,
+        unmount
+    },
+
+    Adapter = Object.freeze({
+        name: 'vue',
+        api: Object.freeze({ Vue, Surface })
+    });
+    
+Surface.Adapter = Adapter;
+
+Object.freeze(Surface);
+
+
+export {
+    createElement,
+    defineComponent,
+    inspectElement,
+    isElement,
+    mount,
+    unmount,
+    Adapter
+};
+
+export default Surface;
+
+
+// ------------------------------------------------------------------
 
 let nextRefID = 1;
 
 
-// ---------------------------------------------------------------
+function getNextRefName() {
+    const ret = 'ref-' + nextRefID.toString(16);
+
+    if (nextRefID === Number.MAX_SAFE_INTEGER) {
+        nextRefID = 0;
+    } else {
+        ++nextRefID;
+    }
+
+    return ret;
+}
+
+function decorateComponentFunction(componentFunction, meta) {
+    const ret = function Component (props, context) {
+        const newProps =
+            context
+                ? mergePropsWithContext(props, context, meta)
+                : props;
+
+        return componentFunction(newProps);
+    };
+
+    const config = normalizeComponentConfig(meta);
+
+    ret.type = ret;
+    ret.factory = createFactory(ret, config, Adapter); 
+
+    return ret;
+}
+
+function decorateComponentClass(componentClass, meta) {
+    const convertedConfig = convertConfig(meta);
+
+    let ret = class Component extends componentClass {};
+
+    if (convertedConfig.contextTypes) {
+        const innerComponent = ret;
+
+        innerComponent.displayName = meta.displayName + '-inner';
+
+        ret = class Component extends componentClass {
+            render() {
+                const props = mergePropsWithContext(
+                    this.props, this.context, meta);
+
+                return createElement(innerComponent, props);
+            }
+        };
+    }
+
+    Object.assign(ret, convertedConfig);
+    ret.type = ret;
+    ret.factory = createFactory(ret, null, Adapter);
+
+    return ret;
+}
 
 function renderContent(vueCreateElement, content, component) {
     if (!content || !content.isSurfaceElement) {
         throw new Error('no surface element');
     }
-
-    console.log(content)
 
     let props = content.props;
 
@@ -111,22 +282,38 @@ function renderContent(vueCreateElement, content, component) {
 function convertChildren(children, vueCreateElement, component) {
     const ret = [];
 
-    if (children) {
-        if (!Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
-            children = [children];
-        } else {
-            for (let item of children) {
-                if (Array.isArray(item)) {
-                    ret.push(...convertChildren(item, vueCreateElement, component));
-                } else if (typeof item === 'string') {
-                    ret.push(item);
-                } else if (item && typeof item[Symbol.iterator] === 'function') {
-                    ret.push(...convertChildren(item, vueCreateElement, component));
-                } else if (item && item.isSurfaceElement) {
-                    ret.push(renderContent(vueCreateElement, item, component));
-                } else if (item !== undefined && item !== null) {
-                    ret.push(item);
-                }
+    if (children && !Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
+        children = [children];
+    }
+
+    for (let item of children) {
+        if (Array.isArray(item)) {
+            ret.push(...convertChildren(item, vueCreateElement, component));
+        } else if (typeof item === 'string') {
+            ret.push(item);
+        } else if (item && typeof item[Symbol.iterator] === 'function') {
+            ret.push(...convertChildren(item, vueCreateElement, component));
+        } else if (item && item.isSurfaceElement) {
+            ret.push(renderContent(vueCreateElement, item, component));
+        } else if (item !== undefined && item !== null) {
+            ret.push(item);
+        }
+    }
+
+    return ret;
+}
+
+function determineDefaultValues(config) {
+    const ret = {};
+
+    if (config.properties) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].defaultValue) {
+                ret[key] = config.properties[key].defaultValue;
+            } else if (config.properties[key].getDefaultValue) {
+                const getter = () => config.properties[key].getDefaultValue();
+                
+                Object.defineProperty(ret, key, { get: getter });
             }
         }
     }
@@ -134,193 +321,119 @@ function convertChildren(children, vueCreateElement, component) {
     return ret;
 }
 
-// ------------------------------------------------------------------
+function mixProps(props, events, injections, defaultValues, config) {
+    let ret = Object.assign({}, props);
 
-function getNextRefName() {
-    const ret = 'ref-' + nextRefID.toString(16);
-
-    if (nextRefID === Number.MAX_SAFE_INTEGER) {
-        nextRefID = 0;
-    } else {
-        ++nextRefID;
-    }
-
-    return ret;
-}
-
-// ------------------------------------------------------------------
-
-function decorateComponentFunction(componentFunction, meta) {
-    const ret = componentFunction.bind(null); 
-
-    const type = Vue.extend({
-        functional: true,
-        props: Object.keys(meta.properties || {}),
-        inject: null, //determineInjectionKeys(config),
-
-        render: function (vueCreateElement, context) {
-            const
-                props = context.props, // mixProps(context.props, context.listeners, context.injections, defaultValues, config),
-                content = componentFunction(props);
-
-            return renderContent(vueCreateElement, content, this);
-        }
-    });
-
-    ret.type = type;
-    ret.factory = createFactory(type);
-
-    return ret;
-}
-
-
-function decorateComponentClass() {
     // TODO
-}
+    const hasInjections = config.properties
+        && Object.keys(config.properties).some(key => config.properties[key].inject);
 
-// ------------------------------------------------------------------
+    if (hasInjections) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].inject
+                && injections[key] !== undefined
+                && props[key] === undefined) {
+                
+                let injectedValue = injections[key];
 
-function createFactory(type) {
-    const ret = createElement.bind(null, type);
-    ret.type = type;
+                if (injectedValue instanceof Injection) {
+                    injectedValue = injectedValue.value;
+                }
+
+                ret[key] = injectedValue;
+            }
+        }
+    }
+
+    if (defaultValues) {
+        for (let key of Object.keys(defaultValues)) {
+            if (ret[key] === undefined) {
+                const defaultValue = defaultValues[key];
+
+                ret[key] = defaultValue;
+            }
+        }
+    }
+
+    if (events) {
+        for (let key of Object.keys(events)) {
+            // TODO - what's with that array case
+            const handler = Array.isArray(events[key])
+                ? events[key][0]
+                : events[key];
+
+            ret['on' + key[0].toUpperCase() + key.substr(1)] = handler;
+        }
+    }
 
     return ret;
 }
 
-// ------------------------------------------------------------------
 
-class Component {
-    componentWillMount() {
+function determineInjectionKeys(config) {
+    const ret = [];
+
+    if (config.properties) {
+        for (let key of Object.keys(config.properties)) {
+            if (config.properties[key].inject) {
+                ret.push(key);
+            }
+        }
     }
 
-    componentDidMount() {
-    }
-    
-    componentWillReceiveProps() {
-    }
-
-    componentWillUpdate() {
-    }
-
-    componentDidUpdate() {
-    }
+    return ret;
+}
 
 
-    componentWillUnmount() {
+function determineMethods(config) {
+    let ret = null;
+
+    if (config.methods) {
+        ret = {};
+
+        for (let key of config.methods) {
+            ret[key] = function (...args) {
+                return this.__applyMethod(key, args);
+            };
+        }
     }
 
-    componentDidCatch() {
-    }
+    return ret;
+}
 
-    shouldComponentUpdate() {
-    }
+function handleRefCallbacks(comp) {
+    for (let key of Object.keys(comp.__refCallbacks)) {
+        const
+            callback = comp.__refCallbacks[key],
+            ref = comp.$refs[key];
+        
+        delete(comp.__refCallbacks[key]);
 
-    render() {
+        comp.__refCleanupCallbacks[key] = () => callback(null, ref);
+
+        if (callback) {
+            callback(ref, null);
+        }
     }
 }
 
-// ------------------------------------------------------------------
 
-const
-    createElement = (type, props, ...children) => 
-        children.length === 0
-            ? { type, props, isSurfaceElement: true }
-            : { type, props, children, isSurfaceElement: true },
+function handleRefCleanupCallbacks(comp) {
+    for (let key of Object.keys(comp.__refCleanupCallbacks)) {
+        //if (!comp.$refs[key]) {
+            const callback = comp.__refCleanupCallbacks[key];
+            
+            delete(comp.__refCleanupCallbacks[key]);
 
-    defineComponent = adaptDefineComponentFunction({
-        BaseComponentClass: Component,
-        adaptedCreateElementFunction: createElement,
-        decorateComponentFunction,
-        decorateComponentClass
-    }),
-
-    isElement = adaptIsElementFunction({
-        isElement: it =>
-            !!it && typeof it === 'object' && it.isSurfaceElement === true
-    }),
-
-    isFactory = null, // TODO
-
-    inspectElement = it =>
-        it && typeof it === 'object' && it.isSurfaceElement === true
-            ? { type: it.type, props: it.props }
-            : null,
-    
-    mount = adaptMountFunction({
-        mountFunction: (content, targetNode) => {
-            const container = document.createElement('span');
-            targetNode.appendChild(container);
-
-            const vueComponent = new Vue({
-                el: container,
-        
-                render(vueCreateElement) {
-                    return renderContent(vueCreateElement, content, this);
-                },
-        
-                methods: {
-                    create() {
-                    },
-        
-                    destroy() {
-                        this.$destroy();
-                        delete targetNode.__mountedVueComponent;
-                        targetNode.innerHTML = '';
-                    }
-                }
-            });
-
-            targetNode.__mountedVueComponent = vueComponent;
-        }
-    }),
-
-    unmount = adaptMountFunction({
-        unmountFunction: node => {
-            if (node && node.__mountedVueComponent) {
-                const component = node.__mountedVueComponent;
-                delete node.__mountedVueComponent;
-                component.destroy();
+            if (callback) {
+                callback();
             }
-        }
-    });
-
-
-const Surface = {
-    createElement,
-    defineComponent,
-    inspectElement,
-    isElement,
-    isFactory,
-    mount,
-    unmount,
-    Adapter: null, // Adapter will be set below
-
-    __internal__: {
-        Component
+//        }
     }
-};
+}
 
-const Adapter = Object.freeze({
-    name: 'vue',
-    api: Object.freeze({
-        Vue,
-        Surface
-    })
-});
-
-Surface.Adapter = Adapter;
-
-Object.freeze(Surface);
-
-export default Surface;
-
-export {
-    createElement,
-    defineComponent,
-    inspectElement,
-    isElement,
-    isFactory,
-    mount,
-    unmount,
-    Adapter
-};
+class Injection {
+    constructor(getValue) {
+        Object.defineProperty(this, 'value', { get: getValue });
+    }
+}
