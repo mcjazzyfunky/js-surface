@@ -1,10 +1,10 @@
 import deriveStandardReactComponent from './deriveStandardReactComponent';
 import adaptCreateElementFunction from '../adaptCreateElementFunction';
 import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
-import adaptHtmlBuilders from '../adaptHtmlBuilders';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import adaptUnmountFunction from '../adaptUnmountFunction';
+import createFactory from '../../helper/createFactory';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
 export default function adaptReactExport({
@@ -21,8 +21,6 @@ export default function adaptReactExport({
             
             api: Object.freeze(Object.assign({}, adapterAPI))
         }),
-
-        Component = React.Component,
 
         createElement = adaptCreateElementFunction({
             createElement: React.createElement
@@ -72,9 +70,7 @@ export default function adaptReactExport({
 
         unmount = adaptUnmountFunction({
             unmountFunction: ReactDOM.unmountComponentAtNode
-        }),
-
-        HtmlBuilders = adaptHtmlBuilders({ createElement });
+        });
         
     return {
         createElement,
@@ -83,9 +79,7 @@ export default function adaptReactExport({
         isElement,
         mount,
         unmount,
-        Adapter,
-        Component,
-        HtmlBuilders
+        Adapter
     };
 
     // ---- locals ------------------------------------------------------
@@ -102,8 +96,10 @@ export default function adaptReactExport({
 
         Object.assign(ret, convertConfig(meta));
 
+        const config = normalizeComponentConfig(meta);
+
         ret.type = ret;
-        ret.factory = createFactory(ret);  // TODO
+        ret.factory = createFactory(ret, config, Adapter); 
 
         return ret;
     }
@@ -130,15 +126,7 @@ export default function adaptReactExport({
 
         Object.assign(ret, convertedConfig);
         ret.type = ret;
-        ret.factory = createFactory(ret); // TODO - remove
-
-        return ret;
-    }
-
-    function createFactory(type) {
-        const ret = React.createElement.bind(null, type);
-
-        ret.type = type;
+        ret.factory = createFactory(ret, null, Adapter);
 
         return ret;
     }

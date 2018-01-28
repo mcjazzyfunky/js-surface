@@ -1,9 +1,9 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
+import createElement from '../../adaption/preact-react/createReactElement';
 import React from 'react';
 
 const
-    createElement = React.createElement,
     Component = React.Component,
     Fragment = React.Fragment,
     fragment = createElement.bind(null, React.Fragment),

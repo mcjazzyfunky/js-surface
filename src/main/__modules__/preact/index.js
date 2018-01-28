@@ -1,4 +1,4 @@
-import adaptReactExports from '../../adaption/react/adaptReactExports';
+import adaptReactExports from '../../adaption/preact-react/adaptExports';
 import convertIterablesToArrays from '../../util/convertIterablesToArrays';
 
 import Preact from 'preact';
@@ -32,7 +32,6 @@ const {
     defineComponent,
     inspectElement,
     isElement,
-    isFactory,
     mount,
     unmount,
     Adapter
@@ -47,7 +46,6 @@ Surface.createElement = createElement;
 Surface.defineComponent = defineComponent;
 Surface.inspectElement = inspectElement;
 Surface.isElement = isElement;
-Surface.isFactory = isFactory;
 Surface.mount = mount;
 Surface.unmount = unmount;
 Surface.Adapter = Adapter;
@@ -61,7 +59,6 @@ export {
     defineComponent,
     inspectElement,
     isElement,
-    isFactory,
     mount,
     unmount,
     Adapter

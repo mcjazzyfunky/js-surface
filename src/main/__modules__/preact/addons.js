@@ -1,12 +1,12 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
+import createElement from '../../adaption/preact-react/createPreactElement';
 
-import { createElement, defineComponent } from 'js-surface/preact'; 
 import Preact from 'preact';
 
 const
     Component = Preact.Component,
-    Fragment = defineComponent._jsxFrag,
+    Fragment = 'x-fragment', // TODO
     fragment = createElement.bind(null, Fragment),
     Html = adaptHtmlBuilders({ createElement }),
     Svg = adaptSvgBuilders({ createElement });
