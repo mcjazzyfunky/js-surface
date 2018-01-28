@@ -78,27 +78,33 @@ export default [
         files: ['stop-watch.js']
     },
     {
-        name: 'simple-counter',
-        displayName: 'Simple Counter',
+        name: 'simple-counter-standard',
+        displayName: 'Simple Counter (standard)',
+        directory: 'without-addons/counter',
+        files: ['simple-counter.js']
+    },
+    {
+        name: 'simple-counter-class',
+        displayName: 'Simple Counter (class)',
         directory: 'with-addons/counter',
         files: ['simple-counter.js']
     },
     {
-        name: 'complex-counter',
-        displayName: 'Complex Counter',
+        name: 'complex-counter-standard',
+        displayName: 'Complex Counter (standard)',
+        directory: 'without-addons/counter',
+        files: ['complex-counter.js']
+    },
+    {
+        name: 'complex-counter-class',
+        displayName: 'Complex Counter (class)',
         directory: 'with-addons/counter',
         files: ['complex-counter.js']
     },
     {
-        name: 'iterator-support',
-        displayName: 'Iterator support',
-        directory: 'with-addons/iterator-support',
-        files: ['iterator-support.js']
-    },
-    {
-        name: 'fragment-support',
-        displayName: 'Fragment support',
-        directory: 'with-addons/fragment-support',
+        name: 'fragment-support-functional',
+        displayName: 'Fragment support (functional)',
+        directory: 'without-addons/fragment-support',
         files: ['fragment-support.js']
     },
     {
@@ -108,8 +114,8 @@ export default [
         files: ['vue-demo.js']
     },
     {
-        name: 'mount-unmount',
-        displayName: 'Mount/Unmount',
+        name: 'mount-unmount-class',
+        displayName: 'Mount/Unmount (class)',
         directory: 'with-addons/mount-unmount',
         files: ['mount-unmount.js']
     },
@@ -138,14 +144,20 @@ export default [
         files: ['i18n.js']
     },
     {
-        name: 'error-boundary',
-        displayName: 'Error Boundary',
+        name: 'error-boundary-standard',
+        displayName: 'Error Boundary (standard)',
+        directory: 'without-addons/error-boundary',
+        files: ['error-boundary.js']
+    },
+    {
+        name: 'error-boundary-class',
+        displayName: 'Error Boundary (class)',
         directory: 'with-addons/error-boundary',
         files: ['error-boundary.js']
     },
     {
-        name: 'foo-bar',
-        displayName: 'Foo/Bar',
+        name: 'foo-bar-class',
+        displayName: 'Foo/Bar (class)',
         directory: 'with-addons/foo-bar',
         files: ['foo-bar.js'] 
     }

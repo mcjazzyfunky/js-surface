@@ -17,7 +17,7 @@ const ErrorTrigger = defineComponent({
         }
 
         simulateError(errorMsg = 'Simulated error') {
-            this.state = { errorMsg };
+            this.setState({ errorMsg });
         }
 
         onClick() {
@@ -39,6 +39,8 @@ const ErrorTrigger = defineComponent({
 const ErrorBoundary = defineComponent({
     displayName: 'ErrorBoundary',
 
+    isErrorBoundary: true,
+
     main: class extends Component {
         constructor(props) {
             super(props);
@@ -49,17 +51,18 @@ const ErrorBoundary = defineComponent({
             };       
         }
 
-        onDidCatchError(error, errorInfo) {
-            this.state = { error, errorInfo };
+        componentDidCatch(error, errorInfo) {
+            this.setState({ error, errorInfo });
         }
 
         render() {
             let ret = null;
 
-            if (!this.error) {
+            if (!this.state.error) {
                 ret = ErrorTrigger();
             } else {
-                ret = h('div', 'Catched error: ' + this.error.message);
+                ret = h('div', null,
+                    'Catched error: ' + this.state.error.message);
             }
 
             return ret;

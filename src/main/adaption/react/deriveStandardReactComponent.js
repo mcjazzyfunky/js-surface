@@ -57,6 +57,20 @@ export default function deriveStandardReactComponent(ReactComponent, config) {
         };
     }
 
+    if (config.operations) {
+        for (const operationName of config.operations) {
+            Component.prototype[operationName] = function (...args) {
+                return this.__runOperation(operationName, args);
+            };
+        }
+    }
+
+    if (config.isErrorBoundary) {
+        Component.prototype.componentDidCatch = function (error, info) {
+            this.__handleError(error, info);
+        }
+    }
+
     return Component;
 }
 

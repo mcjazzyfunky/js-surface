@@ -1,9 +1,4 @@
-import {
-    createElement as h,
-    defineComponent,
-    mount
-} from 'js-surface';
-
+import { defineComponent, mount } from 'js-surface';
 import { fragment, Html } from 'js-surface/addons';
 
 const { div, hr, h6, option, select } = Html;

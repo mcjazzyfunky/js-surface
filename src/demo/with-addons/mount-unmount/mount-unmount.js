@@ -6,7 +6,6 @@ import {
 
 import { Component } from 'js-surface/addons';
 
-
 const MountUnmount = defineComponent({
     displayName: 'MountUnmount',
 
@@ -55,7 +54,8 @@ const ComponentA = defineComponent({
         }
 
         render() {
-            return h('div', ' - - - ComponentA - - - ');
+            return h('div', null,
+                ' - - - ComponentA - - - ');
         }
     }
 });
@@ -73,7 +73,8 @@ const ComponentB = defineComponent({
         }
 
         render() {
-            return h('div', ' - - - ComponentB - - - ');
+            return h('div', null,
+                ' - - - ComponentB - - - ');
         }
     }
 });
