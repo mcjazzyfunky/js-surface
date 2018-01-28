@@ -18,10 +18,28 @@ export default [
         files: ['hello-world-class.js']
     },
     {
+        name: 'iterator-support-function',
+        displayName: 'Iterator support (functional)',
+        directory: 'without-addons/iterator-support',
+        files: ['iterator-support.js']
+    },
+    {
+        name: 'inner-html-functional',
+        displayName: 'Inner HTML support (functional)',
+        directory: 'without-addons/inner-html-support',
+        files: ['inner-html-support.js']
+    },
+    {
         name: 'click-me',
         displayName: 'Click Me (class)',
         directory: 'with-addons/click-me',
         files: ['click-me.js']
+    },
+    {
+        name: 'label-for-input-element',
+        displayName: 'Label for input element (functional)',
+        directory: 'without-addons/label-for-input-element',
+        files: ['label-for-input-element.js']
     },
     {
         name: 'clock-standard',
@@ -96,8 +114,14 @@ export default [
         files: ['mount-unmount.js']
     },
     {
-        name: 'injection',
-        displayName: 'Injection',
+        name: 'injection-standard',
+        displayName: 'Injection (standard)',
+        directory: 'without-addons/injection',
+        files: ['injection.js']
+    },
+    {
+        name: 'injection-class',
+        displayName: 'Injection (class)',
         directory: 'with-addons/injection',
         files: ['injection.js']
     },
