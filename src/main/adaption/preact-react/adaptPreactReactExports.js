@@ -7,7 +7,7 @@ import adaptUnmountFunction from '../adaptUnmountFunction';
 import createFactory from '../../helper/createFactory';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
-export default function adaptReactExport({
+export default function adaptPreactReactExports({
         adapterName,
         adapterAPI,
         React,
