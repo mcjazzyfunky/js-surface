@@ -44,7 +44,9 @@ export default class Component {
             if (firstArgIsFunction) {
                 this.___updateState(firstArg, () => console.log(firstArg(this.___state)));
             } else if (firstArgIsObject) {
-                this.___updateState(() => firstArg, (...args) => console.log(4555, ...args));
+                this.___updateState(() => firstArg, state => {
+                    this.___state = state;
+                });
             } else {
                 throw new TypeError('First argument of setState must either be a function or an object');
             }
@@ -89,7 +91,7 @@ export default class Component {
                 setProps = props => {
                     let needsUpdate = false;
 
-                    if (component === null) {
+                    if (component === null) {console.log(2222)
                         component = new this(props);
                         component.___updateiew = updateView;
                         component.___updateState = updateState;
@@ -102,7 +104,7 @@ export default class Component {
                         needsUpdate = component.shouldComponentUpdate(
                             props, component.___state);
                     }
-
+console.log(1111)
                     if (needsUpdate) {
                         needsUpdate = false;
                         content = component.render();

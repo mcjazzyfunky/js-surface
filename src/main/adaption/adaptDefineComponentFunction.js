@@ -14,10 +14,15 @@ export default function adaptDefineComponentFunction({
 
         const
             isConfig = config && typeof config === 'object',
-            { render, init, main, ...meta } = config || {},
+            meta = Object.assign({}, config),
+            { render, init, main } = meta,
             renderIsSet = render !== undefined,
             initIsSet = init !== undefined,
             mainIsSet = main !== undefined;
+
+        delete meta.render;
+        delete meta.init;
+        delete meta.render;
 
         if (!isConfig) {
             throw new TypeError(
@@ -46,7 +51,7 @@ export default function adaptDefineComponentFunction({
                 if (typeof main.buildComponentInitializer === 'function') {
                     const
                         init = main.buildComponentInitializer(meta),
-                        config = { init, ...meta };
+                        config = Object.assign({ init }, meta);
 
                     const derivedClass =  class Component extends main {};
 

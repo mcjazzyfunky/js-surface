@@ -1,25 +1,23 @@
 import adaptReactExports from '../../adaption/specific/adaptPreactReactExports';
-import convertIterablesToArrays from '../../util/convertIterablesToArrays';
+import createPreactElement from '../../adaption/specific/createPreactElement';
 
 import Preact from 'preact';
 
-const { h, render } = Preact;
+const { render } = Preact;
 
 const
     Surface = {}, // will be filled later
-    VNode = h('').constructor,
+    VNode = Preact.h('').constructor,
 
     React = {
         isValidElement: it => it instanceof VNode,
         Component: Preact.Component,
         
-        createElement(...args) {
-            return h.apply(null, convertIterablesToArrays(args));
-        },
+        createElement: createPreactElement,
 
         // TODO - Wait for a newer version of Preact that hopefully
         // will have some kind of fragment support.
-        Fragment: 'x-fragment' // Not really working in all cases - but what shall we do?
+        Fragment: 'x-fragment' // Not really working in all cases - but what shall we do?!
     },
 
     ReactDOM = {

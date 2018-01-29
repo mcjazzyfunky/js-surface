@@ -53,10 +53,10 @@ export default function adaptPreactReactExports({
                 if (hasChildrenProp && !children
                     || Array.isArray(children) && children.length === 0) {
                     
-                    ret.props = {...obj.props};
+                    ret.props = Object.assign({}, obj.props);
                     delete ret.props.children;
                 } else if (children !== undefined && !Array.isArray(children)) {
-                    ret.props = { ...obj.props, children: [children] };
+                    ret.props = Object.assign({ children: [children]}, obj.props);
                 }
             }
 
@@ -200,7 +200,7 @@ export default function adaptPreactReactExports({
         const componentClass =
                 deriveStandardReactComponent(React.Component, config);
 
-        const meta = { ...config };
+        const meta = Object.assign({}, config);
 
         delete meta.init;
 

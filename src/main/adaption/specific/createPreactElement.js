@@ -2,7 +2,7 @@ import convertIterablesToArrays from '../../util/convertIterablesToArrays';
 
 import Preact from 'preact';
 
-export default function createElement(...args) {
+export default function createElement(...args) {console.log(1111, args)
     args = convertIterablesToArrays(args);
 
     const firstArg = args[0];

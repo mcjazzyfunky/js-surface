@@ -1,5 +1,5 @@
 import Component from 'preact';
-
+/*
 // TODO - whole file
 
 class Portal extends Component {
@@ -57,3 +57,4 @@ class PortalProxy extends Component {
         return children && children[0] || null;
     }
 }
+*/

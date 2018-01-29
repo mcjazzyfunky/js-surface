@@ -14,8 +14,8 @@ export default function deriveStandardReactComponent(ReactComponent, config) {
                     this.forceUpdate(callback);
                 },
                 
-                updateState = (updater, callback) => {
-                    this.setState(updater, callback);
+                updateState = (updater, callback) => {console.log(11111)
+                    this.setState(updater, () => callback(this.state));
                 };
 
             const result = config.init(updateView, updateState);
@@ -40,7 +40,7 @@ export default function deriveStandardReactComponent(ReactComponent, config) {
 
         render() {
             const view = this.__view;
-            this.__view = null;
+       //     this.__view = null; // TODO - why is this line not working with Preact (see demo 'simple-counter')?
             return view;
         }
     }

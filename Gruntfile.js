@@ -43,23 +43,21 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
-            inferno: {
-                entry: ['./build/src/main/js-surface-inferno.js'],
-                output: {
-                    filename: './dist/inferno.js',
-                    libraryTarget: 'umd'
-                },  
-                externals: {
-                    'inferno': true,
-                    'inferno-component': true,
-                    'inferno-create-element': true,
-                    'js-spec': true
-                },
-            },
             preact: {
-                entry: ['./build/src/main/js-surface-preact.js'],
+                entry: ['./build/src/main/__modules__/preact/index.js'],
                 output: {
-                    filename: './dist/preact.js',
+                    filename: './dist/preact/index.js',
+                    libraryTarget: 'umd'
+                },   
+                externals: {
+                    'preact': true,
+                    'js-spec': true
+                }
+            },
+            peactAddons: {
+                entry: ['./build/src/main/__modules__/preact/addons.js'],
+                output: {
+                    filename: './dist/preact/addons.js',
                     libraryTarget: 'umd'
                 },   
                 externals: {
@@ -68,9 +66,21 @@ module.exports = function (grunt) {
                 }
             },
             react: {
-                entry: ['./build/src/main/js-surface-react.js'],
+                entry: ['./build/src/main/__modules__/react/index.js'],
                 output: {
-                    filename: './dist/react.js',
+                    filename: './dist/react/index.js',
+                    libraryTarget: 'umd'
+                },   
+                externals: {
+                    'react': true,
+                    'react-dom': true,
+                    'js-spec': true
+                }
+            },
+            reactAddons: {
+                entry: ['./build/src/main/__modules__/react/addons.js'],
+                output: {
+                    filename: './dist/react/addons.js',
                     libraryTarget: 'umd'
                 },   
                 externals: {
@@ -89,9 +99,20 @@ module.exports = function (grunt) {
             },
             */
             vue: {
-                entry: ['./build/src/main/js-surface-vue.js'],
+                entry: ['./build/src/main/__modules__/vue/index.js'],
                 output: {
-                    filename: './dist/vue.js',
+                    filename: './dist/vue/index.js',
+                    libraryTarget: 'umd'
+                },
+                externals: {
+                    vue: true,
+                    'js-spec': true
+                }
+            },
+            vueAddons: {
+                entry: ['./build/src/main/__modules__/vue/addons.js'],
+                output: {
+                    filename: './dist/vue/addons.js',
                     libraryTarget: 'umd'
                 },
                 externals: {
@@ -101,12 +122,12 @@ module.exports = function (grunt) {
             }
         },
         browserify: {
-            jsSurfaceStandalone: {
-                src: 'build/src/main/js-surface-standalone.js',
-                dest: 'dist/standalone.js',
+            jsSurface: {
+                src: 'build/src/main/__modules__/surface/index.js',
+                dest: 'dist/index.js',
                 options: {
                     alias: {
-                        'js-surface': './build/src/main/js-surface-standalone.js'
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
                     },
                     external: ['js-spec'],
 
@@ -115,36 +136,52 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            jsSurfaceInferno: {
-                src: 'build/src/main/js-surface-inferno.js',
-                dest: 'dist/inferno.js',
+            jsSurfaceAddons: {
+                src: 'build/src/main/__modules__/surface/addons.js',
+                dest: 'dist/addons.js',
                 options: {
                     alias: {
-                        'js-surface': './build/src/main/js-surface-inferno.js'
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
                     },
                     ignore: ['./node_modules/**'],
-                    external: ['js-spec', 'inferno', 'inferno-component', 'inferno-create-element'],
+                    external: ['js-spec'],
 
                     browserifyOptions: {
-                        standalone: 'jsSurface'
+                        standalone: 'jsSurfaceAddons'
                     }
                 }
             },
             jsSurfaceReact: {
-                src: 'build/src/main/js-surface-react.js',
-                dest: 'dist/react.js',
+                src: 'build/src/main/__modules/react/index.js',
+                dest: 'dist/react/index.js',
                 options: {
                     alias: {
-                        'js-surface': './build/src/main/js-surface-react.js',
+                        'js-surface/react': './build/src/main/__modules__/react/index.js',
                     },
                     ignore: ['./node_modules/**'],
                     external: ['js-spec', 'react', 'react-dom'],
 
                     browserifyOptions: {
-                        standalone: 'jsSurface'
+                        standalone: 'jsSurfaceReact'
                     }
                 }
             },
+            jsSurfaceReactAddons: {
+                src: 'build/src/main/__modules/react/addons.js',
+                dest: 'dist/react/addons.js',
+                options: {
+                    alias: {
+                        'js-surface/react': './build/src/main/__modules__/react/addons.js',
+                    },
+                    ignore: ['./node_modules/**'],
+                    external: ['js-spec', 'react', 'react-dom'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurfaceReactAddons'
+                    }
+                }
+            },
+            /*
             jsSurfaceReactNative: {
                 src: 'build/src/main/js-surface-react-native.js',
                 dest: 'dist/react-native.js',
@@ -160,33 +197,64 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            */
             jsSurfacePreact: {
-                src: 'build/src/main/js-surface-preact.js',
-                dest: 'dist/preact.js',
+                src: 'build/src/main/__modules__/preact/index.js',
+                dest: 'dist/preact/index.js',
                 options: {
                     ignore: ['./node_modules/**'],
                     alias: {
-                        'js-surface': './build/src/main/js-surface-preact.js'
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
                     },
                     external: ['js-spec', 'preact'],
 
                     browserifyOptions: {
-                        standalone: 'jsSurface'
+                        standalone: 'jsSurfacePreact'
+                    }
+                }
+            },
+            jsSurfacePreactAddons: {
+                src: 'build/src/main/__modules__/preact/addons.js',
+                dest: 'dist/preact/addons.js',
+                options: {
+                    ignore: ['./node_modules/**'],
+                    alias: {
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
+                    },
+                    external: ['js-spec', 'preact'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurfacePreactAddons'
                     }
                 }
             },
             jsSurfaceVue: {
-                src: 'build/src/main/js-surface-vue.js',
-                dest: 'dist/vue.js',
+                src: 'build/src/main/__modules__/vue/index.js',
+                dest: 'dist/vue/index.js',
                 options: {
                     ignore: ['./node_modules/**'],
                     alias: {
-                        'js-surface': './build/src/main/js-surface-vue.js'
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
                     },
                     external: ['js-spec', 'vue'],
 
                     browserifyOptions: {
-                        standalone: 'jsSurface'
+                        standalone: 'jsSurfaceVue'
+                    }
+                }
+            },
+            jsSurfaceVueAddons: {
+                src: 'build/src/main/__modules__/vue/addons.js',
+                dest: 'dist/vue/addons.js',
+                options: {
+                    ignore: ['./node_modules/**'],
+                    alias: {
+                        'js-surface': './build/src/main/__modules__/surface/index.js'
+                    },
+                    external: ['js-spec', 'vue'],
+
+                    browserifyOptions: {
+                        standalone: 'jsSurfaceVueAddons'
                     }
                 }
             }
@@ -201,56 +269,79 @@ module.exports = function (grunt) {
                         + ' Licencse: New BSD License\n'
                         + '*/\n'
             },
-            jsSurfaceStandalone: {
-                src: ['dist/standalone.js'],
-                dest: 'dist/standalone.min.js'
+            jsSurface: {
+                src: ['dist/index.js'],
+                dest: 'dist/index.min.js'
             },
-            jsSurfaceInferno: {
-                src: ['dist/inferno.js'],
-                dest: 'dist/inferno.min.js'
+            jsSurfaceAddons: {
+                src: ['dist/addons.js'],
+                dest: 'dist/addons.min.js'
             },
             jsSurfaceReact: {
-                src: ['dist/react.js'],
-                dest: 'dist/react.min.js'
+                src: ['dist/react/index.js'],
+                dest: 'dist/react/index.min.js'
             },
+            jsSurfaceReactAddons: {
+                src: ['dist/react/addons.js'],
+                dest: 'dist/react/addons.min.js'
+            },
+            /*
             jsSurfaceReactNative: {
                 src: ['dist/react-native.js'],
                 dest: 'dist/react-native.min.js'
             },
+            */
             jsSurfacePreact: {
-                src: ['dist/preact.js'],
-                dest: 'dist/preact.min.js'
+                src: ['dist/preact/index.js'],
+                dest: 'dist/preact/index.min.js'
+            },
+            jsSurfacePreactAddons: {
+                src: ['dist/preact/addons.js'],
+                dest: 'dist/preact/addons.min.js'
             },
             jsSurfaceVue: {
-                src: ['dist/vue.js'],
-                dest: 'dist/vue.min.js'
+                src: ['dist/vue/index.js'],
+                dest: 'dist/vue/index.min.js'
+            },
+            jsSurfaceVueAddons: {
+                src: ['dist/vue/addons.js'],
+                dest: 'dist/vue/addons.min.js'
             }
         },
         compress: {
-            jsSurfaceStandalone: {
+            jsSurface: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/standalone.min.js'],
-                dest: 'dist/standalone.min.js.gz'
+                src: ['dist/index.min.js'],
+                dest: 'dist/index.min.js.gz'
             },
-            jsSurfaceInferno: {
+            jsSurfaceAddons: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/inferno.min.js'],
-                dest: 'dist/inferno.min.js.gz'
+                src: ['dist/addons.min.js'],
+                dest: 'dist/addons.min.js.gz'
             },
             jsSurfaceReact: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/react.min.js'],
-                dest: 'dist/react.min.js.gz'
+                src: ['dist/react/index.min.js'],
+                dest: 'dist/react/index.min.js.gz'
             },
+            jsSurfaceReactAddons: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/react/addons.min.js'],
+                dest: 'dist/react/addons.min.js.gz'
+            },
+            /*
             jsSurfaceReactNative: {
                 options: {
                     mode: 'gzip',
@@ -259,21 +350,38 @@ module.exports = function (grunt) {
                 src: ['dist/react-native.min.js'],
                 dest: 'dist/react-native.min.js.gz'
             },
+            */
             jsSurfacePreact: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/preact.min.js'],
-                dest: 'dist/preact.min.js.gz'
+                src: ['dist/preact/index.min.js'],
+                dest: 'dist/preact/index.min.js.gz'
+            },
+            jsSurfacePreactAddons: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/preact/addons.min.js'],
+                dest: 'dist/preact/addons.min.js.gz'
             },
             jsSurfaceVue: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/vue.min.js'],
-                dest: 'dist/vue.min.js.gz'
+                src: ['dist/vue/index.min.js'],
+                dest: 'dist/vue/index.min.js.gz'
+            },
+            jsSurfaceVueAddons: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/vue/addons.min.js'],
+                dest: 'dist/vue/addons.min.js.gz'
             }
         },
         asciidoctor: [{

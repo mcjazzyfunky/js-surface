@@ -23,7 +23,6 @@ Surface.defineComponent = defineComponent;
 Surface.inspectElement = inspectElement;
 Surface.isElement = isElement;
 Surface.mount = mount;
-Surface.unmount = unmount;
 Surface.Adapter = Adapter;
 
 Object.freeze(Surface);
