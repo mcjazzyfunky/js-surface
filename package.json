@@ -5,7 +5,6 @@
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/react.js",
   "devDependencies": {
-    "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-code-frame": "^6.26.0",
     "babel-core": "^6.26.0",

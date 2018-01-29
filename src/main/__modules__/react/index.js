@@ -1,4 +1,4 @@
-import adaptReactExports from '../../adaption/preact-react/adaptPreactReactExports';
+import adaptReactExports from '../../adaption/specific/adaptPreactReactExports';
 import React from 'react';
 import ReactDOM from 'react-dom';
 

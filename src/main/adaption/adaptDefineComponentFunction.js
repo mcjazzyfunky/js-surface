@@ -1,10 +1,13 @@
+import createFactory from '../helper/createFactory';
+
 export default function adaptDefineComponentFunction({
     BaseComponentClass,
     adaptedCreateElementFunction,
     decorateComponentFunction,
     decorateComponentClass,
     defineStandardComponent,
-    Fragment
+    Fragment,
+    Adapter
 }) {
     function defineComponent(config, component = undefined) {
         let ret;
@@ -39,6 +42,19 @@ export default function adaptDefineComponentFunction({
                 ret = decorateComponentFunction(render, meta).factory;
             } else if (initIsSet) {
                 ret = defineStandardComponent(config);
+            } else if (!(main.prototype instanceof BaseComponentClass)) {
+                if (typeof main.buildComponentInitializer === 'function') {
+                    const
+                        init = main.buildComponentInitializer(meta),
+                        config = { init, ...meta };
+
+                    ret = class Component extends main {};
+            
+                    ret.factory =
+                        createFactory(defineComponent(config), config, Adapter);
+                } else {
+                    throw new TypeError('Given class is not a component class');
+                }
             } else {
                 ret = decorateComponentClass(main, meta).factory;
             }

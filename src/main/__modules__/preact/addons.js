@@ -1,6 +1,6 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
-import createElement from '../../adaption/preact-react/createPreactElement';
+import createElement from '../../adaption/specific/createPreactElement';
 
 import Preact from 'preact';
 

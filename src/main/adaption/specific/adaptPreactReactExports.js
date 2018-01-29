@@ -32,7 +32,8 @@ export default function adaptPreactReactExports({
             decorateComponentFunction,
             decorateComponentClass,
             defineStandardComponent,
-            Fragment: React.Fragment
+            Fragment: React.Fragment,
+            Adapter
         }),
 
         isElement = adaptIsElementFunction({

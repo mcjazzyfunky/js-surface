@@ -1,6 +1,6 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
-import createElement from '../../adaption/preact-react/createReactElement';
+import createElement from '../../adaption/specific/createReactElement';
 import React from 'react';
 
 const
