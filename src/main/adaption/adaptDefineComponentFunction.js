@@ -48,10 +48,12 @@ export default function adaptDefineComponentFunction({
                         init = main.buildComponentInitializer(meta),
                         config = { init, ...meta };
 
-                    ret = class Component extends main {};
-            
-                    ret.factory =
+                    const derivedClass =  class Component extends main {};
+
+                    derivedClass.factory =
                         createFactory(defineComponent(config), config, Adapter);
+
+                    ret = derivedClass.factory;
                 } else {
                     throw new TypeError('Given class is not a component class');
                 }
