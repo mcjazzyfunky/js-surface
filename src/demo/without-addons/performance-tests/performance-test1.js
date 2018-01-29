@@ -2,8 +2,6 @@ import {
     createElement as h,
     defineComponent,
     mount,
-    unmount,
-    Config,
     Adapter 
 }  from 'js-surface';
 
@@ -453,7 +451,7 @@ const mainContent = document.getElementById('main-content');
 function onSelectTest(ev) {
     const testName = ev.target.value;
 
-    unmount('main-content');
+    mount(null, 'main-content');
 
     switch (testName) {
     case 'surface-functional':

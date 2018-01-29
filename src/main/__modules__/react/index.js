@@ -10,7 +10,6 @@ const {
     inspectElement,
     isElement,
     mount,
-    unmount,
     Adapter
 } = adaptReactExports({
     React,
@@ -37,6 +36,5 @@ export {
     inspectElement,
     isElement,
     mount,
-    unmount,
     Adapter
 };

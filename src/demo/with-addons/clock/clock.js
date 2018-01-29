@@ -14,6 +14,7 @@ const Clock = defineComponent({
     main: class extends Component {
         constructor(props) {
             super(props);
+
             this.state = {
                 time: new Date().toLocaleDateString()
             };

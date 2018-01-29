@@ -1,8 +1,7 @@
 import {
     createElement as h,
     defineComponent,
-    mount,
-    unmount,
+    mount
 } from 'js-surface';
 
 import { Component } from 'js-surface/addons';
@@ -247,7 +246,7 @@ const SpeedTest = defineComponent({
 function onSelectTest(ev) {
     const testName = ev.target.value;
     
-    unmount('speed-test');
+    mount(null, 'speed-test');
 
     switch (testName) {
     case 'functional':

@@ -32,10 +32,31 @@ export default class Component {
     render() {
     }
 
-    setState(/* args */) {
+    setState(firstArg, callback) {
+        if (!this.___updateState) {
+            throw new Error('Calling setState within the constructor is not allowed');
+        } else {
+            const
+                typeOfFirstArg = typeof firstArg,
+                firstArgIsFunction = typeOfFirstArg === 'function',
+                firstArgIsObject = firstArg !== null && typeOfFirstArg === 'object';
+
+            if (firstArgIsFunction) {
+                this.___updateState(firstArg, () => console.log(firstArg(this.___state)));
+            } else if (firstArgIsObject) {
+                this.___updateState(() => firstArg, (...args) => console.log(4555, ...args));
+            } else {
+                throw new TypeError('First argument of setState must either be a function or an object');
+            }
+        }
     }
 
-    forceUpdate(/* callback */) {
+    forceUpdate(callback) {
+        if (this.___updateView) {
+            const view = this.render();
+
+            this.___updateView(view, this.getChildContext(), callback);
+        }
     }
 
     get props() {
@@ -70,8 +91,8 @@ export default class Component {
 
                     if (component === null) {
                         component = new this(props);
+                        component.___updateiew = updateView;
                         component.___updateState = updateState;
-
                         component.componentDidMount();
                         needsUpdate = true;
                     } else {

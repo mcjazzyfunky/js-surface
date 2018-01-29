@@ -3,7 +3,6 @@ import adaptCreateElementFunction from '../adaptCreateElementFunction';
 import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
-import adaptUnmountFunction from '../adaptUnmountFunction';
 import createFactory from '../../helper/createFactory';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
@@ -67,10 +66,6 @@ export default function adaptPreactReactExports({
         mount = adaptMountFunction({
             mountFunction: ReactDOM.render,
             unmountFunction: ReactDOM.unmountComponentAtNode
-        }),
-
-        unmount = adaptUnmountFunction({
-            unmountFunction: ReactDOM.unmountComponentAtNode
         });
         
     return {
@@ -79,7 +74,6 @@ export default function adaptPreactReactExports({
         inspectElement,
         isElement,
         mount,
-        unmount,
         Adapter
     };
 
