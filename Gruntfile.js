@@ -43,6 +43,20 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
+            surface: {
+                entry: ['./build/src/main/__modules__/surface/index.js'],
+                output: {
+                    filename: './dist/index.js',
+                    libraryTarget: 'umd'
+                }   
+            },
+            surfaceAddons: {
+                entry: ['./build/src/main/__modules__/surface/addons.js'],
+                output: {
+                    filename: './dist/addons.js',
+                    libraryTarget: 'umd'
+                }   
+            },
             preact: {
                 entry: ['./build/src/main/__modules__/preact/index.js'],
                 output: {
@@ -50,19 +64,17 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 },   
                 externals: {
-                    'preact': true,
-                    'js-spec': true
+                    'preact': true
                 }
             },
-            peactAddons: {
+            preactAddons: {
                 entry: ['./build/src/main/__modules__/preact/addons.js'],
                 output: {
                     filename: './dist/preact/addons.js',
                     libraryTarget: 'umd'
                 },   
                 externals: {
-                    'preact': true,
-                    'js-spec': true
+                    'preact': true
                 }
             },
             react: {
@@ -73,8 +85,7 @@ module.exports = function (grunt) {
                 },   
                 externals: {
                     'react': true,
-                    'react-dom': true,
-                    'js-spec': true
+                    'react-dom': true
                 }
             },
             reactAddons: {
@@ -85,8 +96,7 @@ module.exports = function (grunt) {
                 },   
                 externals: {
                     'react': true,
-                    'react-dom': true,
-                    'js-spec': true
+                    'react-dom': true
                 }
             },
             /*
@@ -105,8 +115,7 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 },
                 externals: {
-                    vue: true,
-                    'js-spec': true
+                    vue: true
                 }
             },
             vueAddons: {
@@ -116,146 +125,7 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 },
                 externals: {
-                    vue: true,
-                    'js-spec': true
-                }
-            }
-        },
-        browserify: {
-            jsSurface: {
-                src: 'build/src/main/__modules__/surface/index.js',
-                dest: 'dist/index.js',
-                options: {
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    external: ['js-spec'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurface'
-                    }
-                }
-            },
-            jsSurfaceAddons: {
-                src: 'build/src/main/__modules__/surface/addons.js',
-                dest: 'dist/addons.js',
-                options: {
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    ignore: ['./node_modules/**'],
-                    external: ['js-spec'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfaceAddons'
-                    }
-                }
-            },
-            jsSurfaceReact: {
-                src: 'build/src/main/__modules/react/index.js',
-                dest: 'dist/react/index.js',
-                options: {
-                    alias: {
-                        'js-surface/react': './build/src/main/__modules__/react/index.js',
-                    },
-                    ignore: ['./node_modules/**'],
-                    external: ['js-spec', 'react', 'react-dom'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfaceReact'
-                    }
-                }
-            },
-            jsSurfaceReactAddons: {
-                src: 'build/src/main/__modules/react/addons.js',
-                dest: 'dist/react/addons.js',
-                options: {
-                    alias: {
-                        'js-surface/react': './build/src/main/__modules__/react/addons.js',
-                    },
-                    ignore: ['./node_modules/**'],
-                    external: ['js-spec', 'react', 'react-dom'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfaceReactAddons'
-                    }
-                }
-            },
-            /*
-            jsSurfaceReactNative: {
-                src: 'build/src/main/js-surface-react-native.js',
-                dest: 'dist/react-native.js',
-                options: {
-                    alias: {
-                        'js-surface': './build/src/main/js-surface-react-native.js'
-                    },
-                    ignore: ['./node_modules/**'],
-                    external: ['js-spec', 'react', 'react-native'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurface'
-                    }
-                }
-            },
-            */
-            jsSurfacePreact: {
-                src: 'build/src/main/__modules__/preact/index.js',
-                dest: 'dist/preact/index.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    external: ['js-spec', 'preact'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfacePreact'
-                    }
-                }
-            },
-            jsSurfacePreactAddons: {
-                src: 'build/src/main/__modules__/preact/addons.js',
-                dest: 'dist/preact/addons.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    external: ['js-spec', 'preact'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfacePreactAddons'
-                    }
-                }
-            },
-            jsSurfaceVue: {
-                src: 'build/src/main/__modules__/vue/index.js',
-                dest: 'dist/vue/index.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    external: ['js-spec', 'vue'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfaceVue'
-                    }
-                }
-            },
-            jsSurfaceVueAddons: {
-                src: 'build/src/main/__modules__/vue/addons.js',
-                dest: 'dist/vue/addons.js',
-                options: {
-                    ignore: ['./node_modules/**'],
-                    alias: {
-                        'js-surface': './build/src/main/__modules__/surface/index.js'
-                    },
-                    external: ['js-spec', 'vue'],
-
-                    browserifyOptions: {
-                        standalone: 'jsSurfaceVueAddons'
-                    }
+                    vue: true
                 }
             }
         },
@@ -407,7 +277,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
-    //grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');

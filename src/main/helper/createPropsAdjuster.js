@@ -1,4 +1,4 @@
-import warn from './warn';
+import printError from './printError';
 import validateProperty from '../validation/validateProperty';
 
 export default function createPropsAdjuster(config) {
@@ -27,7 +27,7 @@ export default function createPropsAdjuster(config) {
 
             hasDefaultValue = 
                 propertiesConfig[key].hasOwnProperty('defaultValue')
-                || !!getDefaultValue,
+                    || !!getDefaultValue,
 
             defaultValueProvider =
                 getDefaultValue
@@ -40,7 +40,7 @@ export default function createPropsAdjuster(config) {
             key,
             type,
             nullable,
-            constraint ? constraint : null,
+            constraint,
             defaultValueProvider
         ]);
 
@@ -73,9 +73,9 @@ export default function createPropsAdjuster(config) {
                 const errMsg = 'Error while validating props for ' 
                     +  `'${componentName}': ${err.message}`;
 
-                warn(errMsg);
+                printError(errMsg);
 
-                warn(`Negatively validated props for '${componentName}':`,
+                printError(`Negatively validated props for '${componentName}':`,
                     props);
 
                 throw new Error(errMsg);

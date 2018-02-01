@@ -219,6 +219,5 @@ function validateUniqueStringArray(it, paramName, regex, forbiddenStrings = null
         }
     }
 
-
     return ret;
 }

@@ -1,6 +1,5 @@
 import adaptDefineComponent from '../../adaption/adaptDefineComponentFunction';
 import adaptMountFunction from '../../adaption/adaptMountFunction';
-import adaptUnmountFunction from '../../adaption/adaptUnmountFunction';
 
 import Vue from 'vue';
 
@@ -74,10 +73,6 @@ const
         unmountFunction: baseUnmount
     }),
 
-    unmount = adaptUnmountFunction({
-        unmountFunction: baseUnmount
-    }),
-
     inspectElement = obj => {
         let ret = null;
 
@@ -93,8 +88,7 @@ const
         defineComponent,
         inspectElement,
         isElement,
-        mount,
-        unmount
+        mount
     },
 
     Adapter = Object.freeze({
@@ -113,7 +107,6 @@ export {
     inspectElement,
     isElement,
     mount,
-    unmount,
     Adapter
 };
 

@@ -8,7 +8,7 @@ export default function adaptCreateReactElement({
     return isFirefox    
         ? function (...args) {
             const firstArg = args[0];
-            
+
             if (firstArg === null) {
                 args[0] = React.Fragment;
             } else if (firstArg && firstArg.__isSurfaceComponentFactory === true) {
@@ -18,8 +18,9 @@ export default function adaptCreateReactElement({
             return createElement(...args);
         }
         : function () {
-            const args = arguments;
-            const firstArg = args[0];
+            const
+                args = arguments,
+                firstArg = args[0];
             
             if (firstArg === null) {
                 args[0] = React.Fragment;

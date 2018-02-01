@@ -54,10 +54,6 @@
   },
   "dependencies": {
     "grunt": "^1.0.1",
-    "inferno": "^3.10.1",
-    "inferno-component": "^3.10.1",
-    "inferno-create-element": "^3.10.1",
-    "js-spec": "^0.1.19",
     "preact": "^8.2.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
