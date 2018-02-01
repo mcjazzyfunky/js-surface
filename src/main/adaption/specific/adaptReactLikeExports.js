@@ -1,18 +1,18 @@
 import deriveStandardReactComponent from './deriveStandardReactComponent';
-import adaptCreateElementFunction from '../adaptCreateElementFunction';
 import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import createFactory from '../../helper/createFactory';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
-export default function adaptPreactReactExports({
-        adapterName,
-        adapterAPI,
-        React,
-        ReactDOM = null,
-        ReactNative = null
-    }) {
+export default function adaptReactLikeExports({
+    adapterName,
+    adapterAPI,
+    createElement,
+    isValidElement,
+    render = null,
+    unmountComponentAtNode = null,
+}) {
 
     const
         Adapter = Object.freeze({
@@ -21,28 +21,19 @@ export default function adaptPreactReactExports({
             api: Object.freeze(Object.assign({}, adapterAPI))
         }),
 
-        createElement = adaptCreateElementFunction({
-            createElement: React.createElement
-        }),
-
         defineComponent = adaptDefineComponentFunction({
-            BaseComponentClass: React.Component,
-            adaptedCreateElementFunction: createElement,
-            decorateComponentFunction,
-            decorateComponentClass,
-            defineStandardComponent,
-            Fragment: React.Fragment,
+            createElement,
             Adapter
         }),
 
         isElement = adaptIsElementFunction({
-            isElement: React.isValidElement
+            isElement: isValidElement
         }),
 
         inspectElement = obj => {
             let ret = null;
 
-            if (React.isValidElement(obj)) {
+            if (isValidElement(obj)) {
                 ret = { type: obj.type, props: obj.props };
 
                 const
@@ -64,8 +55,8 @@ export default function adaptPreactReactExports({
         }, 
 
         mount = adaptMountFunction({
-            mountFunction: ReactDOM.render,
-            unmountFunction: ReactDOM.unmountComponentAtNode
+            mountFunction: render,
+            unmountFunction: unmountComponentAtNode
         });
         
     return {

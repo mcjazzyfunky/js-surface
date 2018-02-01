@@ -1,10 +1,13 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
-import createElement from '../../adaption/specific/createPreactElement';
+
+import adaptCreatePreactElement
+    from '../../adaption/specific/adaptCreatePreactElement';
 
 import Preact from 'preact';
 
 const
+    createElement = adaptCreatePreactElement({}),
     Component = Preact.Component,
     Fragment = 'x-fragment', // TODO
     fragment = createElement.bind(null, Fragment),

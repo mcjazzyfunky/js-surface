@@ -1,8 +1,6 @@
 import warn from './warn';
 import validateProperty from '../validation/validateProperty';
 
-import { SpecValidator } from 'js-spec';
-
 export default function createPropsAdjuster(config) {
     let ret;
 
@@ -42,7 +40,7 @@ export default function createPropsAdjuster(config) {
             key,
             type,
             nullable,
-            constraint ? SpecValidator.from(constraint) : null,
+            constraint ? constraint : null,
             defaultValueProvider
         ]);
 

@@ -1,4 +1,9 @@
-import adaptReactExports from '../../adaption/specific/adaptPreactReactExports';
+import adaptReactLikeExports
+    from '../../adaption/specific/adaptReactLikeExports';
+
+import adaptCreateReactElement
+    from '../../adaption/specific/adaptCreateReactElement';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -11,9 +16,13 @@ const {
     isElement,
     mount,
     Adapter
-} = adaptReactExports({
-    React,
-    ReactDOM,
+} = adaptReactLikeExports({
+    createElement: adaptCreateReactElement({}),
+    isValidElement: React.isValidElement,
+    Fragment: React.Fragment,
+    Component: React.Component,
+    render: ReactDOM.render,
+    unmountComponentAtNode: ReactDOM.unmountComponentAtNode,
     adapterName: 'react',
     adapterAPI: { React, ReactDOM, Surface },
 });

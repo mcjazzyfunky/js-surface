@@ -16,7 +16,7 @@ const Parent = defineComponent({
 
     provides: ['value'],
 
-    init: updateView => ({
+    main: updateView => ({
         setProps(props) {
             updateView(
                 h('div', null,
@@ -59,7 +59,7 @@ const ChildClassBased = defineComponent({
         }
     },
 
-    init: updateView => ({
+    main: updateView => ({
         setProps(props) {
             updateView(
                 h('div', null, 'ChildClassBased(', props.value, ')'));

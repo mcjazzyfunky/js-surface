@@ -14,7 +14,7 @@ const HelloWorld = defineComponent({
         }
     },
 
-    init(setView) {
+    main(setView) {
         return {
             setProps(props) {
                 setView(h('div', null, 'Hello ' + props.name + '!'));

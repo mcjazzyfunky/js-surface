@@ -92,7 +92,7 @@ const TileStandard = defineComponent({
         }
     },
     
-    init(updateView) {
+    main(updateView) {
         return {
             setProps(props) {
                 const
@@ -124,7 +124,7 @@ const TileRowStandard = defineComponent({
         }
     },
     
-    init(updateView) {
+    main(updateView) {
         return {
             setProps(props) {
                 const
@@ -165,7 +165,7 @@ const SpeedTest = defineComponent({
         }
     },
         
-    init(updateView) {
+    main(updateView) {
         let
             props = null,
             startTime = Date.now(),

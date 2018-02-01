@@ -1,31 +1,17 @@
+import adaptReactLikeExports
+    from '../../adaption/specific/adaptReactLikeExports';
 
-import adaptReactExports from '../../adaption/specific/adaptPreactReactExports';
-import convertIterablesToArrays from '../../util/convertIterablesToArrays';
+import adaptCreatePreactElement
+    from '../../adaption/specific/adaptCreatePreactElement';
 
 import Preact from 'preact';
 
-const { h, render } = Preact;
+const { render } = Preact;
 
 const
     Surface = {}, // will be filled later
-    VNode = h('').constructor,
-
-    React = {
-        isValidElement: it => it instanceof VNode,
-        Component: Preact.Component,
-        
-        createElement: (...args) =>
-            h.apply(null, convertIterablesToArrays(args)),
-
-        // TODO - Wait for a newer version of Preact that hopefully
-        // will have some kind of fragment support.
-        Fragment: 'x-fragment' // Not really working in all cases - but what shall we do?
-    },
-
-    ReactDOM = {
-        render,
-        unmountComponentAtNode: targetNode => render('', targetNode)
-    };
+    VNode = Preact.h('').constructor,
+    createPreactElement = adaptCreatePreactElement({});
 
 const {
     createElement,
@@ -34,9 +20,13 @@ const {
     isElement,
     mount,
     Adapter
-} = adaptReactExports({
-    React,
-    ReactDOM,
+} = adaptReactLikeExports({
+    createElement: createPreactElement,
+    isValidElement: it => it instanceof VNode,
+    Fragment: 'x-fragment', // TODO
+    Component: Preact.Component,
+    render: Preact.render,
+    unmountComponentAtNode: targetNode => render('', targetNode),
     adapterName: 'surface',
     adapterAPI: Object.freeze({ Surface })
 });

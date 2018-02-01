@@ -31,7 +31,7 @@ const App = defineComponent({
 
     provides: ['locale'],
 
-    init(updateView) {
+    main(updateView) {
         let locale = null;
 
         const

@@ -14,11 +14,12 @@ export default function deriveStandardReactComponent(ReactComponent, config) {
                     this.forceUpdate(callback);
                 },
                 
-                updateState = (updater, callback) => {console.log(11111)
-                    this.setState(updater, () => callback(this.state));
+                updateState = (updater, callback) => {
+                    this.setState(updater,
+                        callback ? () => callback(this.state) : null);
                 };
 
-            const result = config.init(updateView, updateState);
+            const result = config.main(updateView, updateState);
 
             this.__setProps = result.setProps;
             this.__close = result.close || null;

@@ -81,7 +81,7 @@ export default class Component {
         }
     }
 
-    static buildComponentInitializer(meta) {
+    static standardizeComponent(meta) {
         return (updateView, updateState) => {
             let
                 component = null,

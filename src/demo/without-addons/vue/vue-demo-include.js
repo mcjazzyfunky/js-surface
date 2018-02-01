@@ -65,7 +65,7 @@ const SurfaceCounter = defineComponent({
 
     operations: ['reset'],
 
-    init(updateView) {
+    main(updateView) {
         let counterValue = 0;
 
         const 

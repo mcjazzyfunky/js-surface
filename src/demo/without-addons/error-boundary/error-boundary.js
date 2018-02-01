@@ -20,7 +20,7 @@ const ErrorTrigger = defineComponent({
         }
     },
 
-    init(updateView) {
+    main(updateView) {
         return {
             setProps(props) {
                 if (props.errorMessage) {
@@ -46,7 +46,7 @@ const ErrorBoundary = defineComponent({
 
     isErrorBoundary: true,
 
-    init(updateView) {
+    main(updateView) {
         const onClick = () => {
             updateView(ErrorTrigger({ errorMessage: 'Simulated error' }));
         };
