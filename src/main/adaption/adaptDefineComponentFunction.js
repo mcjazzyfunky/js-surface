@@ -4,26 +4,21 @@ import printError from '../helper/printError';
 
 export default function adaptDefineComponentFunction({
     createElement,
+    determineComponentExtras,
+    BaseComponent,
     Adapter
 }) {
-    const
-        adapterName = Adapter.name,
-        isPreact = adapterName === 'preact',
-        isReact = adapterName === 'react' || adapterName === 'react-native',
-        isReactLike = isPreact || isReact,
-        PreactComponent = isPreact ? Adapter.api.Preact.Component : null,
-        ReactComponent = isReact ? Adapter.api.React.Component : null,
-        ReactLikeComponent = PreactComponent || ReactComponent;
-
     function defineComponent(config, component = undefined) {
         let
             ret = null,
             errorMsg = null;
 
         const
+            { main, render, ...partialConfig } = config,
+            
             isFullConfig = config
-                && (config.render !== undefined || config.main !== undefined),
-
+                && (render !== undefined || main !== undefined),
+            
             validationResult = validateComponentConfig(config, !isFullConfig);
 
         if (validationResult !== null) {
@@ -34,31 +29,18 @@ export default function adaptDefineComponentFunction({
                 + 'component configuration';
         } else if (component !== undefined && typeof component !== 'function') {
             errorMsg = 'Optional second argument must be a function';
-        } else if (component && component.standardizeComponent !== undefined
-            && typeof component.standardizeComponent !== 'function') {
+        } else if (component && component.normalizeComponentClass !== undefined
+            && typeof component.normalizeComponentClass !== 'function') {
 
-            errorMsg = 'Member "standardizeComponent" of component function '
+            errorMsg = 'Member "normalizeComponentClass" of component class '
                 + 'must be a function';
-        } else if (isReactLike && component && component.standardizeComponent
-            && component.standardizeComponent.prototype
-                instanceof ReactLikeComponent) {
+        } else if (BaseComponent & component
+            && component.normalizeComponentClass
+            && component.prototype instanceof BaseComponent) {
 
-            errorMsg = 'Member "standardizeComponent" of component function '
-                + 'must not be a '
-                + adapterName[0].toUpperCase()
-                + adapterName.substr(1)
-                + ' component class';
-        } else if (isReactLike && config.main
-            && config.main.standardizeComponent
-            && config.main.standardizeComponent.prototype
-                instanceof ReactLikeComponent) {
-
-            errorMsg = 'Member "standardizeComponent" of parameter "main" '
-                + 'must not be a '
-                + adapterName[0].toUpperCase()
-                + adapterName.substr(1)
-                + ' component class'
-                + 'Property "standardizeComponent" must not be a React component class';
+            errorMsg = Adapter.name[0].toUpperCase() + Adapter.name.substr(1)
+                + ' component class must not have a static method called '
+                + ' "normalizeComponentClass"';
         }
         
         if (errorMsg) {
@@ -67,48 +49,32 @@ export default function adaptDefineComponentFunction({
             throw new TypeError(errorMsg);
         }
 
-        if (config.render) {
-            ret = createComponentFactory(config);
-        } else if (config.main) {
-            const adjustedConfig =
-                !config.main.standardizeComponent
-                    ? config.main
-                    : Object.assign({}, config,
-                        { main: config.main.standardizeComponent });
+        if (render) {
+            ret = componentize(render, { ...partialConfig, render }).factory;
+        } else if (main) {
+            const adjustedMain =
+                main.normalizeComponentClass
+                    ? config.main.normalizeComponenatClass(partialConfig)
+                    : config.main;
 
-            ret = createComponentFactory(adjustedConfig);
+            ret = componentize(adjustedMain, { ...partialConfig, main })
+                .factory;
         } else if (!component) {
-            ret = component => defineComponent(config, component);
+            ret = component => defineComponent(partialConfig, component);
         } else {
-            let fullConfig;
+            const isFunctional =
+                !component.normalizeComponenatClas
+                && (!BaseComponent
+                    || !(component.prototype instanceof BaseComponent));
 
-            if (component.standardizeComponent) {
-                ret = class Component extends component {};
+            if (isFunctional) {
+                ret = componentize(component,
+                    { ...partialConfig, render: component });
+            } else if (component.normalizeComponenatClass) {
+                const main = component.normalizeComponenatClass(partialConfig); 
 
-                fullConfig = normalizeComponentConfig(Object.assign({
-                    main: component.standardizeComponent,
-                }, config));
-            } else if (isReactLike && component.prototype instanceof ReactLikeComponent) {
-                ret = class Component extends component {};
-                
-                fullConfig = normalizeComponentConfig(Object.assign({
-                    main: config,
-                }, config));
-            } else {
-                ret = function () {
-                    return component(...arguments);
-                };
-
-                fullConfig = normalizeComponentConfig(Object.assign({
-                    render: component,
-                }, config));
+                ret = componentize(main, { ...partialConfig, main });
             }
-
-   //         if (decorateComponent) {
-   //             decorateComponent(ret, fullConfig);
-   //         }
-
-            ret.factory = createComponentFactory(fullConfig);
         }
 
         return ret;
@@ -120,21 +86,52 @@ export default function adaptDefineComponentFunction({
     return defineComponent;
 
     // ---------------------------------------------------
+    
+    function componentize(component, fullConfig) {
+        const
+            isFunctional = fullConfig.render !== undefined,    
+            normalizedConfig = normalizeComponentConfig(fullConfig),
+            
+            ret = isFunctional
+                ?  component.bind(null)
+                : class Component extends component {},
+
+            { type, ...extras } = determineComponentExtras
+                ? determineComponentExtras(normalizedConfig)
+                : { type: ret },
+
+            factory = createComponentFactory(type, normalizedConfig);
+
+        Object.assign(ret, extras);
+
+        Object.defineProperty(ret, 'type', {
+            get() { 
+                return this === ret ? type : undefined;
+            }
+        });
+
+        Object.defineProperty(ret, 'factory', {
+            get() {
+                return this === ret ? factory : undefined;
+            }
+        });
+
+        return ret;
+    }
+    
+    // ---------------------------------------------------
 
     function createComponentFactory(componentType, normalizedConfig) {
-        const ret = (...args) => createElement(componentType, ...args);
-
-        if (!componentType) {
-            componentType = ret; 
-        }
+        const ret = createElement.bind(componentType);
 
         ret.meta = Object.freeze({
-            isComponent: true,
             type: componentType,
             factory: ret,
             config: normalizedConfig,
             Adapter
         });
+
+        Object.freeze(ret);
 
         return ret;
     }

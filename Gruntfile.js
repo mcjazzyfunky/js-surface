@@ -15,7 +15,8 @@ module.exports = function (grunt) {
                 moduleIds: false,
                 sourceMaps: true,
                 plugins: [
-  //                  'transform-es2015-modules-umd'
+                    'transform-object-rest-spread'
+                    // 'transform-es2015-modules-umd'
                 ]
             },
             dist:  {
