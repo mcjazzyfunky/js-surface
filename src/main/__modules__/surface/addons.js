@@ -1,11 +1,16 @@
-import {
-    fragment,
-    Fragment, 
-    Html,
-    Svg
-} from '../preact/addons';
-
+import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
+import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
 import Component from '../../component/Component';
+
+import { createElement } from 'js-surface';
+
+const
+    Fragment = 'x-fragment', // TODO
+    fragment = createElement.bind(null, Fragment),
+    Html = adaptHtmlBuilders({ createElement }),
+    Svg = adaptSvgBuilders({ createElement });
+
+fragment.type = Fragment;
 
 export {
     fragment,
@@ -22,3 +27,4 @@ export default {
     Html,
     Svg
 };
+

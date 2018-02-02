@@ -50,14 +50,14 @@
     "systemjs-plugin-babel": "0.0.25",
     "typescript": "^2.4.2",
     "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
-  },
-  "dependencies": {
-    "grunt": "^1.0.1",
+    "webpack-dev-server": "^2.9.3",
     "preact": "^8.2.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-native": "^0.45.1",
     "vue": "^2.5.13"
+  },
+  "dependencies": {
+    "grunt": "^1.0.1"
   }
 }

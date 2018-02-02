@@ -55,7 +55,10 @@ module.exports = function (grunt) {
                 output: {
                     filename: './dist/addons.js',
                     libraryTarget: 'umd'
-                }   
+                },
+                externals: {
+                    'js-surface': true
+                }  
             },
             preact: {
                 entry: ['./build/src/main/__modules__/preact/index.js'],
