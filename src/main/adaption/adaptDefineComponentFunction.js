@@ -56,10 +56,11 @@ export default function adaptDefineComponentFunction({
         } else if (main) {
             const adjustedMain =
                 main.normalizeComponentClass
-                    ? config.main.normalizeComponenatClass(partialConfig)
-                    : config.main;
+                    ? main.normalizeComponentClass(partialConfig)
+                    : main;
 
-            ret = componentize(adjustedMain, { ...partialConfig, main })
+            ret = componentize(adjustedMain,
+                { ...partialConfig, main: adjustedMain })
                 .factory;
         } else if (!component) {
             ret = component => defineComponent(partialConfig, component);

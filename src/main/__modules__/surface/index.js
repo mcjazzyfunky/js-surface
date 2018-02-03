@@ -10,8 +10,7 @@ const { render } = Preact;
 
 const
     Surface = {}, // will be filled later
-    VNode = Preact.h('').constructor,
-    createPreactElement = adaptCreatePreactElement({});
+    VNode = Preact.h('').constructor;
 
 const {
     createElement,
@@ -21,14 +20,14 @@ const {
     mount,
     Adapter
 } = adaptReactLikeExports({
-    createElement: createPreactElement,
+    createElement: adaptCreatePreactElement({}),
     isValidElement: it => it instanceof VNode,
     Fragment: 'x-fragment', // TODO
     Component: Preact.Component,
     render: Preact.render,
     unmountComponentAtNode: targetNode => render('', targetNode),
     adapterName: 'surface',
-    adapterAPI: Object.freeze({ Surface })
+    adapterAPI: { Surface },
 });
 
 Surface.createElement = createElement;

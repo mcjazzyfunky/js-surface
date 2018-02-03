@@ -1,5 +1,5 @@
-export default function deriveStandardReactComponent(ReactComponent, config) {
-    class Component extends ReactComponent {
+export default function deriveStandardReactLikeComponent(ReactLikeComponent, config) {
+    class Component extends ReactLikeComponent {
         constructor(props) {
             super(props);
             this.__view = null;
