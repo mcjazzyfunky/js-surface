@@ -22,7 +22,7 @@ const StopWatch = defineComponent({
         setRunning(running) {
             const time = this.state.time;
 
-            this.state = { time, running };
+            this.setState({ time, running });
         }
 
         startTimer() {

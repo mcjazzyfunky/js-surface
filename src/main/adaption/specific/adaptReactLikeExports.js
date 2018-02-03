@@ -2,7 +2,7 @@ import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
-import deriveStandardReactLikeCompoennt from '../../adaption/specific/deriveStandardReactLikeComponent';
+import createPropsAdjuster from '../../helper/createPropsAdjuster';
 import deriveStandardReactComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 
 export default function adaptReactLikeExports({
@@ -90,7 +90,7 @@ export default function adaptReactLikeExports({
                     ret.contextTypes[propName] = dummyValidator;
                 } else {
                     if (propCfg.hasOwnProperty('defaultValue') && propCfg.defaultValue === undefined) {
-                        throw new Error('TODO'); // TODO
+                        ret.defaultProps[propName] = undefined; // TODO?
                     } else if (propCfg.defaultValue !== undefined) {
                         ret.defaultProps[propName] = propCfg.defaultValue;
                     } else if (propCfg.getDefaultValue) {
@@ -153,7 +153,9 @@ export default function adaptReactLikeExports({
             dependsOnContext =
                 !! normalizedConfig.properties
                     && Object.values(normalizedConfig.properties)
-                        .findIndex(propConfig => propConfig.inject) >= 0;
+                        .findIndex(propConfig => propConfig.inject) >= 0,
+
+            propsAdjuster = createPropsAdjuster(normalizedConfig);
 
         
         if (isFunctional && dependsOnContext) {
@@ -162,7 +164,8 @@ export default function adaptReactLikeExports({
             derivedComponent.displayName = normalizedConfig.displayName;
 
             ret = (props, context) => {
-                return createElement(derivedComponent, mergePropsWithContext(props, context));
+                return createElement(derivedComponent, 
+                    propsAdjuster(mergePropsWithContext(props, context), true));
             };
 
         } else if (!isFunctional && dependsOnContext) {
@@ -176,9 +179,22 @@ export default function adaptReactLikeExports({
                 return createElement(derivedComponent, mergedProps);
             };
         } else {
-            ret = isFunctional
-                ? component.bind(null)
-                : class Component extends component {};
+            if (isFunctional) {
+                ret = props => component(
+                    propsAdjuster(props, normalizedConfig)); // TODO
+            } else {
+                ret = class Component extends component {
+                    constructor(props) {
+                        propsAdjuster(props, true);
+                        super(props);
+                    }
+
+                    componentWillReceiveProps(nextProps) {
+                        propsAdjuster(nextProps, true);
+                        super.componentWillReceiveProps(nextProps);
+                    }
+                };
+            }
         }
 
         Object.assign(ret, convertConfig(normalizedConfig));
