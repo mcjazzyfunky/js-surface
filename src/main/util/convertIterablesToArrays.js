@@ -15,7 +15,12 @@ export default function convertIterablesToArrays(items) {
                         ret.push(item);
                     }
                 } else if (ret === null) {
-                    ret = items.slice(0, i);
+                    ret = new Array(i);
+
+                    for (let j = 0; j < i; ++j) {
+                        ret[j] = items[j];
+                    }
+                    
                     ret.push(convertedItem);
                 } else {
                     ret.push(convertedItem);

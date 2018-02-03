@@ -21,10 +21,10 @@ export default function adaptCreatePreactElement({
 
             return createElement(...args);
         }
-        : function () {
-            const
-                args = convertIterablesToArrays(...arguments),
-                firstArg = args[0];
+        : function (...args) {
+            args = convertIterablesToArrays(args);
+            
+            const firstArg = args[0];
 
             if (firstArg === null) {
                 args[0] = 'x-fragment'; // TODO

@@ -155,14 +155,23 @@ export default function adaptReactLikeExports({
 
         
         if (isFunctional && dependsOnContext) {
+            const derivedComponent = component.bind(null);
+
+            derivedComponent.displayName = normalizedConfig.displayName;
+
             ret = (props, context) => {
-                return component(mergePropsWithContext(props, context));
+                return createElement(derivedComponent, mergePropsWithContext(props, context));
             };
+
         } else if (!isFunctional && dependsOnContext) {
+            const derivedComponent = class Component extends component {};
+
+            derivedComponent.displayName = normalizedConfig.displayName;
+
             ret = (props, context) => {
                 const mergedProps = mergePropsWithContext(props, context);
 
-                return createElement(component, mergedProps);
+                return createElement(derivedComponent, mergedProps);
             };
         } else {
             ret = isFunctional
@@ -170,15 +179,18 @@ export default function adaptReactLikeExports({
                 : class Component extends component {};
         }
 
-
         Object.assign(ret, convertConfig(normalizedConfig));
+
+        if (dependsOnContext) {
+            ret.displayName += '-wrapper';
+        }
 
         Object.defineProperty(ret, 'type', {
             get() {
                 return this === ret ? ret : undefined;
             }
         });
-        
+
         return ret;
     }
 }

@@ -88,4 +88,4 @@ const SimpleCounter = defineComponent({
     }
 });
 
-mount(SimpleCounter(null, 'Click counter'), 'main-content');
+mount(SimpleCounter({ label: 'Click counter:' }), 'main-content');

@@ -27,7 +27,7 @@ const {
     render: Preact.render,
     unmountComponentAtNode: targetNode => render('', targetNode),
     adapterName: 'preact',
-    adapterAPI: Object.freeze({ Preact, Surface })
+    adapterAPI: { Preact, Surface },
 });
 
 Surface.createElement = createElement;

@@ -13,6 +13,8 @@ export default function createFactory(type, normalizedConfig, Adapter) {
         ret.meta.config = normalizedConfig;
     }
 
+    ret.__isSurfaceComponentFactory = true; // TODO - really a good idea?
+
     Object.freeze(ret.meta);
     Object.freeze(ret);
 
