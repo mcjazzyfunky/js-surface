@@ -96,7 +96,7 @@ function validateParamProperties(properties) {
     } else if (Array.isArray(properties)) {
         ret = validateUniqueStringArray(
             properties, 'properties', REGEX_PROPERTY_NAME);
-    } else {
+    } else if (properties) {
         for (let propertyName of Object.keys(properties)) {
             if (!propertyName.match(REGEX_PROPERTY_NAME)) {
                 ret = 'Invalid property name "${propertyName}"';
@@ -198,10 +198,10 @@ function validateUniqueStringArray(it, paramName, regex, forbiddenStrings = null
 
     if (it !== undefined) {
         if (!Array.isArray(it)) {
-            ret = 'Parameter "childContext" must be an array';
+            ret = 'Parameter "${paramName}" must be an array';
         } else {
             for (let i = 0; i < it.length; ++i) {
-                if (typeof it[i] !== 'string' || it[i].matches(regex)) {
+                if (typeof it[i] !== 'string' || !it[i].match(regex)) {
                     ret = `Parameter "${paramName}[${i}]" must be a string `
                         + `matching ${regex}`;
 

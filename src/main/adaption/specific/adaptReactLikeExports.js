@@ -12,6 +12,7 @@ export default function adaptReactLikeExports({
     isValidElement,
     render = null,
     unmountComponentAtNode = null,
+    Component
 }) {
 
     const
@@ -23,7 +24,10 @@ export default function adaptReactLikeExports({
 
         defineComponent = adaptDefineComponentFunction({
             createElement,
-            Adapter
+            Adapter,
+            decorateComponent,
+            BaseComponent: Component,
+            normlizeBaseComponent: function () {} // TODO
         }),
 
         isElement = adaptIsElementFunction({
@@ -187,15 +191,21 @@ export default function adaptReactLikeExports({
         return ret;
     }
 
-    function defineStandardComponent(config) {
-        const componentClass =
-                deriveStandardReactComponent(React.Component, config);
+    function decorateComponent(component, normalizedConfig) {
+        const ret =
+            component.prototype instanceof Component
+                ? class Component extends component {}
+                : component.bind(null);
 
-        const meta = Object.assign({}, config);
+        Object.assign(ret, convertConfig(normalizedConfig));
 
-        delete meta.init;
-
-        return decorateComponentClass(componentClass, meta).factory;
+        Object.defineProperty(ret, 'type', {
+            get() {
+                return this === ret ? ret : undefined;
+            }
+        });
+        
+        return ret;
     }
 }
 

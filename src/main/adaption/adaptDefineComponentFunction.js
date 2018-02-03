@@ -4,9 +4,10 @@ import printError from '../helper/printError';
 
 export default function adaptDefineComponentFunction({
     createElement,
-    determineComponentExtras,
+    Adapter,
     BaseComponent,
-    Adapter
+    normalizeBaseComponent,
+    decorateComponent
 }) {
     function defineComponent(config, component = undefined) {
         let
@@ -62,10 +63,13 @@ export default function adaptDefineComponentFunction({
         } else if (!component) {
             ret = component => defineComponent(partialConfig, component);
         } else {
-            const isFunctional =
-                !component.normalizeComponenatClas
-                && (!BaseComponent
-                    || !(component.prototype instanceof BaseComponent));
+            const
+                componentExtendsBaseComponent =
+                    !!BaseComponent
+                        && component.prototype instanceof BaseComponent,
+                
+                isFunctional = !component.normalizeComponenatClas
+                    && !componentExtendsBaseComponent;
 
             if (isFunctional) {
                 ret = componentize(component,
@@ -73,7 +77,11 @@ export default function adaptDefineComponentFunction({
             } else if (component.normalizeComponenatClass) {
                 const main = component.normalizeComponenatClass(partialConfig); 
 
-                ret = componentize(main, { ...partialConfig, main });
+                ret = componentize(component, { ...partialConfig, main });
+            } else {
+                const main = normalizeBaseComponent(component);
+
+                ret = componentize(component, { ...partialConfig, main });
             }
         }
 
@@ -89,26 +97,10 @@ export default function adaptDefineComponentFunction({
     
     function componentize(component, fullConfig) {
         const
-            isFunctional = fullConfig.render !== undefined,    
             normalizedConfig = normalizeComponentConfig(fullConfig),
-            
-            ret = isFunctional
-                ?  component.bind(null)
-                : class Component extends component {},
-
-            { type, ...extras } = determineComponentExtras
-                ? determineComponentExtras(normalizedConfig)
-                : { type: ret },
-
+            ret = decorateComponent(component, normalizedConfig),
+            type = ret.type,
             factory = createComponentFactory(type, normalizedConfig);
-
-        Object.assign(ret, extras);
-
-        Object.defineProperty(ret, 'type', {
-            get() { 
-                return this === ret ? type : undefined;
-            }
-        });
 
         Object.defineProperty(ret, 'factory', {
             get() {
@@ -116,13 +108,17 @@ export default function adaptDefineComponentFunction({
             }
         });
 
+        Object.freeze(ret);
+
         return ret;
     }
     
     // ---------------------------------------------------
 
     function createComponentFactory(componentType, normalizedConfig) {
-        const ret = createElement.bind(componentType);
+        const ret = createElement.bind(null, componentType);
+
+        ret.type = componentType;
 
         ret.meta = Object.freeze({
             type: componentType,
@@ -145,161 +141,3 @@ function prettifyErrorMsg(errorMsg, config) {
             + `"${config.displayName}": ${errorMsg} `
         : `[defineComponent] Invalid component configuration: ${errorMsg}`;
 }
-
-/*
-    function createComponentClass(component, meta) {
-
-    }
-
-    function createComponentFunction(compoent, meta) {
-
-    }
-
-    function createComponentFactory(config, componentType = null) {
-        const
-            normalizedConfig = normalizeComponentConfig(config);
-
-
-        
-
-
-
-    }
-
-    function decorateComponent(componentType, config) {
-        const
-            normalizedConfig = normalizeComponentConfig(config),
-
-            meta = Object.freeze({
-                type: componentType,
-                factory: createFactory(componentType), 
-                config: normalizedConfig,
-                Adapter
-            });
-
-        let ret = componentType;
-
-        if (decorateComponent
-                && (config.render
-                    || BaseComponentClass
-                        && componentType.prototype instanceof BaseComponentClass)) {
-
-            ret = decorateComponent(ret, normalizedConfig);
-        }
-
-        if (ret === componentType) {
-            ret = config.render
-                ? function () {
-                    return ret(...arguments);
-                }
-                : class Component extends ret {
-                    constructor() {
-                        super(...arguments);
-                    }
-                };
-        }
-
-        ret.meta = meta;
-        ret.type = componentType;
-
-        return ret;
-    }
-
-    function createFactory(componentType, normalizedConfig) {
-        const
-            ret = Adapter.api.Surface.createElement.bind(null, componentType);
-
-        ret.type = componentType;
-
-        ret.meta = {
-            type: componentType,
-            config: normalizedConfig,
-            factory: ret,
-            Adapter
-        };
-
-        ret.___isSurfaceComponentFactory = true;
-
-        Object.freeze(ret.meta);
-        Object.freeze(ret);
-
-        return ret;
-    }
-}
-
-
-
-        } else {
-            if (component === undefined) {
-                ret = component => decorateComponent(component, meta);
-            } else {
-                ret = decorateComponent(component, meta);
-            }
-        }
-
-        // TODO - validate config
-
-        const
-            meta = Object.assign({}, config),
-            { render, main } = meta,
-            renderIsSet = render !== undefined,
-            mainIsSet = main !== undefined;
-        
-        delete meta.render;
-        delete meta.main;
-
-            if (component !== undefined) {
-                throw new TypeError('[defineComponent] TODO'); // TODO
-            } else if (renderIsSet) {
-                ret = decorateComponentFunction(render, meta).factory;
-            } else if (mainIsSet && typeof main.standardizeComponent !== 'function') {
-                ret = defineStandardComponent(
-                    Object.assign(
-                        { main: main.standardizeComponent(meta) }, meta));
-            } else if (BaseComponentClass && !(main.prototype instanceof BaseComponentClass)) {
-                if (typeof main.standardizeComponent === 'function') {
-                    const
-                        init = main.standardizeComponent(meta),
-                        config = Object.assign({ init }, meta);
-
-                    const derivedClass =  class Component extends main {};
-
-                    derivedClass.factory =
-                        createFactory(defineComponent(config), config, Adapter);
-
-                    ret = derivedClass.factory;
-                } else {
-                    throw new TypeError('Given class is not a component class');
-                }
-            } else {
-                ret = decorateComponentClass(main, meta).factory;
-            }
-        } else {
-            if (component !== undefined) {
-                return (component.prototype instanceof BaseComponentClass)
-                    ? decorateComponentClass(component, meta)
-                    : decorateComponentFunction(component, meta);
-            } else {
-                ret = component => {
-                    if (typeof ret !== 'function') {
-                        throw new TypeError('[defineComponent] TODO'); // TODO
-                    }
-
-                    return (component.prototype instanceof BaseComponentClass)
-                        ? decorateComponentClass(component, meta)
-                        : decorateComponentFunction(component, meta);
-                };
-            }
-        }
-
-        return ret;
-    }
-
-    defineComponent._jsx = adaptedCreateElementFunction;
-    defineComponent._jsxFrag = Fragment;
-
-    return defineComponent; 
-}
-
-
-*/
