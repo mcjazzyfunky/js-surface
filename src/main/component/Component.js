@@ -91,7 +91,7 @@ export default class Component {
                 setProps = props => {
                     let needsUpdate = false;
 
-                    if (component === null) {console.log(2222)
+                    if (component === null) {
                         component = new this(props);
                         component.___updateiew = updateView;
                         component.___updateState = updateState;
@@ -104,7 +104,7 @@ export default class Component {
                         needsUpdate = component.shouldComponentUpdate(
                             props, component.___state);
                     }
-console.log(1111)
+
                     if (needsUpdate) {
                         needsUpdate = false;
                         content = component.render();
