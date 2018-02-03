@@ -7,7 +7,8 @@ export default function adaptDefineComponentFunction({
     Adapter,
     BaseComponent,
     normalizeBaseComponent,
-    decorateComponent
+    decorateComponent,
+    createStandardComponentType
 }) {
     function defineComponent(config, component = undefined) {
         let
@@ -19,7 +20,7 @@ export default function adaptDefineComponentFunction({
             
             isFullConfig = config
                 && (render !== undefined || main !== undefined),
-            
+
             validationResult = validateComponentConfig(config, !isFullConfig);
 
         if (validationResult !== null) {
@@ -96,9 +97,18 @@ export default function adaptDefineComponentFunction({
     // ---------------------------------------------------
     
     function componentize(component, fullConfig) {
+        const normalizedConfig = normalizeComponentConfig(fullConfig);
+
+        let ret;
+
+        if (fullConfig.render || BaseComponent && component.prototype instanceof BaseComponent) {
+            ret = decorateComponent(component, normalizedConfig);
+        } else {
+            ret = createStandardComponentType(fullConfig);
+            ret.type = ret;
+        }
+        
         const
-            normalizedConfig = normalizeComponentConfig(fullConfig),
-            ret = decorateComponent(component, normalizedConfig),
             type = ret.type,
             factory = createFactory(type, normalizedConfig, Adapter);
 

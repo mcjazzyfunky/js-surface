@@ -69,7 +69,7 @@ export default function deriveStandardReactComponent(ReactComponent, config) {
     if (config.isErrorBoundary) {
         Component.prototype.componentDidCatch = function (error, info) {
             this.__handleError(error, info);
-        }
+        };
     }
 
     return Component;

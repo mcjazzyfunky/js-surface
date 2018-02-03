@@ -2,6 +2,8 @@ import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
+import deriveStandardReactLikeCompoennt from '../../adaption/specific/deriveStandardReactLikeComponent';
+import deriveStandardReactComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 
 export default function adaptReactLikeExports({
     adapterName,
@@ -12,7 +14,6 @@ export default function adaptReactLikeExports({
     unmountComponentAtNode = null,
     Component
 }) {
-
     const
         Adapter = Object.freeze({
             name: adapterName,
@@ -25,7 +26,8 @@ export default function adaptReactLikeExports({
             Adapter,
             decorateComponent,
             BaseComponent: Component,
-            normlizeBaseComponent: function () {} // TODO
+            createStandardComponentType,
+            normalizeBaseComponent: function () {} // TODO
         }),
 
         isElement = adaptIsElementFunction({
@@ -192,6 +194,10 @@ export default function adaptReactLikeExports({
         });
 
         return ret;
+    }
+
+    function createStandardComponentType(config) {
+        return deriveStandardReactComponent(Component, config);
     }
 }
 
