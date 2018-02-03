@@ -110,9 +110,6 @@ export default function adaptReactLikeExports({
             }
         }
 
-    console.log(1, config)
-    console.log(2, ret)
-
         return ret;
     }
 
@@ -146,10 +143,33 @@ export default function adaptReactLikeExports({
     }
 
     function decorateComponent(component, normalizedConfig) {
-        const ret =
-            component.prototype instanceof Component
-                ? class Component extends component {}
-                : component.bind(null);
+        let ret;
+
+        const
+            isFunctional = !(component.prototype instanceof Component),
+
+            dependsOnContext =
+                !! normalizedConfig.properties
+                    && Object.values(normalizedConfig.properties)
+                        .findIndex(propConfig => propConfig.inject) >= 0;
+
+        
+        if (isFunctional && dependsOnContext) {
+            ret = (props, context) => {
+                return component(mergePropsWithContext(props, context));
+            };
+        } else if (!isFunctional && dependsOnContext) {
+            ret = (props, context) => {
+                const mergedProps = mergePropsWithContext(props, context);
+
+                return createElement(component, mergedProps);
+            };
+        } else {
+            ret = isFunctional
+                ? component.bind(null)
+                : class Component extends component {};
+        }
+
 
         Object.assign(ret, convertConfig(normalizedConfig));
 
