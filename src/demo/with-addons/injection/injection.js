@@ -13,7 +13,7 @@ const Parent = defineComponent({
         }
     },
 
-    childContextKeys: ['value'],
+    childContext: ['value'],
 
     main:  class extends Component {
         getChildContext() {

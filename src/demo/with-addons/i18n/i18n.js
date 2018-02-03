@@ -31,7 +31,7 @@ const App = defineComponent({
         }
     },
 
-    childContextKeys: ['locale'],
+    childContext: ['locale'],
 
     main: class extends Component {
         constructor(props) {

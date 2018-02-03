@@ -1,20 +1,18 @@
-export default function createFactory(type, config, Adapter) {
+export default function createFactory(type, normalizedConfig, Adapter) {
     const ret = Adapter.api.Surface.createElement.bind(null, type);
 
     ret.type = type;
 
     ret.meta = {
-        isComponent: true,
         type,
         factory: ret,
         Adapter
     };
 
-    if (config) {
-        ret.meta.config = config;
+    if (normalizedConfig) {
+        ret.meta.config = normalizedConfig;
     }
 
-    ret.___isSurfaceComponentFactory = true;
     Object.freeze(ret.meta);
     Object.freeze(ret);
 

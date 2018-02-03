@@ -71,8 +71,8 @@ export default function normalizeComponentConfig(config) {
         ret.operations = config.operations;
     }
 
-    if (config.childContextKeys && config.childContextKeys.length > 0) {
-        ret.childContextKeys = config.childContextKeys;
+    if (config.childContext && config.childContext.length > 0) {
+        ret.childContext = config.childContext;
     }
 
     return ret;

@@ -1,8 +1,6 @@
-import deriveStandardReactComponent from './deriveStandardReactComponent';
 import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
-import createFactory from '../../helper/createFactory';
 import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
 
 export default function adaptReactLikeExports({
@@ -74,53 +72,6 @@ export default function adaptReactLikeExports({
 
     // ---- locals ------------------------------------------------------
 
-    function decorateComponentFunction(componentFunction, meta) {
-        const ret = function Component (props, context) {
-            const newProps =
-                context
-                    ? mergePropsWithContext(props, context, meta)
-                    : props;
-
-            return componentFunction(newProps);
-        };
-
-        Object.assign(ret, convertConfig(meta));
-
-        const config = normalizeComponentConfig(meta);
-
-        ret.type = ret;
-        ret.factory = createFactory(ret, config, Adapter); 
-
-        return ret;
-    }
-
-    function decorateComponentClass(componentClass, meta) {
-        const convertedConfig = convertConfig(meta);
-
-        let ret = class Component extends componentClass {};
-
-        if (convertedConfig.contextTypes) {
-            const innerComponent = ret;
-
-            innerComponent.displayName = meta.displayName + '-inner';
-
-            ret = class Component extends componentClass {
-                render() {
-                    const props = mergePropsWithContext(
-                        this.props, this.context, meta);
-
-                    return createElement(innerComponent, props);
-                }
-            };
-        }
-
-        Object.assign(ret, convertedConfig);
-        ret.type = ret;
-        ret.factory = createFactory(ret, null, Adapter);
-
-        return ret;
-    }
-
     function convertConfig(config) {
         const ret = { defaultProps: {} };
 
@@ -151,13 +102,16 @@ export default function adaptReactLikeExports({
             }
         }
 
-        if (cfg.childContextKeys) {
+        if (cfg.childContext) {
             ret.childContextTypes = {};
 
-            for (const key of cfg.childContextKeys) {
+            for (const key of cfg.childContext) {
                 ret.childContextTypes[key] = dummyValidator;
             }
         }
+
+    console.log(1, config)
+    console.log(2, ret)
 
         return ret;
     }

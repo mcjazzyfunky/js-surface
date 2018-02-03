@@ -29,7 +29,7 @@ const App = defineComponent({
         }
     },
 
-    provides: ['locale'],
+    childContext: ['locale'],
 
     main(updateView) {
         let locale = null;

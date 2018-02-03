@@ -1,7 +1,7 @@
 import validateComponentConfig from '../validation/validateComponentConfig';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
+import createFactory from '../helper/createFactory';
 import printError from '../helper/printError';
-
 export default function adaptDefineComponentFunction({
     createElement,
     Adapter,
@@ -100,7 +100,7 @@ export default function adaptDefineComponentFunction({
             normalizedConfig = normalizeComponentConfig(fullConfig),
             ret = decorateComponent(component, normalizedConfig),
             type = ret.type,
-            factory = createComponentFactory(type, normalizedConfig);
+            factory = createFactory(type, normalizedConfig, Adapter);
 
         Object.defineProperty(ret, 'factory', {
             get() {
@@ -112,31 +112,12 @@ export default function adaptDefineComponentFunction({
 
         return ret;
     }
-    
-    // ---------------------------------------------------
-
-    function createComponentFactory(componentType, normalizedConfig) {
-        const ret = createElement.bind(null, componentType);
-
-        ret.type = componentType;
-
-        ret.meta = Object.freeze({
-            type: componentType,
-            factory: ret,
-            config: normalizedConfig,
-            Adapter
-        });
-
-        Object.freeze(ret);
-
-        return ret;
-    }
 }
 
 function prettifyErrorMsg(errorMsg, config) {
     return config && typeof config === 'object'
         && typeof config.displayName === 'string'
-        && typeof config.displayName.trim().length > 0
+        && config.displayName.trim().length > 0
         ? '[defineComponent] Invalid configuration for component '
             + `"${config.displayName}": ${errorMsg} `
         : `[defineComponent] Invalid component configuration: ${errorMsg}`;
