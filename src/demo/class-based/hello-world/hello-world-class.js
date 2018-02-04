@@ -4,8 +4,8 @@ import {
     mount,
 } from 'js-surface';
 
-import { Component } from 'js-surface/addons';
-
+import { Component } from 'js-surface/generic/common';
+console.log(1, Component)
 const HelloWorld = defineComponent({
     displayName: 'HelloWorld',
 

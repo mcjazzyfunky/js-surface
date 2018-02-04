@@ -1,5 +1,7 @@
-export default function deriveStandardReactLikeComponent(ReactLikeComponent, config) {
-    class Component extends ReactLikeComponent {
+import convertConfigToReactLike from './convertConfigToReactLike';
+
+export default function deriveStandardBaseComponent(BaseComponent, config) {
+    class Component extends BaseComponent {
         constructor(props) {
             super(props);
             this.__view = null;
@@ -15,8 +17,15 @@ export default function deriveStandardReactLikeComponent(ReactLikeComponent, con
                 },
                 
                 updateState = (updater, callback) => {
-                    this.setState(updater,
-                        callback ? () => callback(this.state) : null);
+                    function onUpdate(state, props) {
+                        console.log(state, props);
+                        
+                        if (callback) {
+                            callback(this.state, this.props);
+                        }
+                    }
+
+                    this.setState(updater, onUpdate);
                 };
 
             const result = config.main(updateView, updateState);
@@ -46,13 +55,7 @@ export default function deriveStandardReactLikeComponent(ReactLikeComponent, con
         }
     }
 
-    if (config.provides) {
-        Component.childContextTypes = {};
-
-        for (const key of config.provides) {
-            Component.childContextTypes[key] = dummyValidator;
-        }
-
+    if (config.childContext) {
         Component.prototype.getChildContext = function () {
             return this.__childContext;
         };
@@ -72,9 +75,8 @@ export default function deriveStandardReactLikeComponent(ReactLikeComponent, con
         };
     }
 
+    Object.assign(Component, convertConfigToReactLike(config));
+
     return Component;
 }
 
-// ------------------------------------------------------------------
-
-const dummyValidator = function validator() {};

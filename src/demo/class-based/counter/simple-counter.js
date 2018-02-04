@@ -4,7 +4,7 @@ import {
     mount
 } from 'js-surface';
 
-import { Component } from 'js-surface/addons';
+import { Component } from 'js-surface/generic/common';
 
 const SimpleCounter = defineComponent({
     displayName: 'SimpleCounter',
@@ -22,7 +22,7 @@ const SimpleCounter = defineComponent({
     },
 
     main: class extends Component {
-        constructor(props) { 
+        constructor(props) {
             super(props);
             this.state = { counterValue: props.initialValue };
         }
