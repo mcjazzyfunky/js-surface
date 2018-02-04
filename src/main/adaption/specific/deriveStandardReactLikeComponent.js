@@ -2,8 +2,8 @@ import convertConfigToReactLike from './convertConfigToReactLike';
 
 export default function deriveStandardBaseComponent(BaseComponent, config) {
     class Component extends BaseComponent {
-        constructor(props) {
-            super(props);
+        constructor(props, context) {
+            super(props, context);
             this.__view = null;
             this.__childContext = null;
         }

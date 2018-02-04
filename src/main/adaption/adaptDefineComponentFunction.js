@@ -29,20 +29,23 @@ export default function adaptDefineComponentFunction({
             errorMsg = 'Not allowed to pass a second argument'
                 + 'because the first argument is already a full '
                 + 'component configuration';
-        } else if (component !== undefined && typeof component !== 'function') {
-            errorMsg = 'Optional second argument must be a function';
-        } else if (component && component.normalizeComponentClass !== undefined
-            && typeof component.normalizeComponentClass !== 'function') {
+        } else if (component !== undefined
+                && typeof component !== 'function'
+                && typeof component.normalizeComponent !== 'function') {console.log(111, component)
+            errorMsg = 'Optional second argument must be a function or '
+                + 'object with a function property called "normalizeCompnent"';
+        } else if (component && component.normalizeComponent !== undefined
+            && typeof component.normalizeComponent !== 'function') {
 
-            errorMsg = 'Member "normalizeComponentClass" of component class '
+            errorMsg = 'Member "normalizeComponent" of component class '
                 + 'must be a function';
         } else if (BaseComponent & component
-            && component.normalizeComponentClass
+            && component.normalizeComponent
             && component.prototype instanceof BaseComponent) {
 
             errorMsg = Adapter.name[0].toUpperCase() + Adapter.name.substr(1)
                 + ' component class must not have a static method called '
-                + ' "normalizeComponentClass"';
+                + ' "normalizeComponent"';
         }
         
         if (errorMsg) {
@@ -55,8 +58,8 @@ export default function adaptDefineComponentFunction({
             ret = componentize(render, { ...partialConfig, render }).factory;
         } else if (main) {
             const adjustedMain =
-                main.normalizeComponentClass
-                    ? main.normalizeComponentClass(partialConfig)
+                main.normalizeComponent
+                    ? main.normalizeComponent(partialConfig)
                     : main;
 
             ret = componentize(adjustedMain,

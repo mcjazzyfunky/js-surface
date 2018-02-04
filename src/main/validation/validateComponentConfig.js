@@ -33,9 +33,11 @@ export default function validateComponentConfig(config,
 
         errorMsg = 'Paramter "render" must be a function';
     } else if (config.main !== undefined
-        && typeof config.main !== 'function') {
+        && typeof config.main !== 'function'
+        && typeof config.main.normalizeComponent !== 'function') {  
 
-        errorMsg = 'Parameter "main" must be a function';
+        errorMsg = 'Parameter "main" must be a function or an object '
+            + 'that has a function property called "normalizeComponent"';
     } else if (config.main && config.main.standardizeComponent !== undefined
         && typeof config.main.standardizeComponent !== 'function') {
         

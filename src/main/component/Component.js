@@ -91,7 +91,7 @@ export default class Component {
         }
     }
 
-    static normalizeComponentClass(meta) {
+    static normalizeComponent(meta) {
         return (updateView, updateState) => {
             let
                 component = null,

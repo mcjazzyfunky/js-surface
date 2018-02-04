@@ -90,6 +90,12 @@ export default [
         files: ['simple-counter.js']
     },
     {
+        name: 'simple-counter-flow',
+        displayName: 'Simple Counter (flow)',
+        directory: 'flow-based/counter',
+        files: ['simple-counter.js']
+    },
+    {
         name: 'complex-counter-standard',
         displayName: 'Complex Counter (standard)',
         directory: 'fundamental/counter',
