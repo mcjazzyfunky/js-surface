@@ -4,11 +4,8 @@ import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
 import adaptCreatePreactElement
     from '../../adaption/specific/adaptCreatePreactElement';
 
-//import Preact from 'preact';
-
 const
     createElement = adaptCreatePreactElement({}),
-    //Component = Preact.Component,
     Fragment = 'x-fragment', // TODO
     fragment = createElement.bind(null, Fragment),
     Html = adaptHtmlBuilders({ createElement }),
@@ -18,7 +15,6 @@ fragment.type = Fragment;
 
 export {
     fragment,
-    //Component,
     Fragment,
     Html,
     Svg
@@ -26,7 +22,6 @@ export {
 
 export default {
     fragment,
-    //Component,
     Fragment,
     Html,
     Svg

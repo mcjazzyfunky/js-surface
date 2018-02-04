@@ -1,6 +1,5 @@
 import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
 import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
-import Component from '../../component/Component';
 
 import { createElement } from 'js-surface';
 
@@ -14,7 +13,6 @@ fragment.type = Fragment;
 
 export {
     fragment,
-    Component,
     Fragment,
     Html,
     Svg
@@ -22,7 +20,6 @@ export {
 
 export default {
     fragment,
-    Component,
     Fragment,
     Html,
     Svg

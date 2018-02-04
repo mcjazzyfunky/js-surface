@@ -67,7 +67,7 @@ export default [
     },
     {
         name: 'performance-test2',
-        displayName: 'Performance Test 2 (with addons)',
+        displayName: 'Performance Test 2',
         directory: 'class-based/performance-tests',
         files: ['performance-test2.js']
     },

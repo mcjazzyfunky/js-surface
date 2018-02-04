@@ -17,15 +17,9 @@ export default function deriveStandardBaseComponent(BaseComponent, config) {
                 },
                 
                 updateState = (updater, callback) => {
-                    function onUpdate(state, props) {
-                        console.log(state, props);
-                        
-                        if (callback) {
-                            callback(this.state, this.props);
-                        }
-                    }
-
-                    this.setState(updater, onUpdate);
+                    this.setState(updater, () => {
+                        callback(this.state, this.props);
+                    });
                 };
 
             const result = config.main(updateView, updateState);

@@ -14,7 +14,7 @@ const Parent = defineComponent({
         }
     },
 
-    provides: ['value'],
+    childContext: ['value'],
 
     main: updateView => ({
         setProps(props) {
@@ -23,17 +23,17 @@ const Parent = defineComponent({
                     h('div', null, 'Provided value: ', props.masterValue),
                     h('br'),
                     h('div', null,
-                        ChildFunctionBased(),
-                        ChildClassBased(),
-                        ChildFunctionBased({ value: 'with explicit value' }),
-                        ChildClassBased({ value: 'with another explicit value' }))),
+                        ChildFunctional(),
+                        ChildStandard(),
+                        ChildFunctional({ value: 'with explicit value' }),
+                        ChildStandard({ value: 'with another explicit value' }))),
                 { value: props.masterValue });
         }
     })
 });
 
-const ChildFunctionBased = defineComponent({
-    displayName: 'ChildFunctionBased',
+const ChildFunctional = defineComponent({
+    displayName: 'ChildFunctional',
 
     properties: {
         value: {
@@ -44,12 +44,12 @@ const ChildFunctionBased = defineComponent({
     },
 
     render(props) {
-        return h('div', null, 'ChildFunctionBased(', props.value, ')');
+        return h('div', null, 'ChildFunctional(', props.value, ')');
     }
 });
 
-const ChildClassBased = defineComponent({
-    displayName: 'ChildClassBased',
+const ChildStandard = defineComponent({
+    displayName: 'ChildStandard',
 
     properties: {
         value: {
@@ -62,7 +62,7 @@ const ChildClassBased = defineComponent({
     main: updateView => ({
         setProps(props) {
             updateView(
-                h('div', null, 'ChildClassBased(', props.value, ')'));
+                h('div', null, 'ChildStandard(', props.value, ')'));
         }
     })
 });

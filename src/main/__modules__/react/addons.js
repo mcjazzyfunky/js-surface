@@ -8,7 +8,6 @@ import React from 'react';
 
 const
     createElement = adaptCreateReactElement({}),
-    Component = React.Component,
     Fragment = React.Fragment,
     fragment = createElement.bind(null, React.Fragment),
     Html = adaptHtmlBuilders({ createElement }),
@@ -18,7 +17,6 @@ fragment.type = Fragment;
 
 export {
     fragment,
-    Component,
     Fragment,
     Html,
     Svg
@@ -26,7 +24,6 @@ export {
 
 export default {
     fragment,
-    Component,
     Fragment,
     Html,
     Svg

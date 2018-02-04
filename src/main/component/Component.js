@@ -2,6 +2,7 @@ export default class Component {
     constructor(props) {
         this.___props = props;
         this.___state = undefined;
+        this.___updateView = null;
         this.___updateState = null;
     }
 
@@ -27,12 +28,16 @@ export default class Component {
     }
 
     shouldComponentUpdate(/* nextProps, nextState */) {
+        return true;
+    }
+
+    getChildContext() {
     }
 
     render() {
     }
 
-    setState(firstArg, callback) {
+    setState(firstArg) {
         if (!this.___updateState) {
             throw new Error('Calling setState within the constructor is not allowed');
         } else {
@@ -45,7 +50,12 @@ export default class Component {
                 this.___updateState(firstArg, () => console.log(firstArg(this.___state)));
             } else if (firstArgIsObject) {
                 this.___updateState(() => firstArg, state => {
-                    this.___state = state;
+                    const shouldUpdate = this.shouldComponentUpdate(this.props, state);
+                    this.___state = Object.assign({}, this.___state, state);
+
+                    if (shouldUpdate) {
+                        this.forceUpdate();
+                    }
                 });
             } else {
                 throw new TypeError('First argument of setState must either be a function or an object');
@@ -73,9 +83,9 @@ export default class Component {
         return this.___state;
     }
 
-    set state(newState) {
+    set state(state) {
         if (!this.___updateState) {
-            this.___state = newState;
+            this.___state = state;
         } else {
             throw new Error('Use method setState');
         }
@@ -93,7 +103,7 @@ export default class Component {
 
                     if (component === null) {
                         component = new this(props);
-                        component.___updateiew = updateView;
+                        component.___updateView = updateView;
                         component.___updateState = updateState;
                         component.componentDidMount();
                         needsUpdate = true;
@@ -127,9 +137,7 @@ export default class Component {
                 close
             };
 
-            if (meta.isErrorBoundary && component && component.componentDidCatch
-                !== Component.prototype.componentDidCatch) {
-
+            if (meta.isErrorBoundary) {
                 ret.handleError = (error, info) => {
                     component.componentDidCatch(error, info);
                 };

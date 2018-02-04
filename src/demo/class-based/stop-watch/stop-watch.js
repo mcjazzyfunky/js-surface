@@ -1,5 +1,6 @@
 import { defineComponent, mount }  from 'js-surface';
-import { Component, Html } from 'js-surface/addons';
+import { Component } from 'js-surface/generic/common';
+import { Html } from 'js-surface/addons';
 
 const { br, button, div, h3 } = Html;
 

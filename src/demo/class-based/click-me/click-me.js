@@ -4,8 +4,7 @@ import {
     mount
 } from 'js-surface';
 
-import { Component } from 'js-surface/addons';
-
+import { Component } from 'js-surface/generic/common';
 
 const ClickMe = defineComponent({
     displayName: 'ClickMe',
