@@ -28,7 +28,7 @@ const SimpleCounter = defineComponent({
 
         updateState: {
             incrementCounter: {
-                counter: (it, { delta }) => it + delta
+                counter: (state, { delta }) => state.counter + delta
             }
         },
 

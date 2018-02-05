@@ -60,7 +60,8 @@ export default function adaptReactLikeExports({
 
         mount = adaptMountFunction({
             mountFunction: render,
-            unmountFunction: unmountComponentAtNode
+            unmountFunction: unmountComponentAtNode,
+            isElement
         });
         
     return {

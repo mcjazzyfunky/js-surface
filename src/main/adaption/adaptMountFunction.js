@@ -1,23 +1,32 @@
-export default function adaptMountFunction({ mountFunction, unmountFunction }) {
-    return (elem, target) => {
+export default function adaptMountFunction({
+    mountFunction,
+    unmountFunction,
+    isElement
+}) {
+    return (element, target) => {
         let ret = null;
 
-        const
-            isUnmount = elem === undefined || elem === null,
+        if (element !== null && !isElement(element)) {
+            throw new TypeError(
+                '[mount] First argument must be a virutal element or null');
+        }
 
-            targetNode = typeof target !== 'string'
-                ? target
-                : document.getElementById(target);
-        
+        const
+            isUnmount = element === null,
+
+            targetNode = typeof target === 'string'
+                ? document.getElementById(target)
+                : target;
+
         if (targetNode) {
             if (isUnmount) {
                 unmountFunction(targetNode);
             } else {
-                mountFunction(elem, targetNode); // TODO - implement properly
+                mountFunction(element, targetNode); // TODO - implement properly
 
                 ret = () => unmountFunction(targetNode);
             }
-        }        
+        }
 
         return ret;
     };
