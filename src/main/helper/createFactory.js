@@ -1,4 +1,4 @@
-export default function createFactory(type, normalizedConfig, Adapter) {
+export default function createFactory(type, config, Adapter) {
     const ret = Adapter.api.Surface.createElement.bind(null, type);
 
     ret.type = type;
@@ -9,8 +9,8 @@ export default function createFactory(type, normalizedConfig, Adapter) {
         Adapter
     };
 
-    if (normalizedConfig) {
-        ret.meta.config = normalizedConfig;
+    if (config) {
+        ret.meta.config = config;
     }
 
     ret.__isSurfaceComponentFactory = true; // TODO - really a good idea?

@@ -3,7 +3,8 @@ import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import createPropsAdjuster from '../../helper/createPropsAdjuster';
 import convertConfigToReactLike from './convertConfigToReactLike';
-import deriveStandardReactComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
+import deriveStandardReactLikeComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
+import deriveStandardBaseComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 
 export default function adaptReactLikeExports({
     adapterName,
@@ -12,7 +13,7 @@ export default function adaptReactLikeExports({
     isValidElement,
     render = null,
     unmountComponentAtNode = null,
-    Component
+    Component: BaseComponent
 }) {
     const
         Adapter = Object.freeze({
@@ -22,12 +23,9 @@ export default function adaptReactLikeExports({
         }),
 
         defineComponent = adaptDefineComponentFunction({
+            createComponentType,
             createElement,
-            Adapter,
-            decorateComponent,
-            BaseComponent: Component,
-            createStandardComponentType,
-            normalizeBaseComponent: function () {} // TODO
+            Adapter
         }),
 
         isElement = adaptIsElementFunction({
@@ -104,79 +102,63 @@ export default function adaptReactLikeExports({
         return ret;
     }
 
-    function decorateComponent(component, normalizedConfig) {
-        let ret;
+    function createComponentType(config) {
+        let ret,
+            injectableProperties = null;
 
-        const
-            isFunctional = !(component.prototype instanceof Component),
+        const propsAdjuster = createPropsAdjuster(config);
 
-            dependsOnContext =
-                !! normalizedConfig.properties
-                    && Object.values(normalizedConfig.properties)
-                        .findIndex(propConfig => propConfig.inject) >= 0,
+        if (config.properties) {
+            for (const key of Object.keys(config.properties)) {
+                if (config.properties[key].inject === true) {
+                    injectableProperties = injectableProperties || [];
+                    injectableProperties.push(key);
+                }
+            }
+        }
 
-            propsAdjuster = createPropsAdjuster(normalizedConfig);
+        if (config.render) {
+            if (injectableProperties) {
+                const derivedComponent = config.render.bind(null);
 
-        
-        if (isFunctional && dependsOnContext) {
-            const derivedComponent = component.bind(null);
+                derivedComponent.displayName = config.displayName;
 
-            derivedComponent.displayName = normalizedConfig.displayName;
-
-            ret = (props, context) => {
-                return createElement(derivedComponent, 
-                    propsAdjuster(mergePropsWithContext(props, context), true));
-            };
-
-        } else if (!isFunctional && dependsOnContext) {
-            const derivedComponent = class Component extends component {};
-
-            derivedComponent.displayName = normalizedConfig.displayName;
-
-            ret = (props, context) => {
-                const mergedProps = mergePropsWithContext(props, context);
-
-                return createElement(derivedComponent, mergedProps);
-            };
-        } else {
-            if (isFunctional) {
-                ret = props => component(
-                    propsAdjuster(props, normalizedConfig)); // TODO
-            } else {
-                ret = class Component extends component {
-                    constructor(props) {
-                        propsAdjuster(props, true);
-                        super(props);
-                    }
-
-                    componentWillReceiveProps(nextProps) {
-                        propsAdjuster(nextProps, true);
-                        super.componentWillReceiveProps(nextProps);
-                    }
+                ret = (props, context) => {
+                    return createElement(derivedComponent, 
+                        propsAdjuster(mergePropsWithContext(props, context), true));
                 };
+
+                ret.displayName = config.displayName + '-wrapper';
+            } else {
+                ret = props => config.render(propsAdjuster(props, config)); 
+            }
+        } else {
+            if (injectableProperties) {
+                const derivedComponent = deriveStandardBaseComponent(BaseComponent, config);
+
+                ret = (props, context) => {
+                    return createElement(derivedComponent, 
+                        propsAdjuster(mergePropsWithContext(props, context), true));
+                };
+
+                ret.displayName = config.displayName + '-wrapper';
+            } else {
+                ret = deriveStandardReactLikeComponent(BaseComponent, config);
             }
         }
 
-        Object.assign(ret, convertConfigToReactLike(normalizedConfig));
+        if (injectableProperties) {
+            ret.contextTypes = {};
 
-        if (dependsOnContext) {
-            ret.displayName += '-wrapper';
-        }
-
-        Object.defineProperty(ret, 'type', {
-            get() {
-                return this === ret ? ret : undefined;
+            for (const key of injectableProperties) {
+                ret.contextTypes[key] = dummyValidator;
             }
-        });
+        }
 
         return ret;
     }
-
-    function createStandardComponentType(config) {
-        return deriveStandardReactComponent(Component, config);
-    }
 }
 
-// --- locals ---------------------------------------------
-
-const dummyValidator = function validator() {};
+const dummyValidator = function validator() {
+    return null;
+};

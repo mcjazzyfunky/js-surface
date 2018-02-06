@@ -21,8 +21,7 @@ const
 
 // --- the actual configuration validation function -----------------
 
-export default function validateComponentConfig(config,
-    allowMissingRenderAndMainParam = false) {
+export default function validateComponentConfig(config) {
 
     let errorMsg = null;
 
@@ -43,9 +42,7 @@ export default function validateComponentConfig(config,
         
         errorMsg = 'Member "standardizeComponent" of parameter "main" must be '
             + 'a function';
-    } else if (!allowMissingRenderAndMainParam
-        && !config.render && !config.main) {
-        
+    } else if (!config.render && !config.main) {
         errorMsg = 'Either parameter "render" or parameter "main" '
             + 'must be configured';
     } else if (config.render

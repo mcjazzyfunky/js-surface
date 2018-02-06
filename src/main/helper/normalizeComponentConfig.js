@@ -1,12 +1,12 @@
 const REGEX_CALLBACK_PROPERTY_NAME = /^on([A-Z]|-)*.$/;
 
 export default function normalizeComponentConfig(config) {
-    let ret = {};
+    let ret = { ...config };
 
-    if (config.displayName) {
-        ret.displayName = config.displayName;
+    if (ret.main && ret.main.normalizeComponent) {
+        ret.main = ret.main.normalizeComponent(config);
     }
-    
+
     if (config.properties && Object.keys(config.properties).length > 0) {
         ret.properties = {};
         

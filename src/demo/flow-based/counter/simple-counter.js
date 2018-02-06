@@ -24,7 +24,7 @@ const SimpleCounter = defineComponent({
             incrementCounter: delta => ({ delta })
         },
 
-        initState: ({ initialValue }) => ({ counter: initialValue }),
+        initState: props => ({ counter: props.initialValue }),
 
         updateState: {
             incrementCounter: {
@@ -32,12 +32,12 @@ const SimpleCounter = defineComponent({
             }
         },
 
-        events: ({ actions }) => ({
+        events: actions => ({
             clickIncrement: () => actions.incrementCounter(1),
             clickDecrement: () => actions.incrementCounter(-1)
         }),
 
-        render({ props, state, events }) {
+        render(props, state, events) {
             return (
                 div({ className: 'simple-counter' },
                     label({ className: 'simple-counter-label btn' },

@@ -1,6 +1,6 @@
-import adaptDefineComponent from './adaption/adaptDefineComponent.js';
-import adaptMount from './adaption/adaptMount.js';
-import ElementInspector from './helper/ElementInspector';
+import adaptDefineComponent from '../../adaption/adaptDefineComponent.js';
+import adaptMount from '../../adaption/adaptMount.js';
+import ElementInspector from '../../helper/ElementInspector';
 
 import Vue from 'vue';
 
