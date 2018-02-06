@@ -2,6 +2,7 @@ import validateComponentConfig from '../validation/validateComponentConfig';
 import normalizeComponentConfig from '../helper/normalizeComponentConfig';
 import createFactory from '../helper/createFactory';
 import printError from '../helper/printError';
+
 export default function adaptDefineComponentFunction({
     createComponentType,
     createElement,
@@ -29,17 +30,6 @@ export default function adaptDefineComponentFunction({
     defineComponent._jsxFrag = null;
 
     return defineComponent;
-
-    // ---------------------------------------------------
-    
-    function componentize(component, config) {
-        const
-            normalizedConfig = normalizeComponentConfig(config),
-
-            componentType = createComponentType(normalizedConfig);
-        
-        return createFactory(componentType, normalizedConfig, Adapter);
-    }
 }
 
 function prettifyErrorMsg(errorMsg, config) {

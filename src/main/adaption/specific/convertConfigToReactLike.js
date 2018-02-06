@@ -1,39 +1,43 @@
-import normalizeComponentConfig from '../../helper/normalizeComponentConfig';
-
 export default function convertConfig(config) {
-    const ret = { defaultProps: {} };
+    // config is already normalized
 
-    const cfg = normalizeComponentConfig(config);
+    const ret = {
+        displayName: config.displayName,
+        defaultProps: {},
+        propTypes: {},
+        
+        // contextTypes will be handled by wrapper component
+        // (=> higher-order component)
+        contextTypes: null,
+        childContextTypes: null
+    };
 
-    ret.displayName = cfg.displayName;
+    ret.displayName = config.displayName;
 
-    if (cfg.properties) {
-        for (const propName of Object.keys(cfg.properties)) {
-            const propCfg = cfg.properties[propName];
+    if (config.properties) {
+        for (const propName of Object.keys(config.properties)) {
+            const propCfg = config.properties[propName];
 
-            if (propCfg.inject) {
-                ret.contextTypes = ret.contextTypes || {};
-                ret.contextTypes[propName] = dummyValidator;
-            } else {
-                if (propCfg.hasOwnProperty('defaultValue') && propCfg.defaultValue === undefined) {
-                    ret.defaultProps[propName] = undefined; // TODO?
-                } else if (propCfg.defaultValue !== undefined) {
-                    ret.defaultProps[propName] = propCfg.defaultValue;
-                } else if (propCfg.getDefaultValue) {
-                    Object.defineProperty(ret.defaultProps, propName, {
-                        enumerable: true,
+            ret.propTypes[propName] = dummyValidator;
 
-                        get: () => propCfg.getDefaultValue()
-                    }); 
-                }
+            if (propCfg.hasOwnProperty('defaultValue') && propCfg.defaultValue === undefined) {
+                ret.defaultProps[propName] = undefined; // TODO?
+            } else if (propCfg.defaultValue !== undefined) {
+                ret.defaultProps[propName] = propCfg.defaultValue;
+            } else if (propCfg.getDefaultValue) {
+                Object.defineProperty(ret.defaultProps, propName, {
+                    enumerable: true,
+
+                    get: () => propCfg.getDefaultValue()
+                }); 
             }
         }
     }
 
-    if (cfg.childContext) {
+    if (config.childContext) {
         ret.childContextTypes = {};
 
-        for (const key of cfg.childContext) {
+        for (const key of config.childContext) {
             ret.childContextTypes[key] = dummyValidator;
         }
     }

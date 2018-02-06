@@ -32,6 +32,7 @@ export default class Component {
     }
 
     getChildContext() {
+        return null;
     }
 
     render() {
@@ -47,7 +48,7 @@ export default class Component {
                 firstArgIsObject = firstArg !== null && typeOfFirstArg === 'object';
 
             if (firstArgIsFunction) {
-                this.___updateState(firstArg, () => console.log(firstArg(this.___state)));
+                this.___updateState(firstArg);
             } else if (firstArgIsObject) {
                 this.___updateState(() => firstArg, state => {
                     const shouldUpdate = this.shouldComponentUpdate(this.props, state);
@@ -119,7 +120,7 @@ export default class Component {
                         needsUpdate = false;
                         content = component.render();
                         
-                        const childContext = null; // TODO
+                        const childContext = component.getChildContext();
                         const callbackWhenDone = null; // TODO
 
                         updateView(content, childContext, callbackWhenDone);

@@ -1,6 +1,10 @@
 import convertConfigToReactLike from './convertConfigToReactLike';
 
 export default function deriveStandardBaseComponent(BaseComponent, config) {
+    // config is already normalized
+
+    const convertedConfig = convertConfigToReactLike(config);
+
     class Component extends BaseComponent {
         constructor(props, context) {
             super(props, context);
@@ -69,7 +73,7 @@ export default function deriveStandardBaseComponent(BaseComponent, config) {
         };
     }
 
-    Object.assign(Component, convertConfigToReactLike(config));
+    Object.assign(Component, convertedConfig);
 
     return Component;
 }

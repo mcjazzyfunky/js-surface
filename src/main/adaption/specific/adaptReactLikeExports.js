@@ -2,7 +2,6 @@ import adaptDefineComponentFunction from '../adaptDefineComponentFunction';
 import adaptIsElementFunction from '../adaptIsElementFunction';
 import adaptMountFunction from '../adaptMountFunction';
 import createPropsAdjuster from '../../helper/createPropsAdjuster';
-import convertConfigToReactLike from './convertConfigToReactLike';
 import deriveStandardReactLikeComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 import deriveStandardBaseComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 
@@ -103,6 +102,8 @@ export default function adaptReactLikeExports({
     }
 
     function createComponentType(config) {
+        // config is already normalized
+
         let ret,
             injectableProperties = null;
 
@@ -130,7 +131,7 @@ export default function adaptReactLikeExports({
 
                 ret.displayName = config.displayName + '-wrapper';
             } else {
-                ret = props => config.render(propsAdjuster(props, config)); 
+                ret = props => config.render(propsAdjuster(props, config));
             }
         } else {
             if (injectableProperties) {
@@ -149,7 +150,7 @@ export default function adaptReactLikeExports({
 
         if (injectableProperties) {
             ret.contextTypes = {};
-
+            
             for (const key of injectableProperties) {
                 ret.contextTypes[key] = dummyValidator;
             }
