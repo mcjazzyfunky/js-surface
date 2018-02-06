@@ -1,5 +1,3 @@
-import { createElement as h } from 'js-surface';
-
 export {
     defineFlow
 };

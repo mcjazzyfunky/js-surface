@@ -1,31 +1,52 @@
-import adaptDefineComponent from '../../adaption/adaptDefineComponent.js';
-import adaptMount from '../../adaption/adaptMount.js';
-import ElementInspector from '../../helper/ElementInspector';
+import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction.js';
+import adaptMountFunction from '../../adaption/adaptMountFunction.js';
 
 import Vue from 'vue';
 
 const
-    defineComponent = adaptDefineComponent({
-        defineFunctionalComponent,
-        defineStandardComponent
-    }),
+    Surface = {}, // will be filled later
 
-    mount = adaptMount(customMount, isElement),
+    isElement = it => it && it.isSurfaceElement === true,
+
+    mount = adaptMountFunction({
+        mountFunction: customMount,
+        unmountFunction: customUnmount, 
+        isElement
+    }),
 
     Adapter = Object.freeze({
         name: 'vue',
-        api: { Vue }
+        api: { Surface, Vue }
     }),
     
+    defineComponent = adaptDefineComponentFunction({
+        createElement,
+        createComponentType, 
+        Adapter
+    }),
+
     inspectElement = obj => {
         let ret = null;
 
         if (isElement(obj)) {
-            ret = new ElementInspector(obj.type, obj.props);
+            ret = { type: obj.type, props: obj.props };
         }
 
         return ret;
     };
+
+Object.assign(Surface, {
+    createElement,
+    defineComponent,
+    inspectElement,
+    isElement,
+    mount,
+    Adapter
+});
+
+Object.freeze(Surface);
+
+export default Surface;
 
 export {
     createElement,
@@ -35,7 +56,6 @@ export {
     mount,
     Adapter
 };
-
 
 // ------------------------------------------------------------------
 
@@ -54,10 +74,18 @@ function getNextRefName() {
     return ret;
 }
 
-function defineFunctionalComponent(config) {
+function createComponentType(config) {
+    return config.render
+        ? createFunctionalComponentType(config)
+        : createStandardComponentType(config);
+}
+
+function createFunctionalComponentType(config) {
+    let ret;
+
     const defaultValues = determineDefaultValues(config);
 
-    const component = Vue.extend({
+    ret = Vue.extend({
         functional: true,
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
@@ -70,18 +98,11 @@ function defineFunctionalComponent(config) {
             return renderContent(vueCreateElement, content, this);
         }
     });
-
-    const factory = (props, ...children) => {
-        const ret = createElement(component, props, ...children); 
-        return ret;
-    };
-
-    factory.type = component;
-
-    return factory;
+    
+    return ret;
 }
 
-function defineStandardComponent(config) {
+function createStandardComponentType(config) {
     const defaultValues = determineDefaultValues(config);
 
     const component = Vue.extend({
@@ -133,7 +154,7 @@ function defineStandardComponent(config) {
                 this.__state = state;
             };
 
-            const initResult = config.init(
+            const initResult = config.main(
                 this.__updateView, this.__updateState);
 
             this.__setProps = props => {
@@ -220,14 +241,7 @@ function defineStandardComponent(config) {
         }
     });
 
-    const factory = (props, ...children) => {
-        const ret = createElement(component, props, ...children); 
-
-        return ret;
-    };
-
-    factory.type = component;
-    return factory;
+    return component;
 }
 
 function createElement(tag, props, ...children) {
@@ -247,13 +261,11 @@ function createElement(tag, props, ...children) {
     return ret;
 }
 
-function isElement(it) {
-    return it && it.isSurfaceElement;
-}
-
 function customMount(content, targetNode) {
+    targetNode.innerHTML = '<span></span>';
+
     const vueComponent = new Vue({
-        el: targetNode,
+        el: targetNode.firstChild,
 
         render(vueCreateElement) {
             return renderContent(vueCreateElement, content, this);
@@ -269,7 +281,17 @@ function customMount(content, targetNode) {
         }
     });
 
-    return () => vueComponent.destroy();
+    targetNode.___destroyVueComponent = () => {
+        delete targetNode.____destroyComponent;
+        vueComponent.destroy();
+        targetNode.innerHTML = '';
+    };
+}
+
+function customUnmount(node) {
+    if (typeof node.___destroyVueComponent === 'function') {
+        node.___destroyVueComponent();
+    }
 }
 
 function renderContent(vueCreateElement, content, component) {

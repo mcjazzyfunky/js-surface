@@ -16,13 +16,13 @@ const Clock = defineComponent({
             super(props);
 
             this.state = {
-                time: new Date().toLocaleDateString()
+                time: new Date().toLocaleTimeString()
             };
         }
 
         updateState() {
             this.setState({
-                time: new Date() .toLocaleTimeString()
+                time: new Date().toLocaleTimeString()
             });
         }
 

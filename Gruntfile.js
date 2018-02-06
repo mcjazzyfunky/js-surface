@@ -61,6 +61,20 @@ module.exports = function (grunt) {
                     'js-surface': true
                 }  
             },
+            surfaceGenericCommon: {
+                entry: ['./build/src/main/__modules__/generic/common.js'],
+                output: {
+                    filename: './dist/generic/common.js',
+                   // libraryTarget: 'umd'
+                }
+            },
+            surfaceGenericFlow: {
+                entry: ['./build/src/main/__modules__/generic/flow.js'],
+                output: {
+                    filename: './dist/generic/flow.js',
+                    //libraryTarget: 'umd'
+                }
+            },
             preact: {
                 entry: ['./build/src/main/__modules__/preact/index.js'],
                 output: {
@@ -151,6 +165,14 @@ module.exports = function (grunt) {
                 src: ['dist/addons.js'],
                 dest: 'dist/addons.min.js'
             },
+            jsSurfaceGenericCommon: {
+                src: ['dist/generic/common.js'],
+                dest: 'dist/generic/common.min.js'
+            },
+            jsSurfaceGenericFlow: {
+                src: ['dist/generic/flow.js'],
+                dest: 'dist/generic/flow.min.js'
+            },
             jsSurfaceReact: {
                 src: ['dist/react/index.js'],
                 dest: 'dist/react/index.min.js'
@@ -198,6 +220,22 @@ module.exports = function (grunt) {
                 },
                 src: ['dist/addons.min.js'],
                 dest: 'dist/addons.min.js.gz'
+            },
+            jsSurfaceGenericCommon: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/generic/common.min.js'],
+                dest: 'dist/generic/common.min.js.gz'
+            },
+            jsSurfaceGenericFlow: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/generic/flow.min.js'],
+                dest: 'dist/generic/flow.min.js.gz'
             },
             jsSurfaceReact: {
                 options: {
