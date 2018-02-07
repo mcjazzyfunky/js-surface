@@ -1,9 +1,30 @@
+import determineAllMethodNames from '../util/determineAllMethodNames';
+
+const callbackMethodNamesCache = new Map();
+
 export default class Component {
     constructor(props) {
         this.___props = props;
         this.___state = undefined;
         this.___updateView = null;
         this.___updateState = null;
+
+        let callbackMethodNames =
+            callbackMethodNamesCache.get(this.constructor);
+
+        if (callbackMethodNames === undefined) {
+            callbackMethodNames =
+                determineAllMethodNames(this.constructor)
+                    .filter(name => name.match(/^on[A-Z]/));
+
+            callbackMethodNamesCache.set(this.constructor, callbackMethodNames);
+        }
+
+        for (let i = 0; i < callbackMethodNames.length; ++i) {
+            const callbackMethodName = callbackMethodNames[i];
+
+            this[callbackMethodName] = this[callbackMethodName].bind(this);
+        }
     }
 
     componentWillMount() {

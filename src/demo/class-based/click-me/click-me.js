@@ -30,7 +30,7 @@ const ClickMe = defineComponent({
         render() {
             return (
                 h('button',
-                    { className: 'btn', onClick: () => this.onClick() },
+                    { className: 'btn', onClick: this.onClick },
                     this.props.text)
             );
         }

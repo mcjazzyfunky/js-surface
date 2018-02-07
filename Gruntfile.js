@@ -65,7 +65,7 @@ module.exports = function (grunt) {
                 entry: ['./build/src/main/__modules__/generic/common.js'],
                 output: {
                     filename: './dist/generic/common.js',
-                   // libraryTarget: 'umd'
+                    libraryTarget: 'umd'
                 }
             },
             surfaceGenericFlow: {

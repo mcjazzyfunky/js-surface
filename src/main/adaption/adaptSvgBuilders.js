@@ -17,7 +17,9 @@ export default function adaptSvgBuilders({ createElement }) {
         ret = {},
         svgTags = svgTagNames.trim().split(/\s+/);
 
-    for (const tag of svgTags) {
+    for (let i = 0; i < svgTags.length; ++i) {
+        const tag = svgTags[i];
+
         ret[tag] = createElement.bind(null, tag);
     }
 

@@ -13,7 +13,9 @@ export default function adaptHtmlBuilders({ createElement }) {
         ret = {},
         htmlTags = htmlTagNames.trim().split(/\s+/);
 
-    for (const tag of htmlTags) {
+    for (let i = 0; i < htmlTags.length; ++i) {
+        const tag = htmlTags[i];
+
         ret[tag] = createElement.bind(null, tag);
     }
 
