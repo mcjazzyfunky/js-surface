@@ -44,11 +44,6 @@ const Counter = defineComponent({
     operations: ['resetCounter'],
 
     main: defineFlow({
-        actions: {
-            incrementCounter: delta => ({ delta }),
-            resetCounter: value => ({ value })
-        },
-
         initState: props => ({ counter: props.initialValue }),
 
         updateState: {
@@ -59,6 +54,11 @@ const Counter = defineComponent({
             resetCounter: {
                 counter: ({ value }) => value
             }
+        },
+        
+        actions: {
+            incrementCounter: delta => ({ delta }),
+            resetCounter: value => ({ value })
         },
 
         events: actions => ({
@@ -124,8 +124,8 @@ const CounterCtrl = defineComponent({
 
         events: actions => ({
             refCounter: ref => actions.setCounterRef(ref),
-            clickSetToZero: () => actions.resetCounter(0),
-            clickSetToOneHundred: () => actions.resetCounter(100)
+            clickSetToZero: actions.resetCounter(0),
+            clickSetToOneHundred: actions.resetCounter(100)
         }),
 
         render (props, state, events) {

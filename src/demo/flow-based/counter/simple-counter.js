@@ -37,16 +37,16 @@ const SimpleCounter = defineComponent({
             }
         },
 
-        events: actions => ({
-            clickIncrement: () => actions.incrementCounter(1),
-            clickDecrement: () => actions.incrementCounter(-1)
-        }),
-
         lifecycle: actions => ({
             willMount: () => actions.log('componentWillMount'),
             didMount: () => actions.log('componentDidMount'),
             willUpdate: () => actions.log('componentWillUpdate'),
             didUpdate: () => actions.log('componentWillUpdate')
+        }),
+
+        events: actions => ({
+            clickIncrement: actions.incrementCounter(1),
+            clickDecrement: actions.incrementCounter(-1)
         }),
 
         render(props, state, events) {

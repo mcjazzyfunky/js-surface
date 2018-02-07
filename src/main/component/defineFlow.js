@@ -78,7 +78,7 @@ export default function defineFlow(flowConfig) {
                         if (typeof func === 'function') {
                             dispatch(func(args));
                         }
-                    }
+                    };
                 }
 
                 return ret;
@@ -132,16 +132,31 @@ function buildEventHandlerCreators(eventsInitializer, actions, dispatch) {
     const e = eventsInitializer(actions);
 
     for (const key of Object.keys(e)) {
-        ret[key] = (...args) => ev => {
-            const result = e[key](ev, args);
 
-            if (Array.isArray(result)) {
-                for (let i = 0; i < result.length; ++i) {
-                    dispatch(result[i]);
+        if (typeof e[key] !== 'function') {
+            const callback = () => {
+                if (Array.isArray(e[key])) {
+                    for (let i = 0; i < e[key].length; ++i) {
+                        dispatch(e[key][i]);
+                    }
+                } else {
+                    dispatch(e[key]);
                 }
-            } else {
-                dispatch(result);
-            }
+            };
+
+            ret[key] = () => callback;
+        } else {
+            ret[key] = (...args) => ev => {
+                const result = e[key](ev, args);
+
+                if (Array.isArray(result)) {
+                    for (let i = 0; i < result.length; ++i) {
+                        dispatch(result[i]);
+                    }
+                } else {
+                    dispatch(result);
+                }
+            };
         }
     }
 
