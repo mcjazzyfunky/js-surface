@@ -4,7 +4,7 @@ import {
     mount
 } from 'js-surface';
 
-import { Component } from 'js-surface/generic/common';
+import { Component } from 'js-surface/common';
 
 const App = defineComponent({
     displayName: 'App',

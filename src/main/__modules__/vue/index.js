@@ -1,6 +1,9 @@
 import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction.js';
 import adaptMountFunction from '../../adaption/adaptMountFunction.js';
 
+import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
+import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
+
 import Vue from 'vue';
 
 const
@@ -33,15 +36,27 @@ const
         }
 
         return ret;
-    };
+    },
+
+    Html = adaptHtmlBuilders({ createElement }),
+    Svg = adaptSvgBuilders({ createElement }),
+    Fragment = 'x-fragment', // TODO
+    fragment = createElement.bind(null, Fragment);
 
 Object.assign(Surface, {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 });
 
 Object.freeze(Surface);
@@ -49,12 +64,19 @@ Object.freeze(Surface);
 export default Surface;
 
 export {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+    
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 };
 
 // ------------------------------------------------------------------

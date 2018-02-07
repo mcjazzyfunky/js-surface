@@ -1,9 +1,4 @@
-export {
-    defineFlow
-};
-
-
-function defineFlow(flowConfig) {
+export default function defineFlow(flowConfig) {
     const error = validateFlowConfig(flowConfig);
 
     if (error) {

@@ -4,6 +4,7 @@ import adaptReactLikeExports
 import adaptCreatePreactElement
     from '../../adaption/specific/adaptCreatePreactElement';
 
+
 import Preact from 'preact';
 
 const { render } = Preact;
@@ -13,12 +14,19 @@ const
     VNode = Preact.h('').constructor;
 
 const {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 } = adaptReactLikeExports({
     createElement: adaptCreatePreactElement({}),
     isValidElement: it => it instanceof VNode,
@@ -30,6 +38,7 @@ const {
     adapterAPI: { Surface },
 });
 
+// core
 Surface.createElement = createElement;
 Surface.defineComponent = defineComponent;
 Surface.inspectElement = inspectElement;
@@ -37,15 +46,28 @@ Surface.isElement = isElement;
 Surface.mount = mount;
 Surface.Adapter = Adapter;
 
+// addons
+Surface.fragment = fragment;
+Surface.Fragment = Fragment;
+Surface.Html = Html;
+Surface.Svg = Svg;
+
 Object.freeze(Surface);
 
 export default Surface;
 
 export {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 };

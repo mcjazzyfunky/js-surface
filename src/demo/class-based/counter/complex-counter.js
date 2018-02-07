@@ -1,12 +1,8 @@
-import {
-    createElement as h,
-    defineComponent,
-    mount
-} from 'js-surface';
-
-import { Component } from 'js-surface/generic/common';
-
+import { defineComponent, mount, Html } from 'js-surface';
+import { Component } from 'js-surface/common';
 import { Spec } from 'js-spec';
+
+const { b, button, div, label, span } = Html;
 
 const CounterInfo = defineComponent({
     displayName:  'CounterInfo',
@@ -19,8 +15,8 @@ const CounterInfo = defineComponent({
 
     render(props) {
         return (
-            h('label', null,
-               h('b', null,
+            label(null,
+               b(null,
                     props.value)));
     }
 });
@@ -108,13 +104,13 @@ const Counter = defineComponent({
 
         render() {
             return (
-                h('span', { className: 'counter' },
-                    h('button', {
+                span({ className: 'counter' },
+                    button({
                         className: 'btn btn-default',
                         onClick: () => this.increaseCounter(-1)
                     },
                         '-'),
-                    h('div', {
+                    div({
                         style: {
                             width: '30px',
                             display: 'inline-block',
@@ -122,7 +118,7 @@ const Counter = defineComponent({
                         }
                     },
                         CounterInfo({ value: this.state.counterValue })),
-                    h('button', {
+                    button({
                         className: 'btn btn-default',
                         onClick: () => this.increaseCounter(1)
                     },
@@ -141,16 +137,16 @@ const CounterCtrl = defineComponent({
         let counterInstance = null;
 
         return (
-            h('div', { className: 'counter-ctrl' },
-                h('button',
-                    { className: 'btn btn-info',
-                        onClick: () => counterInstance.resetCounter(0)
-                    },
+            div({ className: 'counter-ctrl' },
+                button({
+                    className: 'btn btn-info',
+                    onClick: () => counterInstance.resetCounter(0)
+                },
                     'Set to 0'),
                 ' ',
                 Counter({ ref: it => { counterInstance = it; } }),
                 ' ',
-                h('button', {
+                button({
                     className: 'btn btn-info',
                     onClick: () => counterInstance.resetCounter(100)
                 },

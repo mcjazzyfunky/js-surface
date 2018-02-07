@@ -1,10 +1,7 @@
-import {
-    createElement as h,
-    defineComponent,
-    mount
-} from 'js-surface';
+import { defineComponent, mount, Html } from 'js-surface';
+import { Component } from 'js-surface/common';
 
-import { Component } from 'js-surface/generic/common';
+const { button } = Html;
 
 const ClickMe = defineComponent({
     displayName: 'ClickMe',
@@ -29,7 +26,7 @@ const ClickMe = defineComponent({
 
         render() {
             return (
-                h('button',
+                button(
                     { className: 'btn', onClick: this.onClick },
                     this.props.text)
             );

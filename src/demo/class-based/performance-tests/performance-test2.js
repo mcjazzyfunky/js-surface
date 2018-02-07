@@ -1,9 +1,5 @@
-import {
-    createElement as h,
-    Adapter
-} from 'js-surface';
+import { createElement as h, Adapter, Html } from 'js-surface';
 
-import { Html } from 'js-surface/addons';
 
 const { div } = Html;
 

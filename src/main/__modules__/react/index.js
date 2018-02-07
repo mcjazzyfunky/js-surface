@@ -10,12 +10,19 @@ import ReactDOM from 'react-dom';
 const Surface = {}; // will be filled later
 
 const {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 } = adaptReactLikeExports({
     createElement: adaptCreateReactElement({}),
     isValidElement: React.isValidElement,
@@ -27,6 +34,7 @@ const {
     adapterAPI: { React, ReactDOM, Surface },
 });
 
+// core
 Surface.createElement = createElement;
 Surface.defineComponent = defineComponent;
 Surface.inspectElement = inspectElement;
@@ -34,15 +42,28 @@ Surface.isElement = isElement;
 Surface.mount = mount;
 Surface.Adapter = Adapter;
 
+// addons
+Surface.fragment = fragment;
+Surface.Fragment = Fragment;
+Surface.Html = Html;
+Surface.Svg = Svg;
+
 Object.freeze(Surface);
 
 export default Surface;
 
 export {
+    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter
+    Adapter,
+
+    // addons
+    fragment,
+    Fragment,
+    Html,
+    Svg
 };

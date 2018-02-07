@@ -51,44 +51,17 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 }   
             },
-            surfaceAddons: {
-                entry: ['./build/src/main/__modules__/surface/addons.js'],
+            surfaceCommon: {
+                entry: ['./build/src/main/__modules__/common/index.js'],
                 output: {
-                    filename: './dist/addons.js',
+                    filename: './dist/common.js',
                     libraryTarget: 'umd'
-                },
-                externals: {
-                    'js-surface': true
-                }  
-            },
-            surfaceGenericCommon: {
-                entry: ['./build/src/main/__modules__/generic/common.js'],
-                output: {
-                    filename: './dist/generic/common.js',
-                    libraryTarget: 'umd'
-                }
-            },
-            surfaceGenericFlow: {
-                entry: ['./build/src/main/__modules__/generic/flow.js'],
-                output: {
-                    filename: './dist/generic/flow.js',
-                    //libraryTarget: 'umd'
                 }
             },
             preact: {
                 entry: ['./build/src/main/__modules__/preact/index.js'],
                 output: {
-                    filename: './dist/preact/index.js',
-                    libraryTarget: 'umd'
-                },   
-                externals: {
-                    'preact': true
-                }
-            },
-            preactAddons: {
-                entry: ['./build/src/main/__modules__/preact/addons.js'],
-                output: {
-                    filename: './dist/preact/addons.js',
+                    filename: './dist/preact.js',
                     libraryTarget: 'umd'
                 },   
                 externals: {
@@ -98,18 +71,7 @@ module.exports = function (grunt) {
             react: {
                 entry: ['./build/src/main/__modules__/react/index.js'],
                 output: {
-                    filename: './dist/react/index.js',
-                    libraryTarget: 'umd'
-                },   
-                externals: {
-                    'react': true,
-                    'react-dom': true
-                }
-            },
-            reactAddons: {
-                entry: ['./build/src/main/__modules__/react/addons.js'],
-                output: {
-                    filename: './dist/react/addons.js',
+                    filename: './dist/react.js',
                     libraryTarget: 'umd'
                 },   
                 externals: {
@@ -129,23 +91,13 @@ module.exports = function (grunt) {
             vue: {
                 entry: ['./build/src/main/__modules__/vue/index.js'],
                 output: {
-                    filename: './dist/vue/index.js',
+                    filename: './dist/vue.js',
                     libraryTarget: 'umd'
                 },
                 externals: {
                     vue: true
                 }
             },
-            vueAddons: {
-                entry: ['./build/src/main/__modules__/vue/addons.js'],
-                output: {
-                    filename: './dist/vue/addons.js',
-                    libraryTarget: 'umd'
-                },
-                externals: {
-                    vue: true
-                }
-            }
         },
         uglify: {
             options: {
@@ -161,25 +113,13 @@ module.exports = function (grunt) {
                 src: ['dist/index.js'],
                 dest: 'dist/index.min.js'
             },
-            jsSurfaceAddons: {
-                src: ['dist/addons.js'],
-                dest: 'dist/addons.min.js'
-            },
-            jsSurfaceGenericCommon: {
-                src: ['dist/generic/common.js'],
-                dest: 'dist/generic/common.min.js'
-            },
-            jsSurfaceGenericFlow: {
-                src: ['dist/generic/flow.js'],
-                dest: 'dist/generic/flow.min.js'
+            jsSurfaceCommon: {
+                src: ['dist/common.js'],
+                dest: 'dist/common.min.js'
             },
             jsSurfaceReact: {
-                src: ['dist/react/index.js'],
-                dest: 'dist/react/index.min.js'
-            },
-            jsSurfaceReactAddons: {
-                src: ['dist/react/addons.js'],
-                dest: 'dist/react/addons.min.js'
+                src: ['dist/react.js'],
+                dest: 'dist/react.min.js'
             },
             /*
             jsSurfaceReactNative: {
@@ -188,21 +128,13 @@ module.exports = function (grunt) {
             },
             */
             jsSurfacePreact: {
-                src: ['dist/preact/index.js'],
-                dest: 'dist/preact/index.min.js'
-            },
-            jsSurfacePreactAddons: {
-                src: ['dist/preact/addons.js'],
-                dest: 'dist/preact/addons.min.js'
+                src: ['dist/preact.js'],
+                dest: 'dist/preact.min.js'
             },
             jsSurfaceVue: {
-                src: ['dist/vue/index.js'],
-                dest: 'dist/vue/index.min.js'
+                src: ['dist/vue.js'],
+                dest: 'dist/vue.min.js'
             },
-            jsSurfaceVueAddons: {
-                src: ['dist/vue/addons.js'],
-                dest: 'dist/vue/addons.min.js'
-            }
         },
         compress: {
             jsSurface: {
@@ -213,45 +145,21 @@ module.exports = function (grunt) {
                 src: ['dist/index.min.js'],
                 dest: 'dist/index.min.js.gz'
             },
-            jsSurfaceAddons: {
+            jsSurfaceCommon: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/addons.min.js'],
-                dest: 'dist/addons.min.js.gz'
-            },
-            jsSurfaceGenericCommon: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/generic/common.min.js'],
-                dest: 'dist/generic/common.min.js.gz'
-            },
-            jsSurfaceGenericFlow: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/generic/flow.min.js'],
-                dest: 'dist/generic/flow.min.js.gz'
+                src: ['dist/common.min.js'],
+                dest: 'dist/common.min.js.gz'
             },
             jsSurfaceReact: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/react/index.min.js'],
-                dest: 'dist/react/index.min.js.gz'
-            },
-            jsSurfaceReactAddons: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/react/addons.min.js'],
-                dest: 'dist/react/addons.min.js.gz'
+                src: ['dist/react.min.js'],
+                dest: 'dist/react.min.js.gz'
             },
             /*
             jsSurfaceReactNative: {
@@ -268,33 +176,17 @@ module.exports = function (grunt) {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/preact/index.min.js'],
-                dest: 'dist/preact/index.min.js.gz'
-            },
-            jsSurfacePreactAddons: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/preact/addons.min.js'],
-                dest: 'dist/preact/addons.min.js.gz'
+                src: ['dist/preact.min.js'],
+                dest: 'dist/preact.min.js.gz'
             },
             jsSurfaceVue: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/vue/index.min.js'],
-                dest: 'dist/vue/index.min.js.gz'
+                src: ['dist/vue.min.js'],
+                dest: 'dist/vue.min.js.gz'
             },
-            jsSurfaceVueAddons: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/vue/addons.min.js'],
-                dest: 'dist/vue/addons.min.js.gz'
-            }
         },
         asciidoctor: [{
             options: {

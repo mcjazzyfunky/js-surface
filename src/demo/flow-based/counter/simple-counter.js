@@ -1,5 +1,4 @@
-import { defineComponent, mount } from 'js-surface';
-import { Html } from 'js-surface/addons';
+import { defineComponent, mount, Html } from 'js-surface';
 import { defineFlow } from 'js-surface/generic/flow';
 
 const { button, div, label } = Html;

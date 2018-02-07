@@ -1,4 +1,4 @@
-import determineAllMethodNames from '../util/determineAllMethodNames';
+import determineAllMethodNames from '../internal/determineAllMethodNames';
 
 const callbackMethodNamesCache = new Map();
 

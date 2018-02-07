@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, mount } from 'js-surface';
-import { Component } from 'js-surface/generic/common';
+import { Component } from 'js-surface/common';
 
 const Clock = defineComponent({
     displayName: 'Clock',
