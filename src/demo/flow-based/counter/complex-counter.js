@@ -45,19 +45,19 @@ const Counter = defineComponent({
 
     main: defineFlow({
         actions: {
-            increaseCounter: ({ delta }) => ({ delta }),
-            resetCounter: ({ value }) => ({ value })
+            incrementCounter: delta => ({ delta }),
+            resetCounter: value => ({ value })
         },
 
         initState: props => ({ counter: props.initialValue }),
 
         updateState: {
-            increaseCounter: {
+            incrementCounter: {
                 counter: ({ delta }, it) => it + delta 
             },
 
             resetCounter: {
-                counter: ({ value }) => ({ counter: value })
+                counter: ({ value }) => value
             }
         },
 
@@ -67,7 +67,7 @@ const Counter = defineComponent({
         }),
 
         operations: actions => ({
-            resetCounter: ([n]) => actions.resetCounter({ value: n })
+            resetCounter: ([value]) => actions.resetCounter(value)
         }),
 
         render(props, state, events) {
@@ -101,26 +101,51 @@ const Counter = defineComponent({
 const CounterCtrl = defineComponent({
     displayName: 'CounterCtrl',
 
-    render () {
-        let counterInstance = null;
+    main: defineFlow({
+        actions: {
+            // state updates
+            setCounterRef: ref => ({ ref }),
 
-        return (
-            div({ className: 'counter-ctrl' },
-                button({
-                    className: 'btn btn-info',
-                    onClick: () => counterInstance.resetCounter(0)
-                },
-                    'Set to 0'),
-                ' ',
-                Counter({ ref: it => { counterInstance = it; } }),
-                ' ',
-                button({
-                    className: 'btn btn-info',
-                    onClick: () => counterInstance.resetCounter(100)
-                },
-                    'Set to 100')));
-    }
+            // side effects
+            resetCounter: value => (getProps, getState) => {
+                const ref = getState().counterRef;
+
+                ref.resetCounter(value);
+            }
+        },
+
+        initState: () => ({ counterRef: null }),
+
+        updateState: {
+            setCounterRef: {
+                counterRef: ({ ref }) => ref
+            }
+        },
+
+        events: actions => ({
+            refCounter: ref => actions.setCounterRef(ref),
+            clickSetToZero: () => actions.resetCounter(0),
+            clickSetToOneHundred: () => actions.resetCounter(100)
+        }),
+
+        render (props, state, events) {
+            return (
+                div({ className: 'counter-ctrl' },
+                    button({
+                        className: 'btn btn-info',
+                        onClick: events.clickSetToZero()
+                    },
+                        'Set to 0'),
+                    ' ',
+                    Counter({ ref: events.refCounter() }),
+                    ' ',
+                    button({
+                        className: 'btn btn-info',
+                        onClick: events.clickSetToOneHundred()
+                    },
+                        'Set to 100')));
+        }
+    })
 });
 
 mount(CounterCtrl(), 'main-content');
-

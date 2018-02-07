@@ -43,7 +43,10 @@ const SimpleCounter = defineComponent({
         }),
 
         lifecycle: actions => ({
-            willUpdate: () => actions.log('componentWillUpdate')
+            willMount: () => actions.log('componentWillMount'),
+            didMount: () => actions.log('componentDidMount'),
+            willUpdate: () => actions.log('componentWillUpdate'),
+            didUpdate: () => actions.log('componentWillUpdate')
         }),
 
         render(props, state, events) {
