@@ -1,10 +1,24 @@
 const REGEX_CALLBACK_PROPERTY_NAME = /^on([A-Z]|-)*.$/;
 
 export default function normalizeComponentConfig(config) {
-    let ret = { ...config };
+    let { main, ...ret } = config;
 
-    if (ret.main && ret.main.normalizeComponent) {
-        ret.main = ret.main.normalizeComponent(config);
+    if (main && main.normalizeComponent) {
+        const result = main.normalizeComponent(config);
+
+        if (!result || typeof result !== 'object') {
+            throw TypeError('Result of "normalizedComponent" must be an object');
+        } else if (!result.render && !result.init) {
+            throw TypeError('Result of "normalizedComponent" must return either a "render" or "init" function');
+        } else if (result.render !== undefined && typeof result.render !== 'function') {
+            throw TypeError('Result of "normalizedComponent" does not have a valid "render" function');
+        } else if (result.init !== undefined && typeof result.init !== 'function') {
+            throw TypeError('Result of "normalizedComponent" does not have a valid "init" function');
+        } else if (result.render) {
+            ret.render = result.render;
+        } else {
+            ret.init = result.init;
+        }
     }
 
     if (config.properties && Object.keys(config.properties).length > 0) {

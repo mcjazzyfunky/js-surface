@@ -1,8 +1,8 @@
 import adaptReactLikeExports
-    from '../../adaption/specific/adaptReactLikeExports';
+    from '../adaption/specific/adaptReactLikeExports';
 
 import adaptCreateReactElement
-    from '../../adaption/specific/adaptCreateReactElement';
+    from '../adaption/specific/adaptCreateReactElement';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

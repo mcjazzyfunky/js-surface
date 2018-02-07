@@ -1,8 +1,8 @@
-import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction.js';
-import adaptMountFunction from '../../adaption/adaptMountFunction.js';
+import adaptDefineComponentFunction from '../adaption/adaptDefineComponentFunction.js';
+import adaptMountFunction from '../adaption/adaptMountFunction.js';
 
-import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
-import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
+import adaptHtmlBuilders from '../adaption/adaptHtmlBuilders';
+import adaptSvgBuilders from '../adaption/adaptSvgBuilders';
 
 import Vue from 'vue';
 

@@ -1,9 +1,8 @@
 import adaptReactLikeExports
-    from '../../adaption/specific/adaptReactLikeExports';
+    from '../adaption/specific/adaptReactLikeExports';
 
 import adaptCreatePreactElement
-    from '../../adaption/specific/adaptCreatePreactElement';
-
+    from '../adaption/specific/adaptCreatePreactElement';
 
 import Preact from 'preact';
 
@@ -34,8 +33,8 @@ const {
     Component: Preact.Component,
     render: Preact.render,
     unmountComponentAtNode: targetNode => render('', targetNode),
-    adapterName: 'surface',
-    adapterAPI: { Surface },
+    adapterName: 'preact',
+    adapterAPI: { Preact, Surface },
 });
 
 // core

@@ -1,4 +1,4 @@
-import determineAllMethodNames from '../internal/determineAllMethodNames';
+import determineAllMethodNames from '../util/determineAllMethodNames';
 
 const callbackMethodNamesCache = new Map();
 
@@ -114,7 +114,7 @@ export default class Component {
     }
 
     static normalizeComponent(meta) {
-        return (updateView, updateState) => {
+        const init = (updateView, updateState) => {
             let
                 component = null,
                 content = null;
@@ -173,5 +173,7 @@ export default class Component {
 
             return ret;
         };
+
+        return { init };
     }
 }

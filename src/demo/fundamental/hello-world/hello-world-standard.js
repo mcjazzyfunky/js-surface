@@ -1,8 +1,4 @@
-import {
-    createElement as h,
-    defineComponent,
-    mount
-} from 'js-surface';
+import { createElement as h, defineComponent, mount } from 'js-surface';
 
 const HelloWorld = defineComponent({
     displayName:  'HelloWorld',
@@ -14,7 +10,7 @@ const HelloWorld = defineComponent({
         }
     },
 
-    main(setView) {
+    init(setView) {
         return {
             setProps(props) {
                 setView(h('div', null, 'Hello ' + props.name + '!'));

@@ -1,5 +1,5 @@
-import Component from './api/Component';
-import defineFlow from './api/defineFlow';
+import Component from '../component/Component';
+import defineFlow from '../component/defineFlow';
 
 const SurfaceCommon = {
     defineFlow,

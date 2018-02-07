@@ -20,7 +20,7 @@ const SimpleCounter = defineComponent({
         }
     },
 
-    main(updateView, updateState) {
+    init(updateView, updateState) {
         let
             props = null,
             counterValue = null;

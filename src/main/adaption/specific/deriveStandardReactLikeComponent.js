@@ -21,12 +21,12 @@ export default function deriveStandardBaseComponent(BaseComponent, config) {
                 },
                 
                 updateState = (updater, callback) => {
-                    this.setState(updater, () => {
+                    this.setState(updater, !callback ? null : () => {
                         callback(this.state, this.props);
                     });
                 };
 
-            const result = config.main(updateView, updateState);
+            const result = config.init(updateView, updateState);
 
             this.__setProps = result.setProps;
             this.__close = result.close || null;

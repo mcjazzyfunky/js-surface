@@ -1,5 +1,5 @@
 import { defineComponent, mount, Html } from 'js-surface';
-import { defineFlow } from 'js-surface/generic/flow';
+import { defineFlow } from 'js-surface/common';
 
 const { button, div, label } = Html;
 
@@ -20,20 +20,30 @@ const SimpleCounter = defineComponent({
 
     main: defineFlow({
         actions: {
-            incrementCounter: delta => ({ delta })
+            // state updater
+            incrementCounter: delta => ({ delta }),
+
+            // side effects
+            log: (...args) => () => {
+                console.log(...args);
+            }
         },
 
         initState: props => ({ counter: props.initialValue }),
 
         updateState: {
             incrementCounter: {
-                counter: (state, { delta }) => state.counter + delta
+                counter: ({ delta }, it) => it + delta
             }
         },
 
         events: actions => ({
             clickIncrement: () => actions.incrementCounter(1),
             clickDecrement: () => actions.incrementCounter(-1)
+        }),
+
+        lifecycle: actions => ({
+            willUpdate: () => actions.log('componentWillUpdate')
         }),
 
         render(props, state, events) {
@@ -43,15 +53,15 @@ const SimpleCounter = defineComponent({
                         props.label),
                     button({
                         className: 'button simple-counter-decrease-button btn btn-default',
-                        onClick: events.clickIncrement()
+                        onClick: events.clickDecrement()
                     },
                         '-'
                     ),
                     div({ className: 'simple-counter-value btn' },
-                        state.counterValue),
-                    div({ button }, {
+                        state.counter),
+                    button({
                         className: 'button simple-counter-increase-button btn btn-default',
-                        onClick: () => events.clickDecrement() },
+                        onClick: events.clickIncrement() },
                         '+'))
             );
         }

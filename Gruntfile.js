@@ -45,21 +45,21 @@ module.exports = function (grunt) {
         },
         webpack: {
             surface: {
-                entry: ['./build/src/main/__modules__/surface/index.js'],
+                entry: ['./build/src/main/__modules__/surface.js'],
                 output: {
                     filename: './dist/index.js',
                     libraryTarget: 'umd'
                 }   
             },
             surfaceCommon: {
-                entry: ['./build/src/main/__modules__/common/index.js'],
+                entry: ['./build/src/main/__modules__/common.js'],
                 output: {
                     filename: './dist/common.js',
                     libraryTarget: 'umd'
                 }
             },
             preact: {
-                entry: ['./build/src/main/__modules__/preact/index.js'],
+                entry: ['./build/src/main/__modules__/preact.js'],
                 output: {
                     filename: './dist/preact.js',
                     libraryTarget: 'umd'
@@ -69,7 +69,7 @@ module.exports = function (grunt) {
                 }
             },
             react: {
-                entry: ['./build/src/main/__modules__/react/index.js'],
+                entry: ['./build/src/main/__modules__/react.js'],
                 output: {
                     filename: './dist/react.js',
                     libraryTarget: 'umd'
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
             },
             */
             vue: {
-                entry: ['./build/src/main/__modules__/vue/index.js'],
+                entry: ['./build/src/main/__modules__/vue.js'],
                 output: {
                     filename: './dist/vue.js',
                     libraryTarget: 'umd'

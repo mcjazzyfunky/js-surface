@@ -7,7 +7,7 @@ import {
 const Clock = defineComponent({
     displayName: 'Clock',
 
-    main(updateView) {
+    init(updateView) {
         let
             time = null,
             intervalId = null;

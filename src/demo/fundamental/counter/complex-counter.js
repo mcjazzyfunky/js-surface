@@ -46,7 +46,7 @@ const Counter = defineComponent({
 
     operations: ['resetCounter'],
 
-    main(updateView, updateState) {
+    init(updateView, updateState) {
         let counterValue;
 
         const
@@ -106,7 +106,7 @@ const Counter = defineComponent({
 const CounterCtrl = defineComponent({
     displayName: 'CounterCtrl',
 
-    main: updateView => ({
+    init: updateView => ({
         setProps() {
             let counterInstance = null;
 

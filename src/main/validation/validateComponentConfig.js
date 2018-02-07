@@ -2,7 +2,7 @@
 const
     VALID_CONFIG_KEYS = new Set(
         ['displayName', 'properties', 'childContext', 'operations',
-            'isErrorBoundary', 'render', 'main']),
+            'isErrorBoundary', 'render', 'init', 'main']),
 
     VALID_PROPERTY_CONFIG_KEYS = new Set(
         ['type', 'constraint', 'nullable',
@@ -31,20 +31,20 @@ export default function validateComponentConfig(config) {
         && typeof config.render !== 'function') {
 
         errorMsg = 'Paramter "render" must be a function';
-    } else if (config.main !== undefined
-        && typeof config.main !== 'function'
-        && typeof config.main.normalizeComponent !== 'function') {  
+    } else if (config.init !== undefined
+        && typeof config.init !== 'function') {
 
+        errorMsg = 'Paramter "init" must be a function';
+    } else if (config.main !== undefined
+        && (config.main === null || typeof config.main.normalizeComponent !== 'function')) {  
         errorMsg = 'Parameter "main" must be a function or an object '
             + 'that has a function property called "normalizeComponent"';
-    } else if (config.main && config.main.standardizeComponent !== undefined
-        && typeof config.main.standardizeComponent !== 'function') {
-        
-        errorMsg = 'Member "standardizeComponent" of parameter "main" must be '
-            + 'a function';
-    } else if (!config.render && !config.main) {
-        errorMsg = 'Either parameter "render" or parameter "main" '
-            + 'must be configured';
+    } else if (!config.render && !config.init && !config.main) {
+        errorMsg = 'One of the following parameters must be configured: '
+            + '"render" or "init" or "main"';
+    } else if (!!config.render + !!config.init + !!config.main > 1) {
+        errorMsg = 'Only one of the following parameters can be configured: '
+            + '"render" or "init" or "main"';
     } else if (config.render
         && (config.childContext !== undefined
             || config.operations !== undefined

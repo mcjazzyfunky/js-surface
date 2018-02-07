@@ -108,6 +108,12 @@ export default [
         files: ['complex-counter.js']
     },
     {
+        name: 'complex-counter-flow',
+        displayName: 'Complex Counter (flow)',
+        directory: 'flow-based/counter',
+        files: ['complex-counter.js']
+    },
+    {
         name: 'fragment-support-functional',
         displayName: 'Fragment support (functional)',
         directory: 'fundamental/fragment-support',
