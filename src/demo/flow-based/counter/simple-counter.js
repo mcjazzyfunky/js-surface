@@ -56,7 +56,7 @@ const SimpleCounter = defineComponent({
                         props.label),
                     button({
                         className: 'button simple-counter-decrease-button btn btn-default',
-                        onClick: events.clickDecrement()
+                        onClick: events.clickDecrement
                     },
                         '-'
                     ),
@@ -64,7 +64,7 @@ const SimpleCounter = defineComponent({
                         state.counter),
                     button({
                         className: 'button simple-counter-increase-button btn btn-default',
-                        onClick: events.clickIncrement() },
+                        onClick: events.clickIncrement },
                         '+'))
             );
         }

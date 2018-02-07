@@ -62,8 +62,8 @@ const Counter = defineComponent({
         },
 
         events: actions => ({
-            clickIncrement: () => actions.incrementCounter(1),
-            clickDecrement: () => actions.incrementCounter(-1)
+            clickIncrement: actions.incrementCounter(1),
+            clickDecrement: actions.incrementCounter(-1)
         }),
 
         operations: actions => ({
@@ -75,7 +75,7 @@ const Counter = defineComponent({
                 span({ className: 'counter' },
                     button({
                         className: 'btn btn-default',
-                        onClick: events.clickDecrement()
+                        onClick: events.clickDecrement
                     },
                         '-'),
                     div({
@@ -88,7 +88,7 @@ const Counter = defineComponent({
                         CounterInfo({ value: state.counter })),
                     button({
                         className: 'btn btn-default',
-                        onClick: events.clickIncrement()
+                        onClick: events.clickIncrement
                     },
                         '+'))
             );
@@ -133,15 +133,15 @@ const CounterCtrl = defineComponent({
                 div({ className: 'counter-ctrl' },
                     button({
                         className: 'btn btn-info',
-                        onClick: events.clickSetToZero()
+                        onClick: events.clickSetToZero
                     },
                         'Set to 0'),
                     ' ',
-                    Counter({ ref: events.refCounter() }),
+                    Counter({ ref: events.refCounter }),
                     ' ',
                     button({
                         className: 'btn btn-info',
-                        onClick: events.clickSetToOneHundred()
+                        onClick: events.clickSetToOneHundred
                     },
                         'Set to 100')));
         }

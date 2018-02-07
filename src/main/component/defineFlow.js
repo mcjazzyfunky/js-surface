@@ -17,7 +17,9 @@ export default function defineFlow(flowConfig) {
             let currProps = null, setView, setState;
             
             const dispatch = (action) => {
-                if (typeof action.payload !== 'function') {
+                if (Array.isArray(action)) {
+                    action.forEach(it => dispatch(it));
+                } else if (typeof action.payload !== 'function') {
                     const newState = stateReducer(state, action);
 
                     if (newState !== state) {
@@ -135,24 +137,18 @@ function buildEventHandlerCreators(eventsInitializer, actions, dispatch) {
 
         if (typeof e[key] !== 'function') {
             const callback = () => {
-                if (Array.isArray(e[key])) {
-                    for (let i = 0; i < e[key].length; ++i) {
-                        dispatch(e[key][i]);
-                    }
-                } else {
-                    dispatch(e[key]);
-                }
+                dispatch(e[key]);
             };
 
-            ret[key] = () => callback;
+            ret[key] = callback;
         } else {
-            ret[key] = (...args) => ev => {
-                const result = e[key](ev, args);
+            ret[key] = (...args) => {
+                const result = e[key](...args);
 
-                if (Array.isArray(result)) {
-                    for (let i = 0; i < result.length; ++i) {
-                        dispatch(result[i]);
-                    }
+                if (typeof result === 'function') {
+                    return (...args2) => {
+                        dispatch(result(...args2));
+                    };
                 } else {
                     dispatch(result);
                 }
@@ -173,15 +169,7 @@ function buildLifecycleHandlers(lifecylceConfig, actions, dispatch) {
         const key = keys[i];
 
         ret[key] = (...args) => {
-            const result = obj[key](...args);
-
-            if (Array.isArray(result)) {
-                for (let i = 0; i < result.length; ++i) {
-                    dispatch(result[i]);
-                }
-            } else {
-                dispatch(result);
-            }
+            dispatch(obj[key](...args));
         };
     }
 
