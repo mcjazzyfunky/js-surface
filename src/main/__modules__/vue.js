@@ -7,6 +7,8 @@ import adaptSvgBuilders from '../adaption/adaptSvgBuilders';
 import Vue from 'vue';
 
 const
+    doNothing = () => {},
+
     Surface = {}, // will be filled later
 
     isElement = it => it && it.isSurfaceElement === true,
@@ -155,6 +157,8 @@ function createStandardComponentType(config) {
             this.__refCleanupCallbacks = {};
             this.__content = null;
             this.__callbackWhenUpdated = null;
+            this.__nextState = {};
+            this.__isInitialized = false;
             
             this.__updateView = (content, provisions, callbackWhenUpdated) => {
                 this.__content = content;
@@ -169,21 +173,36 @@ function createStandardComponentType(config) {
                     this.__preventForceUpdate = true;
                     this.$forceUpdate();
                 }
+
+                this.__isInitialized = true;
             };
 
 
-            this.__updateState = state => {
-                this.__state = state;
+            this.__updateState = (updater, callback) => {
+                const newState = updater(this.__state);
+                this.__nextState = Object.assign({}, this.__nextState, newState);
+
+                if (!this.__isInitialized) {
+                    this.__state = this.__nextState;
+                } else {
+                    setTimeout(() => {
+                        this.__state = this.__nextState;
+
+                        if (callback) {
+                            callback(this.__state);
+                        }
+                    }, 0);
+                }
             };
 
-            const initResult = config.main(
+            const initResult = config.init(
                 this.__updateView, this.__updateState);
 
             this.__setProps = props => {
                 initResult.setProps(props);
             };
 
-            this.__close = initResult.close;
+            this.__close = initResult.close || doNothing;
             this.__applyMethod = initResult.applyMethod;
 
             if (config.isErrorBoundary) {
@@ -255,7 +274,7 @@ function createStandardComponentType(config) {
             const ret = config.isErrorBoundary ? false : null;
 
             if (config.isErrorBoundary) {
-                //console.log('>>>', config.displayName, error, vm, info)
+                this.__preventForceUpdate = false;
                 this.__handleError(error);
             }
 

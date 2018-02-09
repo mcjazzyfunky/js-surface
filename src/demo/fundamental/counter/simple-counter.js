@@ -67,7 +67,7 @@ const SimpleCounter = defineComponent({
                 
                 if (counterValue === null) {
                     counterValue = props.initialValue;
-                    updateState({ counterValue });
+                    updateState(() => ({ counterValue }));
                 }
 
                 updateView(render());

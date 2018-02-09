@@ -23,7 +23,7 @@ const ErrorTrigger = defineComponent({
     init(updateView) {
         return {
             setProps(props) {
-                if (props.errorMessage) {
+                if (props.errorMessage) {console.log('triggering error...')
                     throw new Error(props.errorMessage);
                 } else {
                     const onClick =
