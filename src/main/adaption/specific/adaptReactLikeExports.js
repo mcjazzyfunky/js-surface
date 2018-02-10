@@ -139,8 +139,10 @@ export default function adaptReactLikeExports({
                 derivedComponent.displayName = config.displayName;
 
                 ret = (props, context) => {
-                    return createElement(derivedComponent, 
-                        propsAdjuster(mergePropsWithContext(props, context), true));
+                    const ret = createElement(derivedComponent, 
+                        propsAdjuster(mergePropsWithContext(props, context, config), true));
+
+                    return ret;
                 };
 
                 ret.displayName = config.displayName + '-wrapper';
@@ -153,7 +155,7 @@ export default function adaptReactLikeExports({
 
                 ret = (props, context) => {
                     return createElement(derivedComponent, 
-                        propsAdjuster(mergePropsWithContext(props, context), true));
+                        propsAdjuster(mergePropsWithContext(props, context, config), true));
                 };
 
                 ret.displayName = config.displayName + '-wrapper';

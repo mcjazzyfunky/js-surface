@@ -45,8 +45,8 @@
     "object-assign": "^4.1.1",
     "preact": "^8.2.7",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.0-alpha.0",
+    "react-dom": "^16.3.0-alpha.0",
     "react-native": "^0.45.1",
     "redux": "^3.7.2",
     "systemjs": "^0.20.15",
@@ -57,7 +57,6 @@
     "webpack-dev-server": "^2.9.3"
   },
   "dependencies": {
-    "antd": "^3.2.0",
     "grunt": "^1.0.1"
   }
 }

@@ -72,6 +72,12 @@ export default [
         files: ['performance-test2.js']
     },
     {
+        name: 'context',
+        displayName: 'Context',
+        directory: 'class-based/context',
+        files: ['context.js']
+    },
+    {
         name: 'stop-watch-class',
         displayName: 'Stop Watch (class)',
         directory: 'class-based/stop-watch',
