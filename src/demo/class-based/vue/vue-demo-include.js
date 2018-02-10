@@ -1,9 +1,5 @@
-import {
-    component,
-    createElement as h,
-    mount,
-    Component
-} from 'js-surface';
+import { createElement as h, defineComponent } from 'js-surface';
+import { Component } from 'js-surface/common';
 
 import { Spec } from 'js-spec';
 
@@ -12,61 +8,59 @@ import Vue from 'vue';
 document.getElementById('main-content').innerHTML = '<div><vue-demo/></div>';
 
 // ==============================================
-// jsGlow components
+// jsSurface components
 // ==============================================
 
-const GlowButton =
-    component({
-        displayName: 'GlowButton',
+const SurfaceButton = defineComponent({
+    displayName: 'SurfaceButton',
 
-        properties: {
-            text: {
-                type: String,
-                nullable: true,
-                defaultValue: null
-            },
-
-            className: {
-                type: String,
-                nullable: true,
-                defaultValue: null
-            },
-
-            onClick: {
-                type: Function,
-                nullable: true,
-                defaultValue: null
-            }
-        }
-    },
-    function (props) {
-        return (
-            h('button', 
-                {
-                    className: 'btn ' + String(props.class),
-                    onClick: props.onClick
-                },
-                props.text)
-        );
-    })
-    .factory;
-
-const GlowCounter =
-    component({
-        displayName: 'Counter',
-
-        properties: {
-            initialValue: {
-                type: Number,
-                constraint: Spec.integer,
-                defaultValue: 0
-            }
+    properties: {
+        text: {
+            type: String,
+            nullable: true,
+            defaultValue: null
         },
 
-        operations: ['reset'],
+        className: {
+            type: String,
+            nullable: true,
+            defaultValue: null
+        },
+
+        onClick: {
+            type: Function,
+            nullable: true,
+            defaultValue: null
+        }
     },
-    class extends Component {
-        constructor(props) {
+
+    render: props => {
+        return (
+            h('button', {
+                className: 'btn ' + String(props.class),
+                onClick: props.onClick
+            },
+                props.text
+            )
+        );
+    }
+});
+
+const SurfaceCounter = defineComponent({
+    displayName: 'Counter',
+
+    properties: {
+        initialValue: {
+            type: Number,
+            constraint: Spec.integer,
+            defaultValue: 0
+        }
+    },
+
+    operations: ['reset'],
+
+    main: class extends Component {
+        constructor(props) {console.log('>>>>', props)
             super(props);
 
             this.state = { counterValue: props.initialValue };
@@ -85,7 +79,7 @@ const GlowCounter =
         render() {
             return (
                 h('span', null,
-                    GlowButton(
+                    SurfaceButton(
                         {
                             className: 'btn-primary',
                             text: '-',
@@ -94,7 +88,7 @@ const GlowCounter =
                         '-'),
                     h('span', null,
                         ` ${this.state.counterValue} `),
-                    GlowButton(
+                    SurfaceButton(
                         {
                             className: 'btn-primary',
                             text: '+',
@@ -102,35 +96,34 @@ const GlowCounter =
                         }))
             );
         }
-    })
-    .factory;
+    }
+});
 
-const GlowClock =
-    component({
-        displayName: 'GlowClock',
+const SurfaceClock = defineComponent({
+    displayName: 'SurfaceClock',
 
-        properties: {
-            headline: {
-                type: String,
-                defaultValue: 'Current time' 
-            },
+    properties: {
+        headline: {
+            type: String,
+            defaultValue: 'Current time' 
+        },
 
-            onChange: {
-                type: Function,
-                nullable: true,
-                defaultValue: null
-            }
+        onChange: {
+            type: Function,
+            nullable: true,
+            defaultValue: null
         }
     },
-    class extends Component {
+
+    main: class extends Component {
         constructor(props) {
             super(props);
             this.interval = null;
-            this.updateTime(new Date());
+            this.state = { time: new Date().toLocaleTimeString() };
         }
 
         updateTime(dateTime) {
-            this.state = { time: dateTime.toLocaleTimeString() };
+            this.setState({ time: dateTime.toLocaleTimeString() });
 
             if (this.props.onChange) {
                 this.props.onChange({
@@ -159,15 +152,16 @@ const GlowClock =
                     this.state.time)
             );
         }
-    });
+    }
+});
 
 // ==============================================
 // Vue portion
 // ==============================================
 
-Vue.component('surface-button', GlowButton.type);
-Vue.component('surface-counter', GlowCounter.type);
-Vue.component('surface-clock', GlowClock.type);
+Vue.component('surface-button', SurfaceButton.type);
+Vue.component('surface-counter', SurfaceCounter.type);
+Vue.component('surface-clock', SurfaceClock.type);
 
 Vue.component('vue-demo', {
     methods: {

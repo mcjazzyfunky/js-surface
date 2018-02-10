@@ -132,7 +132,7 @@ function createStandardComponentType(config) {
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
-        methods: determineMethods(config),
+        methods: determineOperations(config),
 
         provide: !config.childContext ? null : function () {
             const ret = {};
@@ -159,7 +159,7 @@ function createStandardComponentType(config) {
             this.__callbackWhenUpdated = null;
             this.__nextState = {};
             this.__isInitialized = false;
-            
+console.log('<<<<<<<', this.initialValue)
             this.__updateView = (content, provisions, callbackWhenUpdated) => {
                 this.__content = content;
 
@@ -539,7 +539,7 @@ function determineInjectionKeys(config) {
 }
 
 
-function determineMethods(config) {
+function determineOperations(config) {
     let ret = null;
 
     if (config.methods) {
