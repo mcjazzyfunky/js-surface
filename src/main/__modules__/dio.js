@@ -29,8 +29,8 @@ const {
     Component: Dio.Component,
     render: Dio.render,
     unmountComponentAtNode: Dio.unmountComponentAtNode,
-    adapterName: 'surface',
-    adapterAPI: { Surface },
+    adapterName: 'dio',
+    adapterAPI: { Dio, Surface },
 });
 
 // core
