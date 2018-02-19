@@ -15,29 +15,21 @@ const FragmentDemo = defineComponent({
                 hr(),
                 h6(null,
                     'A simple fragment test with a select box:'),
-                select(null,
-                    fragment(null,
-                        Option({ text: 'Option #1' }),
-                        Option({ text: 'Option #2' }),
-                        Option({ text: 'Option #3' })))
+                select(null, Options())
             )
         );
     }
 });
 
-const Option = defineComponent({
-    displayName: 'Option',
+const Options = defineComponent({
+    displayName: 'Options',
 
-    properties: {
-        text: {
-            type: String,
-            nullable: true,
-            defaultValue: null
-        }
-    },
-
-    render({ text }) {
-        return option(null, text);
+    render() {
+        return (
+            fragment(null,
+                option({ text: 'Option #1' }),
+                option({ text: 'Option #2' }),
+                option({ text: 'Option #3' })));
     }
 });
 
