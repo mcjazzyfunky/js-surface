@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+
+    <style type="text/css">
+        #main-content:empty {
+            display: none;
+        }
+
+        #main-content {
+            background: #fff;
+            padding: 30px;
+        }
+
+        #main-content.todomvc {
+            min-width: 100%;
+            background: rgb(245, 245, 245);
+        }
+
+        .demo-header {
+            padding: 10px;
+            background: #efefef;
+        }
+    </style>
+
+    <script type="text/javascript" src="../../node_modules/systemjs/dist/system.js"></script>
+
+    <script type="text/javascript">
+    {   
+        const
+            uri = location.href,
+            baseUri = uri.split('#')[0],
+            fragment = uri.split('#')[1] || '',
+            demoName = fragment.split('/')[0],
+            adapter = fragment.split('/')[1] || 'react',
+
+            reload = () => {
+                const
+                    demoName = document.getElementById('demo-selector').value,
+                    adapterName = document.getElementById('adapter-selector').value,
+                    newUri = baseUri + '#' + demoName + '/' + adapterName;
+
+                location.href = newUri;
+                location.reload();
+            },
+
+            availableAdapters = ['react', 'preact', 'vue', 'dio', 'surface'];
+
+
+        System.config({
+            baseURL: '../..',
+            transpiler: 'plugin-babel',
+            packages: {
+               '': {
+                   defaultExtension: 'js'
+                }
+            },
+
+            meta: {
+                '*.js': {
+                    presets: ['es2015',  'es2016', 'es2017', 'stage-1'],
+                    
+                    babelOptions: {
+                        react: true,
+                    
+                        plugins: [
+                          //  ['transform-decorator-legacy']
+                           // [
+                              //  'transform-react-jsx',
+                              //  {
+                              //      pragma: 'component._jsx'
+                              //  }
+                           // ]
+                        ]
+                     },
+                },
+                '../../node_modules/bootstrap/dist/js/bootstrap.js': {
+                    format: 'global',
+                    deps: ['jquery'],
+ 		            presets: ['es2015']
+                },
+                'js-surface': {
+                    deps: ['react', 'react-dom',  'preact', 'vue', 'dio']
+                }
+            },
+            map: {
+                'js-surface': `../main/__modules__/${adapter}.js`,
+                'js-surface/common': `../main/__modules__/common.js`,
+                'js-surface/preact': `../main/__modules__/preact/index.js`,
+                'js-surface/react': `../main/__modules__/react/index.js`,
+                'js-surface/dom-builders': `../main/__modules__/${adapter}/dom-builders.js`,
+                [`js-surface/${adapter}`]: `../main/__modules__/${adapter}/index.js`,
+                //'js-surface': `node_modules/js-surface/dist/react.js`,
+                //'js-surface/vue': `node_modules/js-surface/dist/vue.js`,
+                //'js-hyperscript': 'node_modules/js-hyperscript/dist/js-hyperscript.min.js',
+                'jquery': 'node_modules/jquery/dist/jquery.js',
+                'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
+                'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
+                
+                //'react': 'node_modules/react/umd/react.development.js',
+                //'react-dom': 'node_modules/react-dom/umd/react-dom.development.js',
+                
+                'react': 'node_modules/react/umd/react.production.min.js',
+                'react-dom': 'node_modules/react-dom/umd/react-dom.production.min.js',
+
+                //'preact': 'node_modules/preact/dist/preact.js',
+                'preact': 'node_modules/preact/dist/preact.min.js',
+
+                'vue': 'node_modules/vue/dist/vue.min.js',
+
+                'dio': 'node_modules/dio.js/dist/umd.min.js',
+                'dio.js': 'node_modules/dio.js/dist/umd.min.js',
+
+                'js-spec': 'node_modules/js-spec/dist/js-spec.js',
+            }
+        });
+
+        System.import('./available-demos.js')
+            .then(({ default: availableDemos }) => {
+                const
+                    activeDemoIndex = Math.max(availableDemos.findIndex(it => it.name === demoName), 0),
+                    activeDemo =  availableDemos[activeDemoIndex];
+
+                let content =
+                    '<div class="card"><div class="card-header demo-header">'
+                    + '<label for="demo-selector">Demo:</label> '
+                    + '<select id="demo-selector">';
+
+                for (let file of activeDemo.files) {
+                    const path = './' + activeDemo.directory + '/' + file;
+
+                    if (path.endsWith('.js')) {
+                        System.import(path);
+                    } else if (path.endsWith('.css')) {
+                        const elem = document.createElement('link');
+                        elem.setAttribute('type', 'text/css');
+                        elem.setAttribute('rel', 'stylesheet');
+                        elem.setAttribute('href', path);
+
+                        document.head.appendChild(elem);
+                    }
+                }
+
+                for (let demo of availableDemos) {
+                    const selected = demo.name === activeDemo.name ? 'selected' : '';
+
+                    content += `<option value="${demo.name}" ${selected}>${demo.displayName}</option>`;
+                }
+
+                content += '</select> '
+                    + '<label for="adapter-selector">Adapter:</label> '
+                    + '<select id="adapter-selector">';
+
+                for (let availableAdapter of availableAdapters) {
+                    const selected = availableAdapter === adapter ? 'selected' : '';
+
+                    content += `<option ${selected}>${availableAdapter}</option>`;
+                }
+
+                content += '</select></div><div id="main-content" class="'
+                    + activeDemo.name
+                    + ' card-block"></div></div>';
+                
+                document.body.innerHTML = content;
+
+                for (let elem of document.getElementsByTagName('select')) {
+                    elem.addEventListener('change', reload);
+                }
+            })
+            .catch(err => {
+                document.body.innerText = err;
+            });
+    }
+    </script>
+</head>
+<body>
+</body>
+</html>
