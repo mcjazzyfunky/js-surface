@@ -23,9 +23,7 @@ const {
 
     // addons
     fragment,
-    Fragment,
-    Html,
-    Svg
+    Fragment
 } = adaptReactLikeExports({
     createElement: adaptCreatePreactElement({}),
     isValidElement: it => it instanceof VNode,
@@ -48,8 +46,6 @@ Surface.Adapter = Adapter;
 // addons
 Surface.fragment = fragment;
 Surface.Fragment = Fragment;
-Surface.Html = Html;
-Surface.Svg = Svg;
 
 Object.freeze(Surface);
 
@@ -66,7 +62,5 @@ export {
 
     // addons
     fragment,
-    Fragment,
-    Html,
-    Svg
+    Fragment
 };

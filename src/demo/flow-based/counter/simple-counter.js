@@ -1,7 +1,5 @@
-import { defineComponent, mount, Html } from 'js-surface';
+import { createElement as h, defineComponent, mount } from 'js-surface';
 import { defineFlow } from 'js-surface/common';
-
-const { button, div, label } = Html;
 
 const SimpleCounter = defineComponent({
     displayName: 'SimpleCounter',
@@ -51,18 +49,18 @@ const SimpleCounter = defineComponent({
 
         render(props, state, events) {
             return (
-                div({ className: 'simple-counter' },
-                    label({ className: 'simple-counter-label btn' },
+                h('div', { className: 'simple-counter' },
+                    h('label', { className: 'simple-counter-label btn' },
                         props.label),
-                    button({
+                    h('button', {
                         className: 'button simple-counter-decrease-button btn btn-default',
                         onClick: events.clickDecrement
                     },
                         '-'
                     ),
-                    div({ className: 'simple-counter-value btn' },
+                    h('div', { className: 'simple-counter-value btn' },
                         state.counter),
-                    button({
+                    h('button', {
                         className: 'button simple-counter-increase-button btn btn-default',
                         onClick: events.clickIncrement },
                         '+'))

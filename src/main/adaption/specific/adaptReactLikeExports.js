@@ -5,9 +5,6 @@ import createPropsAdjuster from '../../helper/createPropsAdjuster';
 import deriveStandardReactLikeComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 import deriveStandardBaseComponent from '../../adaption/specific/deriveStandardReactLikeComponent';
 
-import adaptHtmlBuilders from '../../adaption/adaptHtmlBuilders';
-import adaptSvgBuilders from '../../adaption/adaptSvgBuilders';
-
 export default function adaptReactLikeExports({
     adapterName,
     adapterAPI,
@@ -66,9 +63,7 @@ export default function adaptReactLikeExports({
         });
 
     const
-        fragment = createElement.bind(null, Fragment),
-        Html = adaptHtmlBuilders({ createElement }),
-        Svg = adaptSvgBuilders({ createElement });
+        fragment = createElement.bind(null, Fragment);
         
     return {
         createElement,
@@ -79,9 +74,7 @@ export default function adaptReactLikeExports({
         Adapter,
 
         fragment,
-        Fragment,
-        Html,
-        Svg
+        Fragment
     };
 
     // ---- locals ------------------------------------------------------

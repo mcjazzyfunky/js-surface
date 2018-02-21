@@ -1,6 +1,4 @@
-import { defineComponent, fragment, mount, Html } from 'js-surface';
-
-const { div, hr, h6, option, select } = Html;
+import { createElement as h, defineComponent, fragment, mount } from 'js-surface';
 
 const FragmentDemo = defineComponent({
     displayName:  'FragmentDemo',
@@ -8,14 +6,14 @@ const FragmentDemo = defineComponent({
     render() {
         return (
             fragment(null,
-                div(null,
+                h('div', null,
                     'This text line is an element inside of an fragment.'),
-                div(null,
+                h('div', null,
                     'This text line is another element inside of an fragment.'),
-                hr(),
-                h6(null,
+                h('hr'),
+                h('h6', null,
                     'A simple fragment test with a select box:'),
-                select(null, Options())
+                h('select', null, Options())
             )
         );
     }
@@ -27,9 +25,9 @@ const Options = defineComponent({
     render() {
         return (
             fragment(null,
-                option({ text: 'Option #1' }),
-                option({ text: 'Option #2' }),
-                option({ text: 'Option #3' })));
+                h('option', { text: 'Option #1' }),
+                h('option', { text: 'Option #2' }),
+                h('option', { text: 'Option #3' })));
     }
 });
 

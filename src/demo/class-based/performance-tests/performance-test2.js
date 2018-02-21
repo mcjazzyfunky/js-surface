@@ -1,7 +1,4 @@
-import { createElement as h, Adapter, Html } from 'js-surface';
-
-
-const { div } = Html;
+import { createElement as h, Adapter } from 'js-surface';
 
 const
     iterationCount = 200000,
@@ -18,6 +15,10 @@ case 'react':
 
 case 'preact':
     createElement = Adapter.api.Preact.h;
+    break;
+
+case 'surface':
+    createElement = Adapter.api.Surface.createElement;
     break;
 }
 
@@ -55,8 +56,8 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            div({ className: 'my-class', id: 'my-id' },
-                div({ className: 'my-class2', id: 'my-id2'}, 'my-div'));     
+            h('div', { className: 'my-class', id: 'my-id' },
+                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));     
         }
     }
 });

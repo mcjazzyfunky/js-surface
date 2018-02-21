@@ -1,8 +1,6 @@
-import { defineComponent, mount, Html } from 'js-surface';
+import { createElement as h, defineComponent, mount } from 'js-surface';
 import { defineFlow } from 'js-surface/common';
 import { Spec } from 'js-spec';
-
-const { b, button, div, label, span } = Html;
 
 const CounterInfo = defineComponent({
     displayName:  'CounterInfo',
@@ -15,8 +13,8 @@ const CounterInfo = defineComponent({
 
     render(props) {
         return (
-            label(null,
-               b(null,
+            h('label', null,
+               h('b', null,
                     props.value)));
     }
 });
@@ -72,13 +70,13 @@ const Counter = defineComponent({
 
         render(props, state, events) {
             return (
-                span({ className: 'counter' },
-                    button({
+                h('span', { className: 'counter' },
+                    h('button', {
                         className: 'btn btn-default',
                         onClick: events.clickDecrement
                     },
                         '-'),
-                    div({
+                    h('div', {
                         style: {
                             width: '30px',
                             display: 'inline-block',
@@ -86,7 +84,7 @@ const Counter = defineComponent({
                         }
                     },
                         CounterInfo({ value: state.counter })),
-                    button({
+                    h('button', {
                         className: 'btn btn-default',
                         onClick: events.clickIncrement
                     },
@@ -130,8 +128,8 @@ const CounterCtrl = defineComponent({
 
         render (props, state, events) {
             return (
-                div({ className: 'counter-ctrl' },
-                    button({
+                h('div', { className: 'counter-ctrl' },
+                    h('button', {
                         className: 'btn btn-info',
                         onClick: events.clickSetToZero
                     },
@@ -139,7 +137,7 @@ const CounterCtrl = defineComponent({
                     ' ',
                     Counter({ ref: events.refCounter }),
                     ' ',
-                    button({
+                    h('button', {
                         className: 'btn btn-info',
                         onClick: events.clickSetToOneHundred
                     },

@@ -1,9 +1,6 @@
 import adaptDefineComponentFunction from '../adaption/adaptDefineComponentFunction.js';
 import adaptMountFunction from '../adaption/adaptMountFunction.js';
 
-import adaptHtmlBuilders from '../adaption/adaptHtmlBuilders';
-import adaptSvgBuilders from '../adaption/adaptSvgBuilders';
-
 import Vue from 'vue';
 
 const
@@ -40,8 +37,6 @@ const
         return ret;
     },
 
-    Html = adaptHtmlBuilders({ createElement }),
-    Svg = adaptSvgBuilders({ createElement }),
     Fragment = 'x-fragment', // TODO
     fragment = createElement.bind(null, Fragment);
 
@@ -56,9 +51,7 @@ Object.assign(Surface, {
 
     // addons
     fragment,
-    Fragment,
-    Html,
-    Svg
+    Fragment
 });
 
 Object.freeze(Surface);
@@ -76,9 +69,7 @@ export {
     
     // addons
     fragment,
-    Fragment,
-    Html,
-    Svg
+    Fragment
 };
 
 // ------------------------------------------------------------------
@@ -159,7 +150,7 @@ function createStandardComponentType(config) {
             this.__callbackWhenUpdated = null;
             this.__nextState = {};
             this.__isInitialized = false;
-console.log('<<<<<<<', this.initialValue)
+
             this.__updateView = (content, provisions, callbackWhenUpdated) => {
                 this.__content = content;
 

@@ -1,7 +1,5 @@
-import { defineComponent, mount, Html } from 'js-surface';
+import { createElement as h, defineComponent, mount } from 'js-surface';
 import { Component } from 'js-surface/common';
-
-const { br, div } = Html;
 
 const Parent = defineComponent({
     displayName: 'Parent',
@@ -24,11 +22,11 @@ const Parent = defineComponent({
 
         render() {
             return (
-                div(null,
-                    div(null,
+                h('div', null,
+                    h('div', null,
                         `Provided value: ${this.props.masterValue}`),
-                    br(),
-                    div(null,
+                    h('br'),
+                    h('div', null,
                         ChildFunctionBased(),
                         ChildClassBased(),
                         ChildFunctionBased({ value: 'with explicit value' }),
@@ -51,7 +49,7 @@ const ChildFunctionBased = defineComponent({
 
     render(props) {
         return (
-            div(null,
+            h('div', null,
                 `ChildFunctionBased(${props.value})`)
         );
     }
@@ -71,7 +69,7 @@ const ChildClassBased = defineComponent({
     main: class extends Component {
         render () {
             return (
-                div(null,
+                h('div', null,
                     `ChildClassBased(${this.props.value})`)
             );
         }

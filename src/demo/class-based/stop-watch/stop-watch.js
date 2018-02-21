@@ -1,7 +1,5 @@
-import { defineComponent, mount, Html }  from 'js-surface';
+import { createElement as h, defineComponent, mount }  from 'js-surface';
 import { Component } from 'js-surface/common';
-
-const { br, button, div, h3 } = Html;
 
 const StopWatch = defineComponent({
     displayName: 'StopWatch',
@@ -73,20 +71,20 @@ const StopWatch = defineComponent({
             };
 
             return (
-                div(null,
-                    h3(null,
+                h('div', null,
+                    h('h3', null,
                         'Stop watch'),
-                    div(null,
+                    h('div', null,
                         `Time: ${this.state.time} `),
-                        br(),
-                        div({ className: 'btn-group' },
-                            button(
+                        h('br'),
+                        h('div', { className: 'btn-group' },
+                            h('button',
                                 {
                                     className: 'btn btn-primary',
                                     ...bind.startStopButton
                                 },
                                 this.state.running ? 'Stop' : 'Start'),
-                            button(
+                            h('button',
                                 {
                                     className: 'btn btn-warning',
                                     ...bind.resetButton
