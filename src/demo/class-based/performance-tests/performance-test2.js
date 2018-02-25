@@ -1,24 +1,32 @@
-import { createElement as h, Adapter } from 'js-surface';
+import Surface from 'js-surface';
+import { Html as HtmlReact } from 'js-dom-factories/react';
+import { Html as HtmlDio } from 'js-dom-factories/dio';
+import { Html as HtmlUniversal } from 'js-dom-factories/universal';
+
+const Html =
+    Surface.Adapter.name === 'react'
+        ? HtmlReact
+        : (Surface.Adapter.name === 'dio' ? HtmlDio : HtmlUniversal);
 
 const
     iterationCount = 200000,
     contentContainer = document.getElementById('main-content'),
-    adapterName = Adapter.name,
+    adapterName = Surface.Adapter.name,
     tests = [];
 
 let createElement = null;
 
 switch (adapterName) {
 case 'react':
-    createElement = Adapter.api.React.createElement;
+    createElement = Surface.Adapter.api.React.createElement;
     break;
 
-case 'preact':
-    createElement = Adapter.api.Preact.h;
+case 'dio':
+    createElement = Surface.Adapter.api.Dio.createElement;
     break;
 
 case 'surface':
-    createElement = Adapter.api.Surface.createElement;
+    createElement = Surface.Adapter.api.Surface.createElement;
     break;
 }
 
@@ -27,7 +35,7 @@ let report = '';
 
 if (adapterName !== 'vue') {
     tests.push({
-        displayName: `Using '${Adapter.name}'`,
+        displayName: `Using '${Surface.Adapter.name}'`,
 
         run() {
             for (let i = 0; i < iterationCount; ++i) {
@@ -44,9 +52,9 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            h('div',
+            Surface.createElement('div',
                 { className: 'my-class', id: 'my-id' },
-                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                Surface.createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
         }
     }
 });
@@ -56,8 +64,8 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            h('div', { className: 'my-class', id: 'my-id' },
-                h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));     
+            Html.div({ className: 'my-class', id: 'my-id' },
+                Html.div({ className: 'my-class2', id: 'my-id2'}, 'my-div'));     
         }
     }
 });

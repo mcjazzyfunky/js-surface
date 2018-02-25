@@ -46,7 +46,7 @@
                 location.reload();
             },
 
-            availableAdapters = ['react', 'preact', 'vue', 'dio', 'surface', 'rax'];
+            availableAdapters = ['react', 'vue', 'dio', 'surface'];
 
 
         System.config({
@@ -82,7 +82,9 @@
  		            presets: ['es2015']
                 },
                 'js-surface': {
-                    deps: ['react', 'react-dom',  'preact', 'vue', 'dio']
+                    deps: ['react', 'react-dom',  'vue', 'dio',
+                        'js-hyperscript/react', 'js-hyperscript/dio',
+                        'js-dom-factories/react', 'js-dom-factories/dio']
                 }
             },
             map: {
@@ -105,17 +107,14 @@
                 'react': 'node_modules/react/umd/react.production.min.js',
                 'react-dom': 'node_modules/react-dom/umd/react-dom.production.min.js',
 
-                //'preact': 'node_modules/preact/dist/preact.js',
-                'preact': 'node_modules/preact/dist/preact.min.js',
-
                 'vue': 'node_modules/vue/dist/vue.min.js',
 
                 'dio': 'node_modules/dio.js/dist/umd.min.js',
                 'dio.js': 'node_modules/dio.js/dist/umd.min.js',
 
-                'rax': 'node_modules/rax/dist/rax.min.js',
-
                 'js-spec': 'node_modules/js-spec/dist/js-spec.js',
+                'js-hyperscript': 'node_modules/js-hyperscript/dist/',
+                'js-dom-factories': 'node_modules/js-dom-factories/dist/'
             }
         });
 
