@@ -52,6 +52,7 @@
     "rax": "^0.5.3",
     "react": "^16.3.0-alpha.0",
     "react-dom": "^16.3.0-alpha.0",
+    "react-hyperscript": "^3.2.0",
     "react-native": "^0.45.1",
     "redux": "^3.7.2",
     "systemjs": "^0.20.15",

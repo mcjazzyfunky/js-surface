@@ -100,6 +100,7 @@
                 'jquery': 'node_modules/jquery/dist/jquery.js',
                 'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
                 'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
+                'react-hyperscript': 'node_modules/react-hyperscript/index.js',
                 
                 //'react': 'node_modules/react/umd/react.development.js',
                 //'react-dom': 'node_modules/react-dom/umd/react-dom.development.js',
@@ -117,7 +118,7 @@
                 'js-dom-factories': 'node_modules/js-dom-factories/dist/'
             }
         };
-        
+        console.log(window.require)
         systemConfig['js-surface/' + adapter] =  '../main/__modules__/' + adapter + '/index.js';
 
         System.config(systemConfig);

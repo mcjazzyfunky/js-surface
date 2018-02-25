@@ -2,6 +2,7 @@ import Surface from 'js-surface';
 import { Html as HtmlReact } from 'js-dom-factories/react';
 import { Html as HtmlSurface } from 'js-dom-factories/surface';
 import { Html as HtmlUniversal } from 'js-dom-factories/universal';
+import reactHyperscript from 'react-hyperscript';
 
 import hyperscriptReact from 'js-hyperscript/react';
 import hyperscriptSurface from 'js-hyperscript/surface';
@@ -104,6 +105,20 @@ tests.push({
         }
     }
 });
+
+if (adapterName === 'react') {
+    tests.push({
+        displayName: 'Using "react-hyperscript"',
+
+        run() {
+            for (let i = 0; i < iterationCount; ++i) {
+                reactHyperscript('#my-id.my-class', [
+                    reactHyperscript('div#my-id2.my-class2', [ 'my-div'])
+                ]);
+            }
+        }
+    });
+}
 
 tests.push({
     displayName: 'Using "js-dom-factories"',
