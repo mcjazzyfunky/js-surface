@@ -58,16 +58,6 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 }
             },
-            preact: {
-                entry: ['./build/src/main/__modules__/preact.js'],
-                output: {
-                    filename: './dist/preact.js',
-                    libraryTarget: 'umd'
-                },   
-                externals: {
-                    'preact': true
-                }
-            },
             react: {
                 entry: ['./build/src/main/__modules__/react.js'],
                 output: {
@@ -127,10 +117,6 @@ module.exports = function (grunt) {
                 dest: 'dist/react-native.min.js'
             },
             */
-            jsSurfacePreact: {
-                src: ['dist/preact.js'],
-                dest: 'dist/preact.min.js'
-            },
             jsSurfaceVue: {
                 src: ['dist/vue.js'],
                 dest: 'dist/vue.min.js'
@@ -171,14 +157,6 @@ module.exports = function (grunt) {
                 dest: 'dist/react-native.min.js.gz'
             },
             */
-            jsSurfacePreact: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/preact.min.js'],
-                dest: 'dist/preact.min.js.gz'
-            },
             jsSurfaceVue: {
                 options: {
                     mode: 'gzip',

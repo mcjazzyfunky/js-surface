@@ -1,19 +1,15 @@
 import Surface from 'js-surface';
 import { Html as HtmlReact } from 'js-dom-factories/react';
-import { Html as HtmlDio } from 'js-dom-factories/dio';
 import { Html as HtmlSurface } from 'js-dom-factories/surface';
 import { Html as HtmlUniversal } from 'js-dom-factories/universal';
 
 import hyperscriptReact from 'js-hyperscript/react';
-import hyperscriptDio from 'js-hyperscript/dio';
 import hyperscriptSurface from 'js-hyperscript/surface';
 import hyperscriptUniversal from 'js-hyperscript/universal';
 
 const Html =
     Surface.Adapter.name === 'react'
         ? HtmlReact
-        : Surface.Adapter.name === 'dio'
-        ? HtmlDio
         : Surface.Adapter.name === 'surface'
         ? HtmlSurface
         : HtmlUniversal;
@@ -21,8 +17,6 @@ const Html =
 const hyperscript =
     Surface.Adapter.name === 'react'
         ? hyperscriptReact
-        : Surface.Adapter.name === 'dio'
-        ? hyperscriptDio
         : Surface.Adapter.name === 'surface'
         ? hyperscriptSurface
         : hyperscriptUniversal;
