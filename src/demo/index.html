@@ -25,18 +25,19 @@
         }
     </style>
 
+    <script type="text/javascript" src="../../node_modules/babel-polyfill/dist/polyfill.min.js"></script>
     <script type="text/javascript" src="../../node_modules/systemjs/dist/system.js"></script>
 
     <script type="text/javascript">
     {   
-        const
+        var
             uri = location.href,
             baseUri = uri.split('#')[0],
             fragment = uri.split('#')[1] || '',
             demoName = fragment.split('/')[0],
             adapter = fragment.split('/')[1] || 'react',
 
-            reload = () => {
+            reload = function () {
                 const
                     demoName = document.getElementById('demo-selector').value,
                     adapterName = document.getElementById('adapter-selector').value,
@@ -49,7 +50,7 @@
             availableAdapters = ['react', 'vue', 'surface'];
 
 
-        System.config({
+        var systemConfig = {
             baseURL: '../..',
             transpiler: 'plugin-babel',
             packages: {
@@ -88,12 +89,11 @@
                 }
             },
             map: {
-                'js-surface': `../main/__modules__/${adapter}.js`,
-                'js-surface/common': `../main/__modules__/common.js`,
-                'js-surface/preact': `../main/__modules__/preact/index.js`,
-                'js-surface/react': `../main/__modules__/react/index.js`,
-                'js-surface/dom-builders': `../main/__modules__/${adapter}/dom-builders.js`,
-                [`js-surface/${adapter}`]: `../main/__modules__/${adapter}/index.js`,
+                'js-surface': '../main/__modules__/' + adapter + '.js',
+                'js-surface/common': '../main/__modules__/common.js',
+                'js-surface/preact': '../main/__modules__/preact/index.js',
+                'js-surface/react': '../main/__modules__/react/index.js',
+                'js-surface/dom-builders': '../main/__modules__/' + adapter + '/dom-builders.js',
                 //'js-surface': `node_modules/js-surface/dist/react.js`,
                 //'js-surface/vue': `node_modules/js-surface/dist/vue.js`,
                 //'js-hyperscript': 'node_modules/js-hyperscript/dist/js-hyperscript.min.js',
@@ -116,26 +116,34 @@
                 'js-hyperscript': 'node_modules/js-hyperscript/dist/',
                 'js-dom-factories': 'node_modules/js-dom-factories/dist/'
             }
-        });
+        };
+        
+        systemConfig['js-surface/' + adapter] =  '../main/__modules__/' + adapter + '/index.js';
+
+        System.config(systemConfig);
 
         System.import('./available-demos.js')
-            .then(({ default: availableDemos }) => {
-                const
-                    activeDemoIndex = Math.max(availableDemos.findIndex(it => it.name === demoName), 0),
+            .then(function (module) {
+                var
+                    availableDemos = module.default,
+                    activeDemoIndex = Math.max(availableDemos.findIndex(
+                        function (it) { return it.name === demoName; }, 0)),
                     activeDemo =  availableDemos[activeDemoIndex];
 
-                let content =
+                var content =
                     '<div class="card"><div class="card-header demo-header">'
                     + '<label for="demo-selector">Demo:</label> '
                     + '<select id="demo-selector">';
 
-                for (let file of activeDemo.files) {
-                    const path = './' + activeDemo.directory + '/' + file;
+                for (var i = 0; i < activeDemo.files.length; ++i) {
+                    var
+                        file = activeDemo.files[i],
+                        path = './' + activeDemo.directory + '/' + file;
 
                     if (path.endsWith('.js')) {
                         System.import(path);
                     } else if (path.endsWith('.css')) {
-                        const elem = document.createElement('link');
+                        var elem = document.createElement('link');
                         elem.setAttribute('type', 'text/css');
                         elem.setAttribute('rel', 'stylesheet');
                         elem.setAttribute('href', path);
@@ -144,20 +152,26 @@
                     }
                 }
 
-                for (let demo of availableDemos) {
-                    const selected = demo.name === activeDemo.name ? 'selected' : '';
+                for (var i = 0; i < availableDemos.length; ++i) {
+                    var
+                        demo = availableDemos[i],
+                        selected = demo.name === activeDemo.name ? 'selected' : '';
 
-                    content += `<option value="${demo.name}" ${selected}>${demo.displayName}</option>`;
+                    content += '<option value="'
+                        + demo.name + '" ' + selected + '>' + demo.displayName
+                        + '</option>';
                 }
 
                 content += '</select> '
                     + '<label for="adapter-selector">Adapter:</label> '
                     + '<select id="adapter-selector">';
 
-                for (let availableAdapter of availableAdapters) {
-                    const selected = availableAdapter === adapter ? 'selected' : '';
+                for (var i = 0; i < availableAdapters.length; ++i) {
+                    var
+                        availableAdapter = availableAdapters[i];
+                        selected = availableAdapter === adapter ? 'selected' : '';
 
-                    content += `<option ${selected}>${availableAdapter}</option>`;
+                    content += '<option ' + selected + '>' + availableAdapter + '</option>';
                 }
 
                 content += '</select></div><div id="main-content" class="'
@@ -166,11 +180,15 @@
                 
                 document.body.innerHTML = content;
 
-                for (let elem of document.getElementsByTagName('select')) {
+                var selectElements = document.getElementsByTagName('select');
+
+                for (var i = 0; i < selectElements.length; ++i) {
+                    var elem = selectElements[i];
+
                     elem.addEventListener('change', reload);
                 }
             })
-            .catch(err => {
+            .catch(function (err) {
                 document.body.innerText = err;
             });
     }

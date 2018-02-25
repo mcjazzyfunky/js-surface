@@ -1,11 +1,16 @@
 import React from 'react';
 
-const createElement = React.createElement;
+const
+    createElement = React.createElement,
+
+    isV8Engine = typeof process !== 'undefined'
+        || (typeof chrome !== 'undefined'
+            && window.chrome && window.chrome.webstore);
 
 export default function adaptCreateReactElement({
-    isFirefox = typeof InstallTrigger !== 'undefined'
+    optimizeForV8 = isV8Engine
 }) {
-    return isFirefox    
+    return !optimizeForV8    
         ? function (...args) {
             const firstArg = args[0];
 
