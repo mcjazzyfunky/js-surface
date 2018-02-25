@@ -39,7 +39,8 @@
     "grunt-webpack": "^3.0.2",
     "invariant": "^2.2.2",
     "jquery": "^2.2.4",
-    "js-dom-factories": "^0.1.1",
+    "js-dom-factories": "^0.1.2",
+    "js-hyperscript": "^0.1.3",
     "js-spec": "^0.1.19",
     "jsesc": "^2.5.1",
     "json5": "^0.5.1",
@@ -60,7 +61,6 @@
     "webpack-dev-server": "^2.9.3"
   },
   "dependencies": {
-    "grunt": "^1.0.1",
-    "js-hyperscript": "^0.1.2"
+    "grunt": "^1.0.1"
   }
 }

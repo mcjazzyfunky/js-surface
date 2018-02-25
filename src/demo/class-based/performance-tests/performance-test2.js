@@ -1,12 +1,31 @@
 import Surface from 'js-surface';
 import { Html as HtmlReact } from 'js-dom-factories/react';
 import { Html as HtmlDio } from 'js-dom-factories/dio';
+import { Html as HtmlSurface } from 'js-dom-factories/surface';
 import { Html as HtmlUniversal } from 'js-dom-factories/universal';
+
+import hyperscriptReact from 'js-hyperscript/react';
+import hyperscriptDio from 'js-hyperscript/dio';
+import hyperscriptSurface from 'js-hyperscript/surface';
+import hyperscriptUniversal from 'js-hyperscript/universal';
 
 const Html =
     Surface.Adapter.name === 'react'
         ? HtmlReact
-        : (Surface.Adapter.name === 'dio' ? HtmlDio : HtmlUniversal);
+        : Surface.Adapter.name === 'dio'
+        ? HtmlDio
+        : Surface.Adapter.name === 'surface'
+        ? HtmlSurface
+        : HtmlUniversal;
+
+const hyperscript =
+    Surface.Adapter.name === 'react'
+        ? hyperscriptReact
+        : Surface.Adapter.name === 'dio'
+        ? hyperscriptDio
+        : Surface.Adapter.name === 'surface'
+        ? hyperscriptSurface
+        : hyperscriptUniversal;
 
 const
     iterationCount = 200000,
@@ -35,7 +54,7 @@ let report = '';
 
 if (adapterName !== 'vue') {
     tests.push({
-        displayName: `Using '${Surface.Adapter.name}'`,
+        displayName: `Using adapter "${Surface.Adapter.name}"`,
 
         run() {
             for (let i = 0; i < iterationCount; ++i) {
@@ -48,7 +67,7 @@ if (adapterName !== 'vue') {
 }
 
 tests.push({
-    displayName: 'Using js-surface with createElement',
+    displayName: 'Using createElement of "js-surface"',
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
@@ -60,7 +79,40 @@ tests.push({
 });
 
 tests.push({
-    displayName: 'Using surface with HTML builder',
+    displayName: 'Using "js-hyperscript" (test 1)',
+
+    run() {
+        for (let i = 0; i < iterationCount; ++i) {
+            hyperscript('div',
+                { className: 'my-class', id: 'my-id' },
+                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+        }
+    }
+});
+
+tests.push({
+    displayName: 'Using "js-hyperscript" (test 2)',
+
+    run() {
+        for (let i = 0; i < iterationCount; ++i) {
+            hyperscript('div#my-id.my-class',
+                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+        }
+    }
+});
+
+tests.push({
+    displayName: 'Using "js-hyperscript" (test 3)',
+
+    run() {
+        for (let i = 0; i < iterationCount; ++i) {
+            hyperscript('#my-id.my-class > #my-id2.my-class2', 'my-div');
+        }
+    }
+});
+
+tests.push({
+    displayName: 'Using "js-dom-factories"',
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
