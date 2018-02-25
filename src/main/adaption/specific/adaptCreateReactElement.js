@@ -4,7 +4,8 @@ const
     createElement = React.createElement,
 
     isV8Engine = typeof process !== 'undefined'
-        || (typeof chrome !== 'undefined'
+        || (typeof window === 'object' && window
+            && typeof chrome !== 'undefined'
             && window.chrome && window.chrome.webstore);
 
 export default function adaptCreateReactElement({
