@@ -129,7 +129,10 @@
                     availableDemos = module.default,
                     activeDemoIndex = Math.max(availableDemos.findIndex(
                         function (it) { return it.name === demoName; }, 0)),
-                    activeDemo =  availableDemos[activeDemoIndex];
+                    activeDemo =
+                        activeDemoIndex === -1
+                            ? availableDemos[0]
+                            : availableDemos[activeDemoIndex];
 
                 var content =
                     '<div class="card"><div class="card-header demo-header">'
