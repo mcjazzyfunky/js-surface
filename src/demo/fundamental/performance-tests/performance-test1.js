@@ -1,13 +1,11 @@
 import {
-    createElement as h,
+   createElement as h,
     defineComponent,
     mount,
     Adapter 
 }  from 'js-surface';
 
 import { Spec } from 'js-spec';
-
-// Config.validateProps = false;
 
 const
     framesPerSecond = 240,

@@ -11,29 +11,17 @@ const
 export default function adaptCreateReactElement({
     optimizeForV8 = isV8Engine
 }) {
-    return !optimizeForV8    
-        ? function (...args) {
-            const firstArg = args[0];
+    return (...args) => {
+        const firstArg = args[0];
 
-            if (firstArg === null) {
-                args[0] = React.Fragment;
-            } else if (firstArg && firstArg.__isSurfaceComponentFactory === true) {
-                args[0] = firstArg.type;
-            }
-
-            return createElement(...args);
+        if (firstArg === null) {
+            args[0] = React.Fragment;
+        } else if (firstArg && firstArg.__isSurfaceComponentFactory === true) {
+            args[0] = firstArg.type;
         }
-        : function () {
-            const
-                args = arguments,
-                firstArg = args[0];
-            
-            if (firstArg === null) {
-                args[0] = React.Fragment;
-            } else if (firstArg && firstArg.__isSurfaceComponentFactory === true) {
-                args[0] = firstArg.type;
-            }
 
-            return createElement.apply(null, args);
-        };
+        return optimizeForV8
+            ? createElement.apply(null, args)
+            : createElement(...args)
+    };
 }

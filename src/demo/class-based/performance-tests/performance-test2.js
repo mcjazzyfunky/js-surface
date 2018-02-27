@@ -23,7 +23,7 @@ const hyperscript =
         : hyperscriptUniversal;
 
 const
-    iterationCount = 200000,
+    iterationCount = 100000,
     contentContainer = document.getElementById('main-content'),
     adapterName = Surface.Adapter.name,
     tests = [];
@@ -55,7 +55,7 @@ if (adapterName !== 'vue') {
             for (let i = 0; i < iterationCount; ++i) {
                 createElement('div',
                     { className: 'my-class', id: 'my-id' },
-                    createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                    createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));    
             }
         }
     });
@@ -68,7 +68,7 @@ tests.push({
         for (let i = 0; i < iterationCount; ++i) {
             Surface.createElement('div',
                 { className: 'my-class', id: 'my-id' },
-                Surface.createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                Surface.createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));    
         }
     }
 });
@@ -80,7 +80,7 @@ tests.push({
         for (let i = 0; i < iterationCount; ++i) {
             hyperscript('div',
                 { className: 'my-class', id: 'my-id' },
-                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));    
         }
     }
 });
@@ -90,8 +90,8 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            hyperscript('div#my-id.my-class',
-                hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div'));    
+            hyperscript('#my-id', { className: 'my-class' },
+                hyperscript('#my-id2', { className: 'my-class2' }, 'my-div', 1, 2, 3, 4, 5));    
         }
     }
 });
@@ -101,19 +101,31 @@ tests.push({
 
     run() {
         for (let i = 0; i < iterationCount; ++i) {
-            hyperscript('#my-id.my-class > #my-id2.my-class2', 'my-div');
+            hyperscript('#my-id.my-class > #my-id2.my-class2', 'my-div', 1, 2, 3, 4, 5);
         }
     }
 });
 
 if (adapterName === 'react') {
     tests.push({
-        displayName: 'Using "react-hyperscript"',
+        displayName: 'Using "react-hyperscript (test 1)"',
 
         run() {
             for (let i = 0; i < iterationCount; ++i) {
-                reactHyperscript('#my-id.my-class', [
-                    reactHyperscript('div#my-id2.my-class2', [ 'my-div'])
+                reactHyperscript('div', { className: 'my-class', id: 'my-id' }, [
+                    reactHyperscript('div', { className: 'my-class2', id: 'my-id2'}, ['my-div', 1, 2, 3, 4, 5])
+                ]);    
+            }
+        }
+    });
+
+    tests.push({
+        displayName: 'Using "react-hyperscript (test 2)"',
+
+        run() {
+            for (let i = 0; i < iterationCount; ++i) {
+                reactHyperscript('#my-id', { className: 'my-class' }, [
+                    reactHyperscript('#my-id2', { className: 'my-class2' }, ['my-div', 1, 2, 3, 4, 5])
                 ]);
             }
         }
@@ -126,7 +138,7 @@ tests.push({
     run() {
         for (let i = 0; i < iterationCount; ++i) {
             Html.div({ className: 'my-class', id: 'my-id' },
-                Html.div({ className: 'my-class2', id: 'my-id2'}, 'my-div'));     
+                Html.div({ className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));     
         }
     }
 });
