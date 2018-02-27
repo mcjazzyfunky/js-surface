@@ -460,15 +460,6 @@ function onSelectTest(ev) {
         mount(SpeedTest({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
         break;
     
-    case 'original-functional':
-        mount(SpeedTestDirect({ type: 'functional', columnCount, rowCount, tileWidth }), 'speed-test');
-        break;
-    
-    case 'original-standard':
-        mount(SpeedTestDirect({ type: 'standard', columnCount, rowCount, tileWidth }), 'speed-test');
-        break;
-    
-    
     default:
         document.getElementById('speed-test').innerHTML = '';
     }
