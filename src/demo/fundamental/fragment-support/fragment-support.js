@@ -25,9 +25,9 @@ const Options = defineComponent({
     render() {
         return (
             fragment(null,
-                h('option', { text: 'Option #1' }),
-                h('option', { text: 'Option #2' }),
-                h('option', { text: 'Option #3' })));
+                h('option', null, 'Option #1' ),
+                h('option', null, 'Option #2' ),
+                h('option', null, 'Option #3' )));
     }
 });
 

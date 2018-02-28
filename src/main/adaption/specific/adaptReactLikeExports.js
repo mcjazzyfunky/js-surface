@@ -141,6 +141,7 @@ export default function adaptReactLikeExports({
                 ret.displayName = config.displayName + '-wrapper';
             } else {
                 ret = props => config.render(propsAdjuster(props, config));
+                ret.displayName = config.displayName;
             }
         } else {
             if (injectableProperties) {
