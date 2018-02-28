@@ -149,7 +149,7 @@ function createComponentType(config) {
 
             derivedComponent.displayName = config.displayName;
 
-            ret = (props, context) => {
+            ret = (props, _, context) => {
                 const ret = createElement(derivedComponent, 
                     propsAdjuster(mergePropsWithContext(props, context, config), true));
 
@@ -164,7 +164,7 @@ function createComponentType(config) {
         if (injectableProperties) {
             const derivedComponent = createComponentClass(config);
 
-            ret = (props, context) => {
+            ret = (props, _, context) => {
                 return createElement(derivedComponent, 
                     propsAdjuster(mergePropsWithContext(props, context, config), true));
             };
@@ -289,6 +289,7 @@ function createComponentClass(config) {
 
     Object.assign(Component, convertConfig(config));
 
+    console.log(convertConfig(config));
 
     return Component;
 }
