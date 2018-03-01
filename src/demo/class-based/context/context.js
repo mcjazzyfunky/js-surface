@@ -49,21 +49,21 @@ const Child = defineComponent({
     properties: {
         parentDisabled: {
             type: Boolean,
-            inject: true,
-            defaultValue: false
+            inject: true
+            //defaultValue: false
         }
     },
 
-    //main: class extends Component {
-        render(props) {
+    main: class extends Component {
+        render() {
             return (
                 h('div', null,
                     'Child component is ',
-                    props.parentDisabled ? 'disabled' : 'enabled',
+                    this.props.parentDisabled ? 'disabled' : 'enabled',
                     '.')
             );
         }
-    //}
+    }
 });
 
 const Container = defineComponent({
@@ -72,15 +72,12 @@ const Container = defineComponent({
     properties: ['children'],
 
     main: class extends Component {
-        shouldComponentUpdate() {
-            console.log('Container decides whether it should update');
-            
+        shouldComponentUpdate() {console.log('shouldComponentUpdate')
             return false;
+            //return false;
         }
 
         render() {
-            console.log('Container is rendering');
-            
             return (
                 h('div', null,
                     h('div', null, this.props.children))

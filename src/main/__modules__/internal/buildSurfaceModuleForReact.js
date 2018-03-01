@@ -99,16 +99,17 @@ function createComponentType(config) {
         }
     } else {
         if (injectableProperties) {
-            const derivedComponent = deriveStandardBaseComponent(config);
+            const derivedComponent = deriveReactComponent(config);
 
             ret = (props, context) => {
-                return createElement(derivedComponent, 
-                    propsAdjuster(mergePropsWithContext(props, context, config), true));
+                let mergedProps = propsAdjuster(mergePropsWithContext(props, context, config), true);
+
+                return createElement(derivedComponent, mergedProps);
             };
 
             ret.displayName = config.displayName + '-wrapper';
         } else {
-            ret = deriveStandardReactLikeComponent(config);
+            ret = deriveReactComponent(config);
         }
     }
 
@@ -123,21 +124,21 @@ function createComponentType(config) {
     return ret;
 }
 
-function deriveStandardBaseComponent(config) {
+function deriveReactComponent(config) {
     // config is already normalized
 
     const convertedConfig = convertConfigToReactLike(config);
 
     class Component extends React.Component {
-        constructor(props, context) {
+        constructor(props, context) {console.log(config.displayName);
             super(props, context);
-            this.__view = null;
+            this.__view = undefined;
             this.__childContext = null;
-        }
+       // }
 
-        componentWillMount() {
+//        componentWillMount() {
             const
-                updateView = (view, childContext, callback = null) => {
+                updateView = (view, childContext, callback = null) => {console.log('updateView', config.displayName)
                     this.__view = view;
                     this.__childContext = childContext;
                     this.forceUpdate(callback);
@@ -159,7 +160,11 @@ function deriveStandardBaseComponent(config) {
             this.__setProps(this.props);
         }
 
-        componentWillReceiveProps(props) {
+        shouldComponentUpdate() {
+            return this.__view !== undefined;
+        }
+
+        componentWillReceiveProps(props) {console.log('willreceiveProps', config.displayName)
             this.__setProps(props);
         }
 
@@ -171,7 +176,7 @@ function deriveStandardBaseComponent(config) {
 
         render() {
             const view = this.__view;
-       //     this.__view = null; // TODO - why is this line not working with Preact (see demo 'simple-counter')?
+            this.__view = undefined;
             return view;
         }
     }
@@ -229,84 +234,8 @@ function mergePropsWithContext(props, context) {
             ret[contextKey] = contextValue;
         }
     }
-}
 
-function deriveStandardReactLikeComponent(config) {
-    // config is already normalized
-
-    const convertedConfig = convertConfigToReactLike(config);
-
-    class Component extends React.Component {
-        constructor(props, context) {
-            super(props, context);
-            this.__view = null;
-            this.__childContext = null;
-        }
-
-        componentWillMount() {
-            const
-                updateView = (view, childContext, callback = null) => {
-                    this.__view = view;
-                    this.__childContext = childContext;
-                    this.forceUpdate(callback);
-                },
-                
-                updateState = (updater, callback) => {
-                    this.setState(updater, !callback ? null : () => {
-                        callback(this.state, this.props);
-                    });
-                };
-
-            const result = config.init(updateView, updateState);
-
-            this.__setProps = result.setProps;
-            this.__close = result.close || null;
-            this.__runOperation = result.runOperation || null;
-            this.__handleError = result.handleError || null;
-
-            this.__setProps(this.props);
-        }
-
-        componentWillReceiveProps(props) {
-            this.__setProps(props);
-        }
-
-        componentWillUnmount() {
-            if (this.__close) {
-                this.__close();
-            }
-        }
-
-        render() {
-            const view = this.__view;
-       //     this.__view = null; // TODO - why is this line not working with Preact (see demo 'simple-counter')?
-            return view;
-        }
-    }
-
-    if (config.childContext) {
-        Component.prototype.getChildContext = function () {
-            return this.__childContext;
-        };
-    }
-
-    if (config.operations) {
-        for (const operationName of config.operations) {
-            Component.prototype[operationName] = function (...args) {
-                return this.__runOperation(operationName, args);
-            };
-        }
-    }
-
-    if (config.isErrorBoundary) {
-        Component.prototype.componentDidCatch = function (error, info) {
-            this.__handleError(error, info);
-        };
-    }
-
-    Object.assign(Component, convertedConfig);
-
-    return Component;
+    return ret;
 }
 
 function convertConfigToReactLike(config) {

@@ -1,6 +1,6 @@
 import determineAllMethodNames from '../util/determineAllMethodNames';
 
-const callbackMethodNamesCache = new Map();
+const callbackMethodNamesCache = new WeakMap();
 
 export default class Component {
     constructor(props) {
@@ -125,6 +125,7 @@ export default class Component {
 
                     if (component === null) {
                         component = new this(props);
+                        component.___props = props;
                         component.___updateView = updateView;
                         component.___updateState = updateState;
                         component.componentDidMount();
@@ -133,6 +134,8 @@ export default class Component {
                         component.componentWillReceiveProps(
                             component.___props, component.___state);
                         
+                        component.___props = props;
+                       console.log(22222, meta.displayName); 
                         needsUpdate = component.shouldComponentUpdate(
                             props, component.___state);
                     }
