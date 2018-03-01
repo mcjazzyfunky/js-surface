@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -47,23 +49,40 @@ module.exports = function (grunt) {
             surface: {
                 entry: ['./build/src/main/__modules__/surface.js'],
                 output: {
-                    filename: './dist/index.js',
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'index.js',
+                    library: 'jsSurface',
                     libraryTarget: 'umd'
-                }   
+                },
+                resolve: {
+                    alias: {
+                        'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
+                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                    }
+                }
             },
             surfaceCommon: {
                 entry: ['./build/src/main/__modules__/common.js'],
                 output: {
-                    filename: './dist/common.js',
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'common.js',
+                    library: 'jsSurfaceCommon',
                     libraryTarget: 'umd'
                 }
             },
             react: {
                 entry: ['./build/src/main/__modules__/react.js'],
                 output: {
-                    filename: './dist/react.js',
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'react.js',
+                    library: 'jsSurfaceReact',
                     libraryTarget: 'umd'
                 },   
+                resolve: {
+                    alias: {
+                        'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
+                    }
+                },
                 externals: {
                     'react': true,
                     'react-dom': true
@@ -81,8 +100,14 @@ module.exports = function (grunt) {
             vue: {
                 entry: ['./build/src/main/__modules__/vue.js'],
                 output: {
-                    filename: './dist/vue.js',
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'vue.js',
                     libraryTarget: 'umd'
+                },
+                resolve: {
+                    alias: {
+                        'js-hyperscript/universal$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'universal.js')
+                    }
                 },
                 externals: {
                     vue: true
@@ -93,11 +118,11 @@ module.exports = function (grunt) {
             options: {
                 ASCIIOnly: true,
                 banner: '/*\n'
-                        + ' <%= pkg.name %> v<%= pkg.version %> - '
-                        + '<%= grunt.template.today("yyyy-mm-dd") %>\n'
-                        + ' Homepage: <%= pkg.homepage %>\n'
-                        + ' Licencse: New BSD License\n'
-                        + '*/\n'
+                    + ' <%= pkg.name %> v<%= pkg.version %> - '
+                    + '<%= grunt.template.today("yyyy-mm-dd") %>\n'
+                    + ' Homepage: <%= pkg.homepage %>\n'
+                    + ' Licencse: New BSD License\n'
+                    + '*/\n'
             },
             jsSurface: {
                 src: ['dist/index.js'],

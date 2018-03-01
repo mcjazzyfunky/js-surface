@@ -55,8 +55,8 @@
     "systemjs-plugin-babel": "0.0.25",
     "typescript": "^2.4.2",
     "vue": "^2.5.13",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack": "^4.0.1",
+    "webpack-dev-server": "^3.1.0"
   },
   "dependencies": {
     "grunt": "^1.0.1"
