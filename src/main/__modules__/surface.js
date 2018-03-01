@@ -89,8 +89,7 @@ function convertConfig(config) {
         
         // contextTypes will be handled by wrapper component
         // (=> higher-order component)
-        contextTypes: null,
-        childContextTypes: null
+        contextTypes: null
     };
 
     ret.displayName = config.displayName;
@@ -112,14 +111,6 @@ function convertConfig(config) {
                     get: () => propCfg.getDefaultValue()
                 }); 
             }
-        }
-    }
-
-    if (config.childContext) {
-        ret.childContextTypes = {};
-
-        for (const key of config.childContext) {
-            ret.childContextTypes[key] = dummyValidator;
         }
     }
 
@@ -288,8 +279,6 @@ function createComponentClass(config) {
     }
 
     Object.assign(Component, convertConfig(config));
-
-    console.log(convertConfig(config));
 
     return Component;
 }
