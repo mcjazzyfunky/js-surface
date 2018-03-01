@@ -4,6 +4,9 @@ import adaptMountFunction from '../adaption/adaptMountFunction';
 import createPropsAdjuster from '../helper/createPropsAdjuster';
 
 import dio from 'dio.js';
+import createElement from 'js-hyperscript/dio';
+
+console.log(dio);
 
 const
     dummyValidator = function validator() {},
@@ -19,7 +22,7 @@ const
     }),
 
     Fragment = dio.Fragment,
-    fragment = createElement.bind(null, Fragment),
+    fragment = dio.createElement.bind(null, Fragment),
 
     Adapter = {
         name: 'surface'
@@ -66,18 +69,6 @@ export {
 };
 
 // --- locals -------------------------------------------------------
-
-function createElement(...args) {
-    const firstArg = args[0];
-
-    if (firstArg === null) {
-        args[0] = dio.Fragment;
-    } else if (firstArg && firstArg.type && typeof firstArg.type === 'function') {
-        args[0] = firstArg.type;
-    }
-
-    return dio.createElement.apply(null, args);
-}
 
 function convertConfig(config) {
     // config is already normalized
@@ -141,7 +132,7 @@ function createComponentType(config) {
             derivedComponent.displayName = config.displayName;
 
             ret = (props, _, context) => {
-                const ret = createElement(derivedComponent, 
+                const ret = dio.createElement(derivedComponent, 
                     propsAdjuster(mergePropsWithContext(props, context, config), true));
 
                 return ret;
@@ -156,7 +147,7 @@ function createComponentType(config) {
             const derivedComponent = createComponentClass(config);
 
             ret = (props, _, context) => {
-                return createElement(derivedComponent, 
+                return dio.createElement(derivedComponent, 
                     propsAdjuster(mergePropsWithContext(props, context, config), true));
             };
 
