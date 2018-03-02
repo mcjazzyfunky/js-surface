@@ -1,4 +1,3 @@
-
 import React from 'react';
 import createElement from 'js-hyperscript/react';
 import adaptIsElementFunction from '../../adaption/adaptIsElementFunction';
@@ -130,54 +129,83 @@ function deriveReactComponent(config) {
     const convertedConfig = convertConfigToReactLike(config);
 
     class Component extends React.Component {
-        constructor(props, context) {console.log(config.displayName);
-            super(props, context);
-            this.__view = undefined;
-            this.__childContext = null;
-       // }
+        constructor(props) {
+            super(props);
 
-//        componentWillMount() {
             const
-                updateView = (view, childContext, callback = null) => {console.log('updateView', config.displayName)
-                    this.__view = view;
-                    this.__childContext = childContext;
-                    this.forceUpdate(callback);
-                },
-                
                 updateState = (updater, callback) => {
-                    this.setState(updater, !callback ? null : () => {
-                        callback(this.state, this.props);
-                    });
+                    if (!this.__isInitialized) {
+                        this.state = updater();
+
+                        if (callback) {
+                            callback(this.state);
+                        }
+                    } else {
+                        this.setState(updater, !callback ? null : () => {
+                            callback(this.state);
+                        });
+                    }
+                },
+
+                refresh = callback => {
+                    if (!this.__isInitialized) {
+                        if (callback) {
+                            if (this.__callbacksWhenDidMount === null) {
+                                this.__callbacksWhenDidMount = [callback];
+                            } else {
+                                this.__callbacksWhenDidMount.push(callback);
+                            }
+                        }
+                    } else {
+                        this.forceUpdate(callback);
+                    }
                 };
 
-            const result = config.init(updateView, updateState);
+            this.__isInitialized = false;
+            this.__callbacksWhenDidMount = null;
+            
+            const result = config.init(props, refresh, updateState);
 
-            this.__setProps = result.setProps;
-            this.__close = result.close || null;
+            this.__receiveProps = result.receiveProps || null;
+            this.__finalize = result.finalize || null;
             this.__runOperation = result.runOperation || null;
             this.__handleError = result.handleError || null;
-
-            this.__setProps(this.props);
+            this.__render = result.render;
         }
 
         shouldComponentUpdate() {
-            return this.__view !== undefined;
+            return this.__shouldRefresh;
         }
 
-        componentWillReceiveProps(props) {console.log('willreceiveProps', config.displayName)
-            this.__setProps(props);
+        componentWillReceiveProps(props) {
+            if (this.__receiveProps) {
+                this.__receiveProps(props);
+            }
+        }
+
+        componentDidMount() {
+            this.__isInitialized = true;
+    
+            const callbacks = this.__callbacksWhenDidMount;
+
+            if (callbacks) {
+                this.__callbacksWhenDidMount = null;
+    
+                for (let i = 0; i < callbacks.length; ++i) {
+                    callbacks[i]();
+                }
+            }
         }
 
         componentWillUnmount() {
-            if (this.__close) {
-                this.__close();
+            if (this.__finalize) {
+                this.__finalize();
             }
         }
 
         render() {
-            const view = this.__view;
-            this.__view = undefined;
-            return view;
+            this.__shouldUpdate = false;
+            return this.__render(this.props, this.state);
         }
     }
 

@@ -95,7 +95,7 @@ const SurfaceCounter = defineComponent({
             };
 
         return {
-            setProps(props) {
+            receiveProps(props) {
                 if (props === null) {
                     counterValue = props.initialValue;                    
                 }

@@ -17,7 +17,7 @@ const Parent = defineComponent({
     childContext: ['value'],
 
     init: updateView => ({
-        setProps(props) {
+        receiveProps(props) {
             updateView(
                 h('div', null,
                     h('div', null, 'Provided value: ', props.masterValue),
@@ -60,7 +60,7 @@ const ChildStandard = defineComponent({
     },
 
     init: updateView => ({
-        setProps(props) {
+        receiveProps(props) {
             updateView(
                 h('div', null, 'ChildStandard(', props.value, ')'));
         }

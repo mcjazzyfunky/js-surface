@@ -6,9 +6,8 @@ import createPropsAdjuster from '../helper/createPropsAdjuster';
 import dio from 'dio.js';
 import createElement from 'js-hyperscript/dio';
 
-console.log(dio);
-
 const
+    validateProps = true, // TODO
     dummyValidator = function validator() {},
 
     isElement = adaptIsElementFunction({
@@ -133,14 +132,14 @@ function createComponentType(config) {
 
             ret = (props, _, context) => {
                 const ret = dio.createElement(derivedComponent, 
-                    propsAdjuster(mergePropsWithContext(props, context, config), true));
+                    propsAdjuster(mergePropsWithContext(props, context, config), validateProps));
 
                 return ret;
             };
 
             ret.displayName = config.displayName + '-wrapper';
         } else {
-            ret = props => config.render(propsAdjuster(props, config));
+            ret = props => config.render(propsAdjuster(props, validateProps));
         }
     } else {
         if (injectableProperties) {
@@ -148,7 +147,7 @@ function createComponentType(config) {
 
             ret = (props, _, context) => {
                 return dio.createElement(derivedComponent, 
-                    propsAdjuster(mergePropsWithContext(props, context, config), true));
+                    propsAdjuster(mergePropsWithContext(props, context, config), validateProps));
             };
 
             ret.displayName = config.displayName + '-wrapper';
@@ -224,21 +223,21 @@ function createComponentClass(config) {
 
             const result = config.init(updateView, updateState);
 
-            this.__setProps = result.setProps;
-            this.__close = result.close || null;
+            this.__receiveProps = result.receiveProps;
+            this.__finalize = result.finalize || null;
             this.__runOperation = result.runOperation || null;
             this.__handleError = result.handleError || null;
 
-            this.__setProps(this.props);
+            this.__receiveProps(this.props);
         }
 
         componentWillReceiveProps(props) {
-            this.__setProps(props);
+            this.__receiveProps(props);
         }
 
         componentWillUnmount() {
-            if (this.__close) {
-                this.__close();
+            if (this.__finalize) {
+                this.__finalize();
             }
         }
 

@@ -6,7 +6,7 @@ export default class Component {
     constructor(props) {
         this.___props = props;
         this.___state = undefined;
-        this.___updateView = null;
+        this.___refresh = null;
         this.___updateState = null;
 
         let callbackMethodNames =
@@ -27,16 +27,7 @@ export default class Component {
         }
     }
 
-    componentWillMount() {
-    }
-    
     componentDidMount() {
-    }
-
-    componentWillReceiveProps(/* props */) {
-    }
-
-    componentWillUpate(/* nextProps, nextState */) {
     }
 
     componentDidUpdate(/* prevProps, prevState */) {
@@ -52,11 +43,8 @@ export default class Component {
         return true;
     }
 
-    getChildContext() {
+    render() { 
         return null;
-    }
-
-    render() {
     }
 
     setState(firstArg) {
@@ -86,10 +74,8 @@ export default class Component {
     }
 
     forceUpdate(callback) {
-        if (this.___updateView) {
-            const view = this.render();
-
-            this.___updateView(view, this.getChildContext(), callback);
+        if (this.___refresh) {
+            this.___refresh(callback);
         }
     }
 
@@ -113,62 +99,58 @@ export default class Component {
         }
     }
 
-    static normalizeComponent(meta) {
-        const init = (updateView, updateState) => {
-            let
-                component = null,
-                content = null;
-
+    static normalizeComponent(config) {
+        const init = (props, refresh, updateState) => {
             const
-                setProps = props => {
-                    let needsUpdate = false;
+                component = new this(props),
 
-                    if (component === null) {
-                        component = new this(props);
-                        component.___props = props;
-                        component.___updateView = updateView;
-                        component.___updateState = updateState;
-                        component.componentDidMount();
-                        needsUpdate = true;
-                    } else {
-                        component.componentWillReceiveProps(
-                            component.___props, component.___state);
-                        
-                        component.___props = props;
-                       console.log(22222, meta.displayName); 
+                render = () => {
+                    return component.render();
+                },
+
+                receiveProps = props => {
+                    const
+                        oldProps = component.___props,
+                        state = component.___state,
                         needsUpdate = component.shouldComponentUpdate(
-                            props, component.___state);
-                    }
+                            props, state);
+
+                    component.componentWillReceiveProps(
+                        props, state);
+                    
+                    component.___props = props;
+
 
                     if (needsUpdate) {
-                        needsUpdate = false;
-                        content = component.render();
-                        
-                        const childContext = component.getChildContext();
-                        const callbackWhenDone = null; // TODO
-
-                        updateView(content, childContext, callbackWhenDone);
+                        this.___refresh(() => this.componentDidUpdate(oldProps, state));
                     }
                 },
 
-                close = () => {
+                finalize = () => {
                     if (component && component.___updateState) {
                         component.componentWillUnmount();
                     }
                 };
+            
+            
+            component.___props = props;
+            component.___refresh = refresh;
+            component.___updateState = updateState;
+            component.componentDidMount();
 
             const ret = {
-                setProps,
-                close
+                render,
+                receiveProps,
+                finalize
             };
 
-            if (meta.isErrorBoundary) {
+            if (config.isErrorBoundary) {
                 ret.handleError = (error, info) => {
                     component.componentDidCatch(error, info);
                 };
             }
 
-            if (meta.operations) {
+            if (config.operations) {
                 ret.runOperation = (name, args) => {
                     return component[name](...args);
                 };

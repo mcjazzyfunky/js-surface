@@ -58,7 +58,7 @@ const App = defineComponent({
             };
 
         return {
-            setProps(props) {
+            receiveProps(props) {
                 if (!locale) {
                     locale = props.defaultLocale;
                 }

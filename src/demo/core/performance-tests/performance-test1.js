@@ -90,9 +90,9 @@ const TileStandard = defineComponent({
         }
     },
     
-    init(updateView) {
+    init(props, refresh) {
         return {
-            setProps(props) {
+            render(props) {
                 const
                     { width, color } = props,
                 
@@ -103,7 +103,11 @@ const TileStandard = defineComponent({
                         backgroundColor: color
                     };
                 
-                updateView(h('div', { style }));
+                return h('div', { style });
+            },
+
+            receiveProps() {
+                refresh();
             }
         };
     }
@@ -122,13 +126,13 @@ const TileRowStandard = defineComponent({
         }
     },
     
-    init(updateView) {
+    init(props, refresh) {
         return {
-            setProps(props) {
+            render(props) {
                 const
-                    { tileWidth, columnCount } = props, 
+                    { tileWidth, columnCount } = props,
                     tiles = [];
-            
+
                 for (let x = 0; x < columnCount; ++x) {
                     const
                         colorIdx = Math.floor(Math.random() * colors.length),           
@@ -137,7 +141,11 @@ const TileRowStandard = defineComponent({
                     tiles.push(TileStandard({ width: tileWidth, color, key: x }));
                 }
             
-                updateView(h('div', { style: { clear: 'both' }}, tiles));
+                return h('div', { style: { clear: 'both' }}, tiles);
+            },
+
+            receiveProps() {
+                refresh();
             }
         };
     }
@@ -163,9 +171,8 @@ const SpeedTest = defineComponent({
         }
     },
         
-    init(updateView) {
+    init(initialProps, refresh) {
         let
-            props = null,
             startTime = Date.now(),
             frameCount = 0,
             actualFramesPerSecond = '0',
@@ -207,9 +214,12 @@ const SpeedTest = defineComponent({
                 );
             },
 
+            intervalId = null;
+
+        refresh(() => {
             intervalId = setInterval(() => {
                 ++frameCount;
-                updateView(render(props)); 
+                refresh(); 
 
                 if (frameCount % 10 === 0) {
                     actualFramesPerSecond =
@@ -217,14 +227,16 @@ const SpeedTest = defineComponent({
                             (Date.now() - startTime)).toFixed(2);
                 }
             }, 1000 / framesPerSecond);
+        });
 
         return {
-            setProps(nextProps) {
-                props = nextProps;
-                updateView(render(props));
+            render,
+
+            receiveProps() {
+                refresh();
             },
 
-            close() {
+            finalize() {
                 clearInterval(intervalId);
                 intervalId = null,
                 startTime = null;

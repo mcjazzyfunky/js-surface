@@ -47,7 +47,7 @@ export default function defineFlow(flowConfig) {
                 setState = updateState;
 
                 const ret = {
-                    setProps(props) {
+                    receiveProps(props) {
                         const initialized = state !== undefined;
 
                         currProps = props;
@@ -69,7 +69,7 @@ export default function defineFlow(flowConfig) {
                         updateView(flowConfig.render(props, state, events));
                     },
 
-                    close() {
+                    finalize() {
                     }
                 };
 

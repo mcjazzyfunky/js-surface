@@ -50,7 +50,7 @@ const StandardGreeting = defineComponent({
     },
 
     main: updateView => ({
-        setProps(props) {
+        receiveProps(props) {
             const text =
                 props.locale === 'fr'
                 ? `Bonjour ${props.name}!`

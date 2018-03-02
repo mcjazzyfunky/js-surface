@@ -2,13 +2,13 @@ export default [
     {
         name: 'hello-wold-functional',
         displayName: 'Hello World (functional)',
-        directory: 'fundamental/hello-world',
+        directory: 'core/hello-world',
         files: ['hello-world-functional.js']
     },
     {
         name: 'hello-wold-standard',
         displayName: 'Hello World (standard)',
-        directory: 'fundamental/hello-world',
+        directory: 'core/hello-world',
         files: ['hello-world-standard.js']
     },
     {
@@ -20,13 +20,13 @@ export default [
     {
         name: 'iterator-support-function',
         displayName: 'Iterator support (functional)',
-        directory: 'fundamental/iterator-support',
+        directory: 'core/iterator-support',
         files: ['iterator-support.js']
     },
     {
         name: 'inner-html-functional',
         displayName: 'Inner HTML support (functional)',
-        directory: 'fundamental/inner-html-support',
+        directory: 'core/inner-html-support',
         files: ['inner-html-support.js']
     },
     {
@@ -38,13 +38,13 @@ export default [
     {
         name: 'label-for-input-element',
         displayName: 'Label for input element (functional)',
-        directory: 'fundamental/label-for-input-element',
+        directory: 'core/label-for-input-element',
         files: ['label-for-input-element.js']
     },
     {
         name: 'clock-standard',
         displayName: 'Clock (standard)',
-        directory: 'fundamental/clock',
+        directory: 'core/clock',
         files: ['clock.js']
     },
     {
@@ -56,7 +56,7 @@ export default [
     {
         name: 'performance-test1-standard',
         displayName: 'Performance Test 1 (standard)',
-        directory: 'fundamental/performance-tests',
+        directory: 'core/performance-tests',
         files: ['performance-test1.js']
     },
     {
@@ -86,7 +86,7 @@ export default [
     {
         name: 'simple-counter-standard',
         displayName: 'Simple Counter (standard)',
-        directory: 'fundamental/counter',
+        directory: 'core/counter',
         files: ['simple-counter.js']
     },
     {
@@ -104,7 +104,7 @@ export default [
     {
         name: 'complex-counter-standard',
         displayName: 'Complex Counter (standard)',
-        directory: 'fundamental/counter',
+        directory: 'core/counter',
         files: ['complex-counter.js']
     },
     {
@@ -122,7 +122,7 @@ export default [
     {
         name: 'fragment-support-functional',
         displayName: 'Fragment support (functional)',
-        directory: 'fundamental/fragment-support',
+        directory: 'core/fragment-support',
         files: ['fragment-support.js']
     },
     {
@@ -140,7 +140,7 @@ export default [
     {
         name: 'injection-standard',
         displayName: 'Injection (standard)',
-        directory: 'fundamental/injection',
+        directory: 'core/injection',
         files: ['injection.js']
     },
     {
@@ -152,7 +152,7 @@ export default [
     {
         name: 'i18n-standard',
         displayName: 'Internationalization (standard)',
-        directory: 'fundamental/i18n',
+        directory: 'core/i18n',
         files: ['i18n.js']
     },
     {
@@ -164,7 +164,7 @@ export default [
     {
         name: 'error-boundary-standard',
         displayName: 'Error Boundary (standard)',
-        directory: 'fundamental/error-boundary',
+        directory: 'core/error-boundary',
         files: ['error-boundary.js']
     },
     {

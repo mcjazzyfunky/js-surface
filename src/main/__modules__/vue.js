@@ -189,11 +189,11 @@ function createStandardComponentType(config) {
             const initResult = config.init(
                 this.__updateView, this.__updateState);
 
-            this.__setProps = props => {
-                initResult.setProps(props);
+            this.__receiveProps = props => {
+                initResult.receiveProps(props);
             };
 
-            this.__close = initResult.close || doNothing;
+            this.__finalize = initResult.finalize || doNothing;
             this.__applyMethod = initResult.applyMethod;
 
             if (config.isErrorBoundary) {
@@ -203,7 +203,7 @@ function createStandardComponentType(config) {
         },
 
         beforeMount() {
-            this.__setProps(
+            this.__receiveProps(
                 mixProps(
                     this.$options.propsData,
                     this._events,
@@ -233,7 +233,7 @@ function createStandardComponentType(config) {
                     this.__updateChildInjections();
                 }
 
-                this.__setProps(
+                this.__receiveProps(
                     mixProps(
                         this.$options.propsData,
                         this._events,
@@ -253,7 +253,7 @@ function createStandardComponentType(config) {
         },
 
         beforeDestroy() {
-            this.__close();
+            this.__finalize();
             handleRefCleanupCallbacks(this);
         },
 

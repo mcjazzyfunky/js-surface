@@ -16,7 +16,8 @@ const ErrorTrigger = defineComponent({
             this.state = { errorMsg: null };
         }
 
-        simulateError(errorMsg = 'Simulated error') { console.log('simulating error');
+        simulateError(errorMsg = 'Simulated error') {
+            console.log('Triggering error...');
             this.setState({ errorMsg });
         }
 

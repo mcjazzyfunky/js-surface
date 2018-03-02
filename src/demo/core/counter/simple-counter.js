@@ -20,23 +20,15 @@ const SimpleCounter = defineComponent({
         }
     },
 
-    init(updateView, updateState) {
-        let
-            props = null,
-            counterValue = null;
-        
+    init(initialProps, refresh, updateState) {
+        updateState(() => ({ counterValue: initialProps.initialValue }));
+ 
         const
-            updateCounterValue = n => {
-                counterValue = n;
-                updateView(render());
-                updateState(() => ({ counterValue }));
-            },
-    
-            incrementCounter = n => {
-                updateCounterValue(counterValue + n);
+            incrementCounter = delta => {
+                updateState(state => ({ counterValue: state.counterValue + delta }), () => refresh());
             },
 
-            render = () => {
+            render = (props, state) => {console.log(props, state)
                 return (
                     h('div',
                         { className: 'simple-counter' },
@@ -51,7 +43,7 @@ const SimpleCounter = defineComponent({
                             '-'),
                         h('div',
                             { className: 'simple-counter-value btn' },
-                            counterValue),
+                            state.counterValue),
                         h('button',
                             {
                                 className: 'simple-counter-increase-button btn btn-default',
@@ -62,16 +54,7 @@ const SimpleCounter = defineComponent({
             };
 
         return {
-            setProps(nextProps) {
-                props = nextProps;
-                
-                if (counterValue === null) {
-                    counterValue = props.initialValue;
-                    updateState(() => ({ counterValue }));
-                }
-
-                updateView(render());
-            }
+            render
         };
     },
 });

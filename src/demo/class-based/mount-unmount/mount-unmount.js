@@ -35,8 +35,8 @@ const MountUnmount = defineComponent({
                 : ComponentB({ ref: this.refCallback.bind(this, 'ComponentB')});
         }
 
-        refCallback(type, ref, prevRef) {
-            console.log(`Invoked ref callback - ${type}: `, String(ref), String(prevRef));
+        refCallback(type, ref) {
+            console.log(`Invoked ref callback - ${type}: `, String(ref));
         }
     }
 });

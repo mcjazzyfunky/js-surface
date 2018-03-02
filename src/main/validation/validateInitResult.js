@@ -1,19 +1,19 @@
-export default function validateInitResult(initResult, config) {
+export default function validateInitResult(initResult, config) {console.log(1)
     let
         errMsg = null,
         error = null,
-        close = initResult ? initResult.close : null,
+        finalize = initResult ? initResult.finalize : null,
         handleError = initResult ? initResult.handleError : null;
     
     if (initResult === null || typeof initResult !== 'object') {
         errMsg = 'Must be an object';
-    } else if (typeof initResult.setProps !== 'function') {
-        errMsg = "Parameter 'setProps' must be a function";
-    } else if (close !== undefined
-            && close !== null
-            && typeof close !== 'function') {
+    } else if (typeof initResult.receiveProps !== 'function') {
+        errMsg = "Parameter 'receiveProps' must be a function";
+    } else if (finalize !== undefined
+            && finalize !== null
+            && typeof finalize !== 'function') {
 
-        errMsg = "Parameter 'close' must be a function or empty";
+        errMsg = "Parameter 'finalize' must be a function or empty";
     } else if (config.isErrorBoundary) {
         if (handleError === undefined || handleError === null) {
             errMsg = "Missing parameter 'handleError'";
@@ -43,7 +43,7 @@ export default function validateInitResult(initResult, config) {
 
         if (keys.length > 1 + !!config.methods) {
             for (const key of keys) {
-                if (key !== 'setProps' && key !== 'close'
+                if (key !== 'receiveProps' && key !== 'finalize'
                     && key !== 'applyMethod' && key !== 'handleError') {
                     
                     errMsg = `Invalid parameter '${key}'`;

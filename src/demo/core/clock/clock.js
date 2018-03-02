@@ -7,7 +7,7 @@ import {
 const Clock = defineComponent({
     displayName: 'Clock',
 
-    init(updateView) {
+    init(props, refresh) {
         let
             time = null,
             intervalId = null;
@@ -27,18 +27,18 @@ const Clock = defineComponent({
             };
     
         updateTime();
-        
-        intervalId = setInterval(() => {
-            updateTime();
-            updateView(render());
-        }, 1000);
+
+        refresh(() => {
+            intervalId = setInterval(() => {
+                updateTime();
+                refresh();
+            }, 1000);
+        });
 
         return {
-            setProps() {
-                updateView(render());
-            },
+            render,
 
-            close() {
+            finalize() {
                 clearInterval(intervalId);
                 intervalId = null;
             }

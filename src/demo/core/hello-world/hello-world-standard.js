@@ -10,10 +10,10 @@ const HelloWorld = defineComponent({
         }
     },
 
-    init(setView) {
+    init: props => {
         return {
-            setProps(props) {
-                setView(h('div', null, 'Hello ' + props.name + '!'));
+            render() {
+                return h('div', null, 'Hello ' + props.name + '!');
             }
         };
     }

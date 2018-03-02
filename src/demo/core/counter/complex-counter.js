@@ -85,7 +85,7 @@ const Counter = defineComponent({
         setCounterValue(0);
 
         return {
-            setProps() {
+            receiveProps() {
                 updateView(render());
             },
 
@@ -107,7 +107,7 @@ const CounterCtrl = defineComponent({
     displayName: 'CounterCtrl',
 
     init: updateView => ({
-        setProps() {
+        receiveProps() {
             let counterInstance = null;
 
             updateView(

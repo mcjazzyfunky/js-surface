@@ -20,10 +20,13 @@ const ErrorTrigger = defineComponent({
         }
     },
 
-    init(updateView) {
+    init(initialProps, refresh) {
         return {
-            setProps(props) {
-                if (props.errorMessage) {console.log('triggering error...')
+            render(props) {
+                let ret;
+
+                if (props.errorMessage) {
+                    console.log('triggering error...');
                     throw new Error(props.errorMessage);
                 } else {
                     const onClick =
@@ -31,11 +34,17 @@ const ErrorTrigger = defineComponent({
                             ? () => props.onClick()
                             : null;
 
-                    updateView(
+                    ret = 
                         h('button',
                             { className: 'btn', onClick },
-                            'Trigger error'));
+                            'Trigger error');
                 }
+
+                return ret;
+            },
+
+            receiveProps() {
+                refresh();
             }
         };
     }
@@ -46,20 +55,29 @@ const ErrorBoundary = defineComponent({
 
     isErrorBoundary: true,
 
-    init(updateView) {
-        const onClick = () => {
-            updateView(ErrorTrigger({ errorMessage: 'Simulated error' }));
-        };
+    init(initialProps, refresh) {
+        let
+            error = null,
+            errorMessage = null;
 
         return {
-            setProps() {
-                updateView(ErrorTrigger({ onClick })); 
+            render() {
+                return error === null
+                    ? ErrorTrigger({
+                        errorMessage,
+
+                        onClick: () => {
+                            errorMessage = 'Simulated error';
+                            refresh();
+                        }
+                    })
+
+                    : h('div', null, 'Simulated error: ' + error.message);
             },
 
-            handleError(error) {
-                const msg = error.message ? error.message : error.toString();
-
-                updateView(h('div', null, 'Catched error: ' + msg));
+            handleError(thrownError) {
+                error = thrownError;
+                refresh();
             }
         };
     }
