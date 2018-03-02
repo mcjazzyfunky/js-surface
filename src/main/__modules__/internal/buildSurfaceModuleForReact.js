@@ -5,10 +5,10 @@ import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFun
 import createPropsAdjuster from '../../helper/createPropsAdjuster';
 
 
-export default function buildSurfaceModuleForReact({ api, mount }) {
+export default function buildSurfaceModuleForReact({ adapterName, api, mount }) {
     const
         Adapter = Object.freeze({
-            name: 'react',
+            name: adapterName,
             api: {
                 React,
                 ...api,

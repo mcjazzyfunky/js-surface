@@ -11,6 +11,7 @@ const
     }),
 
     Surface = buildSurfaceModuleForReact({
+        adapterName: 'react',
         api: { ReactDOM },
         mount: customMount
     }),

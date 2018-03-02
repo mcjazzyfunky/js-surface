@@ -56,8 +56,11 @@ module.exports = function (grunt) {
                 },
                 resolve: {
                     alias: {
-                        'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
-                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                        'react$': path.resolve(__dirname, 'node_modules', 'react', 'umd', 'react.production.min.js'),
+                        'react-dom$': path.resolve(__dirname, 'node_modules', 'react-dom', 'umd', 'react-dom.production.min.js'),
+                        'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
+                        //'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
+                        //'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
                     }
                 }
             },
