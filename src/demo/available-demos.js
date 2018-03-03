@@ -73,7 +73,7 @@ export default [
     },
     {
         name: 'context',
-        displayName: 'Context',
+        displayName: 'Context (class)',
         directory: 'class-based/context',
         files: ['context.js']
     },
@@ -153,12 +153,6 @@ export default [
         name: 'i18n-standard',
         displayName: 'Internationalization (standard)',
         directory: 'core/i18n',
-        files: ['i18n.js']
-    },
-    {
-        name: 'i18n-class',
-        displayName: 'Internationalization (class)',
-        directory: 'class-based/i18n',
         files: ['i18n.js']
     },
     {

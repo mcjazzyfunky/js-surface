@@ -89,8 +89,9 @@
                 }
             },
             map: {
-                'js-surface': '../main/__modules__/' + adapter + '.js',
-                'js-surface/common': '../main/__modules__/common.js',
+                'js-surface': '../main/__modules__/' + adapter + '/' + adapter + '.js',
+                'js-surface/common/classes': '../main/__modules__/common/classes.js',
+                'js-surface/common/flow': '../main/__modules__/common/flow.js',
                 'js-surface/preact': '../main/__modules__/preact/index.js',
                 'js-surface/react': '../main/__modules__/react/index.js',
                 'js-surface/dom-builders': '../main/__modules__/' + adapter + '/dom-builders.js',
@@ -102,11 +103,11 @@
                 'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
                 'react-hyperscript': 'node_modules/react-hyperscript/index.js',
                 
-                //'react': 'node_modules/react/umd/react.development.js',
-                //'react-dom': 'node_modules/react-dom/umd/react-dom.development.js',
+                'react': 'node_modules/react/umd/react.development.js',
+                'react-dom': 'node_modules/react-dom/umd/react-dom.development.js',
                 
-                'react': 'node_modules/react/umd/react.production.min.js',
-                'react-dom': 'node_modules/react-dom/umd/react-dom.production.min.js',
+                //'react': 'node_modules/react/umd/react.production.min.js',
+                //'react-dom': 'node_modules/react-dom/umd/react-dom.production.min.js',
 
                 'vue': 'node_modules/vue/dist/vue.min.js',
 

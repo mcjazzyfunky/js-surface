@@ -1,5 +1,7 @@
-import { createElement as h, defineComponent, mount } from 'js-surface';
-import { Component } from 'js-surface/common';
+import { createElement as h, createContext, defineComponent, mount, fragment } from 'js-surface';
+import { Component } from 'js-surface/common/classes';
+
+const ParentDisabledContext = createContext(false);
 
 const Parent = defineComponent({
     displayName: 'Parent',
@@ -8,8 +10,6 @@ const Parent = defineComponent({
         children: {
         }
     },
-
-    childContext: ['parentDisabled'],
 
     main: class extends Component {
         constructor(props) {
@@ -24,20 +24,16 @@ const Parent = defineComponent({
             });
         }
 
-        getChildContext() {
-            const ret = { parentDisabled: this.state.disabled };
-
-            return ret;
-        }
-
         render() {
             return (
-                h('div', null,
+                h(ParentDisabledContext.Provider,
+                    { value: this.state.disabled }, 
                     h('div', null,
-                        'Parent component is ', this.state.disabled ? 'disabled' : 'enabled', '.'),
-                    h('button', { onClick: () => this.toggleDisableState() },
-                        this.state.disabled ? 'Enable' : 'Disable'),
-                    h('div', null, this.props.children))
+                        h('div', null,
+                            'Parent component is ', this.state.disabled ? 'disabled' : 'enabled', '.'),
+                        h('button', { onClick: () => this.toggleDisableState() },
+                            this.state.disabled ? 'Enable' : 'Disable'),
+                        h('div', null, this.props.children)))
             );
         }
     }
@@ -46,21 +42,17 @@ const Parent = defineComponent({
 const Child = defineComponent({
     displayName: 'Child',
 
-    properties: {
-        parentDisabled: {
-            type: Boolean,
-            inject: true
-            //defaultValue: false
-        }
-    },
-
     main: class extends Component {
         render() {
             return (
-                h('div', null,
-                    'Child component is ',
-                    this.props.parentDisabled ? 'disabled' : 'enabled',
-                    '.')
+                fragment(null,
+                    'This time information should never update: ',
+                    new Date().toLocaleTimeString(),
+                    h(ParentDisabledContext.Consumer, parentDisabled => 
+                        h('div', null,
+                            'Child component is ',
+                            parentDisabled ? 'disabled' : 'enabled',
+                            '.')))
             );
         }
     }
@@ -72,9 +64,8 @@ const Container = defineComponent({
     properties: ['children'],
 
     main: class extends Component {
-        shouldComponentUpdate() {console.log('shouldComponentUpdate')
-            return false;
-            //return false;
+        shouldComponentUpdate() {
+            throw new Error('"shouldComponentUpdate" should never be called');
         }
 
         render() {

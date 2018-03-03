@@ -1,5 +1,5 @@
-import adaptDefineComponentFunction from '../adaption/adaptDefineComponentFunction.js';
-import adaptMountFunction from '../adaption/adaptMountFunction.js';
+import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction.js';
+import adaptMountFunction from '../../adaption/adaptMountFunction.js';
 
 import Vue from 'vue';
 

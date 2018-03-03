@@ -47,10 +47,10 @@ module.exports = function (grunt) {
         },
         webpack: {
             surface: {
-                entry: ['./build/src/main/__modules__/surface.js'],
+                entry: ['./build/src/main/__modules__/surface/surface.js'],
                 output: {
                     path: path.resolve(__dirname, 'dist'),
-                    filename: 'index.js',
+                    filename: 'surface.js',
                     library: 'jsSurface',
                     libraryTarget: 'umd'
                 },
@@ -64,17 +64,26 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            surfaceCommon: {
-                entry: ['./build/src/main/__modules__/common.js'],
+            surfaceCommonClasses: {
+                entry: ['./build/src/main/__modules__/common/classes.js'],
                 output: {
-                    path: path.resolve(__dirname, 'dist'),
-                    filename: 'common.js',
-                    library: 'jsSurfaceCommon',
+                    path: path.resolve(__dirname, 'dist', 'common'),
+                    filename: 'classes.js',
+                    library: ['jsSurface', 'common', 'classes'],
+                    libraryTarget: 'umd'
+                }
+            },
+            surfaceCommonFlow: {
+                entry: ['./build/src/main/__modules__/common/flow.js'],
+                output: {
+                    path: path.resolve(__dirname, 'dist', 'common'),
+                    filename: 'flow.js',
+                    library: ['jsSurface', 'common', 'flow'],
                     libraryTarget: 'umd'
                 }
             },
             react: {
-                entry: ['./build/src/main/__modules__/react.js'],
+                entry: ['./build/src/main/__modules__/react/react.js'],
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'react.js',
@@ -101,7 +110,7 @@ module.exports = function (grunt) {
             },
             */
             vue: {
-                entry: ['./build/src/main/__modules__/vue.js'],
+                entry: ['./build/src/main/__modules__/vue/vue.js'],
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'vue.js',
@@ -128,12 +137,16 @@ module.exports = function (grunt) {
                     + '*/\n'
             },
             jsSurface: {
-                src: ['dist/index.js'],
-                dest: 'dist/index.min.js'
+                src: ['dist/surface.js'],
+                dest: 'dist/surface.min.js'
             },
-            jsSurfaceCommon: {
-                src: ['dist/common.js'],
-                dest: 'dist/common.min.js'
+            jsSurfaceCommonClasses: {
+                src: ['dist/common/classes.js'],
+                dest: 'dist/common/classes.min.js'
+            },
+            jsSurfaceCommonFlow: {
+                src: ['dist/common/flow.js'],
+                dest: 'dist/common/flow.min.js'
             },
             jsSurfaceReact: {
                 src: ['dist/react.js'],
@@ -156,16 +169,24 @@ module.exports = function (grunt) {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/index.min.js'],
-                dest: 'dist/index.min.js.gz'
+                src: ['dist/surface.min.js'],
+                dest: 'dist/surface.min.js.gz'
             },
-            jsSurfaceCommon: {
+            jsSurfaceCommonClasses: {
                 options: {
                     mode: 'gzip',
                     level: 9
                 },
-                src: ['dist/common.min.js'],
-                dest: 'dist/common.min.js.gz'
+                src: ['dist/common/classes.min.js'],
+                dest: 'dist/common/classes.min.js.gz'
+            },
+            jsSurfaceCommonFlow: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/common/flow.min.js'],
+                dest: 'dist/common/flow.min.js.gz'
             },
             jsSurfaceReact: {
                 options: {

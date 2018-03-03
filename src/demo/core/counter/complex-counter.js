@@ -46,18 +46,18 @@ const Counter = defineComponent({
 
     operations: ['resetCounter'],
 
-    init(updateView, updateState) {
+    init(initialProps, refresh, updateState) {
         let counterValue;
 
         const
             setCounterValue = n => {
                 counterValue = n;
-                updateState({ counterValue });
+                updateState(() => ({ counterValue }));
             },
 
             increaseCounter = n => {
                 setCounterValue(counterValue + n);
-                updateView(render());
+                refresh();
             },
 
             render = () => {
@@ -85,16 +85,14 @@ const Counter = defineComponent({
         setCounterValue(0);
 
         return {
-            receiveProps() {
-                updateView(render());
-            },
+            render,
 
             runOperation(name, args) {
                 if (name === 'resetCounter') {
                     const [n = 0] = args;
 
                     counterValue = n;
-                    updateView(render());
+                    refresh();
                 }
             }
         };
@@ -106,30 +104,33 @@ const Counter = defineComponent({
 const CounterCtrl = defineComponent({
     displayName: 'CounterCtrl',
 
-    init: updateView => ({
-        receiveProps() {
-            let counterInstance = null;
+    init() {
+        let counterInstance = null;
 
-            updateView(
-                h('div',
-                    { className: 'counter-ctrl' },
-                    h('button',
-                        {
-                            className: 'btn btn-info',
-                            onClick: () => counterInstance.resetCounter(0)
-                        },
-                        'Set to 0'),
-                    ' ',
-                    Counter({ ref: it => { counterInstance = it; } }),
-                    ' ',
-                    h('button',
-                        {
-                            className: 'btn btn-info',
-                            onClick: () => counterInstance.resetCounter(100)
-                        },
-                        'Set to 100')));
-        }
-    })
+        return {
+            render() {
+                return (
+                    h('div',
+                        { className: 'counter-ctrl' },
+                        h('button',
+                            {
+                                className: 'btn btn-info',
+                                onClick: () => counterInstance.resetCounter(0)
+                            },
+                            'Set to 0'),
+                        ' ',
+                        Counter({ ref: it => { counterInstance = it; } }),
+                        ' ',
+                        h('button',
+                            {
+                                className: 'btn btn-info',
+                                onClick: () => counterInstance.resetCounter(100)
+                            },
+                            'Set to 100'))
+                );
+            }
+        };
+    }
 });
 
 mount(CounterCtrl(), 'main-content');

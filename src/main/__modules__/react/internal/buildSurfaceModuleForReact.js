@@ -1,16 +1,15 @@
 import React from 'react';
 import createElement from 'js-hyperscript/react';
-import adaptIsElementFunction from '../../adaption/adaptIsElementFunction';
-import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction';
-import createPropsAdjuster from '../../helper/createPropsAdjuster';
+import adaptIsElementFunction from '../../../adaption/adaptIsElementFunction';
+import adaptDefineComponentFunction from '../../../adaption/adaptDefineComponentFunction';
+import createPropsAdjuster from '../../../helper/createPropsAdjuster';
 
 
-export default function buildSurfaceModuleForReact({ adapterName, api, mount }) {
+export default function buildSurfaceModuleForReact({ adapterName, mount, api = null }) {
     const
         Adapter = Object.freeze({
             name: adapterName,
             api: {
-                React,
                 ...api,
                 Surface: null // will be set later
             }
@@ -26,6 +25,7 @@ export default function buildSurfaceModuleForReact({ adapterName, api, mount }) 
             isElement: React.isValidElement
         }),
 
+        createContext = React.createContext,
         fragment = createElement.bind(fragment),
         Fragment = React.Fragment,
 
@@ -46,6 +46,7 @@ export default function buildSurfaceModuleForReact({ adapterName, api, mount }) 
 
     return Object.freeze({
         // core
+        createContext,
         createElement,
         defineComponent,
         isElement,
@@ -64,60 +65,15 @@ export default function buildSurfaceModuleForReact({ adapterName, api, mount }) 
 function createComponentType(config) {
     // config is already normalized
 
-    let ret,
-        injectableProperties = null;
+    let ret;
 
     const propsAdjuster = createPropsAdjuster(config);
 
-    if (config.properties) {
-        for (const key of Object.keys(config.properties)) {
-            if (config.properties[key].inject === true) {
-                injectableProperties = injectableProperties || [];
-                injectableProperties.push(key);
-            }
-        }
-    }
-
     if (config.render) {
-        if (injectableProperties) {
-            const derivedComponent = config.render.bind(null);
-
-            derivedComponent.displayName = config.displayName;
-
-            ret = (props, context) => {
-                const ret = createElement(derivedComponent, 
-                    propsAdjuster(mergePropsWithContext(props, context, config), true));
-
-                return ret;
-            };
-
-            ret.displayName = config.displayName + '-wrapper';
-        } else {
-            ret = props => config.render(propsAdjuster(props, config));
-            ret.displayName = config.displayName;
-        }
+        ret = props => config.render(propsAdjuster(props, config));
+        ret.displayName = config.displayName;
     } else {
-        if (injectableProperties) {
-            const derivedComponent = deriveReactComponent(config);
-
-            ret = (props, context) => {
-                let mergedProps = propsAdjuster(mergePropsWithContext(props, context, config), true);
-
-                return createElement(derivedComponent, mergedProps);
-            };
-
-            ret.displayName = config.displayName + '-wrapper';
-        } else {
-            ret = deriveReactComponent(config);
-        }
-    }
-
-    if (injectableProperties) {
-        ret.contextTypes = {};
-        
-        for (const key of injectableProperties) {
-            ret.contextTypes[key] = dummyValidator;
-        }
+        ret = deriveReactComponent(config);
     }
 
     return ret;
@@ -162,6 +118,7 @@ function deriveReactComponent(config) {
                 };
 
             this.__isInitialized = false;
+            this.__shouldRefresh = false;
             this.__callbacksWhenDidMount = null;
             
             const result = config.init(props, refresh, updateState);
@@ -204,7 +161,7 @@ function deriveReactComponent(config) {
         }
 
         render() {
-            this.__shouldUpdate = false;
+            this.__shouldRefresh = false;
             return this.__render(this.props, this.state);
         }
     }

@@ -29,7 +29,7 @@ const
     tests = [];
 
 let createElement = null;
-
+console.log(Surface.adapter)
 switch (adapterName) {
 case 'react':
     createElement = Surface.Adapter.api.React.createElement;

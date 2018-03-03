@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, mount } from 'js-surface';
-import { Component } from 'js-surface/common';
+import { Component } from 'js-surface/common/classes';
 
 const ClickMe = defineComponent({
     displayName: 'ClickMe',

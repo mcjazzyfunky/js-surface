@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, mount } from 'js-surface';
-import { defineFlow } from 'js-surface/common';
+import { defineFlow } from 'js-surface/common/flow';
 
 const SimpleCounter = defineComponent({
     displayName: 'SimpleCounter',

@@ -6,7 +6,7 @@ const
 
     VALID_PROPERTY_CONFIG_KEYS = new Set(
         ['type', 'constraint', 'nullable',
-            'defaultValue', 'getDefaultValue', 'inject']),
+            'defaultValue', 'getDefaultValue']),
 
     FORBIDDEN_OPERATION_NAMES = new Set(
         ['props', 'state', 'context', 'shouldComponentUpdate',
@@ -130,7 +130,6 @@ function validatePropertyConfig(propertyConfig) {
         constraint = propertyConfig.constraint,
         nullable = propertyConfig.nullable,
         getDefaultValue = propertyConfig.getDefaultValue,
-        inject = propertyConfig.inject,
         
         typeIsValid = type === undefined || typeof type === 'function',
 
@@ -143,9 +142,7 @@ function validatePropertyConfig(propertyConfig) {
             || typeof nullable === 'boolean',
 
         getDefaultValueIsValid = getDefaultValue === undefined
-             || typeof getDefaultValue === 'function',
-
-        injectIsValid = inject === undefined || typeof inject === 'boolean';
+             || typeof getDefaultValue === 'function';
 
     if (!typeIsValid) {
         ret = 'Property parameter "type" must be a function';
@@ -156,8 +153,6 @@ function validatePropertyConfig(propertyConfig) {
         ret = 'Property parameter "nullable" must be boolean';
     } else if (!getDefaultValueIsValid) {
         ret = 'Property parameter "getDefaultValue" must be a function';
-    } else if (!injectIsValid) {
-        ret = 'Property parameter "inject" must be boolean';
     } else if (getDefaultValue
         && propertyConfig.hasOwnProperty('defaultValue')) {
         

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import adaptMountFunction from '../adaption/adaptMountFunction';
-import buildSurfaceModuleForReact from './internal/buildSurfaceModuleForReact';
+import adaptMountFunction from '../../adaption/adaptMountFunction';
+import buildSurfaceModuleForReact from '../react/internal/buildSurfaceModuleForReact';
 
 const
     customMount = adaptMountFunction({
@@ -11,11 +11,11 @@ const
     }),
 
     Surface = buildSurfaceModuleForReact({
-        adapterName: 'react',
-        api: { ReactDOM },
+        adapterName: 'surface',
         mount: customMount
     }),
 
+    createContext = Surface.createContext,
     createElement = Surface.createElement,
     defineComponent = Surface.defineComponent,
     isElement = Surface.isElement,
@@ -27,6 +27,7 @@ const
 export default Surface;
 
 export {
+    createContext,
     createElement,
     defineComponent,
     isElement,
