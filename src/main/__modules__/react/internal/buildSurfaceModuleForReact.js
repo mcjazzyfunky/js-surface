@@ -5,7 +5,7 @@ import adaptDefineComponentFunction from '../../../adaption/adaptDefineComponent
 import createPropsAdjuster from '../../../helper/createPropsAdjuster';
 
 
-export default function buildSurfaceModuleForReact({ adapterName, mount, api = null }) {
+export default function buildSurfaceModuleForReact({ adapterName, api = null, extras = null }) {
     const
         Adapter = Object.freeze({
             name: adapterName,
@@ -26,37 +26,23 @@ export default function buildSurfaceModuleForReact({ adapterName, mount, api = n
         }),
 
         createContext = React.createContext,
-        fragment = createElement.bind(fragment),
         Fragment = React.Fragment,
 
-        Surface = Object.freeze({
-            // core
+        Surface = {
+            createContext,
             createElement,
             defineComponent,
             isElement,
-            mount,
             Adapter,
-            // add-ons
-            fragment,
-            Fragment
-        });
+            Fragment,
+            ...extras
+        };
 
     Adapter.api.Surface = Surface;
     Object.freeze(Adapter.api);
+    Object.freeze(Surface);
 
-    return Object.freeze({
-        // core
-        createContext,
-        createElement,
-        defineComponent,
-        isElement,
-        mount,
-        Adapter,
-
-        // addons
-        fragment,
-        Fragment
-    });
+    return Surface;
 }
 
 // ------------------------------------------------------------------

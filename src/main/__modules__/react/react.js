@@ -13,16 +13,20 @@ const
     Surface = buildSurfaceModuleForReact({
         adapterName: 'react',
         api: { React, ReactDOM },
-        mount: customMount
+        
+        extras: {
+            createPortal: ReactDOM.createPortal,
+            mount: customMount
+        }
     }),
 
     createContext = Surface.createContext,
     createElement = Surface.createElement,
+    createPortal = Surface.createPortal,
     defineComponent = Surface.defineComponent,
     isElement = Surface.isElement,
     mount = Surface.mount,
     Adapter = Surface.Adapter,
-    fragment = Surface.fragment,
     Fragment = Surface.Fragement;
 
 export default Surface;
@@ -30,10 +34,10 @@ export default Surface;
 export {
     createContext,
     createElement,
+    createPortal,
     defineComponent,
     isElement,
     mount,
     Adapter,
-    fragment,
     Fragment
 };
