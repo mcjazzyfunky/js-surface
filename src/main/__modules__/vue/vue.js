@@ -110,7 +110,7 @@ function createFunctionalComponentType(config) {
 
 function createStandardComponentType(config) {
     const defaultValues = determineDefaultValues(config);
-
+ 
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
@@ -196,6 +196,7 @@ function createStandardComponentType(config) {
         },
 
         beforeMount() {
+
             if (this.__receiveProps) {
                 this.__receiveProps(
                     mixProps(
@@ -211,6 +212,7 @@ function createStandardComponentType(config) {
         },
 
         mounted() {
+            this.__isInitialized = true;
             this.__preventForceUpdate = false;
             
             if (this.__callbackWhenUpdated) {
@@ -228,12 +230,14 @@ function createStandardComponentType(config) {
                     this.__updateChildInjections();
                 }
 
-                this.__receiveProps(
-                    mixProps(
-                        this.$options.propsData,
-                        this._events,
-                        this,
-                        defaultValues, config));
+                if (this.__receiveProps) {
+                    this.__receiveProps(
+                        mixProps(
+                            this.$options.propsData,
+                            this._events,
+                            this,
+                            defaultValues, config));
+                }
             }
         },
 
@@ -436,7 +440,7 @@ function determineDefaultValues(config) {
 
     if (config.properties) {
         for (let key of Object.keys(config.properties)) {
-            if (config.properties[key].defaultValue) {
+            if (config.properties[key].hasOwnProperty('defaultValue')) {
                 ret[key] = config.properties[key].defaultValue;
             } else if (config.properties[key].getDefaultValue) {
                 const getter = () => config.properties[key].getDefaultValue();

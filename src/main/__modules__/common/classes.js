@@ -91,7 +91,7 @@ class Component {
         return this.___state;
     }
 
-    set state(state) {
+    set state(state) {console.log(4556, state)
         if (!this.___updateState) {
             this.___state = state;
         } else {
@@ -130,8 +130,7 @@ class Component {
                   
                     component.___props = props;
 
-
-                    if (needsUpdate) {console.log()
+                    if (needsUpdate) {
                         refresh(() => this.componentDidUpdate(oldProps, state));
                     }
                 },
@@ -146,6 +145,12 @@ class Component {
             component.___props = props;
             component.___refresh = refresh;
             component.___updateState = updateState;
+
+console.log('xxxx', this.___state)
+            if (this.___state !== undefined) {
+                this.___updateState(() => this.__state);
+            }
+
             component.componentDidMount();
 
             const ret = {

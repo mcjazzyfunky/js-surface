@@ -22,7 +22,7 @@ const SimpleCounter = defineComponent({
     },
 
     main: class extends Component {
-        constructor(props) {
+        constructor(props) {console.log('---- props', props)
             super(props);
             this.state = { counterValue: props.initialValue };
         }
