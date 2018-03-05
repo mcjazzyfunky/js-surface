@@ -120,10 +120,16 @@ function deriveReactComponent(config) {
             return this.__shouldRefresh;
         }
 
-        componentWillReceiveProps(props) {
+        set props(props) {
             if (this.__receiveProps) {
                 this.__receiveProps(props);
             }
+            
+            this.__props = props;
+        }
+
+        get props() {
+            return this.__props;
         }
 
         componentDidMount() {
@@ -183,31 +189,6 @@ const dummyValidator = function validator() {
     return null;
 };
 
-
-function mergePropsWithContext(props, context) {
-    let ret = null;
-
-    props = props || {};
-    context = context || {};
-    
-    const contextKeys = Object.keys(context);
-
-    for (let i = 0; i < contextKeys.length; ++i) {
-        const
-            contextKey = contextKeys[i],
-            contextValue = context[contextKey];
-
-        if (contextValue !== undefined && props[contextKey] === undefined) {
-            if (ret === null) {
-                ret = Object.assign({}, props);
-            }
-
-            ret[contextKey] = contextValue;
-        }
-    }
-
-    return ret;
-}
 
 function convertConfigToReactLike(config) {
     // config is already normalized

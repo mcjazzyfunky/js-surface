@@ -112,17 +112,27 @@ class Component {
                     const
                         oldProps = component.___props,
                         state = component.___state,
-                        needsUpdate = component.shouldComponentUpdate(
-                            props, state);
+                        needsUpdate = this.___isInitialized
+                            && component.shouldComponentUpdate(props, state),
 
-                    component.componentWillReceiveProps(
-                        props, state);
-                    
+                        getDerivedStateFromProps =
+                            Object.getPrototypeOf(this)
+                                .getDerivedStateFromProps;
+
+                    if (getDerivedStateFromProps) {
+                        // TODO - is this realy working
+                        const state = getDerivedStateFromProps(props, state);
+
+                        if (state) {
+                            this.setState(() => state);
+                        }
+                    }
+                  
                     component.___props = props;
 
 
-                    if (needsUpdate) {
-                        this.___refresh(() => this.componentDidUpdate(oldProps, state));
+                    if (needsUpdate) {console.log()
+                        refresh(() => this.componentDidUpdate(oldProps, state));
                     }
                 },
 

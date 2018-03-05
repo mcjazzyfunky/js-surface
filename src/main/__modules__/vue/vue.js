@@ -1,6 +1,8 @@
 import adaptDefineComponentFunction from '../../adaption/adaptDefineComponentFunction.js';
 import adaptMountFunction from '../../adaption/adaptMountFunction.js';
 
+import createElement from 'js-hyperscript/universal';
+
 import Vue from 'vue';
 
 const
@@ -8,7 +10,7 @@ const
 
     Surface = {}, // will be filled later
 
-    isElement = it => it && it.isSurfaceElement === true,
+    isElement = it => it && it.isElement === true,
 
     mount = adaptMountFunction({
         mountFunction: customMount,
@@ -35,23 +37,16 @@ const
         }
 
         return ret;
-    },
-
-    Fragment = 'x-fragment', // TODO
-    fragment = createElement.bind(null, Fragment);
+    };
 
 Object.assign(Surface, {
-    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter,
-
-    // addons
-    fragment,
-    Fragment
+    Adapter
+    // no Fragment as Vue does not support fragments
 });
 
 Object.freeze(Surface);
@@ -59,17 +54,13 @@ Object.freeze(Surface);
 export default Surface;
 
 export {
-    // core
     createElement,
     defineComponent,
     inspectElement,
     isElement,
     mount,
-    Adapter,
-    
-    // addons
-    fragment,
-    Fragment
+    Adapter
+    // no Fragment as Vue does not support fragments
 };
 
 // ------------------------------------------------------------------
@@ -144,30 +135,21 @@ function createStandardComponentType(config) {
         },
 
         created() {
+            this.__refresh = callback => {
+                this.$forceUpdate();
+
+                if (callback) {
+                    callback();
+                }
+            };
+
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
-            this.__content = null;
             this.__callbackWhenUpdated = null;
             this.__nextState = {};
             this.__isInitialized = false;
-
-            this.__updateView = (content, provisions, callbackWhenUpdated) => {
-                this.__content = content;
-
-                if (config.childContext) {
-                    this.__childInjections = provisions;
-                }
-
-                this.__callbackWhenUpdated = callbackWhenUpdated;
-
-                if (!this.__preventForceUpdate) {
-                    this.__preventForceUpdate = true;
-                    this.$forceUpdate();
-                }
-
-                this.__isInitialized = true;
-            };
-
+            this.__props = undefined;
+            this.__state = undefined;
 
             this.__updateState = (updater, callback) => {
                 const newState = updater(this.__state);
@@ -186,12 +168,23 @@ function createStandardComponentType(config) {
                 }
             };
 
-            const initResult = config.init(
-                this.__updateView, this.__updateState);
+            this.__props = 
+                mixProps(
+                    this.$options.propsData,
+                    this._events,
+                    this,
+                    defaultValues, config);
 
-            this.__receiveProps = props => {
-                initResult.receiveProps(props);
-            };
+            const initResult = config.init(
+                this.__props, this.__refresh, this.__updateState);
+
+            this.__render = initResult.render;
+
+            if (initResult.receiveProps) {
+                this.__receiveProps = props => {
+                    initResult.receiveProps(props);
+                };
+            }
 
             this.__finalize = initResult.finalize || doNothing;
             this.__applyMethod = initResult.applyMethod;
@@ -203,16 +196,18 @@ function createStandardComponentType(config) {
         },
 
         beforeMount() {
-            this.__receiveProps(
-                mixProps(
-                    this.$options.propsData,
-                    this._events,
-                    this,
-                    defaultValues, config));
-            
-            if (this.__updateChildInjections) {
-                this.__updateChildInjections();
-            }
+            if (this.__receiveProps) {
+                this.__receiveProps(
+                    mixProps(
+                        this.$options.propsData,
+                        this._events,
+                        this,
+                        defaultValues, config));
+                
+                if (this.__updateChildInjections) {
+                    this.__updateChildInjections();
+                }
+            }   
         },
 
         mounted() {
@@ -258,7 +253,8 @@ function createStandardComponentType(config) {
         },
 
         render(vueCreateElement) {
-            return renderContent(vueCreateElement, this.__content, this);
+            return renderContent(vueCreateElement,
+                this.__render(this.__props, this.__state), this);
         },
 
         errorCaptured(error) {
@@ -274,23 +270,6 @@ function createStandardComponentType(config) {
     });
 
     return component;
-}
-
-function createElement(tag, props, ...children) {
-    let ret;
-    
-    if (tag && tag.meta) { // TODO: tag.meta checks for factory - find better solution!
-        ret = tag(props, ...children);
-    } else {
-        ret = {
-            type: tag,
-            props,
-            children,
-            isSurfaceElement: true
-        };
-    }
-
-    return ret;
 }
 
 function customMount(content, targetNode) {
@@ -327,15 +306,17 @@ function customUnmount(node) {
 }
 
 function renderContent(vueCreateElement, content, component) {
-    if (!content || !content.isSurfaceElement) {
-        throw new Error('no surface element');
+    if (!content || content.isElement !== true) {
+        throw new Error('not a virtual UI element');
     }
 
     let props = content.props;
 
     const
         type = content.type,
-        children = convertChildren(content.children, vueCreateElement, component);
+        children = content.children
+            ? convertChildren(content.children, vueCreateElement, component)
+            : null;
 
     let ret, refCallback = null, refName = null;
 
@@ -431,17 +412,19 @@ function convertChildren(children, vueCreateElement, component) {
         children = [children];
     }
 
-    for (let item of children) {
-        if (Array.isArray(item)) {
-            ret.push(...convertChildren(item, vueCreateElement, component));
-        } else if (typeof item === 'string') {
-            ret.push(item);
-        } else if (item && typeof item[Symbol.iterator] === 'function') {
-            ret.push(...convertChildren(item, vueCreateElement, component));
-        } else if (item && item.isSurfaceElement) {
-            ret.push(renderContent(vueCreateElement, item, component));
-        } else if (item !== undefined && item !== null) {
-            ret.push(item);
+    if (children) {
+        for (let item of children) {
+            if (Array.isArray(item)) {
+                ret.push(...convertChildren(item, vueCreateElement, component));
+            } else if (typeof item === 'string') {
+                ret.push(item);
+            } else if (item && typeof item[Symbol.iterator] === 'function') {
+                ret.push(...convertChildren(item, vueCreateElement, component));
+            } else if (item && item.isElement) {
+                ret.push(renderContent(vueCreateElement, item, component));
+            } else if (item !== undefined && item !== null) {
+                ret.push(item);
+            }
         }
     }
 
