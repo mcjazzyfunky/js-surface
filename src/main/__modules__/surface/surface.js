@@ -15,7 +15,8 @@ const
         
         extras: {
             createPortal: ReactDOM.createPortal,
-            mount: customMount
+            mount: customMount,
+            Fragment: React.Fragment
         }
     }),
 
@@ -26,7 +27,7 @@ const
     isElement = Surface.isElement,
     mount = Surface.mount,
     Adapter = Surface.Adapter,
-    Fragment = Surface.Fragement;
+    Fragment = Surface.Fragment;
 
 export default Surface;
 

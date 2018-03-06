@@ -1,11 +1,12 @@
-import { createElement as h, defineComponent, fragment, mount } from 'js-surface';
+import { createElement as h, defineComponent, mount, Fragment, Adapter }
+    from 'js-surface';
 
 const FragmentDemo = defineComponent({
     displayName:  'FragmentDemo',
 
     render() {
         return (
-            fragment(null,
+            h(Fragment, null,
                 h('div', null,
                     'This text line is an element inside of an fragment.'),
                 h('div', null,
@@ -24,11 +25,16 @@ const Options = defineComponent({
 
     render() {
         return (
-            fragment(null,
+            h(Fragment, null,
                 h('option', null, 'Option #1' ),
                 h('option', null, 'Option #2' ),
                 h('option', null, 'Option #3' )));
     }
 });
 
-mount(FragmentDemo(), 'main-content');
+if (Adapter.name === 'vue') {
+    document.getElementById('main-content').innerHTML =
+        'Vue does not have fragment support yet.';
+} else {
+    mount(FragmentDemo(), 'main-content');
+}
