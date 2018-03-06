@@ -12,15 +12,11 @@ const StopWatch = defineComponent({
         }
 
         setTime(time) {
-            const running = this.state.running;
-
-            this.setState({ time, running });
+            this.setState({ time });
         }
 
         setRunning(running) {
-            const time = this.state.time;
-
-            this.setState({ time, running });
+            this.setState({ running });
         }
 
         startTimer() {

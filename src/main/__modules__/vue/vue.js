@@ -87,25 +87,29 @@ function createComponentType(config) {
 }
 
 function createFunctionalComponentType(config) {
-    let ret;
+    const
+        render = config.render,
+        newConfig = {...config};
 
-    const defaultValues = determineDefaultValues(config);
+    newConfig.init = (initialProps, refresh) => {
+        let props = initialProps;
 
-    ret = Vue.extend({
-        functional: true,
-        props: Object.keys(config.properties || {}),
-        inject: determineInjectionKeys(config),
-
-        render: function (vueCreateElement, context) {
-            const
-                props = mixProps(context.props, context.listeners, context.injections, defaultValues, config),
-                content = config.render(props);
-
-            return renderContent(vueCreateElement, content, this);
-        }
-    });
+        return {
+            receiveProps(nextProps) {
+                props = nextProps;
     
-    return ret;
+                refresh();
+            },
+
+            render() {
+                return render(props);
+            }
+        };
+    };
+
+    delete newConfig.render;
+
+    return createStandardComponentType(newConfig);
 }
 
 function createStandardComponentType(config) {
@@ -113,25 +117,23 @@ function createStandardComponentType(config) {
 
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
-        inject: determineInjectionKeys(config),
         methods: determineOperations(config),
 
-        provide: !config.childContext ? null : function () {
-            const ret = {};
+        watch: {
+            '$props':{
+                handler: function () {
+                    this.__props = 
+                        mixProps(
+                            this.$options.propsData,
+                            this._events,
+                            defaultValues,
+                            config);
 
-            if (config.childContext) {
-                for (const key of config.childContext) {
-                    ret[key] = new Injection(() => this.__childInjections[key]);
-                }
+                    this.__receiveProps(this.__props);
+                },
+
+                deep: true
             }
-
-            return ret;
-        },
-
-        data() {
-            return {
-                __childInjections: null
-            };
         },
 
         created() {
@@ -145,10 +147,16 @@ function createStandardComponentType(config) {
 
             this.__refCallbacks = {};
             this.__refCleanupCallbacks = {};
-            this.__callbackWhenUpdated = null;
             this.__nextState = {};
             this.__isInitialized = false;
-            this.__props = undefined;
+
+            this.__props = 
+                mixProps(
+                    this.$options.propsData,
+                    this._events,
+                    defaultValues,
+                    config);
+
             this.__state = undefined;
 
             this.__updateState = (updater, callback) => {
@@ -167,13 +175,6 @@ function createStandardComponentType(config) {
                     }, 0);
                 }
             };
-
-            this.__props = 
-                mixProps(
-                    this.$options.propsData,
-                    this._events,
-                    this,
-                    defaultValues, config);
 
             const initResult = config.init(
                 this.__props, this.__refresh, this.__updateState);
@@ -196,58 +197,35 @@ function createStandardComponentType(config) {
         },
 
         beforeMount() {
-
-            if (this.__receiveProps) {
-                this.__receiveProps(
-                    mixProps(
-                        this.$options.propsData,
-                        this._events,
-                        this,
-                        defaultValues, config));
-                
-                if (this.__updateChildInjections) {
-                    this.__updateChildInjections();
-                }
-            }   
+            this.__props = 
+                mixProps(
+                    this.$options.propsData,
+                    this._events,
+                    defaultValues,
+                    config);
         },
 
         mounted() {
             this.__isInitialized = true;
             this.__preventForceUpdate = false;
             
-            if (this.__callbackWhenUpdated) {
-                this.__callbackWhenUpdated(null);
-            }
-
             handleRefCallbacks(this);
         },
 
         beforeUpdate() {
             handleRefCleanupCallbacks(this);
-
-            if (!this.__preventForceUpdate) {
-                if (this.__updateChildInjections) {
-                    this.__updateChildInjections();
-                }
-
-                if (this.__receiveProps) {
-                    this.__receiveProps(
-                        mixProps(
-                            this.$options.propsData,
-                            this._events,
-                            this,
-                            defaultValues, config));
-                }
-            }
+            
+            this.__props =
+                mixProps(
+                    this.$options.propsData,
+                    this._events,
+                    defaultValues,
+                    config);
         },
 
         updated() {
             this.__preventForceUpdate = false;
             
-            if (this.__callbackWhenUpdated) {
-                this.__callbackWhenUpdated();
-            }
-
             handleRefCallbacks(this);
         },
 
@@ -257,8 +235,10 @@ function createStandardComponentType(config) {
         },
 
         render(vueCreateElement) {
-            return renderContent(vueCreateElement,
+            const ret = renderContent(vueCreateElement,
                 this.__render(this.__props, this.__state), this);
+
+            return ret;
         },
 
         errorCaptured(error) {
@@ -456,29 +436,8 @@ function determineDefaultValues(config) {
     return ret;
 }
 
-function mixProps(props, events, injections, defaultValues, config) {
+function mixProps(props, events, defaultValues, config) {
     let ret = Object.assign({}, props);
-
-    // TODO
-    const hasInjections = config.properties
-        && Object.keys(config.properties).some(key => config.properties[key].inject);
-
-    if (hasInjections) {
-        for (let key of Object.keys(config.properties)) {
-            if (config.properties[key].inject
-                && injections[key] !== undefined
-                && props[key] === undefined) {
-                
-                let injectedValue = injections[key];
-
-                if (injectedValue instanceof Injection) {
-                    injectedValue = injectedValue.value;
-                }
-
-                ret[key] = injectedValue;
-            }
-        }
-    }
 
     if (defaultValues) {
         for (let key of Object.keys(defaultValues)) {
@@ -503,22 +462,6 @@ function mixProps(props, events, injections, defaultValues, config) {
 
     return ret;
 }
-
-
-function determineInjectionKeys(config) {
-    const ret = [];
-
-    if (config.properties) {
-        for (let key of Object.keys(config.properties)) {
-            if (config.properties[key].inject) {
-                ret.push(key);
-            }
-        }
-    }
-
-    return ret;
-}
-
 
 function determineOperations(config) {
     let ret = null;
@@ -562,11 +505,5 @@ function handleRefCleanupCallbacks(comp) {
         if (callback) {
             callback();
         }
-    }
-}
-
-class Injection {
-    constructor(getValue) {
-        Object.defineProperty(this, 'value', { get: getValue });
     }
 }

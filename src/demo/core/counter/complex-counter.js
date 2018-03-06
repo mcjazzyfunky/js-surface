@@ -15,14 +15,20 @@ const CounterInfo = defineComponent({
         }
     },
 
-    render(props) {
-        return (
-            h('label',
-                null,
-                h('b',
+    init: (_, refresh) => ({
+        receiveProps() {
+            refresh();
+        },
+
+        render(props) {
+            return (
+                h('label',
                     null,
-                    props.value)));
-    }
+                    h('b',
+                        null,
+                        props.value + '-' + Date.now())));
+        }
+    })
 });
 
 // --------------------------------------------------------------------
@@ -52,18 +58,21 @@ const Counter = defineComponent({
         const
             setCounterValue = n => {
                 counterValue = n;
-                updateState(() => ({ counterValue }));
+    
+                updateState(() => ({ counterValue }), () => {
+                    refresh();
+                });
             },
 
             increaseCounter = n => {
                 setCounterValue(counterValue + n);
-                refresh();
             },
 
             render = () => {
                 return (
                     h('span',
                         { className: 'counter' },
+                        counterValue + '-' + Date.now(),
                         h('button',
                             {
                                 className: 'btn btn-default',
@@ -71,7 +80,7 @@ const Counter = defineComponent({
                             },
                             '-'),
                         h('div',
-                            { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
+                            { style: { width: '230px', display: 'inline-block', textAlign: 'center' }},
                             CounterInfo({ value: counterValue })),
                         h('button',
                             {

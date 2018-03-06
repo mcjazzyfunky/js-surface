@@ -98,12 +98,14 @@ function deriveReactComponent(config) {
                                 this.__callbacksWhenDidMount.push(callback);
                             }
                         }
-                    } else {
+                    } else if (!this.__supressUpdates) {
+                        this.__supressUpdates = true;
                         this.forceUpdate(callback);
                     }
                 };
 
             this.__isInitialized = false;
+            this.__supressUpdates = false;
             this.__shouldRefresh = false;
             this.__callbacksWhenDidMount = null;
             
@@ -134,6 +136,7 @@ function deriveReactComponent(config) {
 
         componentDidMount() {
             this.__isInitialized = true;
+            this.__supressUpdates = false;
     
             const callbacks = this.__callbacksWhenDidMount;
 
@@ -144,6 +147,10 @@ function deriveReactComponent(config) {
                     callbacks[i]();
                 }
             }
+        }
+
+        componentDidUpdate() {
+            this.__supressUpdates = false;
         }
 
         componentWillUnmount() {
