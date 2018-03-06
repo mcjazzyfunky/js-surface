@@ -5,6 +5,8 @@ import createElement from 'js-hyperscript/universal';
 
 import Vue from 'vue';
 
+let updateId = 1;
+
 const
     doNothing = () => {},
 
@@ -113,28 +115,35 @@ function createFunctionalComponentType(config) {
 }
 
 function createStandardComponentType(config) {
-    const defaultValues = determineDefaultValues(config);
+    const
+        defaultValues = determineDefaultValues(config),
+        propsConfig = {},
+        keys = config.properties ? Object.keys(config.properties) : null;
+
+    if (keys) {
+        for (let i = 0; i < keys.length; ++i) {
+            propsConfig[keys[i]] = {};
+        }
+    }
+
+    propsConfig[''] = {
+        default() {
+            if (this.__receiveProps) {
+                Vue.nextTick(() => {
+                    this.__props = mixProps(
+                        this.$options.propsData,
+                        this._events,
+                        defaultValues,
+                        config);
+                    this.__receiveProps(this.__props);
+                });
+            }
+        }
+    };
 
     const component = Vue.extend({
-        props: Object.keys(config.properties || {}),
+        props: propsConfig, 
         methods: determineOperations(config),
-
-        watch: {
-            '$props':{
-                handler: function () {
-                    this.__props = 
-                        mixProps(
-                            this.$options.propsData,
-                            this._events,
-                            defaultValues,
-                            config);
-
-                    this.__receiveProps(this.__props);
-                },
-
-                deep: true
-            }
-        },
 
         created() {
             this.__refresh = callback => {

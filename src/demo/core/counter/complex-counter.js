@@ -26,7 +26,7 @@ const CounterInfo = defineComponent({
                     null,
                     h('b',
                         null,
-                        props.value + '-' + Date.now())));
+                        props.value)));
         }
     })
 });
@@ -72,7 +72,6 @@ const Counter = defineComponent({
                 return (
                     h('span',
                         { className: 'counter' },
-                        counterValue + '-' + Date.now(),
                         h('button',
                             {
                                 className: 'btn btn-default',
@@ -80,7 +79,7 @@ const Counter = defineComponent({
                             },
                             '-'),
                         h('div',
-                            { style: { width: '230px', display: 'inline-block', textAlign: 'center' }},
+                            { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
                             CounterInfo({ value: counterValue })),
                         h('button',
                             {
