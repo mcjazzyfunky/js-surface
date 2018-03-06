@@ -110,7 +110,7 @@ function createFunctionalComponentType(config) {
 
 function createStandardComponentType(config) {
     const defaultValues = determineDefaultValues(config);
- 
+
     const component = Vue.extend({
         props: Object.keys(config.properties || {}),
         inject: determineInjectionKeys(config),
@@ -187,7 +187,7 @@ function createStandardComponentType(config) {
             }
 
             this.__finalize = initResult.finalize || doNothing;
-            this.__applyMethod = initResult.applyMethod;
+            this.__runOperation = initResult.runOperation;
 
             if (config.isErrorBoundary) {
                 this.__isErrorBoundary = true;
@@ -327,7 +327,10 @@ function renderContent(vueCreateElement, content, component) {
     if (props && props.ref) {
         refCallback = props.ref,
         refName = getNextRefName(),
-        props = Object.assign({}, props, { ref: refName });
+        props = Object.assign({}, props);
+
+        props.ref = refName;
+
         component.__refCallbacks[refName] = refCallback;
 
         /*
@@ -520,12 +523,12 @@ function determineInjectionKeys(config) {
 function determineOperations(config) {
     let ret = null;
 
-    if (config.methods) {
+    if (config.operations) {
         ret = {};
 
-        for (let key of config.methods) {
+        for (let key of config.operations) {
             ret[key] = function (...args) {
-                return this.__applyMethod(key, args);
+                return this.__runOperation(key, args);
             };
         }
     }
