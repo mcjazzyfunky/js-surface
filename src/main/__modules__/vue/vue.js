@@ -126,7 +126,7 @@ function createStandardComponentType(config) {
         }
     }
 
-    propsConfig[''] = {
+    propsConfig['__' + config.displayName + '__'] = {
         default() {
             if (this.__isInitialized && this.__receiveProps) {
                 Vue.nextTick(() => {
@@ -140,6 +140,8 @@ function createStandardComponentType(config) {
                     this.__receiveProps(this.__props);
                 });
             }
+
+            return undefined;
         }
     };
 
@@ -307,7 +309,7 @@ function customUnmount(node) {
     }
 }
 
-function renderContent(vueCreateElement, content, component) {
+function renderContent(vueCreateElement, content, component = null) {
     if (!content || content.isElement !== true) {
         throw new Error('not a virtual UI element');
     }
@@ -410,7 +412,7 @@ function renderContent(vueCreateElement, content, component) {
     return ret;
 }
 
-function convertChildren(children, vueCreateElement, component) {
+function convertChildren(children, vueCreateElement, parent) {
     const ret = [];
 
     if (children && !Array.isArray(children) && typeof children[Symbol.iterator] !== 'function') {
@@ -418,17 +420,25 @@ function convertChildren(children, vueCreateElement, component) {
     }
 
     if (children) {
-        for (let item of children) {
+        for (let i = 0; i < children.length; ++i) {
+            const item = children[i];
+
             if (Array.isArray(item)) {
-                ret.push(...convertChildren(item, vueCreateElement, component));
+                ret.push(...convertChildren(item, vueCreateElement, parent));
             } else if (typeof item === 'string') {
                 ret.push(item);
             } else if (typeof item === 'function') {
-                ret.push({ apply: item }); // TODO - Consumer
+                if (parent.__isContextConsumer !== true) {
+                    throw new Error('Child of type "function" is only allowed for context consumers');
+                } else if (i > 0) {
+                    throw new Error('Only the first child of a context consumer can be a function');
+                }
+
+                ret.push({ apply: item });
             } else if (item && typeof item[Symbol.iterator] === 'function') {
-                ret.push(...convertChildren(item, vueCreateElement, component));
+                ret.push(...convertChildren(item, vueCreateElement, parent));
             } else if (item && item.isElement) {
-                ret.push(renderContent(vueCreateElement, item, component));
+                ret.push(renderContent(vueCreateElement, item, item.type));
             } else if (item !== undefined && item !== null) {
                 ret.push(item);
             }
@@ -456,7 +466,7 @@ function determineDefaultValues(config) {
     return ret;
 }
 
-function mixProps(props, children, events, defaultValues, config, component) {
+function mixProps(props, children, events, defaultValues) {
     let ret = Object.assign({}, props);
 
     if (children && children.length > 0) {
@@ -539,7 +549,7 @@ function createContext(defaultValue) {
         contextName = '__$$context-' + nextContextId++,
 
         Provider = Vue.extend({
-            name: 'Context.Provider',
+            name: 'ContextProvider',
             functional: false,
 
             props: {
@@ -571,7 +581,7 @@ function createContext(defaultValue) {
         }),
 
         Consumer = Vue.extend({
-            name: 'Context.Consumer',
+            name: 'ContextConsumer',
             functional: false,
             inject: [contextName],
 
@@ -585,6 +595,11 @@ function createContext(defaultValue) {
                     createElement('span', null, content), this);
             }
         });
+
+    Object.defineProperty(Consumer, '__isContextConsumer', {
+        enumerable: false,
+        value: true
+    });
 
     return { Provider, Consumer };
 }

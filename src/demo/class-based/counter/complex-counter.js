@@ -19,7 +19,6 @@ const CounterInfo = defineComponent({
     }
 });
 
-
 // --------------------------------------------------------------------
 
 const Counter = defineComponent({
@@ -50,50 +49,6 @@ const Counter = defineComponent({
 
         increaseCounter(delta) {
             this.setState({ counterValue: this.state.counterValue + delta });
-        }
-
-        shouldUpdate() {
-            console.log('[shouldUpdate]', arguments);
-            return true;
-        }
-
-        componentWillReceiveProps(nextProps) {
-            console.log('[componentWillReceiveProps]', arguments);
-        }
-
-        componentWillChangeState(nextState) {
-            console.log('[componentWillChangeState]', arguments);
-        }
-
-        componentDidChangeState(prevState) {
-            console.log('[componentDidChangeState]', arguments);
-
-            if (this.props.onChange) {
-                this.props.onChange({
-                    type: 'change',
-                    value: this.state.counterValue
-                });
-            }
-        }
-
-        componentWillMount() {
-            console.log('[componentWillMount]', arguments);
-        }
-
-        componentDidMount() {
-            console.log('[componentDidMount]', arguments);
-        }
-
-        componentWillUpdate() {
-            console.log('[componentWillUpdate]', arguments);
-        }
-
-        componentDidUpdate() {
-            console.log('[componentDidUpdate]', arguments);
-        }
-
-        componentWillUnmount() {
-            console.log('[componentWillUnmount]:', arguments);
         }
 
         resetCounter(value = 0) {
