@@ -553,7 +553,9 @@ function createContext(defaultValue) {
             functional: false,
 
             props: {
-                value: defaultValue
+                value: {
+                    default: () => defaultValue
+                }
             },
 
             data() {

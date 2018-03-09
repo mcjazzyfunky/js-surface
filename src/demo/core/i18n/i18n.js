@@ -55,15 +55,15 @@ const App = defineComponent({
                                 h('option', { value: 'en' }, 'en'),
                                 h('option', { value: 'fr' }, 'fr'),
                                 h('option', { value: 'de' }, 'de')),
-                            h('div', null, Text({ id: 'salutation'}))))
+                            h('div', null, LocaleText({ id: 'salutation'}))))
                 );
             }
         };
     }
 });
 
-const Text = defineComponent({
-    displayName: 'Text',
+const LocaleText = defineComponent({
+    displayName: 'LocaleText',
 
     properties: {
         id: {
