@@ -144,6 +144,7 @@ function createStandardComponentType(config) {
     };
 
     const component = Vue.extend({
+        name: config.displayName,
         props:  propsConfig, 
         methods: determineOperations(config),
 
@@ -538,6 +539,7 @@ function createContext(defaultValue) {
         contextName = '__$$context-' + nextContextId++,
 
         Provider = Vue.extend({
+            name: 'Context.Provider',
             functional: false,
 
             props: {
@@ -569,8 +571,8 @@ function createContext(defaultValue) {
         }),
 
         Consumer = Vue.extend({
+            name: 'Context.Consumer',
             functional: false,
-
             inject: [contextName],
 
             render(vueCreateElement) {
