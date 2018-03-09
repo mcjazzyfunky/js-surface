@@ -1,4 +1,4 @@
-import { createElement as h, createContext, defineComponent, mount, Fragment } from 'js-surface';
+import { createElement as h, createContext, defineComponent, mount } from 'js-surface';
 import { Component } from 'js-surface/common/classes';
 
 const ParentDisabledContext = createContext(false);
@@ -45,7 +45,7 @@ const Child = defineComponent({
     main: class extends Component {
         render() {
             return (
-                h(Fragment, null,
+                h('div', null,
                     'This time information should never update: ',
                     new Date().toLocaleTimeString(),
                     h(ParentDisabledContext.Consumer, parentDisabled => 

@@ -5,8 +5,6 @@ import createElement from 'js-hyperscript/universal';
 
 import Vue from 'vue';
 
-let updateId = 1;
-
 const
     doNothing = () => {},
 
@@ -42,6 +40,7 @@ const
     };
 
 Object.assign(Surface, {
+    createContext,
     createElement,
     defineComponent,
     inspectElement,
@@ -56,6 +55,7 @@ Object.freeze(Surface);
 export default Surface;
 
 export {
+    createContext,
     createElement,
     defineComponent,
     inspectElement,
@@ -128,13 +128,15 @@ function createStandardComponentType(config) {
 
     propsConfig[''] = {
         default() {
-            if (this.__receiveProps) {
+            if (this.__isInitialized && this.__receiveProps) {
                 Vue.nextTick(() => {
                     this.__props = mixProps(
                         this.$options.propsData,
+                        this.$slots.default,
                         this._events,
                         defaultValues,
-                        config);
+                        config,
+                        this);
                     this.__receiveProps(this.__props);
                 });
             }
@@ -142,7 +144,7 @@ function createStandardComponentType(config) {
     };
 
     const component = Vue.extend({
-        props: propsConfig, 
+        props:  propsConfig, 
         methods: determineOperations(config),
 
         created() {
@@ -162,9 +164,11 @@ function createStandardComponentType(config) {
             this.__props = 
                 mixProps(
                     this.$options.propsData,
+                    this.$slots.default,
                     this._events,
                     defaultValues,
-                    config);
+                    config,
+                    this);
 
             this.__state = undefined;
 
@@ -175,13 +179,13 @@ function createStandardComponentType(config) {
                 if (!this.__isInitialized) {
                     this.__state = this.__nextState;
                 } else {
-                    setTimeout(() => {
+                    Vue.nextTick(() => {
                         this.__state = this.__nextState;
 
                         if (callback) {
                             callback(this.__state);
                         }
-                    }, 0);
+                    });
                 }
             };
 
@@ -209,9 +213,11 @@ function createStandardComponentType(config) {
             this.__props = 
                 mixProps(
                     this.$options.propsData,
+                    this.$slots.default,
                     this._events,
                     defaultValues,
-                    config);
+                    config,
+                    this);
         },
 
         mounted() {
@@ -227,9 +233,11 @@ function createStandardComponentType(config) {
             this.__props =
                 mixProps(
                     this.$options.propsData,
+                    this.$slots.default,
                     this._events,
                     defaultValues,
-                    config);
+                    config,
+                    this);
         },
 
         updated() {
@@ -414,6 +422,8 @@ function convertChildren(children, vueCreateElement, component) {
                 ret.push(...convertChildren(item, vueCreateElement, component));
             } else if (typeof item === 'string') {
                 ret.push(item);
+            } else if (typeof item === 'function') {
+                ret.push({ apply: item }); // TODO - Consumer
             } else if (item && typeof item[Symbol.iterator] === 'function') {
                 ret.push(...convertChildren(item, vueCreateElement, component));
             } else if (item && item.isElement) {
@@ -445,8 +455,12 @@ function determineDefaultValues(config) {
     return ret;
 }
 
-function mixProps(props, events, defaultValues, config) {
+function mixProps(props, children, events, defaultValues, config, component) {
     let ret = Object.assign({}, props);
+
+    if (children && children.length > 0) {
+        ret.children = children;
+    }
 
     if (defaultValues) {
         for (let key of Object.keys(defaultValues)) {
@@ -515,4 +529,60 @@ function handleRefCleanupCallbacks(comp) {
             callback();
         }
     }
+}
+
+let nextContextId = 1;
+
+function createContext(defaultValue) {
+    const
+        contextName = '__$$context-' + nextContextId++,
+
+        Provider = Vue.extend({
+            functional: false,
+
+            props: {
+                value: defaultValue
+            },
+
+            data() {
+                return {
+                    contextData: { value: this.value }
+                };
+            },
+
+            provide() {
+                return {
+                    [contextName]: this.contextData
+                };
+            },
+
+            watch: {
+                value() {
+                    this.contextData.value = this.value;
+                }
+            },
+
+            render(vueCreateElement) {
+                return renderContent(vueCreateElement,
+                    createElement('span', null, this.$slots.default));
+            }
+        }),
+
+        Consumer = Vue.extend({
+            functional: false,
+
+            inject: [contextName],
+
+            render(vueCreateElement) {
+                const
+                    value = this[contextName].value,
+                    consume = this.$slots.default ? this.$slots.default[0].apply : null,
+                    content = consume ? consume(value) : null;
+
+                return renderContent(vueCreateElement,
+                    createElement('span', null, content), this);
+            }
+        });
+
+    return { Provider, Consumer };
 }
