@@ -117,15 +117,10 @@ function deriveReactComponent(config) {
                         }
                     } else {
                         this.forceUpdate(callback);
-                        this.__forcedUpdate = true;
                     }
                 };
 
             this.__isInitialized = false;
-            this.__forcedUpdate = false;    // TODO: DIO seems to have a bug =>
-                                            // in some cases a "forceUpdate" invocation does not
-                                            // really update if "shouldComponentUpdate" returns false.
-                                            // "shouldComponentUpdate"
             this.__callbacksWhenDidMount = null;
 
             const result = config.init(props, refresh, updateState);
@@ -138,7 +133,7 @@ function deriveReactComponent(config) {
         }
 
         shouldComponentUpdate() {
-            return this.__forcedUpdate;
+            return false;
         }
 
         // This is not working
@@ -184,7 +179,6 @@ function deriveReactComponent(config) {
         }
 
         render() {
-            this.__forcedUpdate = false;
             return this.__render(this.props, this.state);
         }
     }
