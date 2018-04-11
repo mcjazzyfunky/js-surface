@@ -73,15 +73,6 @@ module.exports = function (grunt) {
                     libraryTarget: 'umd'
                 }
             },
-            surfaceCommonFlow: {
-                entry: ['./build/src/main/__modules__/common/flow.js'],
-                output: {
-                    path: path.resolve(__dirname, 'dist', 'common'),
-                    filename: 'flow.js',
-                    library: ['jsSurface', 'common', 'flow'],
-                    libraryTarget: 'umd'
-                }
-            },
             react: {
                 entry: ['./build/src/main/__modules__/react/react.js'],
                 output: {
@@ -161,10 +152,6 @@ module.exports = function (grunt) {
                 src: ['dist/common/classes.js'],
                 dest: 'dist/common/classes.min.js'
             },
-            jsSurfaceCommonFlow: {
-                src: ['dist/common/flow.js'],
-                dest: 'dist/common/flow.min.js'
-            },
             jsSurfaceReact: {
                 src: ['dist/react.js'],
                 dest: 'dist/react.min.js'
@@ -200,14 +187,6 @@ module.exports = function (grunt) {
                 },
                 src: ['dist/common/classes.min.js'],
                 dest: 'dist/common/classes.min.js.gz'
-            },
-            jsSurfaceCommonFlow: {
-                options: {
-                    mode: 'gzip',
-                    level: 9
-                },
-                src: ['dist/common/flow.min.js'],
-                dest: 'dist/common/flow.min.js.gz'
             },
             jsSurfaceReact: {
                 options: {

@@ -33,28 +33,14 @@ const SimpleCounter = defineComponent({
             });
         }
 
-        componentWillMount() {
-            console.log('componentWillMount');
-            //alert('componentWillMount');
-        }
-
         componentDidMount() {
             console.log('componentDidMount');
             //alert('componentDidMount');
         }
 
-        componentWillUpdate() {
-            console.log('componentWillUpdate');
-            //alert('componentWillUpdate');
-        }
-
         componentDidUpdate() {
             console.log('componentDidUpdate');
             //alert('componentDidUpdate');
-        }
-
-        componentWillChangeState(nextState) {
-            console.log('componentWillChangeState', 'current state:', this.state, 'next state:', nextState);
         }
 
         componentDidChangeState(prevState) {
