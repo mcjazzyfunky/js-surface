@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/react.js",
@@ -24,7 +24,7 @@
     "browserify": "^14.5.0",
     "browserify-zlib": "^0.2.0",
     "core-js": "^2.4.1",
-    "dio.js": "^8.2.3",
+    "dio.js": "^9.0.2",
     "esdoc": "^1.0.3",
     "eslint": "^3.13.1",
     "fbjs": "^0.8.12",

@@ -35,7 +35,7 @@ case 'react':
     createElement = Surface.Adapter.api.React.createElement;
     break;
 
-case 'dio':
+case 'dio':console.log(Surface.Adapter)
     createElement = Surface.Adapter.api.Dio.createElement;
     break;
 

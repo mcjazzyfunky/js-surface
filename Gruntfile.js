@@ -56,11 +56,11 @@ module.exports = function (grunt) {
                 },
                 resolve: {
                     alias: {
-                        'react$': path.resolve(__dirname, 'node_modules', 'react', 'umd', 'react.production.min.js'),
-                        'react-dom$': path.resolve(__dirname, 'node_modules', 'react-dom', 'umd', 'react-dom.production.min.js'),
-                        'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
-                        //'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
-                        //'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                        //'react$': path.resolve(__dirname, 'node_modules', 'react', 'umd', 'react.production.min.js'),
+                        //'react-dom$': path.resolve(__dirname, 'node_modules', 'react-dom', 'umd', 'react-dom.production.min.js'),
+                        //'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
+                        'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
+                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
                     }
                 }
             },
@@ -109,6 +109,23 @@ module.exports = function (grunt) {
                 }   
             },
             */
+            dio: {
+                entry: ['./build/src/main/__modules__/dio/dio.js'],
+                output: {
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'dio.js',
+                    libraryTarget: 'umd'
+                },
+                resolve: {
+                    alias: {
+                        'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
+                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                    }
+                },
+                externals: {
+                    'dio.js': true
+                }
+            },
             vue: {
                 entry: ['./build/src/main/__modules__/vue/vue.js'],
                 output: {
@@ -158,6 +175,10 @@ module.exports = function (grunt) {
                 dest: 'dist/react-native.min.js'
             },
             */
+            jsDio: {
+                src: ['dist/dio.js'],
+                dest: 'dist/dio.min.js'
+            },
             jsSurfaceVue: {
                 src: ['dist/vue.js'],
                 dest: 'dist/vue.min.js'
@@ -206,6 +227,14 @@ module.exports = function (grunt) {
                 dest: 'dist/react-native.min.js.gz'
             },
             */
+            jsSurfaceDio: {
+                options: {
+                    mode: 'gzip',
+                    level: 9
+                },
+                src: ['dist/dio.min.js'],
+                dest: 'dist/dio.min.js.gz'
+            },
             jsSurfaceVue: {
                 options: {
                     mode: 'gzip',

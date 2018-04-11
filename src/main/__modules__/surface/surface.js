@@ -1,3 +1,38 @@
+import Surface from '../dio/dio.js';
+
+const
+    module = { ...Surface },
+    createContext = Surface.createContext,
+    createElement = Surface.createElement,
+    createPortal = Surface.createPortal,
+    defineComponent = Surface.defineComponent,
+    isElement = Surface.isElement,
+    mount = Surface.mount,
+    Fragment = Surface.Fragment,
+
+    Adapter = Object.freeze({
+        name: 'surface',
+        api: Object.freeze({ Surface: module })
+    });
+
+module.Adapter = Adapter;
+
+Object.freeze(module);
+
+export default module;
+
+export {
+    createContext,
+    createElement,
+    createPortal,
+    defineComponent,
+    isElement,
+    mount,
+    Adapter,
+    Fragment
+};
+
+/* --- if React shall be used instead of DIO ---
 import React from 'react';
 import ReactDOM from 'react-dom';
 import adaptMountFunction from '../../adaption/adaptMountFunction';
@@ -41,3 +76,4 @@ export {
     Adapter,
     Fragment
 };
+*/

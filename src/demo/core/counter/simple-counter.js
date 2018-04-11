@@ -28,7 +28,7 @@ const SimpleCounter = defineComponent({
                 updateState(state => ({ counterValue: state.counterValue + delta }), () => refresh());
             },
 
-            render = (props, state) => {console.log(props, state)
+            render = (props, state) => {
                 return (
                     h('div',
                         { className: 'simple-counter' },
