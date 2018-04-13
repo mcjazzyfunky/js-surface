@@ -81,8 +81,8 @@ export default function normalizeComponentConfig(config) {
         }
     }
 
-    if (config.operations && config.operations.length > 0) {
-        ret.operations = config.operations;
+    if (config.methods && config.methods.length > 0) {
+        ret.methods = config.methods;
     }
 
     if (config.childContext && config.childContext.length > 0) {

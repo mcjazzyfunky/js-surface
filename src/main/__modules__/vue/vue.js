@@ -204,7 +204,7 @@ function createStandardComponentType(config) {
             }
 
             this.__finalize = initResult.finalize || doNothing;
-            this.__runOperation = initResult.runOperation;
+            this.__callMethod = initResult.callMethod;
 
             if (config.isErrorBoundary) {
                 this.__isErrorBoundary = true;
@@ -500,12 +500,12 @@ function mixProps(props, children, events, defaultValues) {
 function determineOperations(config) {
     let ret = null;
 
-    if (config.operations) {
+    if (config.methods) {
         ret = {};
 
-        for (let key of config.operations) {
+        for (let key of config.methods) {
             ret[key] = function (...args) {
-                return this.__runOperation(key, args);
+                return this.__callMethod(key, args);
             };
         }
     }

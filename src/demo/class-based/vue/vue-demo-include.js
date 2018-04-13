@@ -57,7 +57,7 @@ const SurfaceCounter = defineComponent({
         }
     },
 
-    operations: ['reset'],
+    methods: ['reset'],
 
     main: class extends Component {
         constructor(props) {console.log('>>>>', props)

@@ -163,8 +163,8 @@ class Component {
                 };
             }
 
-            if (config.operations) {
-                ret.runOperation = (name, args) => {
+            if (config.methods) {
+                ret.callMethod = (name, args) => {
                     return component[name](...args);
                 };
             }

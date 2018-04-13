@@ -113,7 +113,7 @@ function deriveReactComponent(config) {
 
             this.__receiveProps = result.receiveProps || null;
             this.__finalize = result.finalize || null;
-            this.__runOperation = result.runOperation || null;
+            this.__callMethod = result.callMethod || null;
             this.__handleError = result.handleError || null;
             this.__render = result.render;
         }
@@ -171,10 +171,10 @@ function deriveReactComponent(config) {
         };
     }
 
-    if (config.operations) {
-        for (const operationName of config.operations) {
+    if (config.methods) {
+        for (const operationName of config.methods) {
             Component.prototype[operationName] = function (...args) {
-                return this.__runOperation(operationName, args);
+                return this.__callMethod(operationName, args);
             };
         }
     }

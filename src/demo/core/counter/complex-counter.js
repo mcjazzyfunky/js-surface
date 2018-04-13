@@ -50,7 +50,7 @@ const Counter = defineComponent({
         }
     },
 
-    operations: ['resetCounter'],
+    methods: ['resetCounter'],
 
     init(initialProps, refresh, updateState) {
         let counterValue;
@@ -95,7 +95,7 @@ const Counter = defineComponent({
         return {
             render,
 
-            runOperation(name, args) {
+            callMethod(name, args) {
                 if (name === 'resetCounter') {
                     const [n = 0] = args;
 

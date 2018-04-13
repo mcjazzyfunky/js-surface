@@ -38,7 +38,7 @@ const Counter = defineComponent({
         }
     },
 
-    operations: ['resetCounter'],
+    methods: ['resetCounter'],
 
     main: class extends Component {
         constructor(props) {

@@ -103,7 +103,7 @@ const componentConfigSpec =
                                                     + 'and "getDefaultValue" both at once'))))
                         })),
 
-            operations:
+            methods:
                 Spec.optional(
                     Spec.arrayOf(
                         Spec.and(
