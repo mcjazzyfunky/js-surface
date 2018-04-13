@@ -6,6 +6,7 @@ const
     createElement = Surface.createElement,
     createPortal = Surface.createPortal,
     defineComponent = Surface.defineComponent,
+    isContext = Surface.isContext,
     isElement = Surface.isElement,
     mount = Surface.mount,
     Fragment = Surface.Fragment,
@@ -26,6 +27,7 @@ export {
     createElement,
     createPortal,
     defineComponent,
+    isContext,
     isElement,
     mount,
     Adapter,
@@ -50,8 +52,7 @@ const
         
         extras: {
             createPortal: ReactDOM.createPortal,
-            mount: customMount,
-            Fragment: React.Fragment
+            mount: customMount
         }
     }),
 
@@ -59,6 +60,7 @@ const
     createElement = Surface.createElement,
     createPortal = Surface.createPortal,
     defineComponent = Surface.defineComponent,
+    isContext = Surface.isContext,
     isElement = Surface.isElement,
     mount = Surface.mount,
     Adapter = Surface.Adapter,
@@ -71,6 +73,7 @@ export {
     createElement,
     createPortal,
     defineComponent,
+    isContext,
     isElement,
     mount,
     Adapter,

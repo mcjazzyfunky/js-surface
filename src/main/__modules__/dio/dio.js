@@ -21,6 +21,12 @@ const
         Adapter
     }),
 
+    isContext = it =>
+        it !== null
+            && typeof it === 'object'
+            && typeof it.Provider === 'function'
+            && typeof it.Consumer === 'function',
+
     isElement = adaptIsElementFunction({
         isElement: Dio.isValidElement
     }),
@@ -38,6 +44,7 @@ const
         createContext,
         createElement,
         defineComponent,
+        isContext,
         isElement,
         mount,
         Adapter,
@@ -54,6 +61,7 @@ export {
     createContext,
     createElement,
     defineComponent,
+    isContext,
     isElement,
     mount,
     Adapter,

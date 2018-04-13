@@ -21,6 +21,16 @@ export default function buildSurfaceModuleForReact({ adapterName, api = null, ex
             Adapter
         }),
 
+        isContext = it =>
+            it !== null
+                && typeof it === 'object'
+                && it.$$typeof === Symbol.for('react.context') 
+                && it.Provider !== null
+                && typeof it.Provider === 'object'
+                && it.Provider.$$typeof === Symbol.for('react.provider')
+                && it.Provider.context === it
+                && it.Consumer === it,
+
         isElement = adaptIsElementFunction({
             isElement: React.isValidElement
         }),
@@ -32,6 +42,7 @@ export default function buildSurfaceModuleForReact({ adapterName, api = null, ex
             createContext,
             createElement,
             defineComponent,
+            isContext,
             isElement,
             Adapter,
             Fragment,

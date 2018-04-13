@@ -69,31 +69,35 @@ const componentConfigSpec =
 
                                                 inject:
                                                     Spec.optional(
-                                                        Spec.or(
-                                                            {
-                                                                when:
-                                                                    Spec.array,
+                                                        Spec.shape({
+                                                            context: 
+                                                                Spec.or(
+                                                                    {
+                                                                        when:
+                                                                            Spec.array,
 
-                                                                check:
-                                                                    Spec.arrayOf(
-                                                                        Spec.extensibleShape({
-                                                                            Provider: Spec.isSomething,
-                                                                            Consumer: Spec.isSomething
-                                                                        }))
-                                                            },
+                                                                        check:
+                                                                            Spec.arrayOf(
+                                                                                Spec.extensibleShape({
+                                                                                    Provider: Spec.isSomething,
+                                                                                    Consumer: Spec.isSomething
+                                                                                }))
+                                                                    },
 
-                                                            {
-                                                                when:
-                                                                    Spec.any,
+                                                                    {
+                                                                        when:
+                                                                            Spec.any,
 
-                                                                check:
-                                                                    Spec.shape({
-                                                                        Provider: Spec.isSomething,
-                                                                        Consumer: Spec.isSomething
-                                                                    })
-                                                            },
+                                                                        check:
+                                                                            Spec.extensibleShape({
+                                                                                Provider: Spec.isSomething,
+                                                                                Consumer: Spec.isSomething
+                                                                            })
+                                                                    }),
 
-                                                        ))
+                                                            select:
+                                                                Spec.optional(Spec.function)
+                                                        }))
                                             }),
                                         
                                             Spec.valid(
