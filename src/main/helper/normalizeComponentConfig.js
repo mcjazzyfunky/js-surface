@@ -64,7 +64,16 @@ export default function normalizeComponentConfig(config) {
                 }
 
                 if (inject) {
-                    ret.properties[key].inject = true;
+                    const normalizedInject = {
+                        context: inject.context
+                    };
+
+                    if (typeof inject.select === 'function') {
+                        normalizedInject.select = inject.select;
+                    }
+
+                    ret.properties[key].inject =
+                        Object.freeze(normalizedInject);
                 }
             }
         } else {

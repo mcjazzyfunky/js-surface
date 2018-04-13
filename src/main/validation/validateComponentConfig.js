@@ -25,7 +25,8 @@ const componentConfigSpec =
                 Spec.optional(
                     Spec.or(
                         {
-                            when: Spec.array,
+                            when:
+                                Spec.array,
 
                             check:
                                 Spec.and(
@@ -79,8 +80,8 @@ const componentConfigSpec =
                                                                         check:
                                                                             Spec.arrayOf(
                                                                                 Spec.extensibleShape({
-                                                                                    Provider: Spec.isSomething,
-                                                                                    Consumer: Spec.isSomething
+                                                                                    Provider: Spec.something,
+                                                                                    Consumer: Spec.something
                                                                                 }))
                                                                     },
 
@@ -90,8 +91,8 @@ const componentConfigSpec =
 
                                                                         check:
                                                                             Spec.extensibleShape({
-                                                                                Provider: Spec.isSomething,
-                                                                                Consumer: Spec.isSomething
+                                                                                Provider: Spec.something,
+                                                                                Consumer: Spec.something
                                                                             })
                                                                     }),
 

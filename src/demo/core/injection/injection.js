@@ -1,8 +1,11 @@
 import {
+    createContext,
     createElement as h,
     defineComponent,
     mount
 } from 'js-surface';
+
+const ValueCtx = createContext();
 
 const Parent = defineComponent({
     displayName: 'Parent',
@@ -14,20 +17,19 @@ const Parent = defineComponent({
         }
     },
 
-    childContext: ['value'],
-
-    init: updateView => ({
-        receiveProps(props) {
-            updateView(
+    init: () => ({
+        render(props) {
+            return (
                 h('div', null,
                     h('div', null, 'Provided value: ', props.masterValue),
                     h('br'),
                     h('div', null,
-                        ChildFunctional(),
-                        ChildStandard(),
-                        ChildFunctional({ value: 'with explicit value' }),
-                        ChildStandard({ value: 'with another explicit value' }))),
-                { value: props.masterValue });
+                        h(ValueCtx.Provider, { value: props.masteralue }),
+                            ChildFunctional(),
+                            ChildStandard(),
+                            ChildFunctional({ value: 'with explicit value' }),
+                            ChildStandard({ value: 'with another explicit value' })))
+            );
         }
     })
 });
@@ -38,8 +40,11 @@ const ChildFunctional = defineComponent({
     properties: {
         value: {
             type: String,
-            inject: true,
-            defaultValue: 'default value'
+            defaultValue: 'default value',
+            
+            inject: {
+                context: ValueCtx
+            },
         }
     },
 
@@ -54,15 +59,17 @@ const ChildStandard = defineComponent({
     properties: {
         value: {
             type: String,
-            inject: true,
-            defaultValue: 'default value'
+            defaultValue: 'default value',
+            
+            inject: {
+                context: ValueCtx
+            },
         }
     },
 
-    init: updateView => ({
-        receiveProps(props) {
-            updateView(
-                h('div', null, 'ChildStandard(', props.value, ')'));
+    init: () => ({
+        render(props) {
+            return h('div', null, 'ChildStandard(', props.value, ')');
         }
     })
 });
