@@ -60,7 +60,8 @@ module.exports = function (grunt) {
                         //'react-dom$': path.resolve(__dirname, 'node_modules', 'react-dom', 'umd', 'react-dom.production.min.js'),
                         //'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
                         'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
-                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js'),
+                        'js-spec$': path.resolve(__dirname, 'node_modules', 'js-spec', 'dist', 'js-spec.js'),
                     }
                 }
             },
@@ -83,12 +84,14 @@ module.exports = function (grunt) {
                 },   
                 resolve: {
                     alias: {
-                        'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js')
+                        'js-hyperscript/react$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'react.js'),
+                        'js-spec$': path.resolve(__dirname, 'node_modules', 'js-spec', 'dist', 'js-spec.js'),
                     }
                 },
                 externals: {
                     'react': true,
-                    'react-dom': true
+                    'react-dom': true,
+                    'js-spec': true
                 }
             },
             /*
@@ -110,11 +113,13 @@ module.exports = function (grunt) {
                 resolve: {
                     alias: {
                         'dio.js$': path.resolve(__dirname, 'node_modules', 'dio.js', 'dist', 'umd.js'),
-                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js')
+                        'js-hyperscript/dio$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'dio.js'),
+                        'js-spec$': path.resolve(__dirname, 'node_modules', 'js-spec', 'dist', 'js-spec.js'),
                     }
                 },
                 externals: {
-                    'dio.js': true
+                    'dio.js': true,
+                    'js-spec': true
                 }
             },
             vue: {
@@ -126,11 +131,13 @@ module.exports = function (grunt) {
                 },
                 resolve: {
                     alias: {
-                        'js-hyperscript/universal$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'universal.js')
+                        'js-hyperscript/universal$': path.resolve(__dirname, 'node_modules', 'js-hyperscript', 'dist', 'universal.js'),
+                        'js-spec$': path.resolve(__dirname, 'node_modules', 'js-spec', 'dist', 'js-spec.js'),
                     }
                 },
                 externals: {
-                    vue: true
+                    vue: true,
+                    'js-spec': true
                 }
             },
         },

@@ -1,4 +1,4 @@
-export default function validateInitResult(initResult, config) {console.log(1)
+export default function validateInitResult(initResult, config) {
     let
         errMsg = null,
         error = null,
