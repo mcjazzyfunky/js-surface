@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+
+    <style type="text/css">
+        #main-content:empty {
+            display: none;
+        }
+
+        #main-content {
+            background: #fff;
+            padding: 30px;
+        }
+
+        #main-content.todomvc {
+            min-width: 100%;
+            background: rgb(245, 245, 245);
+        }
+
+        .demo-header {
+            background: #efefef;
+        }
+    </style>
+
+    <script type="text/javascript" src="../../node_modules/systemjs/dist/system.js"></script>
+
+    <script type="text/javascript">
+    {   
+        const
+            uri = location.href,
+            baseUri = uri.split('#')[0],
+            fragment = uri.split('#')[1] || '',
+            demoName = fragment.split('/')[0],
+            adapterName = fragment.split('/')[1],
+
+            reload = () => {
+                const
+                    demoName = document.getElementById('demo-selector').value,
+                    adapterName = document.getElementById('adapter-selector').value,
+                    newUri = baseUri + '#' + demoName + '/' + adapterName;
+
+                location.href = newUri;
+                location.reload();
+            },
+
+            availableAdapters = [
+                { 
+                    name: 'react',
+                    module: 'js-surface-react'
+                },
+                {
+                    name: 'inferno',
+                    module: 'js-surface-inferno'
+                },
+                {
+                    name: 'preact',
+                    module: 'js-surface-preact'
+                },
+                {
+                    name: 'vue',
+                    module: 'js-surface-vue'
+                },
+                {
+                    name: 'standalone',
+                    module: 'js-surface-standalone'
+                }
+            ],
+
+            activeAdapterIndex = Math.max(availableAdapters.findIndex(it => it.name === adapterName), 0),
+            activeAdapter = availableAdapters[activeAdapterIndex],
+            jsSurfaceInclude = '../main/' + activeAdapter.module;
+            //jsSurfaceInclude = '../../dist/' + activeAdapter.module.replace('js-surface-', '');
+
+        System.config({
+            baseURL: '../..',
+            transpiler: 'plugin-babel',
+
+            packages: {
+               '': {
+                   defaultExtension: 'js'
+                }
+            },
+
+            meta: {
+                '*.js': {
+ 		            presets: ['es2015',  'es2016', 'es2017']
+                },
+                '../../node_modules/bootstrap/dist/js/bootstrap.js': {
+                    format: 'global',
+                    deps: ['jquery'],
+ 		            presets: ['es2017']
+                },
+                'js-surface': {
+                    deps: ['js-spec', 'react', 'react-dom', 'preact', 'inferno', 'inferno-component', 'inferno-create-element', 'vue']
+                }
+            },
+            map: {
+                'jquery': 'node_modules/jquery/dist/jquery.js',
+                'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
+                'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
+                'immutable': 'node_modules/immutable/dist/immutable.min.js',
+
+                'react': 'node_modules/react/umd/react.development.js',
+                'react-dom': 'node_modules/react-dom/umd/react-dom.development.js',
+
+                //'react': 'node_modules/react/umd/react.production.min.js',
+                //'react-dom': 'node_modules/react-dom/umd/react-dom.production.min.js',
+
+                'inferno': 'node_modules/inferno/dist/inferno.min.js',
+                'inferno-component': 'node_modules/inferno-component/dist/inferno-component.min.js',
+                'inferno-create-element': 'node_modules/inferno-create-element/dist/inferno-create-element.min.js',
+
+                'preact': 'node_modules/preact/dist/preact.min.js',
+
+                'vue': 'node_modules/vue/dist/vue.min.js',
+
+                'js-spec': 'node_modules/js-spec/dist/js-spec.js',
+
+                'js-message': '../../js-message/src/main/js-message.js',
+
+                'js-surface': jsSurfaceInclude + '.js',
+                'js-essential': 'node_modules/js-essential/dist/js-essential/js-essential.min.js',
+            }
+        });
+
+        System.import('./available-demos.js')
+            .then(({ default: availableDemos }) => {
+                const
+                    activeDemoIndex = Math.max(availableDemos.findIndex(it => it.name === demoName), 0),
+                    activeDemo =  availableDemos[activeDemoIndex];
+
+                let content =
+                    '<div class="card"><div class="card-header demo-header">'
+                    + '<label for="demo-selector">Demo:</label> '
+                    + '<select id="demo-selector">';
+
+                for (let file of activeDemo.files) {
+                    const path = './' + activeDemo.directory + '/' + file;
+
+                    if (path.endsWith('.js')) {
+                        System.import(path);
+                    } else if (path.endsWith('.css')) {
+                        const elem = document.createElement('link');
+                        elem.setAttribute('type', 'text/css');
+                        elem.setAttribute('rel', 'stylesheet');
+                        elem.setAttribute('href', path);
+
+                        document.head.appendChild(elem);
+                    }
+                }
+
+                for (let demo of availableDemos) {
+                    const selected = demo.name === activeDemo.name ? 'selected' : '';
+
+                    content += `<option value="${demo.name}" ${selected}>${demo.displayName}</option>`;
+                }
+
+                content += '</select> '
+                    + '<label for="adapter-selector">Adapter:</label> '
+                    + '<select id="adapter-selector">';
+
+                for (let adapter of availableAdapters) {
+                    const selected = adapter.name === activeAdapter.name ? 'selected' : '';
+
+                    content += `<option ${selected}>${adapter.name}</option>`;
+                }
+
+                content += '</select></div><div id="main-content" class="'
+                    + activeDemo.name
+                    + ' card-block"></div></div>';
+                
+                document.body.innerHTML = content;
+
+                for (let elem of document.getElementsByTagName('select')) {
+                    elem.addEventListener('change', reload);
+                }
+            })
+            .catch(err => {
+                document.body.innerText = err;
+            });
+    }
+    </script>
+</head>
+<body>
+</body>
+</html>
