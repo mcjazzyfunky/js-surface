@@ -20,7 +20,7 @@ const DemoSelector = defineComponent({
         for (let i = 0; i < demos.length; ++i) {
           const demo = demos[i];
           
-          options.push(h('option', { value: i }, demo.title));
+          options.push(h('option', { key: i, value: i }, demo.title));
         }
 
         return (

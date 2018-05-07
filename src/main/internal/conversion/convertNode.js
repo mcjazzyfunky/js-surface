@@ -45,11 +45,26 @@ export default function convertNode(node) {
     };
   }
 
-  
-if (newType.$$typeof === Symbol.for('react.provider')) {
-  console.log(newType, newProps, props);
-}
+  let ret = null;
 
-  return React.createElement(newType, newProps);
+  if (!newProps || !newProps.children) {
+    ret = React.createElement(newType, newProps);
+  } else {
+    const
+      children = newProps.children,
+      childCount = newProps.children.length,
+      newArgs = new Array(childCount + 2);
+
+    newArgs[0] = newType;
+    newArgs[1] = newProps;
+
+    for (let i = 0; i < childCount; ++i) {
+      newArgs[i + 2] = children[i];
+    }
+
+    ret = React.createElement.apply(null, newArgs);
+  }
+
+  return ret;
 }
 
