@@ -31,8 +31,10 @@ module.exports = {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
       'js-surface$': path.resolve(__dirname, 'src/main/js-surface.js'),
-      'js-surface/render$': path.resolve(__dirname, 'src/main/submodules/render/index.js'),
-      'js-surface/classes$': path.resolve(__dirname, 'src/main/submodules/classes/index.js')
+      'js-surface/render$': path.resolve(__dirname, 'src/main/submodules/render.js'),
+      'js-surface/classes$': path.resolve(__dirname, 'src/main/submodules/classes.js'),
+      'js-hyperscript/surface$': path.resolve(__dirname, 'node_modules/js-hyperscript/dist/surface.js'),
+      'js-dom-factories/surface$': path.resolve(__dirname, 'node_modules/js-dom-factories/dist/surface.js')
     }
   },
   output: {

@@ -11,6 +11,7 @@ import FragmentsRender from './render/Fragments';
 // class based
 import HelloWorldClass from './class/HelloWorld';
 import ContextsClass from './class/Contexts';
+import PerformanceTest2Class from './class/PerformanceTest2';
 
 export default [
   HelloWorldCore,
@@ -19,6 +20,7 @@ export default [
   SimpleCounterCore,
   ComplexCounterCore,
   PerformanceTest1Core,
+  PerformanceTest2Class,
   FragmentsRender,
   ContextsClass,
 ];

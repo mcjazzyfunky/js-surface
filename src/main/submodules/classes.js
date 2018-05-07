@@ -1,4 +1,4 @@
-import determineAllMethodNames from '../../internal/util/determineAllMethodNames';
+import determineAllMethodNames from '../internal/util/determineAllMethodNames';
 
 const callbackMethodNamesCache = new WeakMap();
 

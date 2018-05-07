@@ -24,6 +24,11 @@ export default function convertNode(node) {
     newProps.children = newChildren;
   }
 
+  if (type.__internalIsConsumer && newProps.children && typeof newProps.children[0] === 'function') {
+    const consume = newProps.children[0];
+    newProps.children = value => convertNode(consume(value));
+  }
+
   return dio.createElement(newType, newProps);
 }
 

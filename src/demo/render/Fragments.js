@@ -1,4 +1,4 @@
-import { createElement as h, defineComponent, mount, Fragment } from 'js-surface';
+import { createElement as h, defineComponent, Fragment } from 'js-surface';
 import { render } from 'js-surface/render';
 
 const FragmentDemo = defineComponent({

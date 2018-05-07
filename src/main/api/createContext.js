@@ -15,21 +15,28 @@ export default function createContext(config) {
       return createElement(Consumer, ...args);
     };
 
+    Consumer.xxx = true;
+
   Object.defineProperty(Provider, '__internalType', {
     enumerable: false,
-    get: () => internalProvider
+    value: internalProvider
   });
 
   Object.defineProperty(Consumer, '__internalType', {
     enumerable: false,
-    get: () => internalConsumer
+    value: internalConsumer
+  });
+
+  Object.defineProperty(Consumer, '__internalIsConsumer', {
+    enumerable: false,
+    value: true
   });
 
   const ret = { Provider, Consumer };
 
   Object.defineProperty(ret, '__internalContext', {
     enumerable: false,
-    get: () => internalContext
+    value: internalContext
   });
 
   return Object.freeze(ret);
