@@ -127,7 +127,11 @@ const CounterCtrl = defineComponent({
               },
               'Set to 0'),
             ' ',
-            Counter({ ref: it => { counterInstance = it; } }),
+            Counter({
+              ref: it => {
+                counterInstance = it;
+              }
+            }),
             ' ',
             h('button',
               {

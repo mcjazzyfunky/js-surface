@@ -3,7 +3,7 @@ import printError from '../internal/helper/printError';
 import createElement from './createElement';
 import convertNode from '../internal/conversion/convertNode';
 
-import dio from 'dio.js';
+import React from 'react';
 
 export default function defineComponent(config) {
   const error = validateComponentConfig(config);
@@ -21,7 +21,19 @@ export default function defineComponent(config) {
     return createElement(ret, ...args);
   };
 
-  ret.__internalType = dioComponentClass;
+  Object.defineProperty(ret, '__internalType', {
+    enumerable: false,
+    value: dioComponentClass
+  });
+
+  ret.meta = { ...config };
+
+  if (typeof ret.meta.main !== 'function') {
+    ret.meta.main = ret.meta.main.normalizeComponent(config);
+  }
+
+  Object.freeze(ret.meta);
+  Object.freeze(ret);
 
   return ret;
 }
@@ -46,10 +58,14 @@ function deriveComponent(config) {
     main = main.normalizeComponent(config);
   }
 
-  class Component extends dio.Component {
+  class Component extends React.Component {
     constructor(props) {
       super(props);
 
+      const meta = {...config};
+      delete meta.main;
+  
+      this.__meta = meta;
       this.displayName = config.displayName;
 
       const

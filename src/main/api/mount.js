@@ -1,7 +1,7 @@
 import isElement from './isElement';
 import convertNode from '../internal/conversion/convertNode';
 
-import dio from 'dio.js';
+import ReactDOM from 'react-dom';
 
 export default function mount(element, target) {
   if (!isElement(element)) {
@@ -20,7 +20,7 @@ export default function mount(element, target) {
   }
 
   try {
-    dio.render(convertNode(element), targetNode);
+    ReactDOM.render(convertNode(element), targetNode);
   } catch (e) {
     const errorMsg =
       e instanceof Error

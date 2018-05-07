@@ -1,7 +1,8 @@
 import convertNodes from './convertNodes';
 import VirtualElement from '../element/VirtualElement';
+import RefProxy from '../proxy/RefProxy';
 
-import dio from 'dio.js';
+import React from 'react';
 
 export default function convertNode(node) {
   if (node && typeof node === 'object' && typeof node[Symbol.iterator] === 'function') {
@@ -29,6 +30,21 @@ export default function convertNode(node) {
     newProps.children = value => convertNode(consume(value));
   }
 
-  return dio.createElement(newType, newProps);
+  if (newProps && newProps.ref && typeof type !== 'string') {
+    const oldRef = newProps.ref;
+
+    newProps.ref = ref => {
+      const meta = ref.__meta;
+
+      if (!meta) {
+        return ref;
+      }
+
+      const refProxy = new RefProxy(ref, meta);
+      return oldRef(refProxy);
+    };
+  }
+
+  return React.createElement(newType, newProps);
 }
 

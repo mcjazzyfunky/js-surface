@@ -33,7 +33,13 @@ module.exports = env => {
       ]
     },
     resolve: {
-      extensions: ['.js']
+      extensions: ['.js'],
+      alias: {
+        'react': path.resolve(__dirname, 'node_modules/react/cjs/react.production.min.js'),
+        'react-dom': path.resolve(__dirname, 'node_modules/react-dom/cjs/react-dom.production.min.js')
+        //'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
+        //'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
+      }
     },
     externals: ['js-spec'],
     output: {

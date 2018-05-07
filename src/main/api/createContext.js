@@ -1,9 +1,9 @@
 import createElement from './createElement';
-import dio from 'dio.js';
+import React from 'react';
 
 export default function createContext(config) {
   const
-    internalContext = dio.createContext(config.defaultValue),
+    internalContext = React.createContext(config.defaultValue),
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 

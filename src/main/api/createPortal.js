@@ -1,3 +1,3 @@
-import dio from 'dio.js';
+import React from 'react';
 
-export default dio.createPortal;
+export default React.createPortal;

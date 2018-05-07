@@ -1,4 +1,4 @@
-import dio from 'dio.js';
+import ReactDOM from 'react-dom';
 
 export default function unmount(target) {
   const targetNode =
@@ -6,5 +6,5 @@ export default function unmount(target) {
       ? document.getElementById(target)
       : target;
 
-  dio.unmountComponentAtNode(targetNode);
+  ReactDOM.unmountComponentAtNode(targetNode);
 }
