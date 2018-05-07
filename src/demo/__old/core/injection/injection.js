@@ -1,11 +1,11 @@
 import {
-  createContext,
+  defineContext,
   createElement as h,
   defineComponent,
   mount
 } from 'js-surface';
 
-const ValueCtx = createContext();
+const ValueCtx = defineContext();
 
 const Parent = defineComponent({
   displayName: 'Parent',

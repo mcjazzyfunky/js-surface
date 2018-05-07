@@ -15,7 +15,72 @@ export default function defineComponent(config) {
     throw new TypeError(errorMsg);
   }
 
-  const dioComponentClass = deriveComponent(config);
+  let internalType = deriveComponent(config);
+
+  if (config.properties) {
+    const
+      propNames = Object.keys(config.properties),
+      injectedContexts = [],
+      contextInfoPairs = [];
+
+    for (let i = 0; i < propNames.length; ++i) {
+      const
+        propName = propNames[i],
+        propConfig = config.properties[propName],
+        inject = propConfig.inject;
+
+      if (inject) {
+        let index = injectedContexts.indexOf(inject);
+
+        if (index === -1) {
+          index = injectedContexts.length;
+          injectedContexts.push(inject);
+        }
+
+        contextInfoPairs.push([propName, index]);
+      }
+    }
+
+    if (injectedContexts.length > 0) {
+      const innerComponent = internalType;
+
+      internalType = React.forwardRef((props, ref) => {
+        const
+          contextValues = new Array(injectedContexts.length),
+          adjustedProps = { ref, ...props };
+
+        let node = null;
+
+        for (let i = 0; i < injectedContexts.length; ++i) {
+          if (i === 0) {
+            node = React.createElement(injectedContexts[0].Consumer.__internalType, null, value => {
+              contextValues[0] = value;
+
+              for (let j = 0; j < contextInfoPairs.length; ++j) {
+                let [propName, contextIndex] = contextInfoPairs[i];
+
+                if (props[propName] === undefined) {
+                  adjustedProps[propName] = contextValues[i];
+                }
+              }
+
+              return React.createElement(innerComponent, adjustedProps);
+            });
+          } else {
+            const currNode = node;
+            
+            node = React.createElement(injectedContexts[i].Consumer, null, value => {
+              contextValues[i] = value;
+
+              return currNode;
+            });
+          }
+        }
+
+        return node;
+      });
+    }
+  }
 
   const ret = (...args) => {
     return createElement(ret, ...args);
@@ -23,7 +88,7 @@ export default function defineComponent(config) {
 
   Object.defineProperty(ret, '__internalType', {
     enumerable: false,
-    value: dioComponentClass
+    value: internalType
   });
 
   ret.meta = { ...config };
@@ -50,7 +115,7 @@ function prettifyErrorMsg(errorMsg, config) {
 function deriveComponent(config) {
   // config is already normalized
 
-  const convertedConfig = convertConfigToDio(config);
+  const convertedConfig = convertConfig(config);
 
   let main = config.main;
 
@@ -185,7 +250,7 @@ function deriveComponent(config) {
   return Component;
 }
 
-function convertConfigToDio(config) {
+function convertConfig(config) {
   // config is already normalized
 
   const ret = {

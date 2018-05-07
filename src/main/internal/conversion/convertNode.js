@@ -34,7 +34,7 @@ export default function convertNode(node) {
     const oldRef = newProps.ref;
 
     newProps.ref = ref => {
-      const meta = ref.__meta;
+      const meta = ref ? ref.__meta : meta;
 
       if (!meta) {
         return ref;
@@ -44,6 +44,11 @@ export default function convertNode(node) {
       return oldRef(refProxy);
     };
   }
+
+  
+if (newType.$$typeof === Symbol.for('react.provider')) {
+  console.log(newType, newProps, props);
+}
 
   return React.createElement(newType, newProps);
 }

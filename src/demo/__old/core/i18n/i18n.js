@@ -1,5 +1,5 @@
 import {
-  createContext,
+  defineContext,
   createElement as h,
   defineComponent,
   mount 
@@ -19,7 +19,7 @@ const translations = {
   }
 };
 
-const LocaleContext = createContext('en');
+const LocaleContext = defineContext('en');
 
 const App = defineComponent({
   displayName: 'App',

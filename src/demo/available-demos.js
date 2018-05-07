@@ -12,6 +12,7 @@ import FragmentsRender from './render/Fragments';
 import HelloWorldClass from './class/HelloWorld';
 import ContextsClass from './class/Contexts';
 import PerformanceTest2Class from './class/PerformanceTest2';
+import InjectionsClass from './class/Injections';
 
 export default [
   HelloWorldCore,
@@ -23,4 +24,5 @@ export default [
   PerformanceTest2Class,
   FragmentsRender,
   ContextsClass,
+  InjectionsClass
 ];

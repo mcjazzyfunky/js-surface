@@ -1,7 +1,7 @@
-import { createElement as h, createContext, defineComponent, mount } from 'js-surface';
+import { createElement as h, defineContext, defineComponent, mount } from 'js-surface';
 import { Component } from 'js-surface/common/classes';
 
-const ParentDisabledContext = createContext(false);
+const ParentDisabledContext = defineContext(false);
 
 const Parent = defineComponent({
   displayName: 'Parent',

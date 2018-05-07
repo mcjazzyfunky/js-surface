@@ -1,13 +1,19 @@
-import { createElement as h, createContext, defineComponent } from 'js-surface';
+import { createElement as h, defineContext, defineComponent } from 'js-surface';
 import { Component } from 'js-surface/classes';
 
-const ParentDisabledContext = createContext(false);
+const ParentDisabledContext = defineContext({
+  displayName: 'ParentDisabledContext',
+  defaultValue: false
+});
 
 const Parent = defineComponent({
   displayName: 'Parent',
 
   properties: {
     children: {
+      type: Array,
+      nullable: true,
+      defaultValue: null
     }
   },
 
@@ -61,7 +67,11 @@ const Child = defineComponent({
 const Container = defineComponent({
   displayName: 'Container',
 
-  properties: ['children'],
+  properties: {
+    children: {
+      type: Array
+    }
+  },
 
   main: class extends Component {
     shouldComponentUpdate() {

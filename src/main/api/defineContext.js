@@ -1,13 +1,24 @@
 import createElement from './createElement';
+import validateContextConfig from '../internal/validation/validateContextConfig';
+import printError from '../internal/helper/printError';
 import React from 'react';
 
-export default function createContext(config) {
+export default function defineContext(config) {
+  const error = validateContextConfig(config);
+
+  if (error) {
+    const errorMsg = prettifyErrorMsg(error.message, config);
+
+    printError(errorMsg);
+    throw new TypeError(errorMsg);
+  }
+
   const
     internalContext = React.createContext(config.defaultValue),
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 
-    Provider = function (args) {
+    Provider = function (...args) {
       return createElement(Provider, ...args);
     },
 
@@ -15,7 +26,6 @@ export default function createContext(config) {
       return createElement(Consumer, ...args);
     };
 
-    Consumer.xxx = true;
 
   Object.defineProperty(Provider, '__internalType', {
     enumerable: false,
@@ -36,8 +46,17 @@ export default function createContext(config) {
 
   Object.defineProperty(ret, '__internalContext', {
     enumerable: false,
-    value: internalContext
+    value: internalContext,
   });
 
   return Object.freeze(ret);
+}
+
+function prettifyErrorMsg(errorMsg, config) {
+  return config && typeof config === 'object'
+    && typeof config.displayName === 'string'
+    && config.displayName.trim().length > 0
+    ? '[defineContext] Invalid configuration for context '
+      + `"${config.displayName}": ${errorMsg} `
+    : `[defineContext] Invalid context configuration: ${errorMsg}`;
 }

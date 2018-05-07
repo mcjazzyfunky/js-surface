@@ -4,9 +4,9 @@ import { Spec } from 'js-spec';
 const
   REGEX_DISPLAY_NAME = /^[A-Z][a-zA-Z0-9_.]*$/,
   REGEX_PROPERTY_NAME = /^[a-z][a-zA-Z0-9_-]*$/,
-  REGEX_OPERATION_NAME = /^[a-z][a-zA-Z0-9_-]*$/,
+  REGEX_METHOD_NAME = /^[a-z][a-zA-Z0-9_-]*$/,
 
-  FORBIDDEN_OPERATION_NAMES = new Set(
+  FORBIDDEN_METHOD_NAMES = new Set(
     ['props', 'state', 'context', 'shouldComponentUpdate',
       'setState', 'componentWillReceiveProps',
       'componentWillMount', 'componentDidMount',
@@ -23,106 +23,48 @@ const componentConfigSpec =
 
       properties:
         Spec.optional(
-          Spec.or(
-            {
-              when:
-                Spec.array,
+          Spec.and(
+            Spec.object,
 
-              check:
-                Spec.and(
-                  Spec.arrayOf(Spec.match(REGEX_PROPERTY_NAME),
-                  Spec.unique))
-            },
-            {
-              when:
-                Spec.any,
+            Spec.keysOf(
+              Spec.match(REGEX_PROPERTY_NAME)),
 
-              check:
-                Spec.and(
-                  Spec.object,
+            Spec.valuesOf(
+              Spec.shape({
+                type:
+                  Spec.optional(Spec.function),
+                
+                constraint:
+                  Spec.optional(
+                    Spec.or(
+                      Spec.function,
+                      Spec.extensibleShape({
+                        validate: Spec.function
+                      })
+                    )),
 
-                  Spec.keysOf(
-                    Spec.match(REGEX_PROPERTY_NAME)),
+                nullable:
+                  Spec.optional(Spec.boolean),
 
-                  Spec.valuesOf(
-                    Spec.and(
-                      Spec.shape({
-                        type:
-                          Spec.optional(Spec.function),
-                        
-                        constraint:
-                          Spec.optional(
-                            Spec.or(
-                              Spec.function,
-                              Spec.extensibleShape({
-                                validate: Spec.function
-                              })
-                            )),
+                defaultValue:
+                  Spec.optional(Spec.any),
 
-                        nullable:
-                          Spec.optional(Spec.boolean),
-
-                        defaultValue:
-                          Spec.optional(Spec.any),
-
-                        getDefaultValue:
-                          Spec.optional(Spec.function),
-
-                        inject:
-                          Spec.optional(
-                            Spec.shape({
-                              context: 
-                                Spec.or(
-                                  {
-                                    when:
-                                      Spec.array,
-
-                                    check:
-                                      Spec.arrayOf(
-                                        Spec.extensibleShape({
-                                          Provider: Spec.something,
-                                          Consumer: Spec.something
-                                        }))
-                                  },
-
-                                  {
-                                    when:
-                                      Spec.any,
-
-                                    check:
-                                      Spec.extensibleShape({
-                                        Provider: Spec.something,
-                                        Consumer: Spec.something
-                                      })
-                                  }),
-
-                              select:
-                                Spec.optional(Spec.function)
-                            }))
-                      }),
-                    
-                      Spec.valid(
-                        it => !it.hasOwnProperty('defaultValue')
-                          || it.getDefaultValue === undefined)
-                        .usingHint('Not allowed to set parameters "defaultValue" '
-                          + 'and "getDefaultValue" both at once'))))
-            })),
+                inject:
+                  Spec.optional(
+                    Spec.valid(it => it != null && typeof it === 'object'
+                      && !!it.__internalContext)
+                      .usingHint('Must be a context'))
+              })))),
 
       methods:
         Spec.optional(
           Spec.arrayOf(
             Spec.and(
-              Spec.match(REGEX_OPERATION_NAME),
-              Spec.notIn(FORBIDDEN_OPERATION_NAMES)))),
+              Spec.match(REGEX_METHOD_NAME),
+              Spec.notIn(FORBIDDEN_METHOD_NAMES)))),
 
       isErrorBoundary:
         Spec.optional(Spec.boolean),
-
-      render:
-        Spec.optional(Spec.function),
-
-      init:
-        Spec.optional(Spec.function),
 
       main:
         Spec.optional(
@@ -131,12 +73,7 @@ const componentConfigSpec =
             Spec.extensibleShape({
               normalizeComponent: Spec.function
             })))
-    }),
-
-    Spec.valid(config => !!config.render + !!config.init + !!config.main === 1)
-      .usingHint('Exactly one of the following parameters must be '
-        + ' configured (not more, not less): '
-        + ' "render", "init" or "main"'));
+    }));
 
 // --- the actual configuration validation function -----------------
 
@@ -144,7 +81,7 @@ export default function validateComponentConfig(config) {
   let ret = null;
 
   if (config === null || typeof config !== 'object') {
-    ret = 'Component configuration must be an object';
+    ret = new TypeError('Component configuration must be an object');
   } else {
     ret = componentConfigSpec.validate(config);
   }

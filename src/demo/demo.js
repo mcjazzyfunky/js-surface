@@ -2,7 +2,7 @@ import { createElement as h, defineComponent, mount } from '../main/js-surface';
 import demos from './available-demos';
 
 const DemoSelector = defineComponent({
-  displayName: 'DemoSelctor',
+  displayName: 'DemoSelector',
 
   main(props, refresh) {
     let currDemoIdx = Math.floor(document.location.href.replace(/^.*idx=/, '')) || 0;
