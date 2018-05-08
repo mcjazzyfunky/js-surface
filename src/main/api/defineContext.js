@@ -27,24 +27,24 @@ export default function defineContext(config) {
     };
 
 
-  Object.defineProperty(Provider, '__internalType', {
+  Object.defineProperty(Provider, '__internal_type', {
     enumerable: false,
     value: internalProvider
   });
 
-  Object.defineProperty(Consumer, '__internalType', {
+  Object.defineProperty(Consumer, '__internal_type', {
     enumerable: false,
     value: internalConsumer
   });
 
-  Object.defineProperty(Consumer, '__internalIsConsumer', {
+  Object.defineProperty(Consumer, '__internal_isConsumer', {
     enumerable: false,
     value: true
   });
 
   const ret = { Provider, Consumer };
 
-  Object.defineProperty(ret, '__internalContext', {
+  Object.defineProperty(ret, '__internal_context', {
     enumerable: false,
     value: internalContext,
   });

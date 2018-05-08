@@ -18,14 +18,14 @@ export default function convertNode(node) {
     newChildren = children ? convertNodes(children) : null;
 
   const
-    newType = typeof type === 'function' && type.__internalType ? type.__internalType : type,
+    newType = typeof type === 'function' && type.__internal_type ? type.__internal_type : type,
     newProps = props ? { ...props } : null;
 
   if (newChildren && newChildren !== children) {
     newProps.children = newChildren;
   }
 
-  if (type.__internalIsConsumer && newProps.children && typeof newProps.children[0] === 'function') { 
+  if (type.__internal_isConsumer && newProps.children && typeof newProps.children[0] === 'function') { 
     const consume = newProps.children[0];
     newProps.children[0] = value => convertNode(consume(value));
   }

@@ -5,6 +5,8 @@ import convertNode from '../internal/conversion/convertNode';
 
 import React from 'react';
 
+const isReact= React.Fragment === Symbol.for('react.fragment');
+
 export default function defineComponent(config) {
   const error = validateComponentConfig(config);
 
@@ -66,7 +68,7 @@ export default function defineComponent(config) {
 
           for (let i = 0; i < injectedContexts.length; ++i) {
             if (i === 0) {
-              node = React.createElement(injectedContexts[0].Consumer.__internalType, null, value => {
+              node = React.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
                 contextValues[0] = value;
 
                 for (let j = 0; j < contextInfoPairs.length; ++j) {
@@ -111,7 +113,7 @@ export default function defineComponent(config) {
     return createElement(ret, ...args);
   };
 
-  Object.defineProperty(ret, '__internalType', {
+  Object.defineProperty(ret, '__internal_type', {
     enumerable: false,
     value: internalType
   });
@@ -162,17 +164,17 @@ function deriveComponent(config) {
           }
         },
 
-        refresh = callback => {
+        refresh = (beforeUpdate, afterUpdate) => {
           if (!this.__isInitialized) {
-            if (callback) {
+            if (afterUpdate) {
               if (this.__callbacksWhenDidMount === null) {
-                this.__callbacksWhenDidMount = [callback];
+                this.__callbacksWhenDidMount = [afterUpdate];
               } else {
-                this.__callbacksWhenDidMount.push(callback);
+                this.__callbacksWhenDidMount.push(afterUpdate);
               }
             }
           } else {
-            this.forceUpdate(callback);
+            this.forceUpdate(afterUpdate);
           }
         };
 
@@ -193,22 +195,7 @@ function deriveComponent(config) {
       return false;
     }
 
-    // This is not working
-   
-    /*
-    set props(props) {console.log('xxxxx', config.displayName, props)
-      if (this.__receiveProps) {
-        this.__receiveProps(props);
-      }
-      
-      this.__props = props;
-    }
-    get props() {
-      return this.__props;
-    }
-    */
-
-    componentWillReceiveProps(nextProps) {
+    [(isReact ? 'UNSAFE_' : '') + 'componentWillReceiveProps'](nextProps) {
       if (this.__receiveProps) {
         this.__receiveProps(nextProps);
       }

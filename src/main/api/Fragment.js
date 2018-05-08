@@ -6,4 +6,4 @@ export default function Fragment(...args) {
   return createElement(Fragment, ...args);
 }
 
-Fragment.__internalType = React.Fragment;
+Fragment.__internal_type = React.Fragment;

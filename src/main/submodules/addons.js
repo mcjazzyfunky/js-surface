@@ -1,5 +1,3 @@
-import determineAllMethodNames from '../internal/util/determineAllMethodNames';
-
 function render(view) {
   return {
     normalizeComponent() {
@@ -19,26 +17,12 @@ function render(view) {
 class Component {
   constructor(props) {
     this.___props = props;
+    this.___prevProps = undefined;
     this.___state = undefined;
+    this.___prevState = undefined;
+    this.___snapshot = undefined;
     this.___refresh = null;
     this.___updateState = null;
-
-    let callbackMethodNames =
-      callbackMethodNamesCache.get(this.constructor);
-
-    if (callbackMethodNames === undefined) {
-      callbackMethodNames =
-        determineAllMethodNames(this.constructor)
-          .filter(name => name.match(/^on[A-Z]/));
-
-      callbackMethodNamesCache.set(this.constructor, callbackMethodNames);
-    }
-
-    for (let i = 0; i < callbackMethodNames.length; ++i) {
-      const callbackMethodName = callbackMethodNames[i];
-
-      this[callbackMethodName] = this[callbackMethodName].bind(this);
-    }
   }
 
   componentDidMount() {
@@ -70,15 +54,24 @@ class Component {
         firstArgIsFunction = typeOfFirstArg === 'function',
         firstArgIsObject = firstArg !== null && typeOfFirstArg === 'object';
 
-      if (firstArgIsFunction) {
-        this.___updateState(firstArg);
-      } else if (firstArgIsObject) {
-        this.___updateState(() => firstArg, state => {
+      if (firstArgIsFunction || firstArgIsObject) {
+        const updater = firstArgIsObject ? () => firstArg : firstArg;
+
+        this.___updateState(updater, state => {
           const shouldUpdate = this.shouldComponentUpdate(this.props, state);
           this.___state = Object.assign({}, this.___state, state);
 
           if (shouldUpdate) {
-            this.forceUpdate();
+            this.forceUpdate(() => {
+              const
+                prevProps = this.___prevProps,
+                prevState = this.___prevState;
+
+              this.___prevProps = this.___props;
+              this.___prevState = this.___state;
+
+              this.componentDidUpdate(prevProps, prevState, this.___snapshot);
+            });
           }
         });
       } else {
@@ -89,7 +82,7 @@ class Component {
 
   forceUpdate(callback) {
     if (this.___refresh) {
-      this.___refresh(callback);
+      this.___refresh(() => 'TODO', callback);
     }
   }
 
@@ -145,7 +138,7 @@ class Component {
           component.___props = props;
 
           if (needsUpdate) {
-            refresh(() => this.componentDidUpdate(oldProps, state));
+            refresh(() => 'TODO', () => this.componentDidUpdate(oldProps, state));
           }
         },
 
@@ -163,6 +156,8 @@ class Component {
         this.___updateState(() => this.__state);
       }
 
+      this.___prevProps = this.___props;
+      this.___prevState = this.___state;
       component.componentDidMount();
 
       const ret = {
@@ -189,10 +184,6 @@ class Component {
     return main;
   }
 }
-
-// --- locals -------------------------------------------------------
-
-const callbackMethodNamesCache = new WeakMap();
 
 // --- exports ------------------------------------------------------
 

@@ -52,7 +52,7 @@ const componentConfigSpec =
                 inject:
                   Spec.optional(
                     Spec.valid(it => it != null && typeof it === 'object'
-                      && !!it.__internalContext)
+                      && !!it.__internal_context)
                       .usingHint('Must be a context'))
               })))),
 

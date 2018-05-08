@@ -139,7 +139,7 @@ const SpeedTest = defineComponent({
 
       intervalId = null;
 
-    refresh(() => {
+    refresh(null, () => {
       intervalId = setInterval(() => {
         ++frameCount;
         refresh(); 
