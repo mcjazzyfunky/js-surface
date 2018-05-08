@@ -1,28 +1,24 @@
 // core
-import HelloWorldCore from './core/HelloWorld';
-import SimpleCounterCore from './core/SimpleCounter';
-import ComplexCounterCore from './core/ComplexCounter';
-import PerformanceTest1Core from './core/PerformanceTest1';
+import HelloWorld1 from './core/HelloWorld1';
+import SimpleCounter from './core/SimpleCounter';
+import ComplexCounter from './core/ComplexCounter';
+import PerformanceTest1 from './core/PerformanceTest1';
 
-// render based
-import HelloWorldRender from './render/HelloWorld';
-import FragmentsRender from './render/Fragments';
-
-// class based
-import HelloWorldClass from './class/HelloWorld';
-import ContextsClass from './class/Contexts';
-import PerformanceTest2Class from './class/PerformanceTest2';
-import InjectionsClass from './class/Injections';
+// addons 
+import HelloWorld2 from './addons/HelloWorld2';
+import FragmentsRender from './addons/Fragments';
+import Contexts from './addons/Contexts';
+import PerformanceTest2 from './addons/PerformanceTest2';
+import Injections from './addons/Injections';
 
 export default [
-  HelloWorldCore,
-  HelloWorldRender,
-  HelloWorldClass,
-  SimpleCounterCore,
-  ComplexCounterCore,
-  PerformanceTest1Core,
-  PerformanceTest2Class,
+  HelloWorld1,
+  HelloWorld2,
+  SimpleCounter,
+  ComplexCounter,
+  PerformanceTest1,
+  PerformanceTest2,
   FragmentsRender,
-  ContextsClass,
-  InjectionsClass
+  Contexts,
+  Injections
 ];

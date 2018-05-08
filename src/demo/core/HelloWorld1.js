@@ -1,5 +1,4 @@
 import { createElement as h, defineComponent } from 'js-surface';
-import { render } from 'js-surface/addons';
 
 const HelloWorld = defineComponent({
   displayName: 'HelloWorld',
@@ -11,14 +10,14 @@ const HelloWorld = defineComponent({
     }
   },
 
-  main: render(({ name }) => {
-    return (
-      h('div', `Hello ${name}!`)
-    );
-  })
+  main() {
+    return {
+      render: ({ name }) => h('div', `Hello ${name}!`)
+    };
+  }
 });
 
 export default {
-  title: 'Hello World (render)',
-  content: HelloWorld({ name: 'John Doe' })
+  title: 'Hello World 1',
+  content: HelloWorld({ name: 'Jane Doe' })
 };

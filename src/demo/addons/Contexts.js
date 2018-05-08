@@ -88,6 +88,6 @@ const Container = defineComponent({
 });
 
 export default {
-  title: 'Context (class)',
+  title: 'Contexts',
   content: Parent(null, Container(null, Child()))
 };

@@ -1,9 +1,4 @@
-import {
-  createElement as h, 
-  defineComponent,
-  mount 
-} from 'js-surface';
-
+import { createElement as h, defineComponent } from 'js-surface';
 import { Spec } from 'js-spec';
 
 const CounterInfo = defineComponent({
@@ -146,6 +141,6 @@ const CounterCtrl = defineComponent({
 });
 
 export default {
-  title: 'Complex counter (core)',
+  title: 'Complex counter',
   content: CounterCtrl()
 };

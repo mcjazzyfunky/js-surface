@@ -97,6 +97,6 @@ function runTests() {
 const report = runTests();
 
 export default {
-  title: 'Performance test 2 (class)',
+  title: 'Performance test 2',
   content: createElement('pre', report) 
 };
