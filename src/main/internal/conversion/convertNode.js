@@ -25,9 +25,9 @@ export default function convertNode(node) {
     newProps.children = newChildren;
   }
 
-  if (type.__internalIsConsumer && newProps.children && typeof newProps.children[0] === 'function') {
+  if (type.__internalIsConsumer && newProps.children && typeof newProps.children[0] === 'function') { 
     const consume = newProps.children[0];
-    newProps.children = value => convertNode(consume(value));
+    newProps.children[0] = value => convertNode(consume(value));
   }
 
   if (newProps && newProps.ref && typeof type !== 'string') {
@@ -55,6 +55,7 @@ export default function convertNode(node) {
       childCount = newProps.children.length,
       newArgs = new Array(childCount + 2);
 
+    delete newProps.children;
     newArgs[0] = newType;
     newArgs[1] = newProps;
 
