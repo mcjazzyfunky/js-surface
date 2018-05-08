@@ -191,26 +191,35 @@ function deriveComponent(config) {
       this.__handleError = result.handleError || null;
       
       this.__render = (props, state) =>  convertNode(result.render(props, state));
+
+      if (isReact) {
+        Object.defineProperty(this, 'props', {
+          enumerable: true, 
+          
+          set: nextProps => {
+            if (nextProps !== this.__props) {
+              if (this.__receiveProps) {
+                this.__receiveProps(nextProps);
+              }
+
+              this.__props = nextProps;
+            }
+          },
+          
+          get: () => this.__props
+        });
+      } else {
+        this.componentWillReceiveProps = nextProps => {
+          if (this.__receiveProps) {
+            this.__receiveProps(nextProps);
+          }
+        };
+      }
     }
 
     shouldComponentUpdate() {
       return false;
     }
-
-    set props(nextProps) {
-      if (nextProps !== this.__props) {
-        if (this.__receiveProps) {
-          this.__receiveProps(nextProps);
-        }
-
-        this.__props = nextProps;
-      }
-    }
-    
-    get props() {
-      return this.__props;
-    }
-
     componentDidMount() {
       this.__isInitialized = true;
   

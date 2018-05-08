@@ -27,9 +27,16 @@ class Component {
         prevState: undefined,
         snapshot: undefined,
         refresh: null,
-        updateState: null
+        updateState: null,
+
+        getSnapshot() {
+          return this.getSnapshotBeforeUpdate(this.___internals.prevProps, this.___internals.prevState);
+        }
       }
     });
+  }
+
+  getSnapshotBeforeUpdate() {
   }
 
   componentDidMount() {
