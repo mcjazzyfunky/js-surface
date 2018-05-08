@@ -52,10 +52,6 @@ const Counter = defineComponent({
       this.onClickIncrement = this.onClickIncrement.bind(this);
     }
 
-    componentDidUpdate() {
-      console.log('did update')
-    }
-
     onClickIncrement() {
       this.props.logger.log('Incrementing...');
       this.setState({ counter: this.state.counter + 1 });
