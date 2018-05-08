@@ -164,22 +164,24 @@ function deriveComponent(config) {
           }
         },
 
-        refresh = (beforeUpdate, afterUpdate) => {
+        refresh = (beforeUpdateCallback, afterUpdateCallback) => {
           if (!this.__isInitialized) {
-            if (afterUpdate) {
+            if (afterUpdateCallback) {
               if (this.__callbacksWhenDidMount === null) {
-                this.__callbacksWhenDidMount = [afterUpdate];
+                this.__callbacksWhenDidMount = [afterUpdateCallback];
               } else {
-                this.__callbacksWhenDidMount.push(afterUpdate);
+                this.__callbacksWhenDidMount.push(afterUpdateCallback);
               }
             }
           } else {
-            this.forceUpdate(afterUpdate);
+            this.forceUpdate(afterUpdateCallback);
           }
         };
 
+      this.__props = props;
       this.__isInitialized = false;
       this.__callbacksWhenDidMount = null;
+      this.__callbacksWhenBeforeUpate = [];
 
       const result = main(props, refresh, updateState);
 
@@ -195,10 +197,18 @@ function deriveComponent(config) {
       return false;
     }
 
-    [(isReact ? 'UNSAFE_' : '') + 'componentWillReceiveProps'](nextProps) {
-      if (this.__receiveProps) {
-        this.__receiveProps(nextProps);
+    set props(nextProps) {
+      if (nextProps !== this.__props) {
+        if (this.__receiveProps) {
+          this.__receiveProps(nextProps);
+        }
+
+        this.__props = nextProps;
       }
+    }
+    
+    get props() {
+      return this.__props;
     }
 
     componentDidMount() {
@@ -215,6 +225,9 @@ function deriveComponent(config) {
       }
     }
 
+    componentDidUpdate(/* prevProps, prevState, snapshot */) {
+    }
+
     componentWillUnmount() {
       if (this.__finalize) {
         this.__finalize();
@@ -222,7 +235,34 @@ function deriveComponent(config) {
     }
 
     render() {
-      return this.__render(this.props, this.state);
+      const ret = this.__render(this.props, this.state);
+
+      if (!isReact) {
+        this.__handleCallbacksWhenBeforeUpdate();
+      }
+
+      return ret;
+    }
+
+    // Just React
+    getSnapshotBeforeUpdate() {
+      if (isReact) {
+        this.__handleCallbacksWhenBeforeUpdate();
+      }
+
+      return null;
+    }
+
+    __handleCallbacksWhenBeforeUpdate() {
+      if (this.__callbacksWhenBeforeUpate.length > 0) {
+        const callbacks = this.__callbacksWhenBeforeUpate;
+        
+        this.__callbacksWhenBeforeUpate = [];
+
+        for (let i = 0; i < callbacks.length; ++i) {
+          callbacks[i](this.props, this.state);
+        }
+      }
     }
   }
 

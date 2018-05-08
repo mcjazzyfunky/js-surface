@@ -16,13 +16,20 @@ function render(view) {
 
 class Component {
   constructor(props) {
-    this.___props = props;
-    this.___prevProps = undefined;
-    this.___state = undefined;
-    this.___prevState = undefined;
-    this.___snapshot = undefined;
-    this.___refresh = null;
-    this.___updateState = null;
+    Object.defineProperty(this, '___internals', {
+      enumerable: false,
+      writeable: false,
+
+      value: {
+        props: props,
+        prevProps: undefined,
+        state: undefined,
+        prevState: undefined,
+        snapshot: undefined,
+        refresh: null,
+        updateState: null
+      }
+    });
   }
 
   componentDidMount() {
@@ -46,7 +53,7 @@ class Component {
   }
 
   setState(firstArg) {
-    if (!this.___updateState) {
+    if (!this.___internals.updateState) {
       throw new Error('Calling setState within the constructor is not allowed');
     } else {
       const
@@ -57,20 +64,20 @@ class Component {
       if (firstArgIsFunction || firstArgIsObject) {
         const updater = firstArgIsObject ? () => firstArg : firstArg;
 
-        this.___updateState(updater, state => {
+        this.___internals.updateState(updater, state => {
           const shouldUpdate = this.shouldComponentUpdate(this.props, state);
-          this.___state = Object.assign({}, this.___state, state);
+          this.___internals.state = Object.assign({}, this.___internals.state, state);
 
           if (shouldUpdate) {
             this.forceUpdate(() => {
               const
-                prevProps = this.___prevProps,
-                prevState = this.___prevState;
+                prevProps = this.___internals.prevProps,
+                prevState = this.___internals.prevState;
 
-              this.___prevProps = this.___props;
-              this.___prevState = this.___state;
+              this.___internals.prevProps = this.___props;
+              this.___internals.prevState = this.___state;
 
-              this.componentDidUpdate(prevProps, prevState, this.___snapshot);
+              this.componentDidUpdate(prevProps, prevState, this.___internals.snapshot);
             });
           }
         });
@@ -81,13 +88,13 @@ class Component {
   }
 
   forceUpdate(callback) {
-    if (this.___refresh) {
-      this.___refresh(() => 'TODO', callback);
+    if (this.___internals.refresh) {
+      this.___internals.refresh(this.___internals.getSnapshot.bind(this), callback);
     }
   }
 
   get props() {
-    return this.___props;
+    return this.___internals.props;
   }
 
   set props(value) {
@@ -95,15 +102,19 @@ class Component {
   }
 
   get state() {
-    return this.___state;
+    return this.___internals.state;
   }
 
   set state(state) {
-    if (!this.___updateState) {
-      this.___state = state;
+    if (!this.___internals.updateState) {
+      this.___internals.state = state;
     } else {
       throw new Error('Use method setState');
     }
+  }
+
+  static getDerivedStateFromProps(/* nextProps, prevState */) {
+    return null;
   }
 
   static normalizeComponent(config) {
@@ -117,9 +128,9 @@ class Component {
 
         receiveProps = props => {
           const
-            oldProps = component.___props,
-            state = component.___state,
-            needsUpdate = this.___isInitialized
+            oldProps = component.___internals.props,
+            state = component.___internals.state,
+            needsUpdate = component.___internals.isInitialized
               && component.shouldComponentUpdate(props, state),
 
             getDerivedStateFromProps =
@@ -135,29 +146,31 @@ class Component {
             }
           }
           
-          component.___props = props;
+          component.___internals.props = props;
 
           if (needsUpdate) {
-            refresh(() => 'TODO', () => this.componentDidUpdate(oldProps, state));
+            refresh(
+              () => component.___internals.getSnapshot(),
+              () => component.componentDidUpdate(oldProps, state));
           }
         },
 
         finalize = () => {
-          if (component && component.___updateState) {
+          if (component && component.___internals.updateState) {
             component.componentWillUnmount();
           }
         };
       
-      component.___props = props;
-      component.___refresh = refresh;
-      component.___updateState = updateState;
+      component.___internals.props = props;
+      component.___internals.refresh = refresh;
+      component.___internals.updateState = updateState;
 
-      if (this.___state !== undefined) {
-        this.___updateState(() => this.__state);
+      if (component.___internals.state !== undefined) {
+        component.___internals.updateState(() => component.___state);
       }
 
-      this.___prevProps = this.___props;
-      this.___prevState = this.___state;
+      component.___internals.prevProps = component.___internals.props;
+      component.___internals.prevState = component.___internals.state;
       component.componentDidMount();
 
       const ret = {
