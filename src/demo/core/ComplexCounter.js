@@ -140,7 +140,4 @@ const CounterCtrl = defineComponent({
   }
 });
 
-export default {
-  title: 'Complex counter',
-  content: CounterCtrl()
-};
+export default CounterCtrl();

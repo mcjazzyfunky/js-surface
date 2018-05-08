@@ -169,7 +169,4 @@ const SpeedTest = defineComponent({
   },
 });
 
-export default {
-  title: 'Performance test 1',
-  content: SpeedTest({ tileWidth, columnCount, rowCount })
-};
+export default SpeedTest({ tileWidth, columnCount, rowCount });

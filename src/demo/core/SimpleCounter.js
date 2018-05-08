@@ -54,7 +54,4 @@ const SimpleCounter = defineComponent({
   },
 });
 
-export default {
-  title: 'Simple counter',
-  content: SimpleCounter({ initialValue: 100 })
-};
+export default SimpleCounter({ initialValue: 100 });

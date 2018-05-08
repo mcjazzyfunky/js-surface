@@ -32,7 +32,4 @@ const Options = defineComponent({
   })
 });
 
-export default {
-  title: 'Fragment demo',
-  content: FragmentDemo()
-};
+export default FragmentDemo();

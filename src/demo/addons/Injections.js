@@ -91,7 +91,4 @@ const InjectionsDemo = defineComponent({
   })
 });
 
-export default {
-  title: 'Injections',
-  content: InjectionsDemo()
-};
+export default InjectionsDemo();

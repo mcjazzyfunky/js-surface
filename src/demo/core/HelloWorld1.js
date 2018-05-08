@@ -17,7 +17,4 @@ const HelloWorld = defineComponent({
   }
 });
 
-export default {
-  title: 'Hello World 1',
-  content: HelloWorld({ name: 'Jane Doe' })
-};
+export default HelloWorld({ name: 'Jane Doe' });

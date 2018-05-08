@@ -38,7 +38,4 @@ const HelloWorld2 = defineComponent({
 });
 
 
-export default {
-  title: 'Hello world 2',
-  content: Fragment(HelloWorld1(), HelloWorld2({ name: 'Julia Doe' }))
-};
+export default Fragment(HelloWorld1(), HelloWorld2({ name: 'Julia Doe' }));
