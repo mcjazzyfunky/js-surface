@@ -1,6 +1,20 @@
 import determineAllMethodNames from '../internal/util/determineAllMethodNames';
 
-const callbackMethodNamesCache = new WeakMap();
+function render(view) {
+  return {
+    normalizeComponent() {
+      return (props, refresh) => ({
+        receiveProps() {
+          refresh();
+        },
+
+        render(props, state) {
+          return view(props, state);
+        }
+      });
+    }
+  };
+}
 
 class Component {
   constructor(props) {
@@ -176,13 +190,19 @@ class Component {
   }
 }
 
+// --- locals -------------------------------------------------------
+
+const callbackMethodNamesCache = new WeakMap();
+
 // --- exports ------------------------------------------------------
 
 export default Object.freeze({
+  render,
   Component
 });
 
 export {
+  render,
   Component
 };
 

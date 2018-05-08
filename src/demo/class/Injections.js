@@ -1,6 +1,5 @@
 import { createElement as h, defineComponent, defineContext } from 'js-surface';
-import { render } from 'js-surface/render';
-import { Component } from 'js-surface/classes';
+import { render, Component } from 'js-surface/addons';
 import { Spec } from 'js-spec';
 
 const
@@ -46,7 +45,7 @@ const Counter = defineComponent({
     constructor(props) {
       super(props);
 
-      props.logger.log('Instanciating new component');
+      props.logger.log('Instantiating new component');
 
       this.state = { counter: props.initialValue };
       this.onClickDecrement = this.onClickDecrement.bind(this);

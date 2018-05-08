@@ -12,8 +12,7 @@ module.exports = env => {
     mode: modeName,
     entry: {
       'js-surface': './src/main/js-surface.js',
-      'render': './src/main/submodules/render.js',
-      'classes': './src/main/submodules/classes.js',
+      'addons': './src/main/submodules/addons.js',
     },
     devtool: modeName === 'production' ? false : 'inline-source-map',
     module: {
