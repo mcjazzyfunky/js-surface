@@ -38,8 +38,8 @@ module.exports = {
       'js-dom-factories/surface$': path.resolve(__dirname, 'node_modules/js-dom-factories/dist/surface.js'),
       //'react': path.resolve(__dirname, 'node_modules/react/cjs/react.production.min.js'),
       //'react-dom': path.resolve(__dirname, 'node_modules/react-dom/cjs/react-dom.production.min.js')
-      //'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
-      //'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
+      'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
+      'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
     }
   },
   output: {

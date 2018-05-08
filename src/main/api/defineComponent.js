@@ -44,41 +44,45 @@ export default function defineComponent(config) {
     if (injectedContexts.length > 0) {
       const innerComponent = internalType;
 
-      internalType = React.forwardRef((props, ref) => {
-        const
-          contextValues = new Array(injectedContexts.length),
-          adjustedProps = { ref, ...props };
+      internalType = class extends React.Component {
+        render() {
+          const
+            contextValues = new Array(injectedContexts.length),
+            adjustedProps = { ...this.props };
 
-        let node = null;
+          let node = null;
 
-        for (let i = 0; i < injectedContexts.length; ++i) {
-          if (i === 0) {
-            node = React.createElement(injectedContexts[0].Consumer.__internalType, null, value => {
-              contextValues[0] = value;
+          for (let i = 0; i < injectedContexts.length; ++i) {
+            if (i === 0) {
+              node = React.createElement(injectedContexts[0].Consumer.__internalType, null, value => {
+                contextValues[0] = value;
 
-              for (let j = 0; j < contextInfoPairs.length; ++j) {
-                let [propName, contextIndex] = contextInfoPairs[i];
+                for (let j = 0; j < contextInfoPairs.length; ++j) {
+                  let [propName, contextIndex] = contextInfoPairs[i];
 
-                if (props[propName] === undefined) {
-                  adjustedProps[propName] = contextValues[i];
+                  if (this.props[propName] === undefined) {
+                    adjustedProps[propName] = contextValues[i];
+                  }
                 }
-              }
 
-              return React.createElement(innerComponent, adjustedProps);
-            });
-          } else {
-            const currNode = node;
-            
-            node = React.createElement(injectedContexts[i].Consumer, null, value => {
-              contextValues[i] = value;
+                return React.createElement(innerComponent, adjustedProps);
+              });
+            } else {
+              const currNode = node;
+              
+              node = React.createElement(injectedContexts[i].Consumer, null, value => {
+                contextValues[i] = value;
 
-              return currNode;
-            });
+                return currNode;
+              });
+            }
           }
-        }
 
-        return node;
-      });
+          return node;
+        }
+      };
+
+      internalType.displayName = config.displayName + '-wrap';
     }
   }
 
