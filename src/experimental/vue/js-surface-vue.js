@@ -11,8 +11,8 @@ import Fragment from './api/Fragment';
 export {
   createElement,
   createPortal,
-  defineComponent,
   defineContext,
+  defineComponent,
   isElement,
   isNode,
   mount,

@@ -34,10 +34,10 @@ export default function convertNode(node) {
     const oldRef = newProps.ref;
 
     newProps.ref = ref => {
-      const meta = ref ? ref.__meta : meta;
+      const meta = ref && ref.__meta ? ref.__meta: null;
 
       if (!meta) {
-        return ref;
+        return oldRef(ref);
       }
 
       const refProxy = new RefProxy(ref, meta);

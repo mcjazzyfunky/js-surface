@@ -15,7 +15,13 @@ export default function defineComponent(config) {
     throw new TypeError(errorMsg);
   }
 
-  let internalType = deriveComponent(config);
+  const normalizedConfig = { ...config };
+
+  if (typeof config.main.normalizeComponent === 'function') {
+    normalizedConfig.main = config.main.normalizeComponent(config);
+  }
+
+  let internalType = deriveComponent(normalizedConfig);
 
   if (config.properties) {
     const
@@ -44,7 +50,13 @@ export default function defineComponent(config) {
     if (injectedContexts.length > 0) {
       const innerComponent = internalType;
 
-      internalType = class extends React.Component {
+      internalType = class CustomComponent extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.__meta = normalizedConfig;
+        }
+
         render() {
           const
             contextValues = new Array(injectedContexts.length),
@@ -61,7 +73,7 @@ export default function defineComponent(config) {
                   let [propName, contextIndex] = contextInfoPairs[i];
 
                   if (this.props[propName] === undefined) {
-                    adjustedProps[propName] = contextValues[i];
+                    adjustedProps[propName] = contextValues[contextIndex];
                   }
                 }
 
@@ -83,6 +95,15 @@ export default function defineComponent(config) {
       };
 
       internalType.displayName = config.displayName + '-wrap';
+
+      if (config.methods) {
+        for (let i = 0; i < config.methods.length; ++i) {
+          const methodName = config.methods[i];
+
+          internalType.prototype[methodName] =
+            (...args) => innerComponent[methodName](...args);
+        }
+      }
     }
   }
 
@@ -95,11 +116,7 @@ export default function defineComponent(config) {
     value: internalType
   });
 
-  ret.meta = { ...config };
-
-  if (typeof ret.meta.main !== 'function') {
-    ret.meta.main = ret.meta.main.normalizeComponent(config);
-  }
+  ret.meta = normalizedConfig;
 
   Object.freeze(ret.meta);
   Object.freeze(ret);
@@ -123,18 +140,11 @@ function deriveComponent(config) {
 
   let main = config.main;
 
-  if (main && main.normalizeComponent) {
-    main = main.normalizeComponent(config);
-  }
-
   class Component extends React.Component {
     constructor(props) {
       super(props);
 
-      const meta = {...config};
-      delete meta.main;
-  
-      this.__meta = meta;
+      this.__meta = config;
       this.displayName = config.displayName;
 
       const

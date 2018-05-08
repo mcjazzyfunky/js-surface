@@ -38,8 +38,8 @@ const DemoSelector = defineComponent({
 });
 
 
-const HelloWorld = defineComponent({
-  displayName: 'HelloWorld',
+const Demo = defineComponent({
+  displayName: 'Demo',
 
   main() {
     return {
@@ -50,4 +50,4 @@ const HelloWorld = defineComponent({
   }
 });
 
-mount(h(HelloWorld), 'main-content');
+mount(Demo(), 'main-content');

@@ -36,7 +36,7 @@ const SimpleCounter = defineComponent({
                 onClick: () => incrementCounter(-1)
               },
               '-'),
-            h('div',
+            h('span',
               { className: 'simple-counter-value btn' },
               state.counterValue),
             h('button',
