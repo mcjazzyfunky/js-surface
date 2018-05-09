@@ -86,7 +86,7 @@ The main issues with React's API are:
   <SomeCtx.Provider value={someValue}>
     <SomeComponent/>
     <SomeOtherComponent/>
-  </SomeContext.Provider>
+  </SomeCtxt.Provider>
   ```
 
   ```jsx
@@ -94,7 +94,7 @@ The main issues with React's API are:
     SomeComponent(value))
   
   // or when using jsSurface with JSX
-  <SomeCtx.Consuer>
+  <SomeCtx.Consumer>
     { it =><SomeComponent/> }
   </SomeCtx.Consumer>
   ```
