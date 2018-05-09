@@ -3,19 +3,23 @@
 jsSurface is a long-term R&D project to find a minimal pragmatic set of
 functions to build a base API for UI development.
 It also provides a reference implementation of that API (currently internally
-based alternatively on react or the fabulous "dio.js" library).
+based electively on "React" or the fabulous "dio.js" library).
+Be aware that jsSurface is currently there for pure research, it's purpose is
+currently not to be used in production!
 
-You may ask: Why not just use an React-like API directly - as React's API
+You may ask: What's wrong with the original React API - React's API
 itself does only consist of a few functions and classes, isn't that minimal
 enough?
 
 This question will be answered below.
 But first, here's a small demo application to get a glimpse of how components
-are implemented with jsSurface:
+are implemented with jsSurface (it's a simple "Counter" application):
 
 ```javascript
 import { createElement as h, defineComponent, mount } from 'js-surface';
 import { view, Component } from 'js-surface/addons';
+// Be aware that "view" and "Component" are just changeable add-ons to
+// jsSurface - means, they are just a kind of syntactical sugar.
 import { Spec } from 'js-spec'; // a 3rd-party general purpose spec library
 
 const Counter = defineComponent({
@@ -66,7 +70,11 @@ const Demo = defineComponent({
 mount(Demo(), 'main-content');
 ```
 
-Now to the questions why React's API seems a bit suboptimal:
+Now to the questions why React's API seems a bit suboptimal (be aware that
+the author of jsSurface is a very big fan of React, and thinks that
+React is really the most ground-breaking library in UI development -
+so just see the following as well-meant proposals for React's long-term
+evolution):
 
 * React's API is quite "optimized" for the use of JSX:
 
