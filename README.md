@@ -19,7 +19,7 @@ are implemented with jsSurface (it's a simple "Counter" application):
 import { createElement as h, defineComponent, mount } from 'js-surface';
 import { view, Component } from 'js-surface/addons';
 // Be aware that "view" and "Component" are just changeable add-ons to
-// jsSurface - means, they are just a kind of syntactical sugar.
+// jsSurface - means, they are just some kind of syntactical sugar.
 import { Spec } from 'js-spec'; // a 3rd-party general purpose spec library
 
 const Counter = defineComponent({
@@ -36,7 +36,6 @@ const Counter = defineComponent({
   main: class extends Component {
     constructor(props) {
       super(props);
-
       this.state = { counter: props.initialValue };
       this.onIncrementClick = this.onIncrementClick.bind(this);
     }
