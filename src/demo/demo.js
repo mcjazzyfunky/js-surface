@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { createElement as h, defineComponent, mount } from '../main/js-surface';
 import demos from './available-demos';
 
