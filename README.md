@@ -1,12 +1,13 @@
 # jsSurface
 
-jsSurface is a R&D project to find a minimal pragmatic set of functions to build a base API for UI development. It also provides a reference implementation of
-that API (currently internally based on "dio.js" - switching internally to 
-"React" as base library can easily be done).
+jsSurface is a long-term R&D project to find a minimal pragmatic set of
+functions to build a base API for UI development.
+It also provides a reference implementation of that API (currently internally
+based alternatively on react or the fabulous "dio.js" library).
 
-You may ask: Why not just use an React-like API directory - as React's API
-itself does only consist of a few functions and classes that's quite minimal,
-isn't it?
+You may ask: Why not just use an React-like API directly - as React's API
+itself does only consist of a few functions and classes, isn't that minimal
+enough?
 
 This question will be answered below.
 But first, here's a small demo application to get a glimpse of how components
@@ -65,9 +66,7 @@ const Demo = defineComponent({
 mount(Demo(), 'main-content');
 ```
 
-
-
-The main issues with React's API are:
+Now to the questions why React's API seems a bit suboptimal:
 
 * React's API is quite "optimized" for the use of JSX:
 

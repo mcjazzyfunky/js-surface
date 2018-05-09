@@ -6,8 +6,10 @@ module.exports = env => {
   const
     { mode, type } = env || {},
     modeName = mode === 'production' ? 'production' : 'development',
-    typeName = ['cjs', 'amd'].includes(type) ? type : 'umd';
-
+    typeName = ['cjs', 'amd'].includes(type) ? type : 'umd',
+    //lib = env && env.lib === 'dio' ? 'dio' : 'react'
+    lib = 'react';
+  
   return {
     mode: modeName,
     entry: {
@@ -34,8 +36,10 @@ module.exports = env => {
     resolve: {
       extensions: ['.js'],
       alias: {
-        'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
-        'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
+        ...(lib === 'dio' ? {
+          'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
+          'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
+        } : {})
       }
     },
     output: {
