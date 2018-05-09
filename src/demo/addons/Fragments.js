@@ -1,10 +1,10 @@
 import { createElement as h, defineComponent, Fragment } from 'js-surface';
-import { render } from 'js-surface/addons';
+import { view } from 'js-surface/addons';
 
 const FragmentDemo = defineComponent({
   displayName:  'FragmentDemo',
 
-  main: render(() => {
+  main: view(() => {
     return (
       h(Fragment, null,
         h('div', null,
@@ -23,7 +23,7 @@ const FragmentDemo = defineComponent({
 const Options = defineComponent({
   displayName: 'Options',
 
-  main: render(() => {
+  main: view(() => {
     return (
       h(Fragment, null,
         h('option', null, 'Option #1' ),

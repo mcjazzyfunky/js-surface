@@ -1,10 +1,10 @@
 import { createElement as h, defineComponent } from 'js-surface';
-import { render } from 'js-surface/addons';
+import { view } from 'js-surface/addons';
 
 const Demo = defineComponent({
   displayName:  'Demo',
 
-  main: render(() => {
+  main: view(() => {
     return (
       h('div', {
         dangerouslySetInnerHTML: {

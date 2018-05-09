@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, Fragment } from 'js-surface';
-import { render, Component } from 'js-surface/addons';
+import { view, Component } from 'js-surface/addons';
 
 const HelloWorld1 = defineComponent({
   displayName: 'HelloWorld1',
@@ -11,7 +11,7 @@ const HelloWorld1 = defineComponent({
     }
   },
 
-  main: render(props => {
+  main: view(props => {
     return (
       h('div', null, `Hello ${props.name}!`)
     );

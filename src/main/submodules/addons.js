@@ -1,4 +1,4 @@
-function render(view) {
+function view(renderContent) {
   return {
     normalizeComponent() {
       return (props, refresh) => ({
@@ -7,7 +7,7 @@ function render(view) {
         },
 
         render(props, state) {
-          return view(props, state);
+          return renderContent(props, state);
         }
       });
     }
@@ -208,12 +208,12 @@ class Component {
 // --- exports ------------------------------------------------------
 
 export default Object.freeze({
-  render,
+  view,
   Component
 });
 
 export {
-  render,
+  view,
   Component
 };
 

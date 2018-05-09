@@ -1,7 +1,6 @@
 
 import { createElement as h, defineComponent } from 'js-surface';
-import { render } from 'js-surface/addons';
-import availableDemos from '../available-demos';
+import { view } from 'js-surface/addons';
 
 const helloWorldContent = {
   [Symbol.iterator]: function * () {
@@ -39,7 +38,7 @@ const helloWorldContent = {
 const Demo = defineComponent({
   displayName:  'Demo',
 
-  main: render(() => {
+  main: view(() => {
     return (
       h('div',
         { style: { display: 'block' } },

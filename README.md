@@ -5,7 +5,67 @@ that API (currently internally based on "dio.js" - switching internally to
 "React" as base library can easily be done).
 
 You may ask: Why not just use an React-like API directory - as React's API
-itself does only consist of a few functions and classes?
+itself does only consist of a few functions and classes that's quite minimal,
+isn't it?
+
+This question will be answered below.
+But first, here's a small demo application to get a glimpse of how components
+are implemented with jsSurface:
+
+```javascript
+import { createElement as h, defineComponent, mount } from 'js-surface';
+import { view, Component } from 'js-surface/addons';
+import { Spec } from 'js-spec'; // a 3rd-party general purpose spec library
+
+const Counter = defineComponent({
+  displayName: 'Counter',
+
+  properties: {
+    initialValue: {
+      type: Number,
+      constraint: Spec.integer, // using a third-party spec library
+      defaultValue: 0
+    }
+  },
+
+  main: class extends Component {
+    constructor(props) {
+      super(props);
+
+      this.state = { counter: props.initialValue };
+      this.onIncrementClick = this.onIncrementClick.bind(this);
+    }
+
+    onIncrementClick() {
+      this.setState(state => ({ counter: state.counter + 1 }));
+    }
+
+    render() {
+      return (
+        h('button',
+          { onClick: this.onIncrementClick },
+          'Counter: ' + this.state.counter)
+      );
+    }
+  }
+});
+
+const Demo = defineComponent({
+  displayName: 'Demo',
+
+  main: view(() => {
+    return (
+      h('div',
+        h('div', 'Please press the button to increase the counter'),
+        Counter())
+    );
+  })
+});
+
+mount(Demo(), 'main-content');
+```
+
+
 
 The main issues with React's API are:
 
@@ -16,7 +76,6 @@ The main issues with React's API are:
   ```html
   <FancyHeader>Some headline</FancyHeander>
   ```
-
   ... its non-JSX counterpart looks quite verbose ...
 
   ```javascript

@@ -7,6 +7,7 @@ import I18n from './core/I18n';
 
 // based on addons 
 import HelloWorld2 from './addons/HelloWorld2';
+import VerySimpleCounter from './addons/VerySimpleCounter';
 import Clock from './addons/Clock';
 import StopWatch from './addons/StopWatch';
 import Fragments from './addons/Fragments';
@@ -20,8 +21,9 @@ import ErrorBoundaries from './addons/ErrorBoundaries';
 export default [
   ['Hello World 1', HelloWorld1],
   ['Hello World 2', HelloWorld2],
-  ['Simple Counter', SimpleCounter],
-  ['Complex Counter', ComplexCounter],
+  ['Very simple counter', VerySimpleCounter],
+  ['Simple counter', SimpleCounter],
+  ['Complex counter', ComplexCounter],
   ['Stop watch', StopWatch],
   ['Clock', Clock],
   ['Performance Test 1', PerformanceTest1],
