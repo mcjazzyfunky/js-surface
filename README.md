@@ -191,6 +191,20 @@ evolution):
   But be aware this Component class is just an out-of-the-box add-on for
   convenience jsSurface does NOT depend on this add-on package at all.
 
+* Reacts provides the possibility for a sophisticated validation of the
+  components' properties, which is great.
+  Normally for that purpose a add-on library called "props-types".
+  While it's great that "props-types" is not part of React itself, yet
+  unfortunatelly all the validation function of "props-types" are only
+  meant to be used with React, it's not meant as a general purpose validation
+  library as the signature of the validation functions are very React-specific.
+  This has some advantages of course (maybe shorter error messages and a bit
+  smaller production bundle sizes) but the disadvantage that you cannot just use
+  a general purpose validation library are really heavy.
+  jsSurface on the other hand allows the use of such general-purpose validation
+  libraries - while it recommended to use the jsSurface independent validation
+  library ["js-spec"](https://github.com/js-works/js-spec).
+
 * The React API lacks a bit of information hiding:
   As for complex components you always have the underlying component class
   or in case of references even the component instance directly, you always have access to a lot of data and methods you do not really need to have access to.
@@ -251,8 +265,10 @@ export default defineComponent({
     properties: {
         value: {
             type: Date,
-            getDefaultValue: () =>
-                new Date(new Date().toDateString())
+            
+            get defaultValue() {
+                return new Date(new Date().toDateString())
+            }
         },
 
         name: {
@@ -266,7 +282,7 @@ export default defineComponent({
         Logger: {
             type: Logger,
             inject: true,
-            defaultValue: Logger.getDefaultLogger();
+            defaultValue: Logger.getNopLogger()
         },
 
         onChange: {
