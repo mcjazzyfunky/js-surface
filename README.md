@@ -5,7 +5,7 @@ set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
 based electively on "React" or the fabulous "dio.js" library).
 Be aware that jsSurface is currently only for research purposes, it's currently
-meant to be used in real-world applications.
+NOT meant to be used in real-world applications.
 
 You may ask: What's wrong with the original React API - React's API
 itself does only consist of a few functions and classes, isn't that minimal
@@ -100,16 +100,16 @@ long-term evolution):
   Neither will component classes be instantiated by the user directly
   nor will the render functions be called directly. The only useful
   usage of component types are that they will be passed as first argument to
-  the ```React.createElement``` function. The same problem you have with
-  context providers and consumers and the ```Fragment``` symbol.
+  the `React.createElement` function. The same problem you have with
+  context providers and consumers and the `Fragment` symbol.
 
   In jsSurface things are different: Everything that can be used as first
-  argument of the ```createElement``` function besides strings is a factory
-  function that returns the result of a corresponding ```createElement``` call.
-  Besides the second argument (```props```) of the ```createElement``` function
+  argument of the `createElement` function besides strings is a factory
+  function that returns the result of a corresponding `createElement` call.
+  Besides the second argument (`props`) of the `createElement` function
   and also for all the component factories is optional to provide a concice
-  syntax: All component types, ```Fragment```, context providers, context
-  consumers are factory functions with an optional second ```props``` argument:
+  syntax: All component types, `Fragment`, context providers, context
+  consumers are factory functions with an optional second `props` argument:
 
   ```jsx
   SomeComponent('some text')
