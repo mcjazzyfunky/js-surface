@@ -1,11 +1,11 @@
 # jsSurface
 
-jsSurface is a long-term R&D project to find a minimal pragmatic set of
-functions to build a base API for UI development.
-It also provides a reference implementation of that API (currently internally
+jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
+set of functions to build a base API for UI development.
+It also provides a reference implementation of that API (internally
 based electively on "React" or the fabulous "dio.js" library).
-Be aware that jsSurface is currently there for pure research, it's purpose is
-currently not to be used in production!
+Be aware that jsSurface is currently only for research purposes, it's currently
+meant to be used in real-world applications.
 
 You may ask: What's wrong with the original React API - React's API
 itself does only consist of a few functions and classes, isn't that minimal
@@ -20,7 +20,7 @@ import { createElement as h, defineComponent, mount } from 'js-surface';
 import { view, Component } from 'js-surface/addons';
 // Be aware that "view" and "Component" are just changeable add-ons to
 // jsSurface - means, they are just some kind of syntactical sugar.
-import { Spec } from 'js-spec'; // a 3rd-party general purpose spec library
+import { Spec } from 'js-spec'; // a 3rd-party general purpose validation library
 
 const Counter = defineComponent({
   displayName: 'Counter',
@@ -72,8 +72,8 @@ mount(Demo(), 'main-content');
 Now to the questions why React's API seems a bit suboptimal (be aware that
 the author of jsSurface is a very big fan of React, and thinks that
 React is really the most ground-breaking library in UI development -
-so just see the following as well-meant proposals for React's long-term
-evolution):
+so please see the following comments as well-meant proposals for React's
+long-term evolution):
 
 * React's API is quite "optimized" for the use of JSX:
 
@@ -160,7 +160,7 @@ evolution):
   
   // or when using jsSurface with JSX
   <SomeCtx.Consumer>
-    { it =><SomeComponent/> }
+    { it => <SomeComponent/> }
   </SomeCtx.Consumer>
   ```
 * React is quite opinonated about the way that complex components shall be
