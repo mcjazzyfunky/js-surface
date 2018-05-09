@@ -1,85 +1,182 @@
 # jsSurface
 
-A UI framework abstraction layer written in ECMAScript 2016.
+jsSurface is a R&D project to find a minimal pragmatic set of functions to build base API for UI development. It also provides a reference implementation of
+that API (currently internally based on "dio.js" - switching internally to 
+"React" as base library can easily be done).
 
-**Note**: This project is in a very early state - please do not plan use it for productive projects yet.
+You may ask: Why not just use an React-like API directory - as React's API
+itself does only consist of a few functions and classes?
 
-## Introduction
+The main issues with React's API are:
 
-Developing user interfaces in JavaScript is fun these days.
-There are so many great UI libraries and framesworks to chose from: 
-React, Vue, Angular, Aurelia, Inferno, Preact etc.
+* React's API is quite "optimized" for the use of JSX:
 
-Unfortunatelly, when you implement a suite of components you first have to decide which library/framework to use - your component suite will then only be supported by this particular UI library/framework.
+  While the following JSX syntax is really nice...
 
-Wouldn't it be better to implement components with help of an API that is independent of the component framework in which the components will run later?
+  ```html
+  <FancyHeader>Some headline</FancyHeander>
+  ```
 
-## Goal
+  ... its non-JSX counterpart looks quite verbose ...
 
-jsSurface is a R&D project to investigate what such a UI library agnostic API could look like.
-Also it should provide adapters to the the most important "virtual DOM" based UI libraries:
+  ```javascript
+  React.createElement(FancyHeader, null, 'Some headline')
+  ```
 
-- React
-- React Native
-- Vue
-- Inferno
-- Preact
+  ... while it would be much nicer just to write ...
+  
+  ```javascript
+  FancyHeader('Some headline')
+  ```
 
-The API of jsSurface is highly based on "virtual DOM" techniques. Unfortunatelly "Angular" and "Aurelia" are not based on virtual DOM diffing, that's why writing an adapter for these two fantastic UI framworks would be much more complicated than for those libraries listed above. Therefore providing support for "Angular" and "Aurelia" is currently not planned for jsSurface - but let's see what future holds.
+  The problem here with React's API is, that the main representation of
+  component types are component classes and (for simple components) render
+  functions.
+  Neither will component classes be instantiated by the user directly
+  nor will the render functions be called directly. The only useful
+  usage of component types are that they will be passed as first argument to
+  the ```React.createElement``` function. The same problem you have with
+  context providers and consumers and the ```Fragment``` symbol.
 
-### Important advance information
+  In jsSurface things are different: Everything that can be used as first
+  argument of the ```createElement``` function besides strings is a factory
+  function that returns the result of a corresponding ```createElement``` call.
+  Besides the second argument (```props```) of the ```createElement``` function
+  and also for all the component factories is optional to provide a concice
+  syntax: All component types, ```Fragment```, context providers, context
+  consumers are factory functions with an optional second ```props``` argument:
 
-jsSurface tries to provide a minimalistic API to describe UI components in a framework-agnostic way.
-But that does not mean that componenent developer will directly this minimalistic API.
-Instead, to implement complex components you have to use some third-party libraries/APIs that are built upon jsSurface.
-For example if you like to implement components in a React-like object-oriented way, then maybe you want try to use the sister-project "jsGlow" (in development - currently in a subfolder of the jsSurface sources).
+  ```jsx
+  SomeComponent('some text')
+
+  // or when using jsSurface with JSX
+  <SomeComponent>Some text</SomeComponent>
+  ```
+
+  ```jsx
+  Fragment(
+    SomeComponent('some text'),
+    SomeComponent({ className: 'some-class'}, 'some text'))
+
+  // or when using jsSurface with JSX
+  <>
+    <SomeComponent>Some text</SomeComponent>
+    <SomeComponent className="some-class">some text</SomeComponent>
+  </>
+  ```
+  
+  ```jsx
+  Fragment({ key: someKey },
+    SomeComponent(),
+    SomeOtherComponent())
+  
+  // or when using jsSurface with JSX
+  <Fragment key={someKey}>
+    <SomeComponent/>
+    <SomeOtherComponent/>
+  </>
+  ```
+
+  ```jsx
+  SomeCtx.Provider({ value: someValue },
+    SomeComponent(),
+    SomeOtherComponent())
+  
+  // or when using jsSurface with JSX
+  <SomeCtx.Provider value={someValue}>
+    <SomeComponent/>
+    <SomeOtherComponent/>
+  </SomeContext.Provider>
+  ```
+
+  ```jsx
+  SomeCtx.Consumer(value =>
+    SomeComponent(value))
+  
+  // or when using jsSurface with JSX
+  <SomeCtx.Consuer>
+    { it =><SomeComponent/> }
+  </SomeCtx.Consumer>
+  ```
+* React is quite opinonated about the way that complex components shall be
+  implemented.
+  The fact that complex component types are represented by extensions of
+  React's Component class shows that this class-based approach is the prefered
+  way of UI programming in React. Even if you like to use other approaches
+  (like for example some functional styles) you still have to map every
+  other component type implementation approach to React's component class.
+
+  jsSurface on the other hand is not opinionated at all about the way components
+  shall be implemented. A jsSurface component definition consists of some
+  component meta information (like display name or declaration of the property
+  types) plus one single function called the `main` function which describes
+  the complete behavior of the component.
+
+  As you may guess, that `main` function is not really very handy to
+  be implemented. But be aware that you will normally not implement that
+  `main` function directly but use some custom helper functions of your
+  choice to make that implementation much easiser.
+  So the component programming paradigm is completely separated from jsSurface
+  itself.
+  Nevertheless using React's Component class provides a very nice way to
+  implement components. Therefore the jsSurface package is bundles with an
+  additional package calles 'js-surface/addons' which has also a Component class
+  with the exact same API as the React counterpart.
+  But be aware this Component class is just an out-of-the-box add-on for
+  convenience jsSurface does NOT depend on this add-on package at all.
+
+* The React API lacks a bit of information hiding:
+  As for complex components you always have the underlying component class
+  or in case of references even the component instance directly, you always have access to a lot of data and methods you do not really need to have access to.
+  
+  In jsSurface that's different: As component types are only represented by
+  a corresponding factory method (that does only create a virtual element by
+  using the `createElement` function) you do NOT have access to the
+  underlying component implementation. And also you will never have access to
+  the component instance: Refs will not pass the component instance itself as
+  it is done with React, but instead will only pass a proxy for the component
+  instance which only expose those component functionalities that have
+  explicitly defined to be exposed.
+
+**Important**: This project is in a very early state - please do not plan to 
+use it for productive projects.
 
 ### jsSurface API
 
-Currently jsSurface API consists of four methods:
-"createElement", "isElement", "defineComponent", "mount".
+Currently jsSurface core API consists of nine methods:
+"createElement", "defineContext", "defineComponent", "isElement", "isContext",
+"isNode", "mount", "unmount" and "Fragment".
 
-#### createElement(type, props, ...children)
+#### createElement(type, props?, ...children)
 
-`createElement` creates a virtual DOM element basically in the same way like the equally named functions in "React" and "Inferno".
-In "Preact" the corresponding function is called `h`.
-Unfortunatelly "Vue" does not have a global `createElement` counterpart, but only a non-global component `createElement` argument that is provided component-specific by Vue's `render` method. That's why jsSurface provide its own global `createElement` implementation for Vue which generates generic VDOM trees that will later be translated to Vue-specific VDOM tree within the Vue components `render` method.
+`createElement` creates a virtual DOM element basically in the same way like the equally named functions in "React".
+The "props" argument is optional.
+It results a virtual DOM element that looks like:
 
-Returns VDOM tree.
+{ type, props }
+
+where children (if there are any) are to be found in the `props` object
+(be aware that the virtual DOM elements are instances of an internal base class,
+that means they cannot be created without using `createElement`).
 
 #### isElement(it)
 
-Checks whether `it` is a proper VDOM structure.
+Checks whether `it` is a proper virtual DOM element that has been created
+by function `createElement`.
 Return true or false.
 
-#### defineComponent(config)
+#### isNode(it)
 
-jsSurface supports two basic kind of components: simple *functional (stateless) components* and more complex *standard components*
+Checks whether `it` is a valid item for the children arguments for
+`createElement`.
+Valid nodes are: undefined, null, booleans, number, strings, arrays and other iterables and virtual element that have been ´createElement´.
 
-Please find here a description about the difference:
-https://javascriptplayground.com/blog/2017/03/functional-stateless-components-react/
+Return true or false.
 
-##### Functional stateless components are defined the following way:
+#### defineComponent(config): Function
 
-```javascript
-export default defineComponent({
-    displayName: 'Greeting',
-
-    properties: {
-        name: {
-            type: String,
-            defaultValue: 'User'
-        }
-    },
-
-    render(props) {
-        return createElement(
-            'div', null, `Hello ${props.name}`);
-    }
-})
-```
-
-##### Complex non-functional components are defined the following way:
+Components are defined the folowing way (be aware that you will NOT have to
+implement that `main` function directly):
 
 ```javascript
 export default defineComponent({
@@ -94,16 +191,16 @@ export default defineComponent({
 
         name: {
             type: String,
-            constraint: Spec.match(/^[a-z]+$/),
+            constraint: Spec.match(/^[a-zA-Z]+$/),
                         // 3rd-party spec lib
             nullable: true,
             defaultValue: null
         }
 
-        localizer: {
-            type: Localizer,
+        Logger: {
+            type: Logger,
             inject: true,
-            defaultValue: Localizer.getDefault();
+            defaultValue: Logger.getDefaultLogger();
         },
 
         onChange: {
@@ -113,50 +210,61 @@ export default defineComponent({
         }
     },
 
-    methods: ['focus', 'blur'],
+    methods: ['focus', 'blur'], // to declare public methods
 
-    init(updateView, forwardState) {
+    // isErrorBoundary: true | false -- not needed in this example
+
+    main(initialProps, refresh, updateState) {
         // ... to complicated to show here ....
         // But fyi:
-        //   updateView:
-        //     (vdom, childContext, callbackWhenDone) => {}
+        //   refresh:
+        //     (callbackBeforeUpdate, callbackAfterUpdate) => void
         //
-        //   forwardState: state => {}
-        //      Just to inform the underlying
-        //      component system about a state
-        //      change
-        //      (e.g. for React Developer Tools)
+        //   updateState:
+        //      (updater, callbackAfterUpdate)
         //
-        //   setProps: props => {}
         //   applyMethod: (methodName, args) => any
         //   close: close() => {}
 
         return {
-            setProps,
-            applyMethod,
-            close
+            render, // will be invoked after "refresh" has been triggerd
+            receiveProps, // callback that will be invoked on props updates
+            applyMethod, // public methods handler
+            // handleError --- not needed in this example
+            // finalize --- not needed in this example
         }
     }
 })
 ```
 **TODO**: More info will follow...
 
-Returns a component factory to generate corresponding component speific VDOM elements.
+Returns a component factory to generate corresponding component specific virtual
+elements.
 
-**TODO**: The component factory will be enriched with some meta information about the component type - details will follow...
+**TODO**: The component factory will be enriched with some meta information about the component type with static, readonly property "meta"- details will follow...
 
-#### mount(content, target)
+### defineContext: config => { Provider, Consumer }
 
-Mounts/renders a VDOM tree specified by argument `content` to a real DOM element specified by `target` (either the DOM element itself or the corresponding ).
+A `defineContext` invocation looks like follows:
 
-Will return the following object:
-`{ node, unmount() }`, where `node` is the concrete target node, `unmount` is a function that can be used to unmount/dismiss the mounted component.
-In case that the DOM element `target` could not be found then `null` will be returned.
+```javascript
+const MyContext = defineContext({
+    displayName: 'MyContext', // for error messages etc.
+    type: Number,
+    constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
+    defaultValue: 5
+}
+```
 
-**TODO**: Function `mount` will behave differently in "React Native" - details will follow...
+Returns an object that has two properties "Provider" and "Consumer", that are
+factories to handle the context.
 
-### Differences between different adapters
+#### mount: (content, target) => void
 
-jsSurface will NOT hide all UI libraries specialities. For example different UI libraries may use different event systems on top of the usual DOM event system (for example "SyntheticEvents" in React).
-jsSurface will only normalize the different behaviors if this normalization will not generate too much code (jsSurface should stay as small as possible).
-Please keep that in mind.
+Mounts/renders a VDOM tree specified by argument `content` to a real DOM element specified by `target` (either the DOM element itself or the corresponding ID).
+
+#### unmount: target => void
+
+Unmounts a component previously mounted at the specified by `target`
+(either the DOM element itself or the corresponding ID).
+
