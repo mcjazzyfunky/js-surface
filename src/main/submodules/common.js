@@ -22,9 +22,9 @@ class Component {
 
       value: {
         props: props,
-        prevProps: undefined,
-        state: undefined,
-        prevState: undefined,
+        prevProps: null,
+        state: null,
+        prevState: null,
         snapshot: undefined,
         refresh: null,
         updateState: null,
@@ -172,6 +172,7 @@ class Component {
       component.___internals.refresh = refresh;
       component.___internals.updateState = updateState;
 
+      // TODO: What's this for?!?
       if (component.___internals.state !== undefined) {
         component.___internals.updateState(() => component.___state);
       }

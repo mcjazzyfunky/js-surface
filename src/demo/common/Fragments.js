@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, Fragment } from 'js-surface';
-import { view } from 'js-surface/addons';
+import { view } from 'js-surface/common';
 
 const FragmentDemo = defineComponent({
   displayName:  'FragmentDemo',

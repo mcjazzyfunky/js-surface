@@ -152,14 +152,14 @@ function deriveComponent(config) {
       const
         updateState = (updater, callback) => {
           if (!this.__isInitialized) {
-            this.state = updater();
+            this.state = updater(this.state);
 
             if (callback) {
-              callback(this.state);
+              callback(this.state, this.props);
             }
           } else {
             this.setState(updater, !callback ? null : () => {
-              callback(this.state);
+              callback(this.state, this.props);
             });
           }
         },

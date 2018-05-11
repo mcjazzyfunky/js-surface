@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent } from 'js-surface';
-import { view, Component } from 'js-surface/addons';
+import { view, Component } from 'js-surface/common';
 import { Spec } from 'js-spec';
 
 const Counter = defineComponent({

@@ -17,7 +17,7 @@ are implemented with jsSurface (it's a simple "Counter" application):
 
 ```javascript
 import { createElement as h, defineComponent, mount } from 'js-surface';
-import { view, Component } from 'js-surface/addons';
+import { view, Component } from 'js-surface/common';
 // Be aware that "view" and "Component" are just changeable add-ons to
 // jsSurface - means, they are just some kind of syntactical sugar.
 import { Spec } from 'js-spec'; // a 3rd-party general purpose validation library
@@ -185,7 +185,7 @@ long-term evolution):
   itself.
   Nevertheless using React's Component class provides a very nice way to
   implement components. Therefore the jsSurface package is bundles with an
-  additional package calles 'js-surface/addons' which has also a Component class
+  additional package calles 'js-surface/common' which has also a Component class
   with the exact same API as the React counterpart.
   But be aware this Component class is just an out-of-the-box add-on for
   convenience jsSurface does NOT depend on this add-on package at all.

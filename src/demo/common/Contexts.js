@@ -1,5 +1,5 @@
 import { createElement as h, defineContext, defineComponent } from 'js-surface';
-import { Component } from 'js-surface/addons';
+import { Component } from 'js-surface/common';
 
 const ParentDisabledContext = defineContext({
   displayName: 'ParentDisabledContext',
