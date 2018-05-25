@@ -10,10 +10,12 @@ const HelloWorld = defineComponent({
     }
   },
 
-  main() {
-    return {
-      render: ({ name }) => h('div', `Hello ${name}!`)
-    };
+  main: {
+    type: 'basic',
+
+    render({ name }) {
+      return h('div', `Hello ${name}!`);
+    }
   }
 });
 

@@ -67,12 +67,35 @@ const componentConfigSpec =
         Spec.optional(Spec.boolean),
 
       main:
-        Spec.optional(
-          Spec.or(
-            Spec.function,
-            Spec.extensibleShape({
-              normalizeComponent: Spec.function
-            })))
+        Spec.or(
+          {
+            when:
+              Spec.function,
+
+            check:
+              Spec.function
+          },
+          {
+            when:
+              it => it && typeof it === 'object' && it.type === 'basic',
+
+            check:
+              Spec.shape({
+                type: Spec.is('basic'),
+                render: Spec.function
+              })
+          },
+          {
+            when:
+              it => it && typeof it === 'object' && it.type === 'advanced',
+
+            check:
+              Spec.shape({
+                type: Spec.is('advanced'),
+                init: Spec.function,
+                deriveStateFromProps: Spec.optional(Spec.function) 
+              })
+          })
     }));
 
 // --- the actual configuration validation function -----------------

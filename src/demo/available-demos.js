@@ -4,9 +4,10 @@ import SimpleCounter from './core/SimpleCounter';
 import ComplexCounter from './core/ComplexCounter';
 import I18n from './core/I18n';
 import PerformanceTest1 from './core/PerformanceTest1';
-import PerformanceTest2 from './core/PerformanceTest2';
+import PerformanceTest2 from './common/PerformanceTest2';
 
-// based on common 
+
+// based on core + common 
 import HelloWorld2 from './common/HelloWorld2';
 import VerySimpleCounter from './common/VerySimpleCounter';
 import Clock from './common/Clock';
@@ -27,12 +28,12 @@ export default [
   ['Stop watch (common)', StopWatch],
   ['Clock (common)', Clock],
   ['Performance Test 1 (core)', PerformanceTest1],
-  ['Performance Test 2 (core)', PerformanceTest2],
+  ['Performance Test 2 (common)', PerformanceTest2],
   ['Fragments (common)', Fragments],
   ['Iterators (common)', Iterators],
   ['Inner HTML (common)', InnerHtml],
   ['Contexts (common)', Contexts],
   ['Injections (common)', Injections],
-  ['Internationalization (common)', I18n],
+  ['Internationalization (core)', I18n],
   ['Error boundaries (common)', ErrorBoundaries],
 ].map(([title, content]) => ({ title, content }));

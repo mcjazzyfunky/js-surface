@@ -1,172 +1,99 @@
-import { createElement as h, defineComponent }  from 'js-surface';
+import { createElement } from 'js-surface';
+import hyperscript from 'js-hyperscript/surface';
+//import { Html } from 'js-dom-factories/surface';
 
-const
-  framesPerSecond = 240,
-  colors = ['red', 'yellow', 'orange'],
-  tileWidth = 5,
-  columnCount = 20,
-  rowCount = 20;
+function runTests() {
+  const
+    iterationCount = 100000,
+    contentContainer = document.getElementById('main-content'),
+    tests = [];
 
-const Tile = defineComponent({
-  displayName:  'Tile',
-  
-  properties: {
-    color: {
-      type: String,
-      defaultValue: 'white'
-    },
-    width: {
-      type: Number,
-      defaultValue: 3
-    }
-  },
-  
-  main(props, refresh) {
-    return {
-      render(props) {
-        const
-          { width, color } = props,
-        
-          style = {
-            float: 'left',
-            width: width + 'px',
-            height: width + 'px',
-            backgroundColor: color
-          };
-        
-        return h('div', { style });
-      },
+  contentContainer.innerHTML = 'Please wait - performance stests are running ...';
+  let report = '';
 
-      receiveProps() {
-        refresh();
+  tests.push({
+    displayName: 'Using createElement of "js-surface"',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        createElement('div',
+          { className: 'my-class', id: 'my-id' },
+          createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));  
       }
-    };
-  }
-});
-
-const TileRow = defineComponent({
-  displayName:  'TileRow',
-  
-  properties: {
-    tileWidth: {
-      type: Number,
-      defaultValue: 3
-    },
-    columnCount: {
-      type: Number
     }
-  },
-  
-  main(props, refresh) {
-    return {
-      render(props) {
-        const
-          { tileWidth, columnCount } = props,
-          tiles = [];
+  });
 
-        for (let x = 0; x < columnCount; ++x) {
-          const
-            colorIdx = Math.floor(Math.random() * colors.length),       
-            color = colors[colorIdx];
-        
-          tiles.push(Tile({ width: tileWidth, color, key: x }));
-        }
-      
-        return h('div', { style: { clear: 'both' }}, tiles);
-      },
+  tests.push({
+    displayName: 'Using "js-hyperscript" (test 1)',
 
-      receiveProps() {
-        refresh();
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        hyperscript('div',
+          { className: 'my-class', id: 'my-id' },
+          hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));  
       }
-    };
-  }
-});
-
-const SpeedTest = defineComponent({
-  displayName: 'SpeedTest',
-
-  properties: {
-    columnCount: {
-      type: Number
-    },
-    rowCount: {
-      type: Number
-    },
-    tileWidth: {
-      type: Number,
-      defaultValue: 3
     }
-  },
+  });
+
+  tests.push({
+    displayName: 'Using "js-hyperscript" (test 2)',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        hyperscript('#my-id', { className: 'my-class' },
+          hyperscript('#my-id2', { className: 'my-class2' }, 'my-div', 1, 2, 3, 4, 5));  
+      }
+    }
+  });
+
+  tests.push({
+    displayName: 'Using "js-hyperscript" (test 3)',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        hyperscript('#my-id.my-class > #my-id2.my-class2', 'my-div', 1, 2, 3, 4, 5);
+      }
+    }
+  });
+
+  /*
+  tests.push({
+    displayName: 'Using "js-dom-factories"',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        Html.div({ className: 'my-class', id: 'my-id' },
+          Html.div({ className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));   
+      }
+    }
+  });
+  */
+
+  for (let i = 0; i < tests.length; ++i) {
+    const
+      test = tests[i],
+      startTime = Date.now();
     
-  main(initialProps, refresh) {
-    let
-      startTime = Date.now(),
-      frameCount = 0,
-      actualFramesPerSecond = '0',
+    test.run();
 
-      render = props => {
-        const
-          rows = [],
-          
-          style = {
-            marginTop: 40,
-            marginLeft: 40
-          };
+    const
+      stopTime = Date.now(),
+      duration = (stopTime - startTime) + ' ms';
 
-        for (let y = 0; y < props.rowCount; ++y) {
-          rows.push(
-            TileRow({
-              tileWidth: props.tileWidth,
-              columnCount: props.columnCount,
-              key: y
-            }));
-        }
-        
-        return (
-          h('div',
-            null,
-            h('div',
-              null,
-              `Rows: ${props.rowCount}, columns: ${props.columnCount}`,
-              h('div',
-                { style },
-                rows)),
-            h('p',
-              { style: { clear: 'both' } },
-            `(actual frames per second: ${actualFramesPerSecond})`))
-        );
-      },
+    const message = `Run time for test '${test.displayName}': ${duration}`;
 
-      intervalId = null;
+    if (i == 0) {
+      report = message;
+    } else {
+      report += '\n' + message;
+    }
+  }
 
-    refresh(null, () => {
-      intervalId = setInterval(() => {
-        ++frameCount;
-        refresh(); 
+  report += '\nAll tests finished.';
+  
+  return report;
+}
 
-        if (frameCount % 10 === 0) {
-          actualFramesPerSecond =
-            (frameCount * 1000.0 /
-              (Date.now() - startTime)).toFixed(2);
-        }
-      }, 1000 / framesPerSecond);
-    });
+const report = runTests();
 
-    return {
-      render,
-
-      receiveProps() {
-        refresh();
-      },
-
-      finalize() {
-        clearInterval(intervalId);
-        intervalId = null,
-        startTime = null;
-        frameCount = 0;
-      }
-    };
-  },
-});
-
-export default SpeedTest({ tileWidth, columnCount, rowCount });
+export default createElement('pre', report);

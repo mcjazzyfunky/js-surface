@@ -2,7 +2,7 @@ import { createElement as h, defineComponent, Fragment } from 'js-surface';
 import { view, Component } from 'js-surface/common';
 
 const HelloWorld1 = defineComponent({
-  displayName: 'HelloWorld1',
+  displayName: 'HelloWorld_A',
 
   properties: {
     name: {
@@ -19,7 +19,7 @@ const HelloWorld1 = defineComponent({
 });
 
 const HelloWorld2 = defineComponent({
-  displayName: 'HelloWorld2',
+  displayName: 'HelloWorld_B',
 
   properties: {
     name: {

@@ -10,10 +10,8 @@ const CounterInfo = defineComponent({
     }
   },
 
-  main: (_, refresh) => ({
-    receiveProps() {
-      refresh();
-    },
+  main: {
+    type: 'basic',
 
     render(props) {
       return (
@@ -23,7 +21,7 @@ const CounterInfo = defineComponent({
             null,
             props.value)));
     }
-  })
+  } 
 });
 
 // --------------------------------------------------------------------
@@ -47,58 +45,59 @@ const Counter = defineComponent({
 
   methods: ['resetCounter'],
 
-  main(initialProps, refresh, updateState) {
-    let counterValue;
+  main: {
+    type: 'advanced',
 
-    const
-      setCounterValue = n => {
-        counterValue = n;
-  
-        updateState(() => ({ counterValue }), () => {
-          refresh();
-        });
-      },
+    init(getProps, getState, updateState) {
+      let counterValue;
 
-      increaseCounter = n => {
-        setCounterValue(counterValue + n);
-      },
-
-      render = () => {
-        return (
-          h('span',
-            { className: 'counter' },
-            h('button',
-              {
-                className: 'btn btn-default',
-                onClick: () => increaseCounter(-1)
-              },
-              '-'),
-            h('div',
-              { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
-              CounterInfo({ value: counterValue })),
-            h('button',
-              {
-                className: 'btn btn-default',
-                onClick: () => increaseCounter(1)
-              }, 
-              '+'))
-        );
-      };
-     
-    setCounterValue(0);
-
-    return {
-      render,
-
-      callMethod(name, args) {
-        if (name === 'resetCounter') {
-          const [n = 0] = args;
-
+      const
+        setCounterValue = n => {
           counterValue = n;
-          refresh();
+    
+          updateState(() => ({ counterValue }));
+        },
+
+        increaseCounter = n => {
+          setCounterValue(counterValue + n);
+        },
+
+        render = () => {
+          return (
+            h('span',
+              { className: 'counter' },
+              h('button',
+                {
+                  className: 'btn btn-default',
+                  onClick: () => increaseCounter(-1)
+                },
+                '-'),
+              h('div',
+                { style: { width: '30px', display: 'inline-block', textAlign: 'center' }},
+                CounterInfo({ value: counterValue })),
+              h('button',
+                {
+                  className: 'btn btn-default',
+                  onClick: () => increaseCounter(1)
+                }, 
+                '+'))
+          );
+        };
+      
+      setCounterValue(0);
+
+      return {
+        render,
+
+        callMethod(name, args) {
+          if (name === 'resetCounter') {
+            const [n = 0] = args;
+
+            setCounterValue(n);
+          }
         }
-      }
-    };
+      };
+    }
   }
 });
 
@@ -107,36 +106,40 @@ const Counter = defineComponent({
 const CounterCtrl = defineComponent({
   displayName: 'CounterCtrl',
 
-  main() {
-    let counterInstance = null;
+  main: {
+    type: 'advanced',
 
-    return {
-      render() {
-        return (
-          h('div',
-            { className: 'counter-ctrl' },
-            h('button',
-              {
-                className: 'btn btn-info',
-                onClick: () => counterInstance.resetCounter(0)
-              },
-              'Set to 0'),
-            ' ',
-            Counter({
-              ref: it => {
-                counterInstance = it;
-              }
-            }),
-            ' ',
-            h('button',
-              {
-                className: 'btn btn-info',
-                onClick: () => counterInstance.resetCounter(100)
-              },
-              'Set to 100'))
-        );
-      }
-    };
+    init() {
+      let counterInstance = null;
+
+      return {
+        render() {
+          return (
+            h('div',
+              { className: 'counter-ctrl' },
+              h('button',
+                {
+                  className: 'btn btn-info',
+                  onClick: () => counterInstance.resetCounter(0)
+                },
+                'Set to 0'),
+              ' ',
+              Counter({
+                ref: it => {
+                  counterInstance = it;
+                }
+              }),
+              ' ',
+              h('button',
+                {
+                  className: 'btn btn-info',
+                  onClick: () => counterInstance.resetCounter(100)
+                },
+                'Set to 100'))
+          );
+        }
+      };
+    }
   }
 });
 

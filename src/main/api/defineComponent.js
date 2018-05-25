@@ -5,8 +5,6 @@ import convertNode from '../internal/conversion/convertNode';
 
 import React from 'react';
 
-const isReact= React.Fragment === Symbol.for('react.fragment');
-
 export default function defineComponent(config) {
   const error = validateComponentConfig(config);
 
@@ -19,8 +17,12 @@ export default function defineComponent(config) {
 
   const normalizedConfig = { ...config };
 
-  if (typeof config.main.normalizeComponent === 'function') {
-    normalizedConfig.main = config.main.normalizeComponent(config);
+  if (typeof config.main === 'function') {
+    if (typeof config.main.normalizeComponent === 'function') {
+      normalizedConfig.main = config.main.normalizeComponent(config);
+    } else {
+      normalizedConfig.main = config.main(config);
+    }
   }
 
   let internalType = deriveComponent(normalizedConfig);
@@ -136,133 +138,99 @@ function prettifyErrorMsg(errorMsg, config) {
 }
 
 function deriveComponent(config) {
+  return config.main.type === 'basic'
+    ? deriveSimpleComponent(config)
+    : deriveAdvancedComponent(config);
+}
+
+function deriveSimpleComponent(config) {
+  const
+    convertedConfig = convertConfig(config),
+    ret = props => convertNode(config.main.render(props));
+
+  Object.assign(ret, convertedConfig);
+  return ret;
+}
+
+function deriveAdvancedComponent(config) {
   // config is already normalized
 
   const convertedConfig = convertConfig(config);
-
-  let main = config.main;
 
   class Component extends React.Component {
     constructor(props) {
       super(props);
 
       this.__meta = config;
-      this.displayName = config.displayName;
+      this.__isInitialized = false;
+      this.__handleError = null;
+      this.__callbacksWhenBeforeUpate = [];
 
       const
-        updateState = (updater, callback) => {
-          if (!this.__isInitialized) {
-            this.state = updater(this.state);
+        getProps = () => !this.__isInitialized ? props : this.props,
+        getState = () => this.state,
 
-            if (callback) {
-              callback(this.state, this.props);
+        updateState = (updater, callback) => {
+          if (updater) { 
+            if (!this.__isInitialized) {
+              const stateUpdates =
+                typeof updater === 'object'
+                  ? updater
+                  : updater(this.state);
+
+              this.state = Object.assign(this.state || {}, stateUpdates);
+
+              if (callback) {
+                callback();
+              }
+            } else {
+              this.setState(updater, callback);
             }
-          } else {
-            this.setState(updater, !callback ? null : () => {
-              callback(this.state, this.props);
-            });
           }
         },
 
-        refresh = (beforeUpdateCallback, afterUpdateCallback) => {
-          if (!this.__isInitialized) {
-            if (afterUpdateCallback) {
-              if (this.__callbacksWhenDidMount === null) {
-                this.__callbacksWhenDidMount = [afterUpdateCallback];
-              } else {
-                this.__callbacksWhenDidMount.push(afterUpdateCallback);
-              }
-            }
-          } else {
-            this.forceUpdate(afterUpdateCallback);
-          }
-        };
+        forceUpdate = this.forceUpdate.bind(this);
 
-      this.__props = props;
-      this.__isInitialized = false;
-      this.__callbacksWhenDidMount = null;
-      this.__callbacksWhenBeforeUpate = [];
+      const result = config.main.init(getProps, getState, updateState, forceUpdate);
 
-      const result = main(props, refresh, updateState);
+      this.componentDidMount = () => {
+        this.__isInitialized = true;
 
-      this.__receiveProps = result.receiveProps || null;
-      this.__finalize = result.finalize || null;
-      this.__callMethod = result.callMethod || null;
-      this.__handleError = result.handleError || null;
-      
-      this.__render = (props, state) =>  convertNode(result.render(props, state));
+        if (result.afterUpdate) {
+          result.afterUpdate(null, null);
+        }
+      };
 
-      if (isReact) {
-        Object.defineProperty(this, 'props', {
-          enumerable: true, 
-          
-          set: nextProps => {
-            if (nextProps !== this.__props) {
-              if (this.__receiveProps) {
-                this.__receiveProps(nextProps);
-              }
-
-              this.__props = nextProps;
-            }
-          },
-          
-          get: () => this.__props
-        });
-      } else {
-        this.componentWillReceiveProps = nextProps => {
-          if (this.__receiveProps) {
-            this.__receiveProps(nextProps);
-          }
+      if (result.afterUpdate) {
+        this.componentDidUpdate = (prevProps, prevState) => {
+          result.afterUpdate(prevProps, prevState);
         };
       }
-    }
 
-    shouldComponentUpdate() {
-      return false;
-    }
-    componentDidMount() {
-      this.__isInitialized = true;
-  
-      const callbacks = this.__callbacksWhenDidMount;
+      if (result.finalize) {
+        this.componentWillUnmount = () => {
+          result.finalize();
+        };
+      }
 
-      if (callbacks) {
-        this.__callbacksWhenDidMount = null;
-  
-        for (let i = 0; i < callbacks.length; ++i) {
-          callbacks[i]();
+      this.__handleError = result.handleError || null;
+
+      if (result.needsUpdate) {
+        this.shouldComponentUpdate = (nextProps, nextState) => {
+          return result.needsUpdate(nextProps, nextState);
+        };
+      }
+
+      this.render = () => convertNode(result.render());
+
+      if (config.methods) {
+        for (const operationName of config.methods) {
+          Component.prototype[operationName] = function (...args) {
+            return result.callMethod(operationName, args);
+          };
         }
       }
-    }
 
-    componentDidUpdate(/* prevProps, prevState, snapshot */) {
-    }
-
-    componentWillUnmount() {
-      if (this.__finalize) {
-        this.__finalize();
-      }
-    }
-
-    render() {
-      const ret = this.__render(this.props, this.state);
-
-      if (!isReact) {
-        this.__handleCallbacksWhenBeforeUpdate();
-      }
-
-      return ret;
-    }
-
-    // Just React
-    getSnapshotBeforeUpdate() {
-      if (isReact) {
-        this.__handleCallbacksWhenBeforeUpdate();
-      }
-
-      return null;
-    }
-
-    __handleCallbacksWhenBeforeUpdate() {
       if (this.__callbacksWhenBeforeUpate.length > 0) {
         const callbacks = this.__callbacksWhenBeforeUpate;
         
@@ -272,20 +240,6 @@ function deriveComponent(config) {
           callbacks[i](this.props, this.state);
         }
       }
-    }
-  }
-
-  if (config.childContext) {
-    Component.prototype.getChildContext = function () {
-      return this.__childContext;
-    };
-  }
-
-  if (config.methods) {
-    for (const operationName of config.methods) {
-      Component.prototype[operationName] = function (...args) {
-        return this.__callMethod(operationName, args);
-      };
     }
   }
 

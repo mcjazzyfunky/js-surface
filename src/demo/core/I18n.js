@@ -29,33 +29,40 @@ const App = defineComponent({
     }
   },
 
-  main(initialProps, refresh) {
-    let locale = initialProps.defaultLocale;
+  main: {
+    type: 'advanced',
+    
+    init: (getProps, getState, updateState) => {
+      updateState({ locale: getProps().defaultLocale });
 
-    return { 
-      render: () => {
-        return (
-          h(LocaleContext.Provider, { value: locale },
-            h('div', null,
-              h('label',
-                { htmlFor: 'lang-selector' },
-                'Select language: '),
-              h('select',
-                {
-                  id: 'lang-selector',
-                  value: locale,
-                  onChange: ev => {
-                    locale = ev.target.value;
-                    refresh();
-                  }
-                },
-                h('option', { value: 'en' }, 'en'),
-                h('option', { value: 'fr' }, 'fr'),
-                h('option', { value: 'de' }, 'de')),
-              h('div', null, LocaleText({ id: 'salutation'}))))
-        );
-      }
-    };
+      return { 
+        render: () => {
+          const locale = getState().locale;
+
+          return (
+            h(LocaleContext.Provider, { value: locale },
+              h('div', null,
+                h('label',
+                  { htmlFor: 'lang-selector' },
+                  'Select language: '),
+                h('select',
+                  {
+                    id: 'lang-selector',
+                    value: locale,
+                    onChange: ev => {
+                      const newLocale = ev.target.value;
+
+                      updateState(() => ({ locale: newLocale }));
+                    }
+                  },
+                  h('option', { value: 'en' }, 'en'),
+                  h('option', { value: 'fr' }, 'fr'),
+                  h('option', { value: 'de' }, 'de')),
+                h('div', null, LocaleText({ id: 'salutation'}))))
+          );
+        }
+      };
+    }
   }
 });
 
@@ -68,20 +75,16 @@ const LocaleText = defineComponent({
     }
   },
 
-  main(initialProps, refresh) {
-    return {
-      receiveProps() {
-        refresh();
-      },
+  main: {
+    type: 'basic',
 
-      render(props) {
-        return (
-          h('div', null,
-            h(LocaleContext.Consumer, locale =>
-              translations[locale][props.id]))
-        );
-      }
-    };
+    render(props) {
+      return (
+        h('div', null,
+          h(LocaleContext.Consumer, locale =>
+            translations[locale][props.id]))
+      );
+    }
   }
 });
 
