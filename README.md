@@ -3,7 +3,7 @@
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
-based electively on "React" or the fabulous "dio.js" library).
+based on "react" and "react-dom").
 Be aware that jsSurface is currently only for research purposes, it's currently
 NOT meant to be used in real-world applications.
 
