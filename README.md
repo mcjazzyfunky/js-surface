@@ -174,12 +174,12 @@ long-term evolution):
   jsSurface on the other hand is not opinionated at all about the way components
   shall be implemented. A jsSurface component definition consists of some
   component meta information (like display name or declaration of the property
-  types) plus one single function called the `main` function which describes
+  types) plus one single descriptor called the `main` descriptor which describes
   the complete behavior of the component.
 
-  As you may guess, that `main` function is not really very handy to
+  As you may guess, that `main` descriptor is not really very handy to
   be implemented. But be aware that you will normally not implement that
-  `main` function directly but use some custom helper functions of your
+  `main` descriptor directly but use some custom helper functions of your
   choice to make that implementation much easiser.
   So the component programming paradigm is completely separated from jsSurface
   itself.
