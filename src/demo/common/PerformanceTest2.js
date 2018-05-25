@@ -9,7 +9,7 @@ const
   rowCount = 20;
 
 const Tile = defineComponent({
-  displayName:  'Tile',
+  displayName: 'Tile',
   
   properties: {
     color: {
@@ -30,7 +30,9 @@ const Tile = defineComponent({
         float: 'left',
         width: width + 'px',
         height: width + 'px',
-        backgroundColor: color
+        backgroundColor: color,
+        padding: 0,
+        margin: 0
       };
     
     return h('div', { style });

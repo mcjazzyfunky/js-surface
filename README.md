@@ -71,7 +71,7 @@ mount(Demo(), 'main-content');
 
 Now to the questions why React's API seems a bit suboptimal (be aware that
 the author of jsSurface is a very big fan of React, and thinks that
-React is really the most ground-breaking library in UI development -
+React is really on the most ground-breaking libraries in UI development -
 so please see the following comments as well-meant proposals for React's
 long-term evolution):
 
@@ -254,8 +254,35 @@ Return true or false.
 
 #### defineComponent(config): Function
 
-Components are defined the folowing way (be aware that you will NOT have to
-implement that `main` function directly):
+Components are basically defined the folowing way (be aware that you will NOT have to
+implement that `main` description object directly - see above counter example):
+
+Stateless functional components:
+
+```javascript
+import { createElement as h, defineComponent } from 'js-surface';
+
+export default defineComponent({
+  displayName: 'HelloWorldDemo',
+
+  properties: {
+    name: {
+      type: String,
+      defaultValue: 'World' 
+    }
+  },
+
+  main: {
+    type: 'basic', // indicates a stateless functional component
+
+    render({ name }) {
+      return h('div', `Hello ${name}!`);
+    }
+  }
+})
+```
+
+Complex components:
 
 ```javascript
 export default defineComponent({
@@ -295,24 +322,40 @@ export default defineComponent({
 
     // isErrorBoundary: true | false -- not needed in this example
 
-    main(initialProps, refresh, updateState) {
-        // ... to complicated to show here ....
-        // But fyi:
-        //   refresh:
-        //     (callbackBeforeUpdate, callbackAfterUpdate) => void
-        //
-        //   updateState:
-        //      (updater, callbackAfterUpdate)
-        //
-        //   applyMethod: (methodName, args) => any
-        //   close: close() => {}
+    main: {
+      type: 'advanced', // indicates a complex component
 
+      init(getProps, getState, updateState, forceUpdate) {
+        // ... sorry, to complicated to show here in detail ....
+        // 
+        // Arguments:
+        //   getProps() returns current props
+        //   getState() returns current state (object)
+        //   updateState(updater, callback?) updates state (mostly) asynchronously
+        //   forceUpdate(callback) Refreshes the component view  
+        //
+        // Returns: {
+        //   render() renders the content and returns a virtual dom view
+        //
+        //   beforeUpdate(nextProps, nextState) will be called before the
+        //                                      view will be updated.
+        //
+        //   afterUpdate(prevProps, prevState) will be called after the view
+        //                                     has been updated
+        //
+        //   finalize() will be called when the component will be unmounted
+        //
+        //   callMethod(methodName, args) calls a public method
+        //
+        //   handleError(error, info) will be called if a descendant component
+        //                            throws an uncatched error (only needed
+        //                            if component configuration parameter
+        //                            'isErrorBoundary' is set to true)
+        // }
         return {
-            render, // will be invoked after "refresh" has been triggerd
-            receiveProps, // callback that will be invoked on props updates
-            applyMethod, // public methods handler
-            // handleError --- not needed in this example
-            // finalize --- not needed in this example
+            render,
+            callyMethod,
+            // [...]
         }
     }
 })
