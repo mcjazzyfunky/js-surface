@@ -222,9 +222,17 @@ use it for productive projects.
 
 ### jsSurface API
 
-Currently jsSurface core API consists of nine methods:
-"createElement", "defineContext", "defineComponent", "isElement", "isContext",
-"isNode", "mount", "unmount" and "Fragment".
+Currently jsSurface core API consists of nine functions:
+
+* createElement(type, props?, ...children)
+* createPortal(child, container)
+* defineComponent(componentConfig)
+* defineContext(contextConfig)
+* isElement(it)
+* isNode(it)
+* mount(content, container)
+* unmount(container)
+* Fragment(props?, ...children)
 
 #### createElement(type, props?, ...children)
 
