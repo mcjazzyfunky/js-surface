@@ -1,6 +1,7 @@
 import isElement from './isElement';
 import convertNode from '../internal/conversion/convertNode';
 
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 export default function mount(element, target) {
@@ -20,7 +21,9 @@ export default function mount(element, target) {
   }
 
   try {
-    ReactDOM.render(convertNode(element), targetNode);
+    ReactDOM.render(
+      React.createElement(React.StrictMode, null, convertNode(element)),
+      targetNode);
   } catch (e) {
     const errorMsg =
       e instanceof Error
