@@ -16,7 +16,7 @@ const SimpleCounter = defineComponent({
   },
 
   main: {
-    type: 'advanced',
+    kind: 'advanced',
     
     init(getProps, getState, updateState) {
       updateState(() => ({ counterValue: getProps().initialValue }));

@@ -11,7 +11,7 @@ const HelloWorld = defineComponent({
   },
 
   main: {
-    type: 'basic',
+    kind: 'basic',
 
     render({ name }) {
       return h('div', `Hello ${name}!`);

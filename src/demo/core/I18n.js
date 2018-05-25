@@ -30,7 +30,7 @@ const App = defineComponent({
   },
 
   main: {
-    type: 'advanced',
+    kind: 'advanced',
     
     init: (getProps, getState, updateState) => {
       updateState({ locale: getProps().defaultLocale });
@@ -76,7 +76,7 @@ const LocaleText = defineComponent({
   },
 
   main: {
-    type: 'basic',
+    kind: 'basic',
 
     render(props) {
       return (

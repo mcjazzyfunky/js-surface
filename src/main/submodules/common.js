@@ -3,7 +3,7 @@ function view(render) {
     // TODO - check config
     
     return {
-      type: 'basic',
+      kind: 'basic',
       render
     };
   };
@@ -107,7 +107,7 @@ class Component {
     const CustomComponent = this;
 
     const ret = {
-      type: 'advanced',
+      kind: 'advanced',
 
       init(getProps, getState, updateState, forceUpdate) {
         const component = new CustomComponent(getProps());
