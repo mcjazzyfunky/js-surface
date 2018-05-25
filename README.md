@@ -354,7 +354,7 @@ export default defineComponent({
         // }
         return {
             render,
-            callyMethod,
+            callMethod,
             // [...]
         }
     }
@@ -377,7 +377,7 @@ const MyContext = defineContext({
     type: Number,
     constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
     defaultValue: 5
-}
+});
 ```
 
 Returns an object that has two properties "Provider" and "Consumer", that are
