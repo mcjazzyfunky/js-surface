@@ -294,26 +294,40 @@ function convertConfig(config) {
       let result = null;
 
       const
+        propNames = config.properties ? Object.keys(config.properties) : [],
         messages = [],
         normalizedProps = normalizeProps(props);
 
       if (config.properties) {
-        const propNames = Object.keys(config.properties);
-
         for (let i = 0; i < propNames.length; ++i) {
           const
             propName = propNames[i],
             propValue = normalizedProps[propName],
             propConfig = config.properties[propName],
-            type = propConfig.type || null,
-            constraint = propConfig.constraint || null,
-            nullable = propConfig.nullable === undefined ? true : propConfig.nullable,
-            result = validateProperty(propValue, propName, type, nullable, constraint);
+            result = validateProperty(propValue, propName, propConfig);
 
           if (result) {
             messages.push(result.message);
           }
         }
+      }
+
+      const
+        usedPropNames = Object.keys(props),
+        invalidPropNames = [];
+
+      for (let i = 0; i < usedPropNames.length; ++i) {
+        const usedPropName = usedPropNames[i];
+
+        if (!config.properties.hasOwnProperty(usedPropName)) {
+          invalidPropNames.push(usedPropName);
+        }
+      }
+
+      if (invalidPropNames.length == 1) {
+        messages.push(`Invalid prop key "${invalidPropNames[0]}"`);
+      } else if (invalidPropNames.length > 1) {
+        messages.push('Invalid prop keys: ' + invalidPropNames.join(', '));
       }
 
       if (config.validate) {

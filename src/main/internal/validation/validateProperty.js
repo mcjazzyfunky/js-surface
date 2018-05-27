@@ -1,48 +1,58 @@
-export default function validateProperty(it, propertyName, typeConstr, nullable, constraint) {
+export default function validateProperty(it, propName, propConfig) {
   let
     ret = null,
     errMsg = null;
 
-  if (it === null && nullable === true) {
+  const
+    nullable = propConfig.nullable === true,
+    typeConstructor = propConfig.type || null,
+    constraint = propConfig.constraint || null;
+
+  if (it === undefined
+    && (!propConfig.hasOwnProperty('defaultValue')
+    || propConfig.defaultValue !== undefined)) {
+
+    errMsg = `Missing mandatory property '${propName}'`;
+  } else if (it === null && nullable === true) {
     // Perfectly fine
   } else if (it === null && nullable === false) {
-    errMsg = `Property '${propertyName}' must not be null`;
-  } else if (typeConstr !== undefined && typeConstr !== null) {
+    errMsg = `Property '${propName}' must not be null`;
+  } else if (typeConstructor !== undefined && typeConstructor !== null) {
     const type = typeof it;
     
-    switch (typeConstr) {
+    switch (typeConstructor) {
     case Boolean:
       if (type !== 'boolean') {
-        errMsg = `Property '${propertyName}' must be boolean`;
+        errMsg = `Property '${propName}' must be boolean`;
       }
       
       break;
       
     case Number:
       if (type !== 'number') {
-        errMsg = `Property '${propertyName}' must be a number`;
+        errMsg = `Property '${propName}' must be a number`;
       }
       
       break;
     
     case String:
       if (type !== 'string') {
-        errMsg = `Property '${propertyName}' must be a string`;
+        errMsg = `Property '${propName}' must be a string`;
       }
       
       break;
       
     case Function:
       if (type !== 'function') {
-        errMsg = `Property '${propertyName}' must be a function`;
+        errMsg = `Property '${propName}' must be a function`;
       }
       
       break;
       
     default:
-      if (typeConstr && !(it instanceof typeConstr)) {
-        errMsg = `The property '${propertyName}' must be of type '`
-          + typeConstr.name + "'";
+      if (typeConstructor && !(it instanceof typeConstructor)) {
+        errMsg = `The property '${propName}' must be of typeConstructor '`
+          + typeConstructor.name + "'";
       }
     }
   }
@@ -54,11 +64,11 @@ export default function validateProperty(it, propertyName, typeConstr, nullable,
         : constraint.validate(it);
     
     if (err === false) {
-      errMsg = `Illegal value for property '${propertyName}'`;
+      errMsg = `Illegal value for property '${propName}'`;
     } else if (typeof err === 'string') {
-      errMsg = `Invalid value for property '${propertyName}' => ${err}`;
+      errMsg = `Invalid value for property '${propName}' => ${err}`;
     } else if (err && typeof err.message === 'string') {
-      errMsg = `Invalid value for property '${propertyName}' => `
+      errMsg = `Invalid value for property '${propName}' => `
         + err.message;
     } else if (err) {
       errMsg = String(err);
