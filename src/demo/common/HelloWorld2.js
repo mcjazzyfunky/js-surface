@@ -37,5 +37,4 @@ const HelloWorld2 = defineComponent({
   }
 });
 
-
 export default Fragment(HelloWorld1(), HelloWorld2({ name: 'Julia Doe' }));

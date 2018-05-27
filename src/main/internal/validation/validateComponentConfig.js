@@ -56,6 +56,10 @@ const componentConfigSpec =
                       .usingHint('Must be a context'))
               })))),
 
+      validate:
+          Spec.optional(
+            Spec.function),
+
       methods:
         Spec.optional(
           Spec.arrayOf(

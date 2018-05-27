@@ -1,4 +1,5 @@
 import validateComponentConfig from '../internal/validation/validateComponentConfig';
+import validateProperty from '../internal/validation/validateProperty';
 import printError from '../internal/helper/printError';
 import createElement from './createElement';
 import convertNode from '../internal/conversion/convertNode';
@@ -288,9 +289,55 @@ function convertConfig(config) {
     }
   }
 
+  ret.propTypes = {
+    '*': props => {
+      let result = null;
+
+      const
+        messages = [],
+        normalizedProps = normalizeProps(props);
+
+      if (config.properties) {
+        const propNames = Object.keys(config.properties);
+
+        for (let i = 0; i < propNames.length; ++i) {
+          const
+            propName = propNames[i],
+            propValue = normalizedProps[propName],
+            propConfig = config.properties[propName],
+            type = propConfig.type || null,
+            constraint = propConfig.constraint || null,
+            nullable = propConfig.nullable === undefined ? true : propConfig.nullable,
+            result = validateProperty(propValue, propName, type, nullable, constraint);
+
+          if (result) {
+            messages.push(result.message);
+          }
+        }
+      }
+
+      if (config.validate) {
+        const error = config.validate(normalizedProps);
+
+        if (error) {
+          messages.push(error instanceof Error ? error.message : String(error));
+        }
+      }
+
+      if (messages.length === 1) {
+        result = new Error(messages[0]);
+      } else if (messages.length > 1) {
+        result = new Error(`\n- ${messages.join('\n- ')}`);
+      }
+
+      return result;
+    }
+  };
+
   return ret;
 }
 
+// TODO
 function normalizeProps(props) {
   let ret = props;
 

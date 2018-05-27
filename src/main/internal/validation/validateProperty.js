@@ -64,11 +64,10 @@ export default function validateProperty(it, propertyName, typeConstr, nullable,
       errMsg = String(err);
     }
   }
-  
-  
+
   if (errMsg) {
     ret = new Error(errMsg);
   } 
-  
+
   return ret;
 }
