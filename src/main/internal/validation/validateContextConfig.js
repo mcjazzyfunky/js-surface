@@ -8,6 +8,19 @@ const contextConfigSpec =
       displayName:
         Spec.string,
 
+      type:
+        Spec.optional(
+          Spec.function),
+
+      constraint:
+        Spec.optional(
+          Spec.or(
+            Spec.function,
+            Spec.extensibleShape({
+              validate: Spec.function
+            })
+          )),
+
       defaultValue:
          Spec.any
     }));

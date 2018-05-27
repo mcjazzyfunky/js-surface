@@ -2,6 +2,7 @@ import createElement from './createElement';
 import validateContextConfig from '../internal/validation/validateContextConfig';
 import printError from '../internal/helper/printError';
 import React from 'react';
+import validateProperty from '../internal/validation/validateProperty';
 
 export default function defineContext(config) {
   const error = validateContextConfig(config);
@@ -25,7 +26,17 @@ export default function defineContext(config) {
     Consumer = (...args) => {
       return createElement(Consumer, ...args);
     };
+    
+  internalContext.Provider.propTypes = {
+    value: props => {
+      const result = validateProperty(props.value, 'value', config);
 
+      return !result
+        ? null
+        : new Error(`Error while providing context "${config.displayName}": `
+          +  result.message);
+    }
+  };
 
   Object.defineProperty(Provider, '__internal_type', {
     enumerable: false,

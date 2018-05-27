@@ -1,8 +1,9 @@
 import { createElement as h, defineContext, defineComponent } from 'js-surface';
 import { Component } from 'js-surface/common';
 
-const ParentDisabledContext = defineContext({
-  displayName: 'ParentDisabledContext',
+const ParentDisabledCtx = defineContext({
+  displayName: 'ParentDisabledCtx',
+  type: Boolean,
   defaultValue: false
 });
 
@@ -32,7 +33,7 @@ const Parent = defineComponent({
   
     render() {
       return (
-        h(ParentDisabledContext.Provider,
+        h(ParentDisabledCtx.Provider,
           { value: this.state.disabled }, 
           h('div', null,
             h('div', null,
@@ -54,7 +55,7 @@ const Child = defineComponent({
         h('div', null,
           'This time information should never update: ',
           new Date().toLocaleTimeString(),
-          h(ParentDisabledContext.Consumer, parentDisabled => 
+          h(ParentDisabledCtx.Consumer, parentDisabled => 
             h('div', null,
               'Child component is ',
               parentDisabled ? 'disabled' : 'enabled',
