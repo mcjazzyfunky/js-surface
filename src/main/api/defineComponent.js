@@ -146,7 +146,7 @@ function deriveComponent(config) {
 function deriveSimpleComponent(config) {
   const
     convertedConfig = convertConfig(config),
-    ret = props => convertNode(config.main.render(props));
+    ret = props => convertNode(config.main.render(normalizeProps(props)));
 
   Object.assign(ret, convertedConfig);
   return ret;
@@ -167,7 +167,7 @@ function deriveAdvancedComponent(config) {
       this.__callbacksWhenBeforeUpate = [];
 
       const
-        getProps = () => !this.__isInitialized ? props : this.props,
+        getProps = () => normalizeProps(!this.__isInitialized ? props : this.props),
         getState = () => this.state,
 
         updateState = (updater, callback) => {
@@ -203,7 +203,7 @@ function deriveAdvancedComponent(config) {
 
       if (result.afterUpdate) {
         this.componentDidUpdate = (prevProps, prevState) => {
-          result.afterUpdate(prevProps, prevState);
+          result.afterUpdate(normalizeProps(prevProps), prevState);
         };
       }
 
@@ -217,7 +217,7 @@ function deriveAdvancedComponent(config) {
 
       if (result.needsUpdate) {
         this.shouldComponentUpdate = (nextProps, nextState) => {
-          return result.needsUpdate(nextProps, nextState);
+          return result.needsUpdate(normalizeProps(nextProps), nextState);
         };
       }
 
@@ -241,6 +241,12 @@ function deriveAdvancedComponent(config) {
         }
       }
     }
+  }
+  
+  if (config.main.deriveStateFromProps) {
+    Component.getDerivedStateFromProps = (props, state) => {
+      return config.main.deriveStateFromProps(normalizeProps(props), state);
+    };
   }
 
   if (config.isErrorBoundary) {
@@ -279,6 +285,26 @@ function convertConfig(config) {
           get: () => propCfg.getDefaultValue()
         }); 
       }
+    }
+  }
+
+  return ret;
+}
+
+function normalizeProps(props) {
+  let ret = props;
+
+  if (props
+    && 'children' in ret
+    && props.children !== null
+    && !(Array.isArray(props.children))) {
+   
+    ret = { ...props };
+
+    delete ret.children;
+
+    if (props.children) {
+      ret.children = [props.children];
     }
   }
 

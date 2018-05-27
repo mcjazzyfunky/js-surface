@@ -1,10 +1,5 @@
-import {
-  createElement as h,
-  defineComponent,
-  mount
-} from 'js-surface';
-
-import { Component } from 'js-surface/common/classes';
+import { createElement as h, defineComponent } from 'js-surface';
+import { Component } from 'js-surface/common';
 
 const MountUnmount = defineComponent({
   displayName: 'MountUnmount',
@@ -79,4 +74,4 @@ const ComponentB = defineComponent({
   }
 });
 
-mount(MountUnmount(), 'main-content');
+export default MountUnmount();

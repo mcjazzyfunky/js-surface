@@ -71,7 +71,8 @@ mount(Demo(), 'main-content');
 
 Now to the questions why React's API seems a bit suboptimal (be aware that
 the author of jsSurface is a very big fan of React, and thinks that
-React is really on the most ground-breaking libraries in UI development -
+React is really one the most ground-breaking libraries in UI development,
+in fact jsSurface is highly based on React's achievements -
 so please see the following comments as well-meant proposals for React's
 long-term evolution):
 
@@ -189,6 +190,13 @@ long-term evolution):
   with the exact same API as the React counterpart.
   But be aware this Component class is just an out-of-the-box add-on for
   convenience jsSurface does NOT depend on this add-on package at all.
+
+* React handles ```props.children``` in a quite awkward way:<br>
+  If there's only one children ```props.children``` is not an one-element
+  array but the child itself.<br>
+  This is handled differently in jsSurface:<br>
+  If there are one ore more children then ```props.children``` will always be
+  an array in jsSurface.
 
 * Reacts provides the possibility for a sophisticated validation of the
   components' properties, which is great.

@@ -18,6 +18,8 @@ import InnerHtml from './common/InnerHtml';
 import Contexts from './common/Contexts';
 import Injections from './common/Injections';
 import ErrorBoundaries from './common/ErrorBoundaries';
+import Children from './common/Children';
+import MountUnmount from './common/MountUnmount';
 
 export default [
   ['Hello World 1 (core)', HelloWorld1],
@@ -36,4 +38,6 @@ export default [
   ['Injections (common)', Injections],
   ['Internationalization (core)', I18n],
   ['Error boundaries (common)', ErrorBoundaries],
+  ['Children (common)', Children],
+  ['MountUnmount (common)', MountUnmount]
 ].map(([title, content]) => ({ title, content }));

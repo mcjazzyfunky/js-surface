@@ -99,7 +99,7 @@ class Component {
     }
   }
 
-  static getDerivedStateFromProps(/* nextProps, prevState */) {
+  static derivedStateFromProps(/* nextProps, prevState */) {
     return null;
   }
 
@@ -148,6 +148,10 @@ class Component {
         return result;
       }
     };
+
+    if (config.main.deriveStateFromProps !== Component.deriveStateFromProps) {
+      ret.deriveStateFromProps = config.main.deriveStateFromProps;
+    }
 
     return ret;
   }
