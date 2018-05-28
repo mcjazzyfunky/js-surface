@@ -323,8 +323,7 @@ export default defineComponent({
 
         Logger: {
             type: Logger,
-            inject: true,
-            defaultValue: Logger.getNopLogger()
+            inject: LoggerCtx
         },
 
         onChange: {
