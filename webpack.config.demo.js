@@ -43,7 +43,13 @@ module.exports = env => {
         ...(lib === 'dio' ? {
           'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
           'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
-        } : {})
+        } : {}),
+        
+        ...(lib === 'nerv' ? {
+          'react': path.resolve(__dirname, 'node_modules/nervjs/index.js'),
+          'react-dom': path.resolve(__dirname, 'node_modules/nervjs/index.js')
+        } : {}),
+        
       }
     },
     output: {
