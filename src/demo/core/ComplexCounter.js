@@ -11,7 +11,7 @@ const CounterInfo = defineComponent({
   },
 
   main: {
-    kind: 'basic',
+    functional: true,
 
     render(props) {
       return (
@@ -46,7 +46,7 @@ const Counter = defineComponent({
   methods: ['resetCounter'],
 
   main: {
-    kind: 'advanced',
+    functional: false,
 
     init(getProps, getState, updateState) {
       let counterValue;
@@ -103,7 +103,7 @@ const CounterCtrl = defineComponent({
   displayName: 'CounterCtrl',
 
   main: {
-    kind: 'advanced',
+    functional: false,
 
     init() {
       let counterInstance = null;

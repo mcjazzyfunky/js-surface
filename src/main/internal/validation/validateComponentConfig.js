@@ -81,21 +81,21 @@ const componentConfigSpec =
           },
           {
             when:
-              it => it && typeof it === 'object' && it.kind === 'basic',
+              it => it && typeof it === 'object' && it.functional === true,
 
             check:
               Spec.shape({
-                kind: Spec.is('basic'),
+                functional: Spec.is(true),
                 render: Spec.function
               })
           },
           {
             when:
-              it => it && typeof it === 'object' && it.kind === 'advanced',
+              it => it && typeof it === 'object' && it.functional === false,
 
             check:
               Spec.shape({
-                kind: Spec.is('advanced'),
+                functional: Spec.is(false),
                 init: Spec.function,
                 deriveStateFromProps: Spec.optional(Spec.function) 
               })

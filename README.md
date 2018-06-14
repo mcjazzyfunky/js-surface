@@ -289,7 +289,7 @@ export default defineComponent({
   },
 
   main: {
-    kind: 'basic', // indicates a stateless functional component
+    functional: true, // indicates a stateless functional component
 
     render({ name }) {
       return h('div', `Hello ${name}!`);
@@ -338,7 +338,7 @@ export default defineComponent({
     // isErrorBoundary: true | false -- not needed in this example
 
     main: {
-      kind: 'advanced', // indicates a complex component
+      functional: false, // indicates a complex component
 
       init(getProps, getState, updateState, forceUpdate) {
         // ... sorry, to complicated to show here in detail ....
@@ -381,10 +381,10 @@ export default defineComponent({
 **Important:
 
 Component configuration parameter "main" can - besides being object of the
-form { kind: 'basic'|'advanced', ... } - also be a function.
+form { functional: true | false, ... } - also be a function.
 This function then will be called (passing the component configuration
 as argument) to determine the main description object
-(=> { kind: 'basic'|'advanced', ... }).
+(=> { functional: true | false, ... }).
 If that function has itself a function called "normalizeComponent" then the
 "normalizeComponent" function will be used instead of the function itself to
 determine the main description object.

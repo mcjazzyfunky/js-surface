@@ -139,7 +139,7 @@ function prettifyErrorMsg(errorMsg, config) {
 }
 
 function deriveComponent(config) {
-  return config.main.kind === 'basic'
+  return config.main.functional
     ? deriveSimpleComponent(config)
     : deriveAdvancedComponent(config);
 }

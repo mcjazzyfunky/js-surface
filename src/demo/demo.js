@@ -6,7 +6,7 @@ const DemoSelector = defineComponent({
   displayName: 'DemoSelector',
 
   main: {
-    kind: 'advanced',
+    functional: false, 
 
     init(getProps, getState, updateState, forceUpdate) {
       let currDemoIdx = Math.floor(document.location.href.replace(/^.*idx=/, '')) || 0;
@@ -47,7 +47,7 @@ const Demo = defineComponent({
   displayName: 'Demo',
 
   main: {
-    kind: 'basic',
+    functional: true,
 
     render() {
       return h('div', h('div', DemoSelector()));

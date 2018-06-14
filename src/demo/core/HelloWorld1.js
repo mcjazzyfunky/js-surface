@@ -11,7 +11,7 @@ const HelloWorld = defineComponent({
   },
 
   main: {
-    kind: 'basic',
+    functional: true,
 
     render({ name }) {
       return h('div', `Hello ${name}!`);
