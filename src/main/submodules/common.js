@@ -136,9 +136,17 @@ class Component {
         };
 
         if (config.methods) {
-          result.callMethod = (name, args) => {
-            return component[name](...args  );
-          };
+          result.proxy = {};
+
+          for (let i = 0; i < config.methods; ++i) {
+            const methodName = config.methods[i];
+
+            result.proxy[methodName] = (...args) => {
+              return component[methodName](...args);
+            };
+          }
+          
+          Object.freeze(result.proxy);
         }
 
         if (config.isErrorBoundary) {

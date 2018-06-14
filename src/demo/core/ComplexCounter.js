@@ -82,21 +82,17 @@ const Counter = defineComponent({
                 }, 
                 '+'))
           );
+        },
+
+        proxy = {
+          resetCounter(n = 0) {
+            setCounterValue(n);
+          }
         };
       
       setCounterValue(0);
 
-      return {
-        render,
-
-        callMethod(name, args) {
-          if (name === 'resetCounter') {
-            const [n = 0] = args;
-
-            setCounterValue(n);
-          }
-        }
-      };
+      return { render, proxy };
     }
   }
 });

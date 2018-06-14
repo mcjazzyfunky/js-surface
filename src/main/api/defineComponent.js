@@ -214,6 +214,10 @@ function deriveAdvancedComponent(config) {
         };
       }
 
+      if (result.proxy) {
+        this.__proxy = result.proxy;
+      }
+
       this.__handleError = result.handleError || null;
 
       if (result.needsUpdate) {
@@ -225,9 +229,9 @@ function deriveAdvancedComponent(config) {
       this.render = () => convertNode(result.render());
 
       if (config.methods) {
-        for (const operationName of config.methods) {
-          Component.prototype[operationName] = function (...args) {
-            return result.callMethod(operationName, args);
+        for (const methodName of config.methods) {
+          Component.prototype[methodName] = function (/*arguments*/) {
+            return result.proxy[methodName].apply(result.proxy, arguments);
           };
         }
       }

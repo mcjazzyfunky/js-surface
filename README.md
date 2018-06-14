@@ -350,17 +350,19 @@ export default defineComponent({
         //   forceUpdate(callback) Refreshes the component view  
         //
         // Returns: {
-        //   render() renders the content and returns a virtual dom view
+        //   render() - renders the content and returns a virtual dom view
         //
-        //   beforeUpdate(nextProps, nextState) will be called before the
-        //                                      view will be updated.
+        //   beforeUpdate(nextProps, nextState) - will be called before the
+        //                                        view will be updated.
         //
-        //   afterUpdate(prevProps, prevState) will be called after the view
-        //                                     has been updated
+        //   afterUpdate(prevProps, prevState) - will be called after the view
+        //                                       has been updated
         //
         //   finalize() will be called when the component will be unmounted
         //
-        //   callMethod(methodName, args) calls a public method
+        //   proxy - object that has only the public methods (see component
+        //           configuration parameter "methods") of the component
+        //           as properties
         //
         //   handleError(error, info) will be called if a descendant component
         //                            throws an uncatched error (only needed
@@ -369,7 +371,7 @@ export default defineComponent({
         // }
         return {
             render,
-            callMethod,
+            proxy, 
             // [...]
         }
     }

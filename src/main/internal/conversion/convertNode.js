@@ -1,6 +1,5 @@
 import convertNodes from './convertNodes';
 import VirtualElement from '../element/VirtualElement';
-import RefProxy from '../proxy/RefProxy';
 
 import React from 'react';
 
@@ -34,14 +33,11 @@ export default function convertNode(node) {
     const oldRef = newProps.ref;
 
     newProps.ref = ref => {
-      const meta = ref && ref.__meta ? ref.__meta: null;
+      const proxy = ref && ref.__proxy ? ref.__proxy : null;
 
-      if (!meta) {
-        return oldRef(ref);
-      }
-
-      const refProxy = new RefProxy(ref, meta);
-      return oldRef(refProxy);
+      return proxy
+        ? oldRef(proxy)
+        : oldRef(ref);
     };
   }
 
