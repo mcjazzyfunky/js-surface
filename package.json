@@ -15,7 +15,7 @@
     "bootstrap": "^4.0.0",
     "chai": "^4.1.2",
     "compression-webpack-plugin": "^1.1.11",
-    "dio.js": "^9.0.3",
+    "dio.js": "^9.1.0",
     "esdoc": "^1.0.3",
     "eslint": "^3.13.1",
     "font-awesome": "^4.5.0",

@@ -76,7 +76,7 @@ const Container = defineComponent({
 
   main: class extends Component {
     shouldComponentUpdate() {
-      throw new Error('"shouldComponentUpdate" should never be called');
+      return false;
     }
 
     render() {

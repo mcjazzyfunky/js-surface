@@ -21,9 +21,15 @@ export default function mount(element, target) {
   }
 
   try {
-    ReactDOM.render(
-      React.createElement(React.StrictMode, null, convertNode(element)),
-      targetNode);
+    if (React.StrictMode) {
+      ReactDOM.render(
+        React.createElement(React.StrictMode, null, convertNode(element)),
+        targetNode);
+    } else {
+      ReactDOM.render(
+        React.createElement(convertNode(element)),
+        targetNode);
+    }
   } catch (e) {
     const errorMsg =
       e instanceof Error

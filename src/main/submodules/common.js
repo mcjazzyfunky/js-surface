@@ -124,6 +124,7 @@ class Component {
         const result = {
           render: component.render.bind(component),
           finalize: component.componentWillUnmount.bind(component),
+          needsUpdate: component.shouldComponentUpdate.bind(component),
 
           afterUpdate: (prevProps, prevState) => {
             if (!isInitialized) {
