@@ -13,8 +13,8 @@ module.exports = env => {
   return {
     mode: modeName,
     entry: {
-      'js-surface': './src/main/js-surface.js',
-      'common': './src/main/submodules/common.js',
+      'jsSurface': './src/main/js-surface.js',
+      'jsSurfaceCommon': './src/main/submodules/common.js',
     },
     devtool: modeName === 'production' ? false : 'inline-source-map',
     module: {
@@ -43,9 +43,17 @@ module.exports = env => {
       }
     },
     output: {
-      filename: (typeName === 'umd' ? '' : `${typeName}/`) + `[name].${modeName}.js`,
+      filename: ({ chunk }) => {
+        const
+          name = chunk.name,
+          base = name === 'jsSurface' ? 'js-surface' : 'common';
+       
+        return (typeName === 'umd'
+          ? ''
+          : `${typeName}/`) + `${base}.${modeName}.js`;
+      },
       path: path.resolve(__dirname, 'dist'),
-      library: 'jsSurface',
+      library: '[name]',
       libraryTarget: typeName === 'cjs' ? 'commonjs2' : typeName
     },
     plugins: [

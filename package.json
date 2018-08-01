@@ -1,9 +1,14 @@
 {
   "name": "js-surface",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
-  "main": "dist/react.js",
+  "main": "dist/js-surface.production.js",
+  "unpkg": "dist/js-surface.production.js",
+  "jsdelivr": "dist/js-surface.production.js",
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
@@ -44,7 +49,7 @@
     "build-dev": "npm run build-dev-umd && npm run build-dev-cjs && npm run build-dev-amd",
     "build-prod": "npm run build-prod-umd && npm run build-prod-cjs && npm run build-prod-amd",
     "test": "node_modules/.bin/mocha src/test/**/*.js",
-    "test-watch": "node_modules/.bin/mocha -w src/test/**/*.jss",
+    "test-watch": "node_modules/.bin/mocha -w src/test/**/*.js",
     "dist": "npm run clean && npm run test && npm run build-dev && npm run build-prod",
     "demo": "webpack-dev-server --config webpack.config.demo.js --watch --open"
   }
