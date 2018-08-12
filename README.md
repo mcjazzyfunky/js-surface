@@ -80,7 +80,7 @@ long-term evolution):
 
   While the following JSX syntax is really nice...
 
-  ```html
+  ```jsx
   <FancyHeader>Some headline</FancyHeader>
   ```
   ... its non-JSX counterpart looks quite verbose ...
