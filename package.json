@@ -1,13 +1,13 @@
 {
   "name": "js-surface",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "main": "dist/js-surface.production.js",
   "unpkg": "dist/js-surface.production.js",
   "jsdelivr": "dist/js-surface.production.js",
   "files": [
-    "dist/"
+    "dist"
   ],
   "devDependencies": {
     "babel": "^6.23.0",
@@ -17,9 +17,11 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "bestzip": "^1.1.6",
     "bootstrap": "^4.0.0",
     "chai": "^4.1.2",
     "compression-webpack-plugin": "^1.1.11",
+    "copyfiles": "^2.0.0",
     "dio.js": "^9.1.0",
     "esdoc": "^1.0.3",
     "eslint": "^3.13.1",
@@ -50,7 +52,8 @@
     "build-prod": "npm run build-prod-umd && npm run build-prod-cjs && npm run build-prod-amd",
     "test": "node_modules/.bin/mocha src/test/**/*.js",
     "test-watch": "node_modules/.bin/mocha -w src/test/**/*.js",
-    "dist": "npm run clean && npm run test && npm run build-dev && npm run build-prod",
+    "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
+    "dist": "npm run clean && npm run test && npm run build-dev && npm run build-prod && npm run zipsource",
     "demo": "webpack-dev-server --config webpack.config.demo.js --watch --open"
   }
 }
