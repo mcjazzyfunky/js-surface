@@ -66,19 +66,21 @@ export default function createPropsAdjuster(config) {
       }
     }
 
-    if (validating) {
-      const err = validateProps(adjustedProps, validations);
+    if (process.env.NODE_ENV === 'development') {
+      if (validating) {
+        const err = validateProps(adjustedProps, validations);
 
-      if (err) {
-        const errMsg = 'Error while validating props for ' 
-          +  `'${componentName}': ${err.message}`;
+        if (err) {
+          const errMsg = 'Error while validating props for ' 
+            +  `'${componentName}': ${err.message}`;
 
-        printError(errMsg);
+          printError(errMsg);
 
-        printError(`Negatively validated props for '${componentName}':`,
-          props);
+          printError(`Negatively validated props for '${componentName}':`,
+            props);
 
-        throw new Error(errMsg);
+          throw new Error(errMsg);
+        }
       }
     }
 

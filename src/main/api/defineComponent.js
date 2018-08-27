@@ -2,18 +2,19 @@ import validateComponentConfig from '../internal/validation/validateComponentCon
 import validateProperty from '../internal/validation/validateProperty';
 import printError from '../internal/helper/printError';
 import createElement from './createElement';
-import convertNode from '../internal/conversion/convertNode';
 
-import React from 'react';
+import preact from 'preact';
 
 export default function defineComponent(config) {
-  const error = validateComponentConfig(config);
+  if (process.env.NODE_ENV === 'development') {
+    const error = validateComponentConfig(config);
 
-  if (error) {
-    const errorMsg = prettifyErrorMsg(error.message, config);
+    if (error) {
+      const errorMsg = prettifyErrorMsg(error.message, config);
 
-    printError(errorMsg);
-    throw new TypeError(errorMsg);
+      printError(errorMsg);
+      throw new TypeError(errorMsg);
+    }
   }
 
   const normalizedConfig = { ...config };
@@ -55,7 +56,7 @@ export default function defineComponent(config) {
     if (injectedContexts.length > 0) {
       const innerComponent = internalType;
 
-      internalType = class CustomComponent extends React.Component {
+      internalType = class CustomComponent extends preact.Component {
         constructor(props) {
           super(props);
 
@@ -71,7 +72,7 @@ export default function defineComponent(config) {
 
           for (let i = 0; i < injectedContexts.length; ++i) {
             if (i === 0) {
-              node = React.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
+              node = preact.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
                 contextValues[0] = value;
 
                 for (let j = 0; j < contextInfoPairs.length; ++j) {
@@ -82,12 +83,12 @@ export default function defineComponent(config) {
                   }
                 }
 
-                return React.createElement(innerComponent, adjustedProps);
+                return preact.createElement(innerComponent, adjustedProps);
               });
             } else {
               const currNode = node;
               
-              node = React.createElement(injectedContexts[i].Consumer, null, value => {
+              node = preact.createElement(injectedContexts[i].Consumer, null, value => {
                 contextValues[i] = value;
 
                 return currNode;
@@ -147,7 +148,7 @@ function deriveComponent(config) {
 function deriveSimpleComponent(config) {
   const
     convertedConfig = convertConfig(config),
-    ret = props => convertNode(config.main.render(normalizeProps(props)));
+    ret = props => config.main.render(normalizeProps(props));
 
   Object.assign(ret, convertedConfig);
   return ret;
@@ -158,7 +159,7 @@ function deriveAdvancedComponent(config) {
 
   const convertedConfig = convertConfig(config);
 
-  class Component extends React.Component {
+  class Component extends preact.Component {
     constructor(props) {
       super(props);
 
@@ -226,7 +227,7 @@ function deriveAdvancedComponent(config) {
         };
       }
 
-      this.render = () => convertNode(result.render());
+      this.render = () => result.render();
 
       if (config.methods) {
         for (const methodName of config.methods) {
@@ -293,64 +294,66 @@ function convertConfig(config) {
     }
   }
 
-  ret.propTypes = {
-    '*': props => {
-      let result = null;
+  if (process.env.NODE_ENV === 'development') {
+    ret.propTypes = {
+      '*': props => {
+        let result = null;
 
-      const
-        propNames = config.properties ? Object.keys(config.properties) : [],
-        messages = [],
-        normalizedProps = normalizeProps(props);
+        const
+          propNames = config.properties ? Object.keys(config.properties) : [],
+          messages = [],
+          normalizedProps = normalizeProps(props);
 
-      if (config.properties) {
-        for (let i = 0; i < propNames.length; ++i) {
-          const
-            propName = propNames[i],
-            propValue = normalizedProps[propName],
-            propConfig = config.properties[propName],
-            result = validateProperty(propValue, propName, propConfig);
+        if (config.properties) {
+          for (let i = 0; i < propNames.length; ++i) {
+            const
+              propName = propNames[i],
+              propValue = normalizedProps[propName],
+              propConfig = config.properties[propName],
+              result = validateProperty(propValue, propName, propConfig);
 
-          if (result) {
-            messages.push(result.message);
+            if (result) {
+              messages.push(result.message);
+            }
           }
         }
-      }
 
-      const
-        usedPropNames = Object.keys(props),
-        invalidPropNames = [];
+        const
+          usedPropNames = Object.keys(props),
+          invalidPropNames = [];
 
-      for (let i = 0; i < usedPropNames.length; ++i) {
-        const usedPropName = usedPropNames[i];
+        for (let i = 0; i < usedPropNames.length; ++i) {
+          const usedPropName = usedPropNames[i];
 
-        if (!config.properties.hasOwnProperty(usedPropName)) {
-          invalidPropNames.push(usedPropName);
+          if (!config.properties.hasOwnProperty(usedPropName)) {
+            invalidPropNames.push(usedPropName);
+          }
         }
-      }
 
-      if (invalidPropNames.length == 1) {
-        messages.push(`Invalid prop key "${invalidPropNames[0]}"`);
-      } else if (invalidPropNames.length > 1) {
-        messages.push('Invalid prop keys: ' + invalidPropNames.join(', '));
-      }
-
-      if (config.validate) {
-        const error = config.validate(normalizedProps);
-
-        if (error) {
-          messages.push(error instanceof Error ? error.message : String(error));
+        if (invalidPropNames.length == 1) {
+          messages.push(`Invalid prop key "${invalidPropNames[0]}"`);
+        } else if (invalidPropNames.length > 1) {
+          messages.push('Invalid prop keys: ' + invalidPropNames.join(', '));
         }
-      }
 
-      if (messages.length === 1) {
-        result = new Error(messages[0]);
-      } else if (messages.length > 1) {
-        result = new Error(`\n- ${messages.join('\n- ')}`);
-      }
+        if (config.validate) {
+          const error = config.validate(normalizedProps);
 
-      return result;
-    }
-  };
+          if (error) {
+            messages.push(error instanceof Error ? error.message : String(error));
+          }
+        }
+
+        if (messages.length === 1) {
+          result = new Error(messages[0]);
+        } else if (messages.length > 1) {
+          result = new Error(`\n- ${messages.join('\n- ')}`);
+        }
+
+        return result;
+      }
+    };
+  }
 
   return ret;
 }

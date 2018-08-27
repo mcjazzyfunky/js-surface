@@ -1,3 +1,3 @@
-import React from 'react';
+import preact from 'preact';
 
-export default React.createPortal;
+export default preact.createPortal;

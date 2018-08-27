@@ -1,4 +1,6 @@
-import VirtualElement from '../internal/element/VirtualElement';
+import preact from 'preact';
+
+const VNode = preact.h('a', null).constructor;
 
 export default function createElement(/* arguments */) {
   const
@@ -7,7 +9,7 @@ export default function createElement(/* arguments */) {
     secondArg = arguments[1],
 
     skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
-        && (typeof secondArg !== 'object' || secondArg instanceof VirtualElement
+        && (typeof secondArg !== 'object' || secondArg instanceof VNode
           || typeof secondArg[Symbol.iterator] === 'function'),
 
     hasChildren = argCount > 2 || argCount === 2 && skippedProps;
@@ -52,7 +54,9 @@ export default function createElement(/* arguments */) {
     props = secondArg || null;
   }
 
-  const ret = Object.create(VirtualElement.prototype);
+  const internalType = arguments[0].__internal_type || arguments[0]
+
+  const ret = preact.createElement(internalType, props);
 
   ret.type = type;
   ret.props = props;

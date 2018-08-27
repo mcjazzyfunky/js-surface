@@ -1,8 +1,5 @@
 import isElement from './isElement';
-import convertNode from '../internal/conversion/convertNode';
-
-import React from 'react';
-import ReactDOM from 'react-dom';
+import preact from 'preact';
 
 export default function mount(element, target) {
   if (!isElement(element)) {
@@ -21,15 +18,9 @@ export default function mount(element, target) {
   }
 
   try {
-    if (React.StrictMode) {
-      ReactDOM.render(
-        React.createElement(React.StrictMode, null, convertNode(element)),
-        targetNode);
-    } else {
-      ReactDOM.render(
-        React.createElement(convertNode(element)),
-        targetNode);
-    }
+    preact.render(
+      element,
+      targetNode);
   } catch (e) {
     const errorMsg =
       e instanceof Error

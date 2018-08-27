@@ -1,14 +1,13 @@
-import { createElement } from 'js-surface';
+import { createElement, defineComponent } from 'js-surface';
+import { Component } from 'js-surface/common';
 import hyperscript from 'js-hyperscript/surface';
-//import { Html } from 'js-dom-factories/surface';
+import { h } from 'preact';
 
 function runTests() {
   const
     iterationCount = 100000,
-    contentContainer = document.getElementById('main-content'),
     tests = [];
 
-  contentContainer.innerHTML = 'Please wait - performance stests are running ...';
   let report = '';
 
   tests.push({
@@ -94,6 +93,19 @@ function runTests() {
   return report;
 }
 
-const report = runTests();
+const Test1 = defineComponent({
+  displayName: 'Test1',
 
-export default createElement('pre', report);
+  main: class extends Component {
+    componentDidMount() {
+      this.report = runTests();
+      this.forceUpdate();
+    }
+
+    render() {
+      return h('pre', null, this.report);
+    }
+  }
+});
+
+export default createElement(Test1);

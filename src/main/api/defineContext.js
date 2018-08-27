@@ -1,21 +1,23 @@
 import createElement from './createElement';
 import validateContextConfig from '../internal/validation/validateContextConfig';
 import printError from '../internal/helper/printError';
-import React from 'react';
+import { createContext } from 'preact-context';
 import validateProperty from '../internal/validation/validateProperty';
 
 export default function defineContext(config) {
-  const error = validateContextConfig(config);
+  if (process.env.NODE_ENV === 'development') {
+    const error = validateContextConfig(config);
 
-  if (error) {
-    const errorMsg = prettifyErrorMsg(error.message, config);
+    if (error) {
+      const errorMsg = prettifyErrorMsg(error.message, config);
 
-    printError(errorMsg);
-    throw new TypeError(errorMsg);
+      printError(errorMsg);
+      throw new TypeError(errorMsg);
+    }
   }
 
   const
-    internalContext = React.createContext(config.defaultValue),
+    internalContext = createContext(config.defaultValue),
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 
@@ -26,17 +28,19 @@ export default function defineContext(config) {
     Consumer = (...args) => {
       return createElement(Consumer, ...args);
     };
-    
-  internalContext.Provider.propTypes = {
-    value: props => {
-      const result = validateProperty(props.value, 'value', config);
+  
+  if (process.env.NODE_ENV === 'development') {
+    internalContext.Provider.propTypes = {
+      value: props => {
+        const result = validateProperty(props.value, 'value', config);
 
-      return !result
-        ? null
-        : new Error(`Error while providing context "${config.displayName}": `
-          +  result.message);
-    }
-  };
+        return !result
+          ? null
+          : new Error(`Error while providing context "${config.displayName}": `
+            +  result.message);
+      }
+    };
+  }
 
   Object.defineProperty(Provider, '__internal_type', {
     enumerable: false,

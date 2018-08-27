@@ -1,14 +1,13 @@
 const
   path = require('path'),
+  webpack = require('webpack'),
   CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = env => {
   const
     { mode, type } = env || {},
     modeName = mode === 'production' ? 'production' : 'development',
-    typeName = ['cjs', 'amd'].includes(type) ? type : 'umd',
-    //lib = env && env.lib === 'dio' ? 'dio' : 'react'
-    lib = 'react';
+    typeName = ['cjs', 'amd'].includes(type) ? type : 'umd';
   
   return {
     mode: modeName,
@@ -17,6 +16,10 @@ module.exports = env => {
       'jsSurfaceCommon': './src/main/submodules/common.js',
     },
     devtool: modeName === 'production' ? false : 'inline-source-map',
+    externals: {
+      'preact': 'preact',
+      //'preact-context': 'preact.context'
+    },
     module: {
       unknownContextCritical: false,
       rules: [
@@ -36,10 +39,6 @@ module.exports = env => {
     resolve: {
       extensions: ['.js'],
       alias: {
-        ...(lib === 'dio' ? {
-          'react': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js'),
-          'react-dom': path.resolve(__dirname, 'node_modules/dio.js/dist/umd.min.js')
-        } : {})
       }
     },
     output: {
@@ -57,6 +56,9 @@ module.exports = env => {
       libraryTarget: typeName === 'cjs' ? 'commonjs2' : typeName
     },
     plugins: [
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: JSON.stringify(modeName)
+      }),
       new CompressionPlugin()
     ]
   };

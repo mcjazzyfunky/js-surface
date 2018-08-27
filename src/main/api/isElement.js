@@ -1,3 +1,5 @@
-import VirtualElement from '../internal/element/VirtualElement';
+import preact from 'preact';
 
-export default it => it instanceof VirtualElement;
+const VNode = preact.h('a', null).constructor;
+
+export default it => it instanceof VNode;
