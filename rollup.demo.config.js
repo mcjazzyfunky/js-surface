@@ -21,11 +21,12 @@ function createRollupConfig(productive) {
 
       globals: {
         'js-spec': 'jsSpec',
-        'preact': 'preact'
+        'preact': 'preact',
+        'preact-context': 'preactContext'
       }
     },
 
-    external: [],
+    external: ['preact', 'js-spec', 'preact-context'],
 
     plugins: [
       resolve({

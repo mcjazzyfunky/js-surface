@@ -95,6 +95,8 @@ export default function createElement(/* arguments */) {
     })
   }
 
+
+
   const
     vnode = preact.h(internalType, props),
     
@@ -106,35 +108,33 @@ export default function createElement(/* arguments */) {
   
     ret = new ExtVNode()
 
+
   Object.defineProperty(ret, 'internal', {
     enumerable: false,
     value: internal
   })
 
   ret.type = type
-  ret.ref = !props ? null : props.ref || null
-  ret.props = props || null
   ret.key = !props ? null : props.key || null
+  ret.ref = !props ? null : props.ref || null
+  ret.props =  props
 
-  if (props) {
-    if (props.hasOwnProperty('key')) {
-      const key = props.key
+  if (props && (props.key || props.ref)) {
+    ret.props = Object.assign({}, props) 
+    delete ret.props.key
+    delete ret.props.ref
 
-      Object.defineProperty(props, 'key', {
-        enumerable: false,
-        value: key
-      })
-    }
-    
-    if (props.hasOwnProperty('ref')) {
+    if (props.ref) {
       const ref = props.ref
+      const preactRef = it => {
+        let proxy = it && it.__proxy
 
-      Object.defineProperty(props, 'ref', {
-        enumerable: false,
-        value: ref
-      })
+        ref(proxy || it)
+      }
+
+      props.ref = preactRef
     }
   }
 
-  return ret
+  return  ret
 }
