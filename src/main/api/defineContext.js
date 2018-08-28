@@ -1,4 +1,5 @@
-import Platform from '../internal/platform/Platform.js'
+import preact from 'preact'
+import preactContext from 'preact-context'
 import validateContextConfig from '../internal/validation/validateContextConfig'
 import printError from '../internal/helper/printError'
 import validateProperty from '../internal/validation/validateProperty'
@@ -16,16 +17,16 @@ export default function defineContext(config) {
   }
 
   const
-    internalContext = Platform.createContext(config.defaultValue),
+    internalContext = preactContext.createContext(config.defaultValue),
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 
     Provider = function (...args) {
-      return Platform.createElement(Provider, ...args)
+      return preact.createElement(Provider, ...args)
     },
 
     Consumer = (...args) => {
-      return Platform.createElement(Consumer, ...args)
+      return preact.createElement(Consumer, ...args)
     }
   
   if (process.env.NODE_ENV === 'development') {

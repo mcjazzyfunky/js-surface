@@ -1,3 +1,1 @@
-import Platform from '../internal/platform/Platform'
-
-export default Platform.createPortal
+export default null // TODO

@@ -1,8 +1,9 @@
-import Platform from '../internal/platform/Platform'
 import validateComponentConfig from '../internal/validation/validateComponentConfig'
 import validateProperty from '../internal/validation/validateProperty'
 import printError from '../internal/helper/printError'
 import createElement from './createElement'
+
+import preact from 'preact'
 
 export default function defineComponent(config) {
   if (process.env.NODE_ENV === 'development') {
@@ -55,7 +56,7 @@ export default function defineComponent(config) {
     if (injectedContexts.length > 0) {
       const innerComponent = internalType
 
-      internalType = class CustomComponent extends Platform.Component {
+      internalType = class CustomComponent extends preact.Component {
         constructor(props) {
           super(props)
 
@@ -71,7 +72,7 @@ export default function defineComponent(config) {
 
           for (let i = 0; i < injectedContexts.length; ++i) {
             if (i === 0) {
-              node = Platform.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
+              node = preact.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
                 contextValues[0] = value
 
                 for (let j = 0; j < contextInfoPairs.length; ++j) {
@@ -82,12 +83,12 @@ export default function defineComponent(config) {
                   }
                 }
 
-                return Platform.createElement(innerComponent, adjustedProps)
+                return preact.createElement(innerComponent, adjustedProps)
               })
             } else {
               const currNode = node
               
-              node = Platform.createElement(injectedContexts[i].Consumer, null, value => {
+              node = preact.createElement(injectedContexts[i].Consumer, null, value => {
                 contextValues[i] = value
 
                 return currNode
@@ -158,7 +159,7 @@ function deriveAdvancedComponent(config) {
 
   const convertedConfig = convertConfig(config)
 
-  class Component extends Platform.Component {
+  class Component extends preact.Component {
     constructor(props) {
       super(props)
 

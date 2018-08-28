@@ -1,7 +1,10 @@
-import Platform from '../internal/platform/Platform'
 import convertIterablesToArrays from '../internal/helper/convertIterablesToArrays';
 
-let ExtVNode = null // will be set later
+import preact from 'preact'
+
+let
+  VNode = preact.h('a').constructor, 
+  ExtVNode = null // will be set later
 
 export default function createElement(/* arguments */) {
   const
@@ -10,7 +13,7 @@ export default function createElement(/* arguments */) {
     secondArg = arguments[1],
 
     skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
-        && (typeof secondArg !== 'object' || Platform.isValidElement(secondArg)
+        && (typeof secondArg !== 'object' || secondArg instanceof VNode
           || typeof secondArg[Symbol.iterator] === 'function'),
 
     hasChildren = argCount > 2 || argCount === 2 && skippedProps
@@ -60,12 +63,9 @@ export default function createElement(/* arguments */) {
   const internalType = arguments[0].__internal_type || arguments[0]
 
   if (!ExtVNode) {
-    const VNode = Platform.createElement('a').constructor
-
     ExtVNode = {
-      VirtualElement: function () {
-        VNode.apply(this, arguments)
-      } // To make sure that the name is VirtualElement (even when minified)
+      VirtualElement() { // to make sure it's called "VirtualElement" even if minified
+      }
     }.VirtualElement
 
     ExtVNode.prototype = Object.create(VNode.prototype, {
@@ -96,20 +96,20 @@ export default function createElement(/* arguments */) {
   }
 
   const
-    vnode = Platform.createElement(internalType, props),
+    vnode = preact.h(internalType, props),
     
     internal = {
       nodeName: vnode.nodeName,
       attributes: vnode.attributes,
       children: vnode.children
     },
+  
+    ret = new ExtVNode()
 
-    ret = Object.create(ExtVNode.prototype, {
-      internal: {
-        enumerable: false,
-        value: internal
-      }
-    })
+  Object.defineProperty(ret, 'internal', {
+    enumerable: false,
+    value: internal
+  })
 
   ret.type = type
   ret.ref = !props ? null : props.ref || null

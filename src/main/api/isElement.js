@@ -1,3 +1,5 @@
-import Platform from '../internal/platform/Platform'
+import preact from 'preact'
 
-export default it => Platform.isValidElement(it)
+const VNode = preact.h('a').constructor
+
+export default it => it instanceof VNode 

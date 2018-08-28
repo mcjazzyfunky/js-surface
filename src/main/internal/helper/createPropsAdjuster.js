@@ -97,14 +97,6 @@ function validateProps(props, validations) {
     ? new Set(Object.getOwnPropertyNames(props))
     : new Set()
 
-  // Depending on the platform they may be still available
-  keysToBeChecked.delete('ref')
-  keysToBeChecked.delete('key')
-
-  // TODO: That's not really nice - make it better!
-  // Ignore children
-  keysToBeChecked.delete('children')
-
   for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
     let prop = props[propertyName]
 

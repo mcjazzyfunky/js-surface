@@ -1,4 +1,4 @@
-import Platform from '../internal/platform/Platform'
+import preact from 'preact'
 
 export default function unmount(target) {
   const targetNode =
@@ -6,5 +6,5 @@ export default function unmount(target) {
       ? document.getElementById(target)
       : target
 
-  Platform.unmountComponentAtNode(targetNode)
+  preact.unmountComponentAtNode(targetNode)
 }

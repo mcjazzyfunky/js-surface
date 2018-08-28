@@ -1,5 +1,6 @@
-import Platform from '../internal/platform/Platform'
 import isElement from './isElement'
+
+import preact from 'preact'
 
 export default function mount(element, target) {
   if (!isElement(element)) {
@@ -18,7 +19,7 @@ export default function mount(element, target) {
   }
 
   try {
-    Platform.render(
+    preact.render(
       element,
       targetNode)
   } catch (e) {
