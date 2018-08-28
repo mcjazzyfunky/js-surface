@@ -48,6 +48,6 @@
     "test": "node_modules/.bin/mocha src/test/**/*.js",
     "test-watch": "node_modules/.bin/mocha -w src/test/**/*.js",
     "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
-    "dist": "npm run clean && npm run test && npm run build && npm run zipsource",
+    "dist": "npm run clean && npm run test && npm run build && npm run zipsource"
   }
 }
