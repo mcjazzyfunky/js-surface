@@ -17,7 +17,7 @@ function createRollupConfig(productive) {
 
       format: 'umd',
       name: 'jsSurface', 
-      sourcemap: productive ? false : 'inline',
+      sourcemap: 'inline',
 
       globals: {
         'js-spec': 'jsSpec',
@@ -35,19 +35,10 @@ function createRollupConfig(productive) {
       }),
       alias({
         'js-surface/common': path.resolve(__dirname, 'src/main/submodules/common.js'),
-        'js-surface': path.resolve(__dirname, 'src/main/js-surface.js'),
+        'js-surface': path.resolve(__dirname, 'src/main/js-surface.js')
       }),
       commonjs({
         namedExports: {
-          'src/main/js-surface.js': [
-            'createElement',
-            'isElement',
-            'isNode',
-            'defineComponent',
-            'defineContext',
-            'createPortal',
-            'defineContext',
-          ],
           'node_modules/js-spec/dist/js-spec.js': ['Spec']
         }
       }),

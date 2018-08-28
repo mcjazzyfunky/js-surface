@@ -55,3 +55,5 @@ const Demo = defineComponent({
 })
 
 mount(Demo(), 'main-content')
+
+console.log(h(Demo, { a: 1, b: 2, key: 'a-key', ref: () => {} }, 11, 22))

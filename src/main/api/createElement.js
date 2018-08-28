@@ -1,4 +1,5 @@
 import Platform from '../internal/platform/Platform'
+import convertIterablesToArrays from '../internal/helper/convertIterablesToArrays';
 
 export default function createElement(/* arguments */) {
   const
@@ -24,6 +25,8 @@ export default function createElement(/* arguments */) {
     for (let i = 0; i < childCount; ++i) {
       children[i] = arguments[firstChildIdx + i]
     }
+
+    children = convertIterablesToArrays(children) // TODO: Optimize
   }
 
   let props = null
