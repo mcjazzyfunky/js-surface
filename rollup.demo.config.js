@@ -17,7 +17,7 @@ function createRollupConfig(productive) {
 
       format: 'umd',
       name: 'jsSurface', 
-      sourcemap: 'inline',
+      sourcemap: false,
 
       globals: {
         'js-spec': 'jsSpec',

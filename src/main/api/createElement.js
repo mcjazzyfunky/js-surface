@@ -1,6 +1,8 @@
 import Platform from '../internal/platform/Platform'
 import convertIterablesToArrays from '../internal/helper/convertIterablesToArrays';
 
+let ExtVNode = null // will be set later
+
 export default function createElement(/* arguments */) {
   const
     argCount = arguments.length,
@@ -57,10 +59,82 @@ export default function createElement(/* arguments */) {
 
   const internalType = arguments[0].__internal_type || arguments[0]
 
-  const ret = Platform.createElement(internalType, props)
+  if (!ExtVNode) {
+    const VNode = Platform.createElement('a').constructor
+
+    ExtVNode = {
+      VirtualElement: function () {
+        VNode.apply(this, arguments)
+      } // To make sure that the name is VirtualElement (even when minified)
+    }.VirtualElement
+
+    ExtVNode.prototype = Object.create(VNode.prototype, {
+      nodeName: {
+        enumerable: false,
+
+        get: function () {
+          return this.internal.nodeName
+        }
+      },
+
+      attributes: {
+        enumerable: false,
+
+        get: function () {
+          return this.internal.attributes
+        }
+      },
+
+      children: {
+        enumerable: false,
+
+        get: function () {
+          return this.internal.children
+        }
+      }
+    })
+  }
+
+  const
+    vnode = Platform.createElement(internalType, props),
+    
+    internal = {
+      nodeName: vnode.nodeName,
+      attributes: vnode.attributes,
+      children: vnode.children
+    },
+
+    ret = Object.create(ExtVNode.prototype, {
+      internal: {
+        enumerable: false,
+        value: internal
+      }
+    })
 
   ret.type = type
-  ret.props = props
+  ret.ref = !props ? null : props.ref || null
+  ret.props = props || null
+  ret.key = !props ? null : props.key || null
+
+  if (props) {
+    if (props.hasOwnProperty('key')) {
+      const key = props.key
+
+      Object.defineProperty(props, 'key', {
+        enumerable: false,
+        value: key
+      })
+    }
+    
+    if (props.hasOwnProperty('ref')) {
+      const ref = props.ref
+
+      Object.defineProperty(props, 'ref', {
+        enumerable: false,
+        value: ref
+      })
+    }
+  }
 
   return ret
 }

@@ -21,8 +21,9 @@ function createRollupConfig(moduleFormat, productive) {
       sourcemap: productive ? false : 'inline',
 
       globals: {
+        'js-surface': 'jsSurface',
         'js-spec': 'jsSpec',
-        'preact': 'preact'
+        'preact': 'preact',
       }
     },
 
