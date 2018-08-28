@@ -1,5 +1,7 @@
 import '@babel/polyfill'
+import 'preact/devtools'
 import { createElement as h, defineComponent, mount } from 'js-surface'
+
 import demos from './available-demos'
 
 const DemoSelector = defineComponent({
