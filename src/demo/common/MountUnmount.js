@@ -1,77 +1,77 @@
-import { createElement as h, defineComponent } from 'js-surface';
-import { Component } from 'js-surface/common';
+import { createElement as h, defineComponent } from 'js-surface'
+import { Component } from 'js-surface/common'
 
 const MountUnmount = defineComponent({
   displayName: 'MountUnmount',
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
-      this.__interval = null;
-      this.__showFoo = true;
+      this.__interval = null
+      this.__showFoo = true
     }
 
     componentDidMount() {
       this.__interval = setInterval(() => {
-        this.__showFoo = !this.__showFoo;
-        this.forceUpdate();
-      }, 3000);
+        this.__showFoo = !this.__showFoo
+        this.forceUpdate()
+      }, 3000)
     }
 
     componentWillUnmount() {
-      clearInterval(this.__interval);
-      this.__interval = null;
+      clearInterval(this.__interval)
+      this.__interval = null
     }
 
     render() {
       return this.__showFoo
         ? ComponentA({ ref: this.refCallback.bind(this, 'ComponentA') })
-        : ComponentB({ ref: this.refCallback.bind(this, 'ComponentB')});
+        : ComponentB({ ref: this.refCallback.bind(this, 'ComponentB')})
     }
 
     refCallback(type, ref) {
-      console.log(`Invoked ref callback - ${type}: `, String(ref));
+      console.log(`Invoked ref callback - ${type}: `, String(ref))
     }
   }
-});
+})
 
 const ComponentA = defineComponent({
   displayName: 'ComponentA',
 
   main: class extends Component {
     componentDidMount() {
-      console.log('Did mount ComponentA...');
+      console.log('Did mount ComponentA...')
     }
 
     componentWillUnmount() {
-      console.log('Will unmount ComponentA...');
+      console.log('Will unmount ComponentA...')
     }
 
     render() {
       return h('div', null,
-        ' - - - ComponentA - - - ');
+        ' - - - ComponentA - - - ')
     }
   }
-});
+})
 
 const ComponentB = defineComponent({
   displayName: 'ComponentB',
 
   main: class extends Component {
     onDidMount() {
-      console.log('Did mount ComponentB..');
+      console.log('Did mount ComponentB..')
     }
 
     onWillUnmount() {
-      console.log('Will unmount ComponentB...');
+      console.log('Will unmount ComponentB...')
     }
 
     render() {
       return h('div', null,
-        ' - - - ComponentB - - - ');
+        ' - - - ComponentB - - - ')
     }
   }
-});
+})
 
-export default MountUnmount();
+export default MountUnmount()

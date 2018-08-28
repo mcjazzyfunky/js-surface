@@ -1,12 +1,12 @@
-import { createElement as h, defineComponent }  from 'js-surface';
-import { view, Component } from 'js-surface/common';
+import { createElement as h, defineComponent }  from 'js-surface'
+import { view, Component } from 'js-surface/common'
 
 const
   framesPerSecond = 240,
   colors = ['red', 'yellow', 'orange'],
   tileWidth = 5,
   columnCount = 20,
-  rowCount = 20;
+  rowCount = 20
 
 const Tile = defineComponent({
   displayName: 'Tile',
@@ -33,11 +33,11 @@ const Tile = defineComponent({
         backgroundColor: color,
         padding: 0,
         margin: 0
-      };
+      }
     
-    return h('div', { style });
+    return h('div', { style })
   })
-});
+})
 
 const TileRow = defineComponent({
   displayName:  'TileRow',
@@ -55,19 +55,19 @@ const TileRow = defineComponent({
   main: view(props => {
     const
       { tileWidth, columnCount } = props,
-      tiles = [];
+      tiles = []
 
     for (let x = 0; x < columnCount; ++x) {
       const
         colorIdx = Math.floor(Math.random() * colors.length),       
-        color = colors[colorIdx];
+        color = colors[colorIdx]
     
-      tiles.push(Tile({ width: tileWidth, color, key: x }));
+      tiles.push(Tile({ width: tileWidth, color, key: x }))
     }
   
-    return h('div', { style: { clear: 'both' }}, tiles);
+    return h('div', { style: { clear: 'both' }}, tiles)
   })
-});
+})
 
 const SpeedTest = defineComponent({
   displayName: 'SpeedTest',
@@ -87,12 +87,12 @@ const SpeedTest = defineComponent({
     
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
-      this.__intervalId = null;
-      this.__startTime = Date.now();
-      this.__frameCount = 0;
-      this.__actualFramesPerSecond = '0';
+      this.__intervalId = null
+      this.__startTime = Date.now()
+      this.__frameCount = 0
+      this.__actualFramesPerSecond = '0'
     }
 
     render() {
@@ -102,7 +102,7 @@ const SpeedTest = defineComponent({
         style = {
           marginTop: 40,
           marginLeft: 40
-        };
+        }
 
       for (let y = 0; y < this.props.rowCount; ++y) {
         rows.push(
@@ -110,7 +110,7 @@ const SpeedTest = defineComponent({
             tileWidth: this.props.tileWidth,
             columnCount: this.props.columnCount,
             key: y
-          }));
+          }))
       }
       
       return (
@@ -125,26 +125,26 @@ const SpeedTest = defineComponent({
           h('p',
             { style: { clear: 'both' } },
           `(actual frames per second: ${this.__actualFramesPerSecond})`))
-      );
+      )
     }
 
     componentDidMount() {
       this.intervalId = setInterval(() => {
-        ++this.__frameCount;
+        ++this.__frameCount
         this.forceUpdate(); 
 
         if (this.__frameCount % 10 === 0) {
           this.__actualFramesPerSecond =
             (this.__frameCount * 1000.0 /
-              (Date.now() - this.__startTime)).toFixed(2);
+              (Date.now() - this.__startTime)).toFixed(2)
         }
-      }, 1000 / framesPerSecond);
+      }, 1000 / framesPerSecond)
     }
 
     componentWillUnmount() {
-      clearInterval(this.intervalId);
+      clearInterval(this.intervalId)
     }
   },
-});
+})
 
-export default SpeedTest({ tileWidth, columnCount, rowCount });
+export default SpeedTest({ tileWidth, columnCount, rowCount })

@@ -1,5 +1,5 @@
-import { createElement as h, defineComponent } from 'js-surface';
-import { Component } from 'js-surface/common';
+import { createElement as h, defineComponent } from 'js-surface'
+import { Component } from 'js-surface/common'
 
 const Clock = defineComponent({
   displayName: 'Clock',
@@ -13,27 +13,27 @@ const Clock = defineComponent({
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
       this.state = {
         time: new Date().toLocaleTimeString()
-      };
+      }
     }
 
     updateState() {
       this.setState({
         time: new Date().toLocaleTimeString()
-      });
+      })
     }
 
     componentDidMount() {
-      this.updateState();
+      this.updateState()
 
-      this.intervalId = setInterval(() => this.updateState(), 1000);
+      this.intervalId = setInterval(() => this.updateState(), 1000)
     }
 
     componentWillUnmount() {
-      clearInterval(this.intervalId);
+      clearInterval(this.intervalId)
     }
 
     render() {
@@ -42,9 +42,9 @@ const Clock = defineComponent({
           h('h4', null,
             this.props.headline),
           this.state.time)
-      );
+      )
     }
   }
-});
+})
 
 export default Clock({ headline: 'Local time:' }); 

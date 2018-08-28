@@ -1,4 +1,4 @@
-import { createElement as h, defineComponent } from 'js-surface';
+import { createElement as h, defineComponent } from 'js-surface'
 
 const HelloWorld = defineComponent({
   displayName: 'HelloWorld',
@@ -14,9 +14,9 @@ const HelloWorld = defineComponent({
     functional: true,
 
     render({ name }) {
-      return h('div', `Hello ${name}!`);
+      return h('div', `Hello ${name}!`)
     }
   }
-});
+})
 
-export default HelloWorld({ name: 'Jane Doe' });
+export default HelloWorld({ name: 'Jane Doe' })

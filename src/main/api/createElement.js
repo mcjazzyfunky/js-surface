@@ -1,6 +1,4 @@
-import preact from 'preact';
-
-const VNode = preact.h('a', null).constructor;
+import Platform from '../internal/platform/Platform'
 
 export default function createElement(/* arguments */) {
   const
@@ -9,57 +7,57 @@ export default function createElement(/* arguments */) {
     secondArg = arguments[1],
 
     skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
-        && (typeof secondArg !== 'object' || secondArg instanceof VNode
+        && (typeof secondArg !== 'object' || Platform.isValidElement(secondArg)
           || typeof secondArg[Symbol.iterator] === 'function'),
 
-    hasChildren = argCount > 2 || argCount === 2 && skippedProps;
+    hasChildren = argCount > 2 || argCount === 2 && skippedProps
 
-  let children = null;
+  let children = null
 
   if (hasChildren) {
     const
       firstChildIdx = 1 + !skippedProps,
-      childCount = argCount - firstChildIdx;
+      childCount = argCount - firstChildIdx
 
-    children = new Array(childCount);
+    children = new Array(childCount)
 
     for (let i = 0; i < childCount; ++i) {
-      children[i] = arguments[firstChildIdx + i];
+      children[i] = arguments[firstChildIdx + i]
     }
   }
 
-  let props = null;
+  let props = null
 
   if (hasChildren && !skippedProps) {
     if (secondArg === undefined || secondArg === null) {
-      props = { children };
+      props = { children }
     } else {
-      props = {};
+      props = {}
         
       const
         keys = Object.keys(secondArg),
-        keyCount = keys.length;
+        keyCount = keys.length
 
       for (let i = 0; i < keyCount; ++i) {
-        const key = keys[i];
+        const key = keys[i]
 
-        props[key] = secondArg[key];
+        props[key] = secondArg[key]
       }
 
-      props.children = children;
+      props.children = children
     }
   } else if (hasChildren && skippedProps) {
-    props = { children };
+    props = { children }
   } else if (!hasChildren && argCount === 2) {
-    props = secondArg || null;
+    props = secondArg || null
   }
 
   const internalType = arguments[0].__internal_type || arguments[0]
 
-  const ret = preact.createElement(internalType, props);
+  const ret = Platform.createElement(internalType, props)
 
-  ret.type = type;
-  ret.props = props;
+  ret.type = type
+  ret.props = props
 
-  return ret;
+  return ret
 }

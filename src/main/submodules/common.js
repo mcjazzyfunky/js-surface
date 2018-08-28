@@ -5,8 +5,8 @@ function view(render) {
     return {
       functional: true,
       render
-    };
-  };
+    }
+  }
 }
 
 class Component {
@@ -25,33 +25,33 @@ class Component {
         beforeUpdate: null,
         afterUpdate: null
       }
-    });
+    })
   }
 
   get props() {
     const getProps = this.___internals.getProps; 
 
-    return getProps ? getProps() : null;
+    return getProps ? getProps() : null
   }
 
   get state() {
-    const getState = this.___internals.getState;
+    const getState = this.___internals.getState
 
-    return getState ? getState() : null;
+    return getState ? getState() : null
   }
 
   set state(state) {
     if (this.___internals.updateState) {
       throw new Error(
         'Component state cannot be set directly from outside of constructor '
-          + '- use setState instead');
+          + '- use setState instead')
     } else {
-      this.___internals.initialState = state;
+      this.___internals.initialState = state
     }
   }
 
   getSnapshotBeforeUpdate(/* prevProps, prevState */) {
-    return null;
+    return null
   }
 
   componentDidMount() {
@@ -67,59 +67,59 @@ class Component {
   }
 
   shouldComponentUpdate(/* nextProps, nextState */) {
-    return true;
+    return true
   }
 
   render() { 
-    return null;
+    return null
   }
 
   setState(firstArg, callback) {
     if (!this.___internals.updateState) {
-      throw new Error('Calling setState within the constructor is not allowed');
+      throw new Error('Calling setState within the constructor is not allowed')
     } else {
       const
         typeOfFirstArg = typeof firstArg,
         firstArgIsFunction = typeOfFirstArg === 'function',
-        firstArgIsObject = firstArg !== null && typeOfFirstArg === 'object';
+        firstArgIsObject = firstArg !== null && typeOfFirstArg === 'object'
 
       if (firstArgIsFunction || firstArgIsObject) {
-        const updater = firstArgIsObject ? () => firstArg : firstArg;
+        const updater = firstArgIsObject ? () => firstArg : firstArg
 
-        this.___internals.updateState(updater, callback);
+        this.___internals.updateState(updater, callback)
       } else {
-        throw new TypeError('First argument of setState must either be a function or an object');
+        throw new TypeError('First argument of setState must either be a function or an object')
       }
     }
   }
 
   forceUpdate(callback) {
     if (this.___internals.forceUpdate) {
-      this.___internals.forceUpdate(callback);
+      this.___internals.forceUpdate(callback)
     }
   }
 
   static derivedStateFromProps(/* nextProps, prevState */) {
-    return null;
+    return null
   }
 
   static normalizeComponent(config) {
-    const CustomComponent = this;
+    const CustomComponent = this
 
     const ret = {
       functional: false,
 
       init(getProps, getState, updateState, forceUpdate) {
-        const component = new CustomComponent(getProps());
+        const component = new CustomComponent(getProps())
         
-        let isInitialized = false;
+        let isInitialized = false
 
-        updateState(() => component.___internals.initialState);
+        updateState(() => component.___internals.initialState)
 
-        component.___internals.getProps = getProps;
-        component.___internals.getState = getState;
-        component.___internals.updateState = updateState;
-        component.___internals.forceUpdate = forceUpdate;
+        component.___internals.getProps = getProps
+        component.___internals.getState = getState
+        component.___internals.updateState = updateState
+        component.___internals.forceUpdate = forceUpdate
         
         const result = {
           render: component.render.bind(component),
@@ -128,41 +128,41 @@ class Component {
 
           afterUpdate: (prevProps, prevState) => {
             if (!isInitialized) {
-              isInitialized = true;
-              component.componentDidMount();
+              isInitialized = true
+              component.componentDidMount()
             } else {
-              component.componentDidUpdate(prevProps, prevState);
+              component.componentDidUpdate(prevProps, prevState)
             }
           }
-        };
+        }
 
         if (config.methods) {
-          result.proxy = {};
+          result.proxy = {}
 
           for (let i = 0; i < config.methods; ++i) {
-            const methodName = config.methods[i];
+            const methodName = config.methods[i]
 
             result.proxy[methodName] = (...args) => {
-              return component[methodName](...args);
-            };
+              return component[methodName](...args)
+            }
           }
           
-          Object.freeze(result.proxy);
+          Object.freeze(result.proxy)
         }
 
         if (config.isErrorBoundary) {
-          result.handleError = component.componentDidCatch.bind(component);
+          result.handleError = component.componentDidCatch.bind(component)
         }
 
-        return result;
+        return result
       }
-    };
-
-    if (config.main.deriveStateFromProps !== Component.deriveStateFromProps) {
-      ret.deriveStateFromProps = config.main.deriveStateFromProps;
     }
 
-    return ret;
+    if (config.main.deriveStateFromProps !== Component.deriveStateFromProps) {
+      ret.deriveStateFromProps = config.main.deriveStateFromProps
+    }
+
+    return ret
   }
 }
 
@@ -171,9 +171,9 @@ class Component {
 export default Object.freeze({
   view,
   Component
-});
+})
 
 export {
   view,
   Component
-};
+}

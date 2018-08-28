@@ -1,70 +1,69 @@
-import createElement from './createElement';
-import validateContextConfig from '../internal/validation/validateContextConfig';
-import printError from '../internal/helper/printError';
-import { createContext } from 'preact-context';
-import validateProperty from '../internal/validation/validateProperty';
+import Platform from '../internal/platform/Platform.js'
+import validateContextConfig from '../internal/validation/validateContextConfig'
+import printError from '../internal/helper/printError'
+import validateProperty from '../internal/validation/validateProperty'
 
 export default function defineContext(config) {
   if (process.env.NODE_ENV === 'development') {
-    const error = validateContextConfig(config);
+    const error = validateContextConfig(config)
 
     if (error) {
-      const errorMsg = prettifyErrorMsg(error.message, config);
+      const errorMsg = prettifyErrorMsg(error.message, config)
 
-      printError(errorMsg);
-      throw new TypeError(errorMsg);
+      printError(errorMsg)
+      throw new TypeError(errorMsg)
     }
   }
 
   const
-    internalContext = createContext(config.defaultValue),
+    internalContext = Platform.createContext(config.defaultValue),
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 
     Provider = function (...args) {
-      return createElement(Provider, ...args);
+      return Platform.createElement(Provider, ...args)
     },
 
     Consumer = (...args) => {
-      return createElement(Consumer, ...args);
-    };
+      return Platform.createElement(Consumer, ...args)
+    }
   
   if (process.env.NODE_ENV === 'development') {
     internalContext.Provider.propTypes = {
       value: props => {
-        const result = validateProperty(props.value, 'value', config);
+        const result = validateProperty(props.value, 'value', config)
 
         return !result
           ? null
           : new Error(`Error while providing context "${config.displayName}": `
-            +  result.message);
+            +  result.message)
       }
-    };
+    }
   }
 
   Object.defineProperty(Provider, '__internal_type', {
     enumerable: false,
     value: internalProvider
-  });
+  })
 
   Object.defineProperty(Consumer, '__internal_type', {
     enumerable: false,
     value: internalConsumer
-  });
+  })
 
   Object.defineProperty(Consumer, '__internal_isConsumer', {
     enumerable: false,
     value: true
-  });
+  })
 
-  const ret = { Provider, Consumer };
+  const ret = { Provider, Consumer }
 
   Object.defineProperty(ret, '__internal_context', {
     enumerable: false,
     value: internalContext,
-  });
+  })
 
-  return Object.freeze(ret);
+  return Object.freeze(ret)
 }
 
 function prettifyErrorMsg(errorMsg, config) {
@@ -73,5 +72,5 @@ function prettifyErrorMsg(errorMsg, config) {
     && config.displayName.trim().length > 0
     ? '[defineContext] Invalid configuration for context '
       + `"${config.displayName}": ${errorMsg} `
-    : `[defineContext] Invalid context configuration: ${errorMsg}`;
+    : `[defineContext] Invalid context configuration: ${errorMsg}`
 }

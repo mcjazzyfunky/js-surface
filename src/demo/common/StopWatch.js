@@ -1,51 +1,51 @@
-import { createElement as h, defineComponent }  from 'js-surface';
-import { Component } from 'js-surface/common';
+import { createElement as h, defineComponent }  from 'js-surface'
+import { Component } from 'js-surface/common'
 
 const StopWatch = defineComponent({
   displayName: 'StopWatch',
 
   main: class extends Component {
     constructor(props) {
-      super(props);
-      this.timerID = null;
-      this.state = { time: 0, running: false };
+      super(props)
+      this.timerID = null
+      this.state = { time: 0, running: false }
     }
 
     setTime(time) {
-      this.setState({ time });
+      this.setState({ time })
     }
 
     setRunning(running) {
-      this.setState({ running });
+      this.setState({ running })
     }
 
     startTimer() {
       if (!this.state.running) {
-        const startTime = Date.now() - this.state.time;
+        const startTime = Date.now() - this.state.time
 
         this.timerID = setInterval(() => {
-          this.setTime(Date.now() - startTime);
-        }, 10);
+          this.setTime(Date.now() - startTime)
+        }, 10)
 
-        this.setRunning(true);
+        this.setRunning(true)
       }
     }
 
     stopTimer() {
       if (this.state.running) {
-        clearInterval(this.timerID);
-        this.timerID = null;
-        this.setRunning(false);
+        clearInterval(this.timerID)
+        this.timerID = null
+        this.setRunning(false)
       }
     }
 
     resetTimer() {
-      this.stopTimer();
-      this.setTime(0);
+      this.stopTimer()
+      this.setTime(0)
     }
 
     onWillUnmount() {
-      this.stopTimer();
+      this.stopTimer()
     }
 
     render() {
@@ -53,18 +53,18 @@ const StopWatch = defineComponent({
         startStopButton: {
           onClick: () => {
             if (this.state.running) {
-              this.stopTimer();
+              this.stopTimer()
             } else {
-              this.startTimer();
+              this.startTimer()
             }
           }
         },
         resetButton: {
           onClick: () => {
-            this.resetTimer();
+            this.resetTimer()
           }
         }
-      };
+      }
 
       return (
         h('div', null,
@@ -86,9 +86,9 @@ const StopWatch = defineComponent({
                   ...bind.resetButton
                 },
                 'Reset')))
-      );
+      )
     }
   }
-});
+})
 
-export default StopWatch();
+export default StopWatch()

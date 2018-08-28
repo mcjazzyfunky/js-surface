@@ -1,5 +1,5 @@
-import { createElement as h, defineComponent } from 'js-surface';
-import { Spec } from 'js-spec';
+import { createElement as h, defineComponent } from 'js-surface'
+import { Spec } from 'js-spec'
 
 const CounterInfo = defineComponent({
   displayName:  'CounterInfo',
@@ -19,10 +19,10 @@ const CounterInfo = defineComponent({
           null,
           h('b',
             null,
-            props.value)));
+            props.value)))
     }
   } 
-});
+})
 
 // --------------------------------------------------------------------
 
@@ -49,17 +49,17 @@ const Counter = defineComponent({
     functional: false,
 
     init(getProps, getState, updateState) {
-      let counterValue;
+      let counterValue
 
       const
         setCounterValue = n => {
-          counterValue = n;
+          counterValue = n
     
-          updateState(() => ({ counterValue }));
+          updateState(() => ({ counterValue }))
         },
 
         increaseCounter = n => {
-          setCounterValue(counterValue + n);
+          setCounterValue(counterValue + n)
         },
 
         render = () => {
@@ -81,21 +81,21 @@ const Counter = defineComponent({
                   onClick: () => increaseCounter(1)
                 }, 
                 '+'))
-          );
+          )
         },
 
         proxy = {
           resetCounter(n = 0) {
-            setCounterValue(n);
+            setCounterValue(n)
           }
-        };
+        }
       
-      setCounterValue(0);
+      setCounterValue(0)
 
-      return { render, proxy };
+      return { render, proxy }
     }
   }
-});
+})
 
 // --------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ const CounterCtrl = defineComponent({
     functional: false,
 
     init() {
-      let counterInstance = null;
+      let counterInstance = null
 
       return {
         render() {
@@ -122,7 +122,7 @@ const CounterCtrl = defineComponent({
               ' ',
               Counter({
                 ref: it => {
-                  counterInstance = it;
+                  counterInstance = it
                 }
               }),
               ' ',
@@ -132,11 +132,11 @@ const CounterCtrl = defineComponent({
                   onClick: () => counterInstance.resetCounter(100)
                 },
                 'Set to 100'))
-          );
+          )
         }
-      };
+      }
     }
   }
-});
+})
 
-export default CounterCtrl();
+export default CounterCtrl()

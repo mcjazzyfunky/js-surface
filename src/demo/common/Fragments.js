@@ -1,5 +1,5 @@
-import { createElement as h, defineComponent, Fragment } from 'js-surface';
-import { view } from 'js-surface/common';
+import { createElement as h, defineComponent, Fragment } from 'js-surface'
+import { view } from 'js-surface/common'
 
 const FragmentDemo = defineComponent({
   displayName:  'FragmentDemo',
@@ -16,9 +16,9 @@ const FragmentDemo = defineComponent({
           'A simple fragment test with a select box:'),
         h('select', null, Options())
       )
-    );
+    )
   })
-});
+})
 
 const Options = defineComponent({
   displayName: 'Options',
@@ -28,8 +28,8 @@ const Options = defineComponent({
       h(Fragment, null,
         h('option', null, 'Option #1' ),
         h('option', null, 'Option #2' ),
-        h('option', null, 'Option #3' )));
+        h('option', null, 'Option #3' )))
   })
-});
+})
 
-export default FragmentDemo();
+export default FragmentDemo()

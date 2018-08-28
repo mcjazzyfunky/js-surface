@@ -1,8 +1,6 @@
-import preact from 'preact';
-
-const VNode = preact.h('a', null).constructor;
+import Platform from '../internal/platform/Platform'
 
 export default function isNode(it) {
-  return !it || typeof it !== 'object' || it instanceof VNode
-    || typeof it[Symbol.iterator] === 'function';
+  return !it || typeof it !== 'object' || Platform.isValidElement(it)
+    || typeof it[Symbol.iterator] === 'function'
 }

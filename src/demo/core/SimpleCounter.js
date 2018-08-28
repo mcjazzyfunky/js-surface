@@ -1,4 +1,4 @@
-import { createElement as h, defineComponent } from 'js-surface';
+import { createElement as h, defineComponent } from 'js-surface'
 
 const SimpleCounter = defineComponent({
   displayName: 'SimpleCounter',
@@ -19,17 +19,17 @@ const SimpleCounter = defineComponent({
     functional: false,
     
     init(getProps, getState, updateState) {
-      updateState(() => ({ counterValue: getProps().initialValue }));
+      updateState(() => ({ counterValue: getProps().initialValue }))
 
       const
         incrementCounter = delta => {
-          updateState(state => ({ counterValue: state.counterValue + delta }));
+          updateState(state => ({ counterValue: state.counterValue + delta }))
         },
 
         render = () => {
           const
             props = getProps(),
-            state = getState();
+            state = getState()
 
           return (
             h('div',
@@ -52,14 +52,14 @@ const SimpleCounter = defineComponent({
                   onClick: () => incrementCounter(1)
                 },
                 '+'))
-          );
-        };
+          )
+        }
 
       return {
         render
-      };
+      }
     }
   }
-});
+})
 
-export default SimpleCounter({ initialValue: 100 });
+export default SimpleCounter({ initialValue: 100 })

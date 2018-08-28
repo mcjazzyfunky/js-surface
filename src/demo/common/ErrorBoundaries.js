@@ -1,36 +1,36 @@
 import { createElement as h, defineComponent } from 'js-surface'; 
-import { Component } from 'js-surface/common';
+import { Component } from 'js-surface/common'
 
 const ErrorTrigger = defineComponent({ 
   displayName: 'ErrorTrigger',
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
-      this.state = { errorMsg: null };
+      this.state = { errorMsg: null }
     }
 
     simulateError(errorMsg = 'Simulated error') {
-      console.log('Triggering error...');
-      this.setState({ errorMsg });
+      console.log('Triggering error...')
+      this.setState({ errorMsg })
     }
 
     onClick() {
-      this.simulateError();
+      this.simulateError()
     }
 
     render() {
       if (this.state.errorMsg) {
-        throw new Error(this.state.errorMsg);
+        throw new Error(this.state.errorMsg)
       } else {
         return h('button',
           { className: 'btn', onClick: () => this.onClick() },
-          'Trigger error');
+          'Trigger error')
       }
     }
   }
-});
+})
 
 const ErrorBoundary = defineComponent({
   displayName: 'ErrorBoundary',
@@ -39,7 +39,7 @@ const ErrorBoundary = defineComponent({
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
       this.state = {
         error: null,
@@ -48,22 +48,22 @@ const ErrorBoundary = defineComponent({
     }
 
     componentDidCatch(error, errorInfo) {
-      this.setState({ error, errorInfo });
+      this.setState({ error, errorInfo })
     }
 
     render() {
-      let ret = null;
+      let ret = null
 
       if (!this.state.error) {
-        ret = ErrorTrigger();
+        ret = ErrorTrigger()
       } else {
         ret = h('div', null,
-          'Catched error: ' + this.state.error.message);
+          'Catched error: ' + this.state.error.message)
       }
 
-      return ret;
+      return ret
     }
   }
-});
+})
 
-export default ErrorBoundary();
+export default ErrorBoundary()

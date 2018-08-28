@@ -1,6 +1,6 @@
-import { createElement as h, defineComponent, defineContext } from 'js-surface';
-import { view, Component } from 'js-surface/common';
-import { Spec } from 'js-spec';
+import { createElement as h, defineComponent, defineContext } from 'js-surface'
+import { view, Component } from 'js-surface/common'
+import { Spec } from 'js-spec'
 
 const
   nopLogger = {
@@ -9,14 +9,14 @@ const
 
   consoleLogger = {
     log(...args) {
-      console.log(...args);
+      console.log(...args)
     }
   },
   
   LoggerCtx = defineContext({
     displayName: 'LoggerCtx',
     defaultValue: nopLogger
-  });
+  })
 
 const Counter = defineComponent({
   displayName: 'Counter',
@@ -43,29 +43,29 @@ const Counter = defineComponent({
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
-      props.logger.log('Instantiating new component');
+      props.logger.log('Instantiating new component')
 
-      this.state = { counter: props.initialValue };
-      this.onClickDecrement = this.onClickDecrement.bind(this);
-      this.onClickIncrement = this.onClickIncrement.bind(this);
+      this.state = { counter: props.initialValue }
+      this.onClickDecrement = this.onClickDecrement.bind(this)
+      this.onClickIncrement = this.onClickIncrement.bind(this)
     }
 
     onClickIncrement() {
-      this.props.logger.log('Incrementing...');
-      this.setState({ counter: this.state.counter + 1 });
+      this.props.logger.log('Incrementing...')
+      this.setState({ counter: this.state.counter + 1 })
     }
 
     onClickDecrement() {
-      this.props.logger.log('Decrementing...');
-      this.setState({ counter: this.state.counter - 1 });
+      this.props.logger.log('Decrementing...')
+      this.setState({ counter: this.state.counter - 1 })
     }
 
     render() {
       const
         { label } = this.props,
-        { counter } = this.state;
+        { counter } = this.state
 
       return (
         h('div',
@@ -74,10 +74,10 @@ const Counter = defineComponent({
           h('button', { onClick: this.onClickDecrement }, ' - '),
           ` ${counter} `,
           h('button', { onClick: this.onClickIncrement }, ' + '))
-      );
+      )
     }
   }
-});
+})
 
 const InjectionsDemo = defineComponent({
   displayName: 'InjectionsDemo',
@@ -87,8 +87,8 @@ const InjectionsDemo = defineComponent({
       LoggerCtx.Provider(
         { value: consoleLogger },
         Counter({ label: 'Counter:' }))
-    );
+    )
   })
-});
+})
 
-export default InjectionsDemo();
+export default InjectionsDemo()

@@ -1,3 +1,3 @@
-import preact from 'preact';
+import Platform from '../internal/platform/Platform'
 
-export default preact.createPortal;
+export default Platform.createPortal

@@ -1,16 +1,16 @@
-import printError from './printError';
-import validateProperty from '../validation/validateProperty';
+import printError from './printError'
+import validateProperty from '../validation/validateProperty'
 
 export default function createPropsAdjuster(config) {
-  let ret;
+  let ret
 
   const
     propertiesConfig = config.properties || {},
     componentName = config.displayName,
     validations = [],
-    defaults = {};
+    defaults = {}
 
-  let hasDefaults = false;
+  let hasDefaults = false
   
   for (let key of  Object.keys(propertiesConfig)) {
     const
@@ -32,9 +32,9 @@ export default function createPropsAdjuster(config) {
       defaultValueProvider =
         getDefaultValue
           ? getDefaultValue
-          : (hasDefaultValue ? () => defaultValue : null);
+          : (hasDefaultValue ? () => defaultValue : null)
       
-    hasDefaults = hasDefaults || hasDefaultValue;
+    hasDefaults = hasDefaults || hasDefaultValue
 
     validations.push([
       key,
@@ -42,73 +42,73 @@ export default function createPropsAdjuster(config) {
       nullable,
       constraint,
       defaultValueProvider
-    ]);
+    ])
 
     if (getDefaultValue) {
       Object.defineProperty(defaults, key, {
         get: getDefaultValue
-      });
+      })
     } else if (hasDefaultValue) {
-      defaults[key] = defaultValue;
+      defaults[key] = defaultValue
     }
   }
 
   ret = (props, validating) => {
-    let adjustedProps = props;
+    let adjustedProps = props
 
     if (hasDefaults) {
       adjustedProps = Object.assign({}, props); // TODO: really necessary?
 
       for (const key of Object.keys(defaults)) {
         if (adjustedProps[key] === undefined) {
-          adjustedProps[key] = defaults[key];
+          adjustedProps[key] = defaults[key]
         }
       }
     }
 
     if (process.env.NODE_ENV === 'development') {
       if (validating) {
-        const err = validateProps(adjustedProps, validations);
+        const err = validateProps(adjustedProps, validations)
 
         if (err) {
           const errMsg = 'Error while validating props for ' 
-            +  `'${componentName}': ${err.message}`;
+            +  `'${componentName}': ${err.message}`
 
-          printError(errMsg);
+          printError(errMsg)
 
           printError(`Negatively validated props for '${componentName}':`,
-            props);
+            props)
 
-          throw new Error(errMsg);
+          throw new Error(errMsg)
         }
       }
     }
 
-    return adjustedProps;
-  };
+    return adjustedProps
+  }
 
-  return ret;
+  return ret
 }
 
 function validateProps(props, validations) {
-  let errMsg = null;
+  let errMsg = null
 
   const keysToBeChecked = props
     ? new Set(Object.getOwnPropertyNames(props))
-    : new Set();
+    : new Set()
 
   // Depending on the platform they may be still available
-  keysToBeChecked.delete('ref');
-  keysToBeChecked.delete('key');
+  keysToBeChecked.delete('ref')
+  keysToBeChecked.delete('key')
 
   // TODO: That's not really nice - make it better!
   // Ignore children
-  keysToBeChecked.delete('children');
+  keysToBeChecked.delete('children')
 
   for (let [propertyName, type, nullable, constraint, defaultValueProvider] of validations) {
-    let prop = props[propertyName];
+    let prop = props[propertyName]
 
-    keysToBeChecked.delete(propertyName);
+    keysToBeChecked.delete(propertyName)
 
     // TODO!!!
     /*
@@ -118,25 +118,25 @@ function validateProps(props, validations) {
     } else */if (nullable === true && prop === null) {
       // everything fine
     } else if (!defaultValueProvider && props[propertyName] === undefined) {
-      errMsg = `Missing mandatory property '${propertyName}'`;
+      errMsg = `Missing mandatory property '${propertyName}'`
     } else {
-      const err = validateProperty(prop, propertyName, type, nullable, constraint);
+      const err = validateProperty(prop, propertyName, type, nullable, constraint)
 
       if (err) {
-        errMsg = err.message;
+        errMsg = err.message
       }
     }
     
     if (errMsg) {
-      break;
+      break
     }
   }
 
   if (!errMsg && keysToBeChecked.size > 0) {
-    const joined = Array.from(keysToBeChecked.values()).join(', ');
+    const joined = Array.from(keysToBeChecked.values()).join(', ')
 
-    errMsg = `Illegal property key(s): ${joined}`;
+    errMsg = `Illegal property key(s): ${joined}`
   }
 
-  return errMsg ? new Error(errMsg) : null;
+  return errMsg ? new Error(errMsg) : null
 }

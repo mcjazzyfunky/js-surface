@@ -1,6 +1,6 @@
-import 'babel-polyfill';
-import { createElement as h, defineComponent, mount } from '../main/js-surface';
-import demos from './available-demos';
+import '@babel/polyfill'
+import { createElement as h, defineComponent, mount } from 'js-surface'
+import demos from './available-demos'
 
 const DemoSelector = defineComponent({
   displayName: 'DemoSelector',
@@ -9,22 +9,22 @@ const DemoSelector = defineComponent({
     functional: false, 
 
     init(getProps, getState, updateState, forceUpdate) {
-      let currDemoIdx = Math.floor(document.location.href.replace(/^.*idx=/, '')) || 0;
+      let currDemoIdx = Math.floor(document.location.href.replace(/^.*idx=/, '')) || 0
 
       function startDemo(idx) {
-        currDemoIdx = idx;
-        document.location.href = document.location.href.replace(/\#.*$/, '') + '#idx=' + currDemoIdx;
-        forceUpdate();
+        currDemoIdx = idx
+        document.location.href = document.location.href.replace(/\#.*$/, '') + '#idx=' + currDemoIdx
+        forceUpdate()
       }
 
       return {
         render() {
-          const options = [];
+          const options = []
 
           for (let i = 0; i < demos.length; ++i) {
-            const demo = demos[i];
+            const demo = demos[i]
             
-            options.push(h('option', { key: i, value: i }, demo.title));
+            options.push(h('option', { key: i, value: i }, demo.title))
           }
 
           return (
@@ -35,13 +35,12 @@ const DemoSelector = defineComponent({
                   h('select', { onChange: ev => startDemo(ev.target.value), value: currDemoIdx }, options))),
               h('br'),
               h('div', demos[currDemoIdx].content))
-          );
+          )
         }
-      };
+      }
     }
   }
-});
-
+})
 
 const Demo = defineComponent({
   displayName: 'Demo',
@@ -50,9 +49,9 @@ const Demo = defineComponent({
     functional: true,
 
     render() {
-      return h('div', h('div', DemoSelector()));
+      return h('div', h('div', DemoSelector()))
     }
   }
-});
+})
 
-mount(Demo(), 'main-content');
+mount(Demo(), 'main-content')

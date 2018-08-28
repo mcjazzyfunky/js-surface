@@ -1,5 +1,5 @@
-import { createElement as h, defineComponent } from 'js-surface';
-import { view } from 'js-surface/common';
+import { createElement as h, defineComponent } from 'js-surface'
+import { view } from 'js-surface/common'
 
 const Demo = defineComponent({
   displayName:  'Demo',
@@ -10,8 +10,8 @@ const Demo = defineComponent({
         dangerouslySetInnerHTML: {
           __html: 'Some <b>HTML</b> <i>text</i>'
         }
-      }));
+      }))
   })
-});
+})
 
-export default Demo();
+export default Demo()

@@ -1,11 +1,11 @@
-import { createElement as h, defineContext, defineComponent } from 'js-surface';
-import { Component } from 'js-surface/common';
+import { createElement as h, defineContext, defineComponent } from 'js-surface'
+import { Component } from 'js-surface/common'
 
 const ParentDisabledCtx = defineContext({
   displayName: 'ParentDisabledCtx',
   type: Boolean,
   defaultValue: false
-});
+})
 
 const Parent = defineComponent({
   displayName: 'Parent',
@@ -20,7 +20,7 @@ const Parent = defineComponent({
 
   main: class extends Component {
     constructor(props) {
-      super(props);
+      super(props)
 
       this.state = { disabled: false }; 
     }
@@ -28,7 +28,7 @@ const Parent = defineComponent({
     toggleDisableState() {
       this.setState({
         disabled: !this.state.disabled
-      });
+      })
     }
   
     render() {
@@ -41,10 +41,10 @@ const Parent = defineComponent({
             h('button', { onClick: () => this.toggleDisableState() },
               this.state.disabled ? 'Enable' : 'Disable'),
             h('div', null, this.props.children)))
-      );
+      )
     }
   }
-});
+})
 
 const Child = defineComponent({
   displayName: 'Child',
@@ -60,10 +60,10 @@ const Child = defineComponent({
               'Child component is ',
               parentDisabled ? 'disabled' : 'enabled',
               '.')))
-      );
+      )
     }
   }
-});
+})
 
 const Container = defineComponent({
   displayName: 'Container',
@@ -76,16 +76,16 @@ const Container = defineComponent({
 
   main: class extends Component {
     shouldComponentUpdate() {
-      return false;
+      return false
     }
 
     render() {
       return (
         h('div', null,
           h('div', null, this.props.children))
-      );
+      )
     }
   }
-});
+})
 
-export default Parent(null, Container(null, Child()));
+export default Parent(null, Container(null, Child()))
