@@ -17,7 +17,7 @@ function createRollupConfig(productive) {
 
       format: 'umd',
       name: 'jsSurface', 
-      sourcemap: false,
+      //sourcemap: false,
 
       globals: {
         'js-surface': 'jsSurface',
@@ -30,7 +30,7 @@ function createRollupConfig(productive) {
       }
     },
 
-    external: ['preact', 'js-spec', 'preact-context'],
+    external: ['preact', 'preact-context', 'js-spec'],
 
     plugins: [
       resolve({

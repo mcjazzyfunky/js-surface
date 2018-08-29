@@ -1,5 +1,8 @@
 import { createElement as h, defineComponent }  from 'js-surface'
 import { Component } from 'js-surface/common'
+import { Html } from 'js-surface/dom-factories'
+
+const { br, button, div, h3 } = Html
 
 const StopWatch = defineComponent({
   displayName: 'StopWatch',
@@ -67,20 +70,19 @@ const StopWatch = defineComponent({
       }
 
       return (
-        h('div', null,
-          h('h3', null,
-            'Stop watch'),
-          h('div', null,
+        div(
+          h3('Stop watch'),
+          div(
             `Time: ${this.state.time} `),
-            h('br'),
-            h('div', { className: 'btn-group' },
-              h('button',
+            br(),
+            div({ className: 'btn-group' },
+              button(
                 {
                   className: 'btn btn-primary',
                   ...bind.startStopButton
                 },
                 this.state.running ? 'Stop' : 'Start'),
-              h('button',
+              button(
                 {
                   className: 'btn btn-warning',
                   ...bind.resetButton
