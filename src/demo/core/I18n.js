@@ -1,4 +1,4 @@
-import { defineContext, createElement as h, defineComponent } from 'js-surface'
+import { defineContext, defineComponent } from 'js-surface'
 import { Html } from 'js-surface/dom-factories'
 import { Spec } from 'js-spec'
 
@@ -16,7 +16,7 @@ const translations = {
   }
 }
 
-const LocaleContext = defineContext({
+const LocaleCtx = defineContext({
   displayName: 'LocaleCtx',
   defaultValue: 'en'
 })
@@ -43,10 +43,9 @@ const App = defineComponent({
           const locale = getState().locale
 
           return (
-            LocaleContext.Provider({ value: locale },
+            LocaleCtx.Provider({ value: locale },
               div(
-                label(
-                  { htmlFor: 'lang-selector' },
+                label({ htmlFor: 'lang-selector' },
                   'Select language: '),
                 select(
                   {
@@ -61,7 +60,8 @@ const App = defineComponent({
                   option({ value: 'en' }, 'en'),
                   option({ value: 'fr' }, 'fr'),
                   option({ value: 'de' }, 'de')),
-                div(LocaleText({ id: 'salutation'}))))
+                div(
+                  LocaleText({ id: 'salutation'}))))
           )
         }
       }
@@ -83,8 +83,8 @@ const LocaleText = defineComponent({
 
     render(props) {
       return (
-        h('div', null,
-          h(LocaleContext.Consumer, locale =>
+        div(
+          LocaleCtx.Consumer(locale =>
             translations[locale][props.id]))
       )
     }
