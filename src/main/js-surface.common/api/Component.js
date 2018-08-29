@@ -1,15 +1,4 @@
-function view(render) {
-  return (/* config */) => {
-    // TODO - check config
-    
-    return {
-      functional: true,
-      render
-    }
-  }
-}
-
-class Component {
+export default class Component {
   constructor() {
     Object.defineProperty(this, '___internals', {
       enumerable: false,
@@ -164,16 +153,4 @@ class Component {
 
     return ret
   }
-}
-
-// --- exports ------------------------------------------------------
-
-export default Object.freeze({
-  view,
-  Component
-})
-
-export {
-  view,
-  Component
 }

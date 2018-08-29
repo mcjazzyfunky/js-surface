@@ -1,5 +1,8 @@
 import { defineContext, createElement as h, defineComponent } from 'js-surface'
+import { Html } from 'js-surface/dom-factories'
 import { Spec } from 'js-spec'
+
+const { div, label, option, select } = Html
 
 const translations = {
   en: {
@@ -32,7 +35,7 @@ const App = defineComponent({
   main: {
     functional: false,
     
-    init: (getProps, getState, updateState) => {
+    init(getProps, getState, updateState) {
       updateState({ locale: getProps().defaultLocale })
 
       return { 
@@ -40,12 +43,12 @@ const App = defineComponent({
           const locale = getState().locale
 
           return (
-            h(LocaleContext.Provider, { value: locale },
-              h('div', null,
-                h('label',
+            LocaleContext.Provider({ value: locale },
+              div(
+                label(
                   { htmlFor: 'lang-selector' },
                   'Select language: '),
-                h('select',
+                select(
                   {
                     id: 'lang-selector',
                     value: locale,
@@ -55,10 +58,10 @@ const App = defineComponent({
                       updateState(() => ({ locale: newLocale }))
                     }
                   },
-                  h('option', { value: 'en' }, 'en'),
-                  h('option', { value: 'fr' }, 'fr'),
-                  h('option', { value: 'de' }, 'de')),
-                h('div', null, LocaleText({ id: 'salutation'}))))
+                  option({ value: 'en' }, 'en'),
+                  option({ value: 'fr' }, 'fr'),
+                  option({ value: 'de' }, 'de')),
+                div(LocaleText({ id: 'salutation'}))))
           )
         }
       }

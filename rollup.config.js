@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 function createRollupConfig(moduleFormat, productive) {
   return {
-    input: 'src/main/js-surface.js',
+    input: 'src/main/js-surface/index.js',
 
     output: {
       file: productive

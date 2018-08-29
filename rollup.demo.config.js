@@ -20,6 +20,10 @@ function createRollupConfig(productive) {
       sourcemap: false,
 
       globals: {
+        'js-surface': 'jsSurface',
+        'js-surface/common': 'jsSurface',
+        'js-surface/util': 'jsSurface',
+        'js-surface/dom-factories': 'jsSurface',
         'js-spec': 'jsSpec',
         'preact': 'preact',
         'preact-context': 'preactContext'
@@ -35,8 +39,10 @@ function createRollupConfig(productive) {
         browser: true,
       }),
       alias({
-        'js-surface/common': path.resolve(__dirname, 'src/main/submodules/common.js'),
-        'js-surface': path.resolve(__dirname, 'src/main/js-surface.js')
+        'js-surface/common': path.resolve(__dirname, 'src/main/js-surface.common/index.js'),
+        'js-surface/util': path.resolve(__dirname, 'src/main/js-surface.util/index.js'),
+        'js-surface/dom-factories': path.resolve(__dirname, 'src/main/js-surface.dom-factories/index.js'),
+        'js-surface': path.resolve(__dirname, 'src/main/js-surface/index.js'),
       }),
       commonjs({
         namedExports: {

@@ -1,8 +1,8 @@
-import preact from 'preact'
 import preactContext from 'preact-context'
 import validateContextConfig from '../internal/validation/validateContextConfig'
 import printError from '../internal/helper/printError'
 import validateProperty from '../internal/validation/validateProperty'
+import createElement from './createElement'
 
 export default function defineContext(config) {
   if (process.env.NODE_ENV === 'development') {
@@ -22,11 +22,11 @@ export default function defineContext(config) {
     internalConsumer = internalContext.Consumer,
 
     Provider = function (...args) {
-      return preact.createElement(Provider, ...args)
+      return createElement(Provider, ...args)
     },
 
     Consumer = (...args) => {
-      return preact.createElement(Consumer, ...args)
+      return createElement(Consumer, ...args)
     }
   
   if (process.env.NODE_ENV === 'development') {
