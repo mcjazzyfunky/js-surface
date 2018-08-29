@@ -1,11 +1,19 @@
 import { h } from 'preact'
 
 const
+  emptyArray = [],
   VNode = h('a').constructor,
 
   VirtualElement = {
-    ['VirtualElement'](type, props) {
-      initVirtualElement(this, type, props)
+    ['VirtualElement'](type, attrs, children) {
+      const internalType = type.__internal_type || type
+
+      this.nodeName = internalType
+      this.attributes = attrs || undefined
+      this.children = children || emptyArray
+      this.type = type
+      this.key = !attrs ? undefined : attrs.key || undefined 
+      this.ref = !attrs ? undefined : attrs.ref || undefined 
     }
   }.VirtualElement
 
@@ -45,34 +53,3 @@ VirtualElement.prototype = Object.create(VNode, {
 })
 
 export default VirtualElement
-
-// --- locals -------------------------------------------------------
-
-function initVirtualElement(elem, type, attrs) {
-  const internalType = type.__internal_type || type
-
-  elem.nodeName = internalType
-  elem.attributes = attrs || undefined
-  elem.children = attrs ? attrs.children || [] : [] 
-  elem.type = type
-  elem.key = !attrs ? null : attrs.key || null 
-  elem.ref = !attrs ? null : attrs.ref || null 
-
-  attrs && delete attrs.children
-
-  if (attrs && attrs.ref) {
-    if (attrs.ref) {
-      const ref = attrs.ref
-
-      const preactRef = it => {
-        let proxy = it && it.__proxy
-
-        ref(proxy || it)
-      }
-
-      attrs.ref = preactRef
-    }
-  }
-
-  // console.log(elem)
-}
