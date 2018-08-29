@@ -4,4 +4,4 @@ export default function Fragment(...args) {
   return createElement(Fragment, ...args)
 }
 
-Fragment.__internal_type = 'span'; // TODO
+Fragment.__internal_type = 'span' // TODO

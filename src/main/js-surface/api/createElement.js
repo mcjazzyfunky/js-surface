@@ -1,19 +1,14 @@
 import convertIterablesToArrays from '../internal/helper/convertIterablesToArrays';
+import VirtualElement from '../internal/element/VirtualElement'
 
 import preact from 'preact'
 
-let
-  VNode = preact.h('a').constructor, 
-  ExtVNode = null // will be set later
-
-export default function createElement(/* arguments */) {
+export default function createElement(type, secondArg /* other arguments */) {
   const
     argCount = arguments.length,
-    type = arguments[0],
-    secondArg = arguments[1],
 
     skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
-        && (typeof secondArg !== 'object' || secondArg instanceof VNode
+        && (typeof secondArg !== 'object' || secondArg instanceof VirtualElement
           || typeof secondArg[Symbol.iterator] === 'function'),
 
     hasChildren = argCount > 2 || argCount === 2 && skippedProps
@@ -60,81 +55,5 @@ export default function createElement(/* arguments */) {
     props = secondArg || null
   }
 
-  const internalType = arguments[0].__internal_type || arguments[0]
-
-  if (!ExtVNode) {
-    ExtVNode = {
-      VirtualElement() { // to make sure it's called "VirtualElement" even if minified
-      }
-    }.VirtualElement
-
-    ExtVNode.prototype = Object.create(VNode.prototype, {
-      nodeName: {
-        enumerable: false,
-
-        get: function () {
-          return this.internal.nodeName
-        }
-      },
-
-      attributes: {
-        enumerable: false,
-
-        get: function () {
-          return this.internal.attributes
-        }
-      },
-
-      children: {
-        enumerable: false,
-
-        get: function () {
-          return this.internal.children
-        }
-      }
-    })
-  }
-
-
-
-  const
-    vnode = preact.h(internalType, props),
-    
-    internal = {
-      nodeName: vnode.nodeName,
-      attributes: vnode.attributes,
-      children: vnode.children
-    },
-  
-    ret = new ExtVNode()
-
-
-  Object.defineProperty(ret, 'internal', {
-    enumerable: false,
-    value: internal
-  })
-
-  ret.type = type
-  ret.key = !props ? null : props.key || null
-  ret.ref = !props ? null : props.ref || null
-  ret.props =  props
-
-  if (props && (props.key || props.ref)) {
-    ret.props = Object.assign({}, props) 
-    delete ret.props.key
-    delete ret.props.ref
-
-    if (props.ref) {
-      const ref = props.ref
-      const preactRef = it => {
-        let proxy = it && it.__proxy
-
-        ref(proxy || it)
-      }
-
-      props.ref = preactRef
-    }
-  }
-
-  return  ret
+  return new VirtualElement(type, props)
 }
