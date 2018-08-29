@@ -9,28 +9,37 @@ const
     }
   }.VirtualElement
 
-VirtualElement.prototype = Object.create(VNode.prototype, {
-  nodeName: {
-    enumerable: false,
+VirtualElement.prototype = Object.create(VNode, {
+  props: {
+    enumerable: true,
 
-    get: function () {
-      return this.internal.nodeName
-    }
-  },
+    get() {
+      let ret = this.props2
 
-  attributes: {
-    enumerable: false,
+      if (ret === undefined) {
+        const ret = {}
 
-    get: function () {
-      return this.internal.attributes
-    }
-  },
+        for (const attrName in this.attributes) {
+          if (this.attributes.hasOwnProperty(attrName)) {
+            ret[attrName] = this.attributes.attrName
+          }
+        }
 
-  children: {
-    enumerable: false,
+        delete ret.key
+        delete ret.ref
 
-    get: function () {
-      return this.internal.children
+        if (this.children && this.children.length > 0) {
+          ret.children = this.children
+        }
+
+        this.props2 = ret
+      }
+
+      return ret
+    },
+
+    set(value) {
+      this.props2 = value || null
     }
   }
 })
@@ -39,41 +48,31 @@ export default VirtualElement
 
 // --- locals -------------------------------------------------------
 
-function initVirtualElement(elem, type, props) {
-  const
-    internalType = type.__internal_type || type,
-    vnode = h(internalType, props),
-    
-    internal = {
-      nodeName: vnode.nodeName,
-      attributes: vnode.attributes,
-      children: vnode.children
-    }
+function initVirtualElement(elem, type, attrs) {
+  const internalType = type.__internal_type || type
 
-  Object.defineProperty(elem, 'internal', {
-    enumerable: false,
-    value: internal
-  })
-
+  elem.nodeName = internalType
+  elem.attributes = attrs || undefined
+  elem.children = attrs ? attrs.children || [] : [] 
   elem.type = type
-  elem.key = !props ? null : props.key || null
-  elem.ref = !props ? null : props.ref || null
-  elem.props =  props
+  elem.key = !attrs ? null : attrs.key || null 
+  elem.ref = !attrs ? null : attrs.ref || null 
 
-  if (props && (props.key || props.ref)) {
-    elem.props = Object.assign({}, props) 
-    delete elem.props.key
-    delete elem.props.ref
+  attrs && delete attrs.children
 
-    if (props.ref) {
-      const ref = props.ref
+  if (attrs && attrs.ref) {
+    if (attrs.ref) {
+      const ref = attrs.ref
+
       const preactRef = it => {
         let proxy = it && it.__proxy
 
         ref(proxy || it)
       }
 
-      props.ref = preactRef
+      attrs.ref = preactRef
     }
   }
+
+  // console.log(elem)
 }

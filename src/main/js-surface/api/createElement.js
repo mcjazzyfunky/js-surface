@@ -1,4 +1,3 @@
-import convertIterablesToArrays from '../internal/helper/convertIterablesToArrays';
 import VirtualElement from '../internal/element/VirtualElement'
 
 import preact from 'preact'
@@ -20,13 +19,13 @@ export default function createElement(type, secondArg /* other arguments */) {
       firstChildIdx = 1 + !skippedProps,
       childCount = argCount - firstChildIdx
 
-    children = new Array(childCount)
+    children = []
 
     for (let i = 0; i < childCount; ++i) {
-      children[i] = arguments[firstChildIdx + i]
-    }
+      const child = arguments[firstChildIdx + i]
 
-    children = convertIterablesToArrays(children) // TODO: Optimize
+      addChildren(children, child)
+    }
   }
 
   let props = null
@@ -55,5 +54,29 @@ export default function createElement(type, secondArg /* other arguments */) {
     props = secondArg || null
   }
 
-  return new VirtualElement(type, props)
+  const ret = new VirtualElement(type, props)
+
+  if (preact.options.vnode) {
+    preact.options.vnode(ret)
+  }
+
+  return ret
+}
+
+function addChildren(targetArray, children) {
+  if (children !== undefined && children !== null && children !== false) {
+    if (!children[Symbol.iterator] || typeof children === 'string') {
+      targetArray.push(children)
+    } else {
+      if (Array.isArray(children)) {
+        for (let i = 0; i < children.length; ++i) {
+          addChildren(targetArray, children[i])
+        }
+      } else {
+        for (const child of children) {
+          addChildren(targetArray, child)
+        }
+      }
+    }
+  }
 }
