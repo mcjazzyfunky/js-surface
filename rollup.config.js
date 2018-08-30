@@ -6,6 +6,7 @@ import babel from 'rollup-plugin-babel'
 import { uglify as uglifyJS} from 'rollup-plugin-uglify'
 import uglifyES from 'rollup-plugin-uglify-es'
 import gzip from 'rollup-plugin-gzip'
+import copy from 'rollup-plugin-copy'
 
 const configs = []
 
@@ -79,7 +80,8 @@ function createCoreConfig(moduleFormat, productive) {
         }
       }),
       productive && (moduleFormat === 'esm' ? uglifyES() : uglifyJS()),
-      productive && gzip()
+      productive && gzip(),
+      productive && moduleFormat === 'umd' && copy({ 'to-copy-to-dist': 'dist' })
     ],
   }
 }

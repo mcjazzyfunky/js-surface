@@ -3,7 +3,7 @@
   "version": "0.3.3",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
-  "main": "dist/js-surface.production.js",
+  "main": "dist/main/",
   "unpkg": "dist/js-surface.production.js",
   "jsdelivr": "dist/js-surface.production.js",
   "files": [
@@ -30,6 +30,7 @@
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-babel": "^4.0.2",
     "rollup-plugin-commonjs": "^9.1.6",
+    "rollup-plugin-copy": "^0.2.3",
     "rollup-plugin-eslint": "^5.0.0",
     "rollup-plugin-gzip": "^2.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
