@@ -23,15 +23,16 @@ import { defineComponent, mount } from 'js-surface';
 // for those you like to implement components in a object oriented way
 import { Component } from 'js-surface/classes';
 
-// A 3rd-party general purpose validation library.
-import { Spec } from 'js-spec'; 
-
 // Just for those who do not want to use JSX (for demo purposes).
 // Everything would also work perfectly with JSX, of course.
 // Those DOM factory functions are only a add-on to jsSurface.
 // The core of jsSurface has also a "createElement" function,
 // of course, as all virtual DOM based libraries have.
 import { button, div } from 'js-surface/dom-factories'
+
+// A 3rd-party general purpose validation library.
+import { Spec } from 'js-spec'; 
+
 
 const Counter = defineComponent({
   displayName: 'Counter',
