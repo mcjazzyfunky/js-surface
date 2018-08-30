@@ -12,7 +12,9 @@ const configs = []
 
 for (const format of ['umd', 'cjs', 'amd', 'esm']) {
   for (const productive of [false, true]) {
-    configs.push(createCoreConfig(format, productive))
+    const copyAssets = format === 'esm' && productive === true
+
+    configs.push(createCoreConfig(format, productive, copyAssets))
   }
 }
 
@@ -28,7 +30,7 @@ export default configs
 
 // --- locals -------------------------------------------------------
 
-function createCoreConfig(moduleFormat, productive) {
+function createCoreConfig(moduleFormat, productive, copyAssets) {
   return {
     input: 'src/main/js-surface/index.js',
 
@@ -74,14 +76,14 @@ function createCoreConfig(moduleFormat, productive) {
       }),
       replace({
         exclude: 'node_modules/**',
-        
+
         values: {
           'process.env.NODE_ENV': productive ? "'production'" : "'development'"
         }
       }),
       productive && (moduleFormat === 'esm' ? uglifyES() : uglifyJS()),
       productive && gzip(),
-      productive && moduleFormat === 'umd' && copy({ 'to-copy-to-dist': 'dist' })
+      copyAssets && copy({ 'assets': 'dist' })
     ],
   }
 }
