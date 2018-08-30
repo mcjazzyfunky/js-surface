@@ -3,7 +3,7 @@
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
-based on "preact"[https://www.preactjs.com]).
+based on [preact](https://www.preactjs.com)).
 Be aware that jsSurface is currently only for research purposes, it's currently
 NOT meant to be used in real-world applications.
 
@@ -52,8 +52,7 @@ const Counter = defineComponent({
 
     render() {
       return (
-        buton(,
-          { onClick: this.onIncrementClick },
+        buton({ onClick: this.onIncrementClick },
           'Counter: ' + this.state.counter)
       );
     }
@@ -304,32 +303,32 @@ export default defineComponent({
   displayName: 'DatePicker',
 
   properties: {
-      value: {
-          type: Date,
+    value: {
+      type: Date,
           
-          get defaultValue() {
-              return new Date(new Date().toDateString())
-          }
-      },
-
-      name: {
-          type: String,
-          constraint: Spec.match(/^[a-zA-Z]+$/),
-                      // 3rd-party spec lib
-          nullable: true,
-          defaultValue: null
+      get defaultValue() {
+        return new Date(new Date().toDateString())
       }
+    },
 
-      Logger: {
-          type: Logger,
-          inject: LoggerCtx
-      },
+    name: {
+      type: String,
+      constraint: Spec.match(/^[a-zA-Z]+$/),
+                  // 3rd-party spec lib
+      nullable: true,
+      defaultValue: null
+    }
 
-      onChange: {
-          type: Function,
-          nullable: true,
-          defaultValue: null
-      }
+    Logger: {
+      type: Logger,
+      inject: LoggerCtx
+    },
+
+    onChange: {
+      type: Function,
+      nullable: true,
+      defaultValue: null
+    }
   },
 
   methods: ['focus', 'blur'], // to declare public methods
@@ -366,9 +365,9 @@ export default defineComponent({
     //                            'isErrorBoundary' is set to true)
     // }
     return {
-        render,
-        proxy, 
-        // [...]
+      render,
+      proxy, 
+      // [...]
     }
   }
 })
