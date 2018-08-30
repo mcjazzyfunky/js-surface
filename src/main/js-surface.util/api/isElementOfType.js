@@ -1,4 +1,4 @@
-import setJsSpecValidator from '../internal/helper/setJsSpecValidator'
+import setJsSpecValidator from '../internal/setJsSpecValidator'
 import { isElement } from 'js-surface'
 
 export default function isElementOfType(type, it) {

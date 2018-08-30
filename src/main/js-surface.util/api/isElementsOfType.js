@@ -1,5 +1,5 @@
-import setJsSpecValidator from '../internal/setJsSpecValidator'
 import isElementOfType from './isElementOfType'
+import setJsSpecValidator from '../internal/setJsSpecValidator'
 
 export default function isElementsOfType(type, it)  {
   let ret = false
