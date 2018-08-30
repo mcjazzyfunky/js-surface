@@ -32,38 +32,34 @@ const App = defineComponent({
     }
   },
 
-  main: {
-    functional: false,
-    
-    init(getProps, getState, updateState) {
-      updateState({ locale: getProps().defaultLocale })
+  init(getProps, getState, updateState) {
+    updateState({ locale: getProps().defaultLocale })
 
-      return { 
-        render: () => {
-          const locale = getState().locale
+    return { 
+      render: () => {
+        const locale = getState().locale
 
-          return (
-            LocaleCtx.Provider({ value: locale },
+        return (
+          LocaleCtx.Provider({ value: locale },
+            div(
+              label({ htmlFor: 'lang-selector' },
+                'Select language: '),
+              select(
+                {
+                  id: 'lang-selector',
+                  value: locale,
+                  onChange: ev => {
+                    const newLocale = ev.target.value
+
+                    updateState(() => ({ locale: newLocale }))
+                  }
+                },
+                option({ value: 'en' }, 'en'),
+                option({ value: 'fr' }, 'fr'),
+                option({ value: 'de' }, 'de')),
               div(
-                label({ htmlFor: 'lang-selector' },
-                  'Select language: '),
-                select(
-                  {
-                    id: 'lang-selector',
-                    value: locale,
-                    onChange: ev => {
-                      const newLocale = ev.target.value
-
-                      updateState(() => ({ locale: newLocale }))
-                    }
-                  },
-                  option({ value: 'en' }, 'en'),
-                  option({ value: 'fr' }, 'fr'),
-                  option({ value: 'de' }, 'de')),
-                div(
-                  LocaleText({ id: 'salutation'}))))
-          )
-        }
+                LocaleText({ id: 'salutation'}))))
+        )
       }
     }
   }
@@ -78,16 +74,12 @@ const LocaleText = defineComponent({
     }
   },
 
-  main: {
-    functional: true,
-
-    render(props) {
-      return (
-        div(
-          LocaleCtx.Consumer(locale =>
-            translations[locale][props.id]))
-      )
-    }
+  render(props) {
+    return (
+      div(
+        LocaleCtx.Consumer(locale =>
+          translations[locale][props.id]))
+    )
   }
 })
 

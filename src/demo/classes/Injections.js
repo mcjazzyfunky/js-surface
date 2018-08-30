@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent, defineContext } from 'js-surface'
-import { view, Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 import { Spec } from 'js-spec'
 
 const
@@ -82,13 +82,13 @@ const Counter = defineComponent({
 const InjectionsDemo = defineComponent({
   displayName: 'InjectionsDemo',
 
-  main: view(() => {
+  render() {
     return (
       LoggerCtx.Provider(
         { value: consoleLogger },
         Counter({ label: 'Counter:' }))
     )
-  })
+  }
 })
 
 export default InjectionsDemo()

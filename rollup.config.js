@@ -24,6 +24,7 @@ function createRollupConfig(moduleFormat, productive) {
         'js-surface': 'jsSurface',
         'js-spec': 'jsSpec',
         'preact': 'preact',
+        'preact-context': 'preactContext'
       }
     },
 
@@ -40,13 +41,11 @@ function createRollupConfig(moduleFormat, productive) {
           'node_modules/js-spec/dist/js-spec.js': ['Spec']
         }
       }),
-      /*
       eslint({
         exclude: [
           'src/styles/**',
         ]
       }),
-      */
       babel({
         exclude: 'node_modules/**',
         externalHelpers: true,

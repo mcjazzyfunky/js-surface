@@ -1,5 +1,5 @@
 import { createElement, defineComponent } from 'js-surface'
-import { Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 import { Html } from 'js-surface/dom-factories'
 import { h } from 'preact'
 

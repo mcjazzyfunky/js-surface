@@ -13,12 +13,8 @@ const HelloWorld = defineComponent({
     }
   },
 
-  main: {
-    functional: true,
-
-    render({ name }) {
-      return div(`Hello ${name}!`)
-    }
+  render({ name }) {
+    return div(`Hello ${name}!`)
   }
 })
 

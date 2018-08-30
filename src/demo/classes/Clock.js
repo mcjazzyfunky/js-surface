@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent } from 'js-surface'
-import { Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 
 const Clock = defineComponent({
   displayName: 'Clock',
@@ -47,4 +47,4 @@ const Clock = defineComponent({
   }
 })
 
-export default Clock({ headline: 'Local time:' }); 
+export default Clock({ headline: 'Local time:' }) 

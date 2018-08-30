@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent }  from 'js-surface'
-import { Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 import { Html } from 'js-surface/dom-factories'
 
 const { br, button, div, h3 } = Html

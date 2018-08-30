@@ -96,8 +96,6 @@ export default class Component {
     const CustomComponent = this
 
     const ret = {
-      functional: false,
-
       init(getProps, getState, updateState, forceUpdate) {
         const component = new CustomComponent(getProps())
         

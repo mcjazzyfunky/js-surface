@@ -1,6 +1,4 @@
-
 import { createElement as h, defineComponent } from 'js-surface'
-import { view } from 'js-surface/common'
 
 const helloWorldContent = {
   [Symbol.iterator]: function * () {
@@ -38,12 +36,12 @@ const helloWorldContent = {
 const Demo = defineComponent({
   displayName:  'Demo',
 
-  main: view(() => {
+  render() {
     return (
       h('div',
         { style: { display: 'block' } },
         helloWorldContent))
-  })
+  }
 })
 
 export default Demo()

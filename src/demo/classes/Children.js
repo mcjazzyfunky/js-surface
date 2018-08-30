@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent } from 'js-surface'
-import { Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 
 const Demo = defineComponent({
   displayName: 'Demo',

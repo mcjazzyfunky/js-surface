@@ -1,5 +1,5 @@
-import { createElement as h, defineComponent } from 'js-surface'; 
-import { Component } from 'js-surface/common'
+import { createElement as h, defineComponent } from 'js-surface' 
+import { Component } from 'js-surface/classes'
 
 const ErrorTrigger = defineComponent({ 
   displayName: 'ErrorTrigger',
@@ -44,7 +44,7 @@ const ErrorBoundary = defineComponent({
       this.state = {
         error: null,
         errorInfo: null
-      };     
+      }
     }
 
     componentDidCatch(error, errorInfo) {

@@ -12,92 +12,110 @@ const
       'componentWillMount', 'componentDidMount',
       'componentWillUpdate', 'componentDidUpdate',
       'componentDidCatch', 'constructor', 'forceUpdate'])
+// --- some helper specs --------------------------------------------
+
+const
+  specOfProperties =
+    Spec.and(
+      Spec.object,
+
+      Spec.keysOf(
+        Spec.match(REGEX_PROPERTY_NAME)),
+
+      Spec.valuesOf(
+        Spec.shape({
+          type:
+            Spec.optional(Spec.function),
+          
+          constraint:
+            Spec.optional(
+              Spec.or(
+                Spec.function,
+                Spec.extensibleShape({
+                  validate: Spec.function
+                })
+              )),
+
+          nullable:
+            Spec.optional(Spec.boolean),
+
+          defaultValue:
+            Spec.optional(Spec.any),
+
+          inject:
+            Spec.optional(
+              Spec.valid(it => it != null && typeof it === 'object'
+                && !!it.__internal_context)
+                .usingHint('Must be a context'))
+        }))),
+    
+  specOfMethods =
+    Spec.arrayOf(
+      Spec.and(
+        Spec.match(REGEX_METHOD_NAME),
+        Spec.notIn(FORBIDDEN_METHOD_NAMES))),
+
+  specOfRenderConfig =
+    Spec.shape({
+      displayName:
+        Spec.match(REGEX_DISPLAY_NAME),
+      properties:
+        Spec.optional(specOfProperties),
+      validate:
+          Spec.optional(Spec.function),
+      render:
+        Spec.function
+    }),
+
+  specOfInitConfig =
+    Spec.shape({
+      displayName:
+        Spec.match(REGEX_DISPLAY_NAME),
+      properties:
+        Spec.optional(specOfProperties),
+      validate:
+        Spec.optional(Spec.function),
+      methods:
+        Spec.optional(specOfMethods),
+      isErrorBoundary:
+        Spec.optional(Spec.boolean),
+      init:
+        Spec.function,
+      deriveStateFromProps:
+        Spec.optional(Spec.function)
+    }),
+
+  specOfMainConfig =
+    Spec.shape({
+      displayName:
+        Spec.match(REGEX_DISPLAY_NAME),
+      properties:
+        Spec.optional(specOfProperties),
+      validate:
+        Spec.optional(Spec.function),
+      methods:
+        Spec.optional(specOfMethods),
+      isErrorBoundary:
+        Spec.optional(Spec.boolean),
+      main:
+        Spec.prop('normalizeComponent', Spec.function)
+    })
 
 // --- the spec of the component configuration ----------------------
 
 export default
   Spec.and(
-    Spec.shape({
-      displayName:
-        Spec.match(REGEX_DISPLAY_NAME),
-
-      properties:
-        Spec.optional(
-          Spec.and(
-            Spec.object,
-
-            Spec.keysOf(
-              Spec.match(REGEX_PROPERTY_NAME)),
-
-            Spec.valuesOf(
-              Spec.shape({
-                type:
-                  Spec.optional(Spec.function),
-                
-                constraint:
-                  Spec.optional(
-                    Spec.or(
-                      Spec.function,
-                      Spec.extensibleShape({
-                        validate: Spec.function
-                      })
-                    )),
-
-                nullable:
-                  Spec.optional(Spec.boolean),
-
-                defaultValue:
-                  Spec.optional(Spec.any),
-
-                inject:
-                  Spec.optional(
-                    Spec.valid(it => it != null && typeof it === 'object'
-                      && !!it.__internal_context)
-                      .usingHint('Must be a context'))
-              })))),
-
-      validate:
-          Spec.optional(
-            Spec.function),
-
-      methods:
-        Spec.optional(
-          Spec.arrayOf(
-            Spec.and(
-              Spec.match(REGEX_METHOD_NAME),
-              Spec.notIn(FORBIDDEN_METHOD_NAMES)))),
-
-      isErrorBoundary:
-        Spec.optional(Spec.boolean),
-
-      main:
-        Spec.or(
-          {
-            when:
-              Spec.function,
-
-            check:
-              Spec.function
-          },
-          {
-            when:
-              it => it && typeof it === 'object' && it.functional === true,
-
-            check:
-              Spec.shape({
-                functional: Spec.is(true),
-                render: Spec.function
-              })
-          },
-          {
-            when:
-              it => it && typeof it === 'object' && it.functional === false,
-
-            check:
-              Spec.shape({
-                functional: Spec.is(false),
-                init: Spec.function,
-                deriveStateFromProps: Spec.optional(Spec.function) 
-              })
-          })
-    }))
+    Spec.object,
+    Spec.or(
+      {
+        when: Spec.hasOwnProp('render'),
+        check: specOfRenderConfig
+      },
+      {
+        when: Spec.hasOwnProp('init'),
+        check: specOfInitConfig
+      },
+      {
+        when: Spec.hasOwnProp('main'),
+        check: specOfMainConfig
+      }))

@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent }  from 'js-surface'
-import { view, Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 
 const
   framesPerSecond = 240,
@@ -22,7 +22,7 @@ const Tile = defineComponent({
     }
   },
   
-  main: view(props => {
+  render(props) {
     const
       { width, color } = props,
     
@@ -36,7 +36,7 @@ const Tile = defineComponent({
       }
     
     return h('div', { style })
-  })
+  }
 })
 
 const TileRow = defineComponent({
@@ -52,7 +52,7 @@ const TileRow = defineComponent({
     }
   },
   
-  main: view(props => {
+  render(props) {
     const
       { tileWidth, columnCount } = props,
       tiles = []
@@ -66,7 +66,7 @@ const TileRow = defineComponent({
     }
   
     return h('div', { style: { clear: 'both' }}, tiles)
-  })
+  }
 })
 
 const SpeedTest = defineComponent({
@@ -131,7 +131,7 @@ const SpeedTest = defineComponent({
     componentDidMount() {
       this.intervalId = setInterval(() => {
         ++this.__frameCount
-        this.forceUpdate(); 
+        this.forceUpdate()
 
         if (this.__frameCount % 10 === 0) {
           this.__actualFramesPerSecond =

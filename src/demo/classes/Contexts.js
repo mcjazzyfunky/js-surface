@@ -1,5 +1,5 @@
 import { createElement as h, defineContext, defineComponent } from 'js-surface'
-import { Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 
 const ParentDisabledCtx = defineContext({
   displayName: 'ParentDisabledCtx',
@@ -22,7 +22,7 @@ const Parent = defineComponent({
     constructor(props) {
       super(props)
 
-      this.state = { disabled: false }; 
+      this.state = { disabled: false }
     }
 
     toggleDisableState() {

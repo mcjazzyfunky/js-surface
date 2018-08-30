@@ -6,40 +6,40 @@ import I18n from './core/I18n'
 import PerformanceTest1 from './core/PerformanceTest1'
 
 
-// based on core + common 
-import HelloWorld2 from './common/HelloWorld2'
-import VerySimpleCounter from './common/VerySimpleCounter'
-import Clock from './common/Clock'
-import StopWatch from './common/StopWatch'
-import Fragments from './common/Fragments'
-import Iterators from './common/Iterators'
-import InnerHtml from './common/InnerHtml'
-import Contexts from './common/Contexts'
-import Injections from './common/Injections'
-import ErrorBoundaries from './common/ErrorBoundaries'
-import Children from './common/Children'
-import MountUnmount from './common/MountUnmount'
-import PerformanceTest2 from './common/PerformanceTest2'
-import PerformanceTest3 from './common/PerformanceTest3'
+// based on core + classes 
+import HelloWorld2 from './classes/HelloWorld2'
+import VerySimpleCounter from './classes/VerySimpleCounter'
+import Clock from './classes/Clock'
+import StopWatch from './classes/StopWatch'
+import Fragments from './classes/Fragments'
+import Iterators from './classes/Iterators'
+import InnerHtml from './classes/InnerHtml'
+import Contexts from './classes/Contexts'
+import Injections from './classes/Injections'
+import ErrorBoundaries from './classes/ErrorBoundaries'
+import Children from './classes/Children'
+import MountUnmount from './classes/MountUnmount'
+import PerformanceTest2 from './classes/PerformanceTest2'
+import PerformanceTest3 from './classes/PerformanceTest3'
 
 export default [
   ['Hello World 1 (core)', HelloWorld1],
-  ['Hello World 2 (common)', HelloWorld2],
-  ['Very simple counter (common)', VerySimpleCounter],
+  ['Hello World 2 (classes)', HelloWorld2],
+  ['Very simple counter (classes)', VerySimpleCounter],
   ['Simple counter (core)', SimpleCounter],
   ['Complex counter (core)', ComplexCounter],
-  ['Stop watch (common)', StopWatch],
-  ['Clock (common)', Clock],
+  ['Stop watch (classes)', StopWatch],
+  ['Clock (classes)', Clock],
   ['Performance Test 1 (core)', PerformanceTest1],
-  ['Performance Test 2 (common)', PerformanceTest2],
-  ['Performance Test functional (common)', PerformanceTest3],
-  ['Fragments (common)', Fragments],
-  ['Iterators (common)', Iterators],
-  ['Inner HTML (common)', InnerHtml],
-  ['Contexts (common)', Contexts],
-  ['Injections (common)', Injections],
+  ['Performance Test 2 (classes)', PerformanceTest2],
+  ['Performance Test functional (classes)', PerformanceTest3],
+  ['Fragments (classes)', Fragments],
+  ['Iterators (classes)', Iterators],
+  ['Inner HTML (classes)', InnerHtml],
+  ['Contexts (classes)', Contexts],
+  ['Injections (classes)', Injections],
   ['Internationalization (core)', I18n],
-  ['Error boundaries (common)', ErrorBoundaries],
-  ['Children (common)', Children],
-  ['MountUnmount (common)', MountUnmount]
+  ['Error boundaries (classes)', ErrorBoundaries],
+  ['Children (classes)', Children],
+  ['MountUnmount (classes)', MountUnmount]
 ].map(([title, content]) => ({ title, content }))

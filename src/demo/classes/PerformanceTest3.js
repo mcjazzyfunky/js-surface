@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent } from 'js-surface'
-import { view, Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 
 const
   framesPerSecond = 240,
@@ -17,7 +17,7 @@ const
   Tile = defineComponent({
     displayName: 'Tile',
 
-    main: view(props => {
+    render(props) {
       const
         { width, color } = props,
       
@@ -31,13 +31,13 @@ const
         }
       
       return h('div', { style })
-    })
+    }
   }),
 
   TileRow = defineComponent({
     displayName: 'TileRow',
     
-    main: view(props => {
+    render(props) {
       const
         { tileWidth, columnCount } = props,
         tiles = []
@@ -51,13 +51,13 @@ const
       }
     
       return h('div', { style: { clear: 'both' }}, tiles)
-    })
+    }
   }),
 
   SpeedTest = defineComponent({
     displayName: 'SpeedTest',
 
-    main: view(() => {
+    render() {
       const
         rows = [],
       
@@ -88,7 +88,7 @@ const
             { style: { clear: 'both' } },
            `(actual frames per second: ${actualFramesPerSecond})`))
       )
-    })
+    }
   }),
 
   Main = defineComponent({

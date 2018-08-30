@@ -19,12 +19,20 @@ export default function defineComponent(config) {
 
   const normalizedConfig = { ...config }
 
-  if (typeof config.main === 'function') {
+  if (config.hasOwnProperty('main')) {
+    // TODO - make this nicer
+
+    let result
+
     if (typeof config.main.normalizeComponent === 'function') {
-      normalizedConfig.main = config.main.normalizeComponent(config)
-    } else {
-      normalizedConfig.main = config.main(config)
+      result = config.main.normalizeComponent(config)
+    } else {console.log(config)
+      result = config.main(config)
     }
+
+    Object.assign(normalizedConfig, result)
+
+    delete normalizedConfig.main
   }
 
   let internalType = deriveComponent(normalizedConfig)
@@ -148,14 +156,14 @@ function prettifyErrorMsg(errorMsg, config) {
 }
 
 function deriveComponent(config) {
-  return config.main.functional
+  return config.hasOwnProperty('render')
     ? deriveSimpleComponent(config)
     : deriveAdvancedComponent(config)
 }
 
 function deriveSimpleComponent(config) {
   return Object.assign(
-    config.main.render.bind(),
+    config.render.bind(),
     convertConfig(config))
 }
 
@@ -198,7 +206,7 @@ function deriveAdvancedComponent(config) {
 
         forceUpdate = this.forceUpdate.bind(this)
 
-      const result = config.main.init(getProps, getState, updateState, forceUpdate)
+      const result = config.init(getProps, getState, updateState, forceUpdate)
 
       this.componentDidMount = () => {
         this.__isInitialized = true
@@ -254,9 +262,9 @@ function deriveAdvancedComponent(config) {
     }
   }
   
-  if (config.main.deriveStateFromProps) {
+  if (config.deriveStateFromProps) {
     Component.getDerivedStateFromProps = (props, state) => {
-      return config.main.deriveStateFromProps(props, state)
+      return config.deriveStateFromProps(props, state)
     }
   }
 

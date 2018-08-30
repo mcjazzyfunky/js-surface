@@ -1,5 +1,5 @@
 import { createElement as h, defineComponent } from 'js-surface'
-import { view, Component } from 'js-surface/common'
+import { Component } from 'js-surface/classes'
 import { Spec } from 'js-spec'
 
 const Counter = defineComponent({
@@ -38,13 +38,13 @@ const Counter = defineComponent({
 const Demo = defineComponent({
   displayName: 'Demo',
 
-  main: view(() => {
+  render() {
     return (
       h('div',
         h('div', 'Please press the button to increase the counter'),
         Counter())
     )
-  })
+  }
 })
 
 export default Demo()

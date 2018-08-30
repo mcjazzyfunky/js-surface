@@ -39,7 +39,7 @@ function createRollupConfig(productive) {
         browser: true,
       }),
       alias({
-        'js-surface/common': path.resolve(__dirname, 'src/main/js-surface.common/index.js'),
+        'js-surface/classes': path.resolve(__dirname, 'src/main/js-surface.classes/index.js'),
         'js-surface/util': path.resolve(__dirname, 'src/main/js-surface.util/index.js'),
         'js-surface/dom-factories': path.resolve(__dirname, 'src/main/js-surface.dom-factories/index.js'),
         'js-surface': path.resolve(__dirname, 'src/main/js-surface/index.js'),
