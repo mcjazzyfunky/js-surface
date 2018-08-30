@@ -17,11 +17,14 @@ are implemented with jsSurface (it's a simple "Counter" application):
 
 ```javascript
 import { createElement as h, defineComponent, mount } from 'js-surface';
-import { Component } from 'js-surface/classes';
+
 // Be aware that "Component" is just a changeable add-ons to
 // jsSurface - means, this is just some kind of syntactical sugar
 // for those you like to implement components in a object oriented way
-import { Spec } from 'js-spec'; // a 3rd-party general purpose validation library.
+import { Component } from 'js-surface/classes';
+
+// a 3rd-party general purpose validation library.
+import { Spec } from 'js-spec'; 
 
 // Just for those who do not want to use JSX (for demo purposes).
 // Everything would also work perfectly with JSX, of course.
