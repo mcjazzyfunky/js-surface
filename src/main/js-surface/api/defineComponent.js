@@ -17,7 +17,7 @@ export default function defineComponent(config) {
     }
   }
 
-  const normalizedConfig = { ...config }
+  const normalizedConfig = Object.assign({}, config)
 
   if (config.hasOwnProperty('main')) {
     // TODO - make this nicer
@@ -74,7 +74,7 @@ export default function defineComponent(config) {
         render() {
           const
             contextValues = new Array(injectedContexts.length),
-            adjustedProps = { ...this.props }
+            adjustedProps = Object.assign({}, this.props)
 
           let node = null
 
@@ -302,7 +302,7 @@ function convertConfig(config) {
           enumerable: true,
 
           get: () => propCfg.getDefaultValue()
-        }); 
+        })
       }
     }
   }

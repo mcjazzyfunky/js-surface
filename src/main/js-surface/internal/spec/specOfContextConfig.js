@@ -2,7 +2,7 @@ import { Spec } from 'js-spec'
 
 // --- the spec of the context configuration ------------------------
 
-export default
+const spec =
   Spec.optional(
     Spec.shape({
       displayName:
@@ -24,3 +24,5 @@ export default
       defaultValue:
          Spec.any
     }))
+
+export default spec

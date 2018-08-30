@@ -21,39 +21,39 @@ export default function validateProperty(it, propName, propConfig) {
     const type = typeof it
     
     switch (typeConstructor) {
-    case Boolean:
-      if (type !== 'boolean') {
-        errMsg = `Property '${propName}' must be boolean`
-      }
+      case Boolean:
+        if (type !== 'boolean') {
+          errMsg = `Property '${propName}' must be boolean`
+        }
+        
+        break
+        
+      case Number:
+        if (type !== 'number') {
+          errMsg = `Property '${propName}' must be a number`
+        }
+        
+        break
       
-      break
-      
-    case Number:
-      if (type !== 'number') {
-        errMsg = `Property '${propName}' must be a number`
-      }
-      
-      break
-    
-    case String:
-      if (type !== 'string') {
-        errMsg = `Property '${propName}' must be a string`
-      }
-      
-      break
-      
-    case Function:
-      if (type !== 'function') {
-        errMsg = `Property '${propName}' must be a function`
-      }
-      
-      break
-      
-    default:
-      if (typeConstructor && !(it instanceof typeConstructor)) {
-        errMsg = `The property '${propName}' must be of typeConstructor '`
-          + typeConstructor.name + "'"
-      }
+      case String:
+        if (type !== 'string') {
+          errMsg = `Property '${propName}' must be a string`
+        }
+        
+        break
+        
+      case Function:
+        if (type !== 'function') {
+          errMsg = `Property '${propName}' must be a function`
+        }
+        
+        break
+        
+      default:
+        if (typeConstructor && !(it instanceof typeConstructor)) {
+          errMsg = `The property '${propName}' must be of typeConstructor '`
+            + typeConstructor.name + "'"
+        }
     }
   }
 

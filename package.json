@@ -19,7 +19,7 @@
     "copyfiles": "^2.0.0",
     "dio.js": "^9.1.0",
     "esdoc": "^1.0.3",
-    "eslint": "^3.19.0",
+    "eslint": "^5.4.0",
     "js-spec": "^0.1.46",
     "mocha": "^5.1.1",
     "preact-compat": "^3.18.3",

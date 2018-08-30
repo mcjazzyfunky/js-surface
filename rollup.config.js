@@ -67,7 +67,7 @@ function createRollupConfig(moduleFormat, productive) {
 const configs = []
 
 for (const format of ['umd', 'cjs', 'amd', 'esm']) {
-  for (const productive of [true, false]) {
+  for (const productive of [false, true]) {
     configs.push(createRollupConfig(format, productive))
   }
 }

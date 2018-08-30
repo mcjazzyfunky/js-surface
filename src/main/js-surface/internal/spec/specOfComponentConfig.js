@@ -103,7 +103,7 @@ const
 
 // --- the spec of the component configuration ----------------------
 
-export default
+const spec =
   Spec.and(
     Spec.object,
     Spec.or(
@@ -119,3 +119,5 @@ export default
         when: Spec.hasOwnProp('main'),
         check: specOfMainConfig
       }))
+
+export default spec
