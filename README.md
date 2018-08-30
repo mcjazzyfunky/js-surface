@@ -16,19 +16,21 @@ But first, here's a small demo application to get a glimpse of how components
 are implemented with jsSurface (it's a simple "Counter" application):
 
 ```javascript
-import { createElement as h, defineComponent, mount } from 'js-surface';
+import { defineComponent, mount } from 'js-surface';
 
 // Be aware that "Component" is just a changeable add-ons to
 // jsSurface - means, this is just some kind of syntactical sugar
 // for those you like to implement components in a object oriented way
 import { Component } from 'js-surface/classes';
 
-// a 3rd-party general purpose validation library.
+// A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
 
 // Just for those who do not want to use JSX (for demo purposes).
 // Everything would also work perfectly with JSX, of course.
 // Those DOM factory functions are only a add-on to jsSurface.
+// The core of jsSurface has also a "createElement" function,
+// of course, as all virtual DOM based libraries have.
 import { button, div } from 'js-surface/dom-factories'
 
 const Counter = defineComponent({
