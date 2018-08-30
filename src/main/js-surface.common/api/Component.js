@@ -18,7 +18,7 @@ export default class Component {
   }
 
   get props() {
-    const getProps = this.___internals.getProps; 
+    const getProps = this.___internals.getProps 
 
     return getProps ? getProps() : null
   }
@@ -88,7 +88,7 @@ export default class Component {
     }
   }
 
-  static derivedStateFromProps(/* nextProps, prevState */) {
+  static getDerivedStateFromProps(/* nextProps, prevState */) {
     return null
   }
 
@@ -147,8 +147,8 @@ export default class Component {
       }
     }
 
-    if (config.main.deriveStateFromProps !== Component.deriveStateFromProps) {
-      ret.deriveStateFromProps = config.main.deriveStateFromProps
+    if (config.main.getDerivedStateFromProps !== Component.getDerivedStateFromProps) {
+      ret.deriveStateFromProps = config.main.getDerivedStateFromProps
     }
 
     return ret

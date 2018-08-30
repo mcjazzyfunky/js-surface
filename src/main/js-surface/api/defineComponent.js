@@ -113,9 +113,17 @@ export default function defineComponent(config) {
     }
   }
 
-  const ret = (...args) => {
-    return createElement(ret, ...args)
-  }
+  const ret = (function () {
+    let createComponentElement = null
+
+    return function () {
+      if (createComponentElement === null) {
+        createComponentElement = createElement.bind(null, ret)
+      }
+
+      return createComponentElement.apply(null, arguments)
+    }
+  }())
 
   Object.defineProperty(ret, '__internal_type', {
     enumerable: false,
@@ -146,12 +154,9 @@ function deriveComponent(config) {
 }
 
 function deriveSimpleComponent(config) {
-  const
-    convertedConfig = convertConfig(config),
-    ret = props => config.main.render(normalizeProps(props))
-
-  Object.assign(ret, convertedConfig)
-  return ret
+  return Object.assign(
+    config.main.render.bind(),
+    convertConfig(config))
 }
 
 function deriveAdvancedComponent(config) {
@@ -169,7 +174,7 @@ function deriveAdvancedComponent(config) {
       this.__callbacksWhenBeforeUpate = []
 
       const
-        getProps = () => normalizeProps(!this.__isInitialized ? props : this.props),
+        getProps = () => !this.__isInitialized ? props : this.props,
         getState = () => this.state,
 
         updateState = (updater, callback) => {
@@ -205,7 +210,7 @@ function deriveAdvancedComponent(config) {
 
       if (result.afterUpdate) {
         this.componentDidUpdate = (prevProps, prevState) => {
-          result.afterUpdate(normalizeProps(prevProps), prevState)
+          result.afterUpdate(prevProps, prevState)
         }
       }
 
@@ -223,11 +228,11 @@ function deriveAdvancedComponent(config) {
 
       if (result.needsUpdate) {
         this.shouldComponentUpdate = (nextProps, nextState) => {
-          return result.needsUpdate(normalizeProps(nextProps), nextState)
+          return result.needsUpdate(nextProps, nextState)
         }
       }
 
-      this.render = () => result.render()
+      this.render = result.render
 
       if (config.methods) {
         for (const methodName of config.methods) {
@@ -251,7 +256,7 @@ function deriveAdvancedComponent(config) {
   
   if (config.main.deriveStateFromProps) {
     Component.getDerivedStateFromProps = (props, state) => {
-      return config.main.deriveStateFromProps(normalizeProps(props), state)
+      return config.main.deriveStateFromProps(props, state)
     }
   }
 
@@ -302,7 +307,7 @@ function convertConfig(config) {
         const
           propNames = config.properties ? Object.keys(config.properties) : [],
           messages = [],
-          normalizedProps = normalizeProps(props)
+          normalizedProps = props
 
         if (config.properties) {
           for (let i = 0; i < propNames.length; ++i) {
@@ -358,23 +363,3 @@ function convertConfig(config) {
   return ret
 }
 
-// TODO
-function normalizeProps(props) {
-  let ret = props
-
-  if (props
-    && 'children' in ret
-    && props.children !== null
-    && !(Array.isArray(props.children))) {
-   
-    ret = { ...props }
-
-    delete ret.children
-
-    if (props.children) {
-      ret.children = [props.children]
-    }
-  }
-
-  return ret
-}

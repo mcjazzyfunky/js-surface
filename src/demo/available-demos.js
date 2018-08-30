@@ -4,7 +4,6 @@ import SimpleCounter from './core/SimpleCounter'
 import ComplexCounter from './core/ComplexCounter'
 import I18n from './core/I18n'
 import PerformanceTest1 from './core/PerformanceTest1'
-import PerformanceTest2 from './common/PerformanceTest2'
 
 
 // based on core + common 
@@ -20,6 +19,8 @@ import Injections from './common/Injections'
 import ErrorBoundaries from './common/ErrorBoundaries'
 import Children from './common/Children'
 import MountUnmount from './common/MountUnmount'
+import PerformanceTest2 from './common/PerformanceTest2'
+import PerformanceTest3 from './common/PerformanceTest3'
 
 export default [
   ['Hello World 1 (core)', HelloWorld1],
@@ -31,6 +32,7 @@ export default [
   ['Clock (common)', Clock],
   ['Performance Test 1 (core)', PerformanceTest1],
   ['Performance Test 2 (common)', PerformanceTest2],
+  ['Performance Test functional (common)', PerformanceTest3],
   ['Fragments (common)', Fragments],
   ['Iterators (common)', Iterators],
   ['Inner HTML (common)', InnerHtml],

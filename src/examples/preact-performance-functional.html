@@ -37,7 +37,13 @@
       columnCount = 20,
       rowCount = 20
 
-      const Tile = props => {
+    let
+      startTime = Date.now(),
+      frameCount = 0,
+      actualFramesPerSecond = '0'
+
+    const
+      Tile = props => {
         const
           { width, color } = props,
           
@@ -51,9 +57,9 @@
           }
           
         return h('div', { style })
-      }
+      },
 
-      const TileRow = props => {
+      TileRow = props => {
         const
           { tileWidth, columnCount } = props,
           tiles = []
@@ -67,71 +73,74 @@
         }
       
         return h('div', { style: { clear: 'both' }}, tiles)
-      }
+      },
 
-      const SpeedTest = class extends Component {
-        constructor(props) {
-          super(props)
-
-          this.__intervalId = null
-          this.__startTime = Date.now()
-          this.__frameCount = 0
-          this.__actualFramesPerSecond = '0'
-        }
-
-        render() {
-          const
-            rows = [],
-            
-            style = {
-            marginTop: 40,
-            marginLeft: 40
-          }
-
-          for (let y = 0; y < this.props.rowCount; ++y) {
-            rows.push(
-              TileRow({
-                tileWidth: this.props.tileWidth,
-                columnCount: this.props.columnCount,
-                key: y
-              }))
-          }
+      SpeedTest = () => {
+        const
+          rows = [],
           
-          return (
-            h('div',
-            null,
-            h('div',
-                null,
-                `Rows: ${this.props.rowCount}, columns: ${this.props.columnCount}`,
-                h('div',
-                { style },
-                rows)),
-            h('p',
-                { style: { clear: 'both' } },
-            `(actual frames per second: ${this.__actualFramesPerSecond})`))
-          )
+          style = {
+          marginTop: 40,
+          marginLeft: 40
         }
 
-        componentDidMount() {
-          this.intervalId = setInterval(() => {
-            ++this.__frameCount
-            this.forceUpdate(); 
-
-            if (this.__frameCount % 10 === 0) {
-            this.__actualFramesPerSecond =
-                (this.__frameCount * 1000.0 /
-                (Date.now() - this.__startTime)).toFixed(2)
-            }
-          }, 1000 / framesPerSecond)
+        for (let y = 0; y < rowCount; ++y) {
+          rows.push(
+            TileRow({
+              tileWidth: tileWidth,
+              columnCount: columnCount,
+              key: y
+            }))
         }
+        
+        return (
+          h('div',
+          null,
+          h('div',
+              null,
+              `Rows: ${rowCount}, columns: ${columnCount}`,
+              h('div',
+              { style },
+              rows)),
+          h('p',
+              { style: { clear: 'both' } },
+          `(actual frames per second: ${actualFramesPerSecond})`))
+        )
+      },
 
-        componentWillUnmount() {
-          clearInterval(this.intervalId)
-          }
+    Main = class extends Component {
+      constructor(props) {
+        super(props)
+
+        this.intervalId = null
       }
+
+      render() {
+        return h(SpeedTest, { tileWidth, columnCount, rowCount })
+      }
+
+      componentDidMount() {
+        this.intervalId = setInterval(() => {
+          ++frameCount
+          this.forceUpdate(); 
+
+          if (frameCount % 10 === 0) {
+            actualFramesPerSecond =
+              (frameCount * 1000.0 /
+              (Date.now() - startTime)).toFixed(2)
+            }
+         }, 1000 / framesPerSecond)
+      }
+
+      componentWillUnmount() {
+        clearInterval(this.intervalId)
+        this.intervalId = null
+      }
+    }
 
     render(
-      h(SpeedTest, { tileWidth, columnCount, rowCount }),
+      h(Main),
       document.getElementById('main-content'))
+
   </script>
 </body>
