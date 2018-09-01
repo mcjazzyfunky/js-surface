@@ -89,7 +89,7 @@ function createSubmoduleConfig(submoduleName, moduleFormat, productive) {
         : `dist/submodules/${submoduleName}/js-surface.${submoduleName}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
-      name: `jsSurface${submoduleName === 'all' ? '' : '.' + submoduleName}`, 
+      name: 'jsSurface', 
       sourcemap: productive ? false : 'inline',
 
       globals:

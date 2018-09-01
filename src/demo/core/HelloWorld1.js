@@ -1,4 +1,4 @@
-import { createElement as h, defineComponent } from 'js-surface'
+import { defineComponent } from 'js-surface'
 import { Html } from 'js-surface/dom-factories'
 
 const { div } = Html

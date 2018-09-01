@@ -82,11 +82,11 @@ const
             null,
             `Rows: ${rowCount}, columns: ${columnCount}`,
             h('div',
-             { style },
-             rows)),
+              { style },
+              rows)),
           h('p',
             { style: { clear: 'both' } },
-           `(actual frames per second: ${actualFramesPerSecond})`))
+            `(actual frames per second: ${actualFramesPerSecond})`))
       )
     }
   }),
