@@ -1,5 +1,5 @@
 import setJsSpecValidator from '../internal/setJsSpecValidator'
-import isElement from 'js-surface'
+import { isElement } from 'js-surface'
 
 export default function isNode(it) {
   return !it || typeof it !== 'object' || isElement(it) 

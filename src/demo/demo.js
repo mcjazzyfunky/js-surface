@@ -10,7 +10,7 @@ const DemoSelector = defineComponent({
 
     function startDemo(idx) {
       currDemoIdx = idx
-      document.location.href = document.location.href.replace(/\#.*$/, '') + '#idx=' + currDemoIdx
+      document.location.href = document.location.href.replace(/#.*$/, '') + '#idx=' + currDemoIdx
       forceUpdate()
     }
 

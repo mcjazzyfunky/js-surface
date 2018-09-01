@@ -1,4 +1,5 @@
 import { eslint } from 'rollup-plugin-eslint'
+import alias from 'rollup-plugin-alias'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import replace from 'rollup-plugin-replace'
@@ -18,7 +19,7 @@ for (const format of ['umd', 'cjs', 'amd', 'esm']) {
   }
 }
 
-for (const submoduleName of ['classes', 'dom-factories', 'portal', 'util']) {
+for (const submoduleName of ['all', 'classes', 'dom-factories', 'portal', 'util']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createSubmoduleConfig(submoduleName, format, productive))
@@ -44,27 +45,19 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
       sourcemap: productive ? false : 'inline',
 
       globals: {
-        'js-surface': 'jsSurface',
       }
     },
-
-    external: [],
 
     plugins: [
       resolve({
         jsnext: true,
         main: true,
+        module: true,
         browser: true,
       }),
       commonjs({
-        namedExports: {
-          'node_modules/js-spec/dist/js-spec.js': ['Spec']
-        }
       }),
       eslint({
-        exclude: [
-          'src/styles/**',
-        ]
       }),
       replace({
         exclude: 'node_modules/**',
@@ -75,8 +68,8 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
         }
       }),
       babel({
-        exclude: 'node_modules/**',
-        externalHelpers: true,
+        //exclude: 'node_modules/**',
+        //externalHelpers: true,
         presets: [['@babel/preset-env', { modules: false }]],
       }),
       productive && (moduleFormat === 'esm' ? uglifyES() : uglifyJS()),
@@ -96,36 +89,32 @@ function createSubmoduleConfig(submoduleName, moduleFormat, productive) {
         : `dist/submodules/${submoduleName}/js-surface.${submoduleName}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
-      name: 'jsSurface.' + submoduleName, 
+      name: `jsSurface${submoduleName === 'all' ? '' : '.' + submoduleName}`, 
       sourcemap: productive ? false : 'inline',
 
-      globals: {
-        'js-surface': 'jsSurface',
-        'preact': 'preact',
-        'preact-portal': 'preactPortal'
-      }
+      globals:
+        submoduleName === 'all'
+          ? {}
+          : { 'js-surface': 'jsSurface' }
     },
 
-    external: ['preact', 'preact-portal', 'js-surface'],
+    external: submoduleName === 'all' ? [] : ['js-surface'],
 
     plugins: [
+      alias({
+        'js-surface': 'src/main/js-surface/index.js'
+      }),
       resolve({
         jsnext: true,
         main: true,
         browser: true,
       }),
       commonjs({
-        namedExports: {
-          'node_modules/js-spec/dist/js-spec.js': ['Spec']
-        }
       }),
       eslint({
-        exclude: [
-          'src/styles/**',
-        ]
       }),
       babel({
-        exclude: 'node_modules/**',
+        //exclude: 'node_modules/**',
         externalHelpers: true,
         presets: [['@babel/preset-env', { modules: false }]],
       }),
