@@ -129,7 +129,7 @@ export default function defineComponent(config) {
             }
           }
 
-      internalType.displayName = config.displayName + '-wrap'
+      internalType.displayName = config.displayName + '(container)'
 
       if (config.methods) {
         for (let i = 0; i < config.methods.length; ++i) {

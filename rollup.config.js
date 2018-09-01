@@ -51,7 +51,7 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
       }
     },
 
-    external: ['preact', 'preact-context', 'js-spec'],
+    external: ['js-spec'],
 
     plugins: [
       resolve({
@@ -69,17 +69,18 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
           'src/styles/**',
         ]
       }),
-      babel({
-        exclude: 'node_modules/**',
-        externalHelpers: true,
-        presets: [['@babel/preset-env', { modules: false }]],
-      }),
       replace({
         exclude: 'node_modules/**',
 
         values: {
-          'process.env.NODE_ENV': productive ? "'production'" : "'development'"
+          'process.env.NODE_ENV': productive ? "'production'" : "'development'",
+          "import 'preact/devtools'": productive ? '' : "import 'preact/devtools'"
         }
+      }),
+      babel({
+        exclude: 'node_modules/**',
+        externalHelpers: true,
+        presets: [['@babel/preset-env', { modules: false }]],
       }),
       productive && (moduleFormat === 'esm' ? uglifyES() : uglifyJS()),
       productive && gzip(),

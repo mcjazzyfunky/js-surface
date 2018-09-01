@@ -1,4 +1,3 @@
-import preact from 'preact'
 import preactContext from 'preact-context'
 import validateContextConfig from '../internal/validation/validateContextConfig'
 import printError from '../internal/helper/printError'
