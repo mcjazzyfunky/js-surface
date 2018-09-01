@@ -102,7 +102,7 @@ const
       }
 
       render() {
-        return h(SpeedTest, { tileWidth, columnCount, rowCount })
+        return h(SpeedTest)
       }
 
       componentDidMount() {

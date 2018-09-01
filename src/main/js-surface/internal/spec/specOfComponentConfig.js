@@ -1,6 +1,5 @@
-import { Spec } from 'js-spec'
-
 import { KEY_INTERNAL_CONTEXT } from '../constant/constants'
+import { Spec } from 'js-spec'
 
 // --- constants needed for the validation --------------------------
 const
