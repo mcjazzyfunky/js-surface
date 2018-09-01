@@ -42,6 +42,11 @@ export default function defineContext(config) {
     }
   }
 
+  Object.defineProperty(Consumer, '__internal_isProvider', {
+    enumerable: false,
+    value: true
+  })
+
   Object.defineProperty(Provider, '__internal_type', {
     enumerable: false,
     value: internalProvider

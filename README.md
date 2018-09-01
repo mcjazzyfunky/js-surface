@@ -392,10 +392,10 @@ A `defineContext` invocation looks like follows:
 
 ```javascript
 const MyContext = defineContext({
-    displayName: 'MyContext', // for error messages etc.
-    type: Number,
-    constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
-    defaultValue: 5
+  displayName: 'MyContext', // for error messages etc.
+  type: Number,
+  constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
+  defaultValue: 5
 });
 ```
 

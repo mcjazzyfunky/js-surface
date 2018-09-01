@@ -13,8 +13,7 @@ const Parent = defineComponent({
   properties: {
     children: {
       type: Array,
-      nullable: true,
-      defaultValue: null
+      optional: true
     }
   },
 
@@ -70,7 +69,8 @@ const Container = defineComponent({
 
   properties: {
     children: {
-      type: Array
+      type: Array,
+      optional: true
     }
   },
 

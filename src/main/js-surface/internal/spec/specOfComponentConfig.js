@@ -23,31 +23,44 @@ const
         Spec.match(REGEX_PROPERTY_NAME)),
 
       Spec.valuesOf(
-        Spec.shape({
-          type:
-            Spec.optional(Spec.function),
-          
-          constraint:
-            Spec.optional(
-              Spec.or(
-                Spec.function,
-                Spec.extensibleShape({
-                  validate: Spec.function
-                })
-              )),
+        Spec.and(
+          Spec.shape({
+            type:
+              Spec.optional(Spec.function),
+            
+            constraint:
+              Spec.optional(
+                Spec.or(
+                  Spec.function,
+                  Spec.extensibleShape({
+                    validate: Spec.function
+                  })
+                )),
 
-          nullable:
-            Spec.optional(Spec.boolean),
+            nullable:
+              Spec.optional(Spec.boolean),
 
-          defaultValue:
-            Spec.optional(Spec.any),
+            optional:
+              Spec.optional(Spec.is(true))
+                .usingHint('Must be set either to true or must not bet set at all'),
 
-          inject:
-            Spec.optional(
-              Spec.valid(it => it != null && typeof it === 'object'
-                && !!it.__internal_context)
-                .usingHint('Must be a context'))
-        }))),
+            defaultValue:
+              Spec.optional(Spec.any),
+
+            inject:
+              Spec.optional(
+                Spec.valid(it => it != null && typeof it === 'object'
+                  && !!it.__internal_context)
+                  .usingHint('Must be a context'))
+          }),
+
+          Spec.valid(it => !it.hasOwnProperty('optional')
+            || !it.hasOwnProperty('defaultValue'))
+            .usingHint('Parmeters "optional" and "defaultValue" must not be set both at once'))),
+      
+      Spec.valid(it => !it.hasOwnProperty('children') || !it.children.hasOwnProperty('defaultValue'))
+        .usingHint('Must not provide a default value for property "children"')
+    ),
     
   specOfMethods =
     Spec.arrayOf(

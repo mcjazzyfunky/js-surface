@@ -22,32 +22,35 @@ VirtualElement.prototype = Object.create(VNode, {
     enumerable: true,
 
     get() {
-      let ret = this.props2
+      let ret = null
 
-      if (ret === undefined) {
-        const ret = {}
-
-        for (const attrName in this.attributes) {
-          if (this.attributes.hasOwnProperty(attrName)) {
-            ret[attrName] = this.attributes.attrName
-          }
+      for (const attrName in this.attributes) {
+        if (this.attributes.hasOwnProperty(attrName)) {
+          ret = ret || {}
+          ret[attrName] = this.attributes[attrName]
         }
+      }
 
+      if (ret) {
         delete ret.key
         delete ret.ref
-
-        if (this.children && this.children.length > 0) {
-          ret.children = this.children
-        }
-
-        this.props2 = ret
       }
+
+      if (this.children && this.children.length > 0) {
+        ret = ret || {}
+        ret.children = this.children
+      }
+
+      this.props = ret
 
       return ret
     },
 
     set(value) {
-      this.props2 = value || null
+      Object.defineProperty(this, 'props', {
+        enumerable: true,
+        value: value
+      })
     }
   }
 })

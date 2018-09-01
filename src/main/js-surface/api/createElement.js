@@ -1,4 +1,5 @@
 import VirtualElement from '../internal/element/VirtualElement'
+import validateProperties from '../internal/validation/validateProperties'
 
 import preact from 'preact'
 
@@ -38,7 +39,45 @@ export default function createElement(/* arguments */) {
     props = secondArg || null
   }
 
+  const
+    meta = type.meta || null,
+    isCtxProvider = !!type.__internal_isProvider,
+    propsConfig = meta === null ? null : meta.properties || null
+
+  if (propsConfig) {
+    for (let propName in propsConfig) {
+      if (propsConfig.hasOwnProperty(propName)) {
+        const propConfig = propsConfig[propName]
+
+        if (propConfig.hasOwnProperty('defaultValue')) {
+          if (propName !== 'children') {
+            if (!props || !props.hasOwnProperty(propName)) {
+              props = props || {} 
+              props[propName] = propConfig.defaultValue
+            }
+          }
+        }
+      }
+    }
+  }
+  
   const ret = new VirtualElement(type, props, children)
+
+  if (process.env.NODE_ENV === 'development') {
+    if (typeof type === 'function' && meta) {
+      const
+        componentName = meta ? meta.displayName : null,
+        propsValidator = meta.validator || null
+
+      if (meta) {
+        const result = validateProperties(ret.props, propsConfig, propsValidator, componentName, isCtxProvider)
+
+        if (result) {
+          console.error(result)
+        }
+      }
+    }
+  }
 
   if (preact.options.vnode) {
     preact.options.vnode(ret)

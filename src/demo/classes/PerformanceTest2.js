@@ -124,7 +124,7 @@ const SpeedTest = defineComponent({
               rows)),
           h('p',
             { style: { clear: 'both' } },
-          `(actual frames per second: ${this.__actualFramesPerSecond})`))
+            `(actual frames per second: ${this.__actualFramesPerSecond})`))
       )
     }
 
