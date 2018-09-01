@@ -1,5 +1,7 @@
 import { Spec } from 'js-spec'
 
+import { KEY_INTERNAL_CONTEXT } from '../constant/constants'
+
 // --- constants needed for the validation --------------------------
 const
   REGEX_DISPLAY_NAME = /^[A-Z][a-zA-Z0-9_.]*$/,
@@ -52,7 +54,7 @@ const
                 Spec.shape({
                   context: 
                     Spec.valid(it => it != null && typeof it === 'object'
-                      && !!it.__internal_context)
+                      && !!it[KEY_INTERNAL_CONTEXT])
                       .usingHint('Must be a context')
                 }))
           }),

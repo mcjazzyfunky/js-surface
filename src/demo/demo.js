@@ -46,7 +46,7 @@ const Demo = defineComponent({
   }
 })
 
-mount(Demo(), 'main-content')
+mount(Demo(), document.getElementById('main-content'))
 
 // const elem = h(Demo, { a: 1, b: 2, key: 'a-key', ref: () => {} }, 11, 22)
 // console.log(Object.keys(elem))

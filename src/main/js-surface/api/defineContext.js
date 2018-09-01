@@ -1,8 +1,15 @@
-import preactContext from 'preact-context'
 import validateContextConfig from '../internal/validation/validateContextConfig'
 import printError from '../internal/helper/printError'
 import validateProperties from '../internal/validation/validateProperties'
+import defineHiddenProperty from '../internal/helper/defineHiddenProperty'
 import createElement from './createElement'
+import preactContext from 'preact-context'
+
+import {
+  KEY_INTERNAL_TYPE,
+  KEY_INTERNAL_CONTEXT,
+  KEY_INTERNAL_IS_CTX_PROVIDER
+} from '../internal/constant/constants'
 
 export default function defineContext(config) {
   if (process.env.NODE_ENV === 'development') {
@@ -62,32 +69,12 @@ export default function defineContext(config) {
     }
   }
 
-  Object.defineProperty(Consumer, '__internal_isProvider', {
-    enumerable: false,
-    value: true
-  })
-
-  Object.defineProperty(Provider, '__internal_type', {
-    enumerable: false,
-    value: internalProvider
-  })
-
-  Object.defineProperty(Consumer, '__internal_type', {
-    enumerable: false,
-    value: internalConsumer
-  })
-
-  Object.defineProperty(Consumer, '__internal_isConsumer', {
-    enumerable: false,
-    value: true
-  })
-
   const ret = { Provider, Consumer }
 
-  Object.defineProperty(ret, '__internal_context', {
-    enumerable: false,
-    value: internalContext,
-  })
+  defineHiddenProperty(ret, KEY_INTERNAL_CONTEXT, internalContext)
+  defineHiddenProperty(Provider, KEY_INTERNAL_IS_CTX_PROVIDER, true)
+  defineHiddenProperty(Provider, KEY_INTERNAL_TYPE, internalProvider)
+  defineHiddenProperty(Consumer, KEY_INTERNAL_TYPE, internalConsumer)
 
   return Object.freeze(ret)
 }

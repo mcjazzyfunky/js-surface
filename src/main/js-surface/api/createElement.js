@@ -1,6 +1,8 @@
 import VirtualElement from '../internal/element/VirtualElement'
 import validateProperties from '../internal/validation/validateProperties'
 
+import { KEY_INTERNAL_IS_CTX_PROVIDER } from '../internal/constant/constants'
+
 import preact from 'preact'
 
 export default function createElement(/* arguments */) {
@@ -41,7 +43,7 @@ export default function createElement(/* arguments */) {
 
   const
     meta = type.meta || null,
-    isCtxProvider = !!type.__internal_isProvider,
+    isCtxProvider = !!type[KEY_INTERNAL_IS_CTX_PROVIDER],
     propsConfig = meta === null ? null : meta.properties || null
 
   if (propsConfig) {

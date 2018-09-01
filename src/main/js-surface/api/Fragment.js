@@ -1,7 +1,13 @@
+import { KEY_INTERNAL_TYPE } from '../internal/constant/constants'
 import createElement from './createElement'
 
-export default function Fragment(...args) {
-  return createElement(Fragment, ...args)
+let createFragmentElement = null // will be set below
+
+export default function Fragment(/* arguments */) {
+  createFragmentElement =
+    createFragmentElement || createElement.bind(Fragment)
+
+  return createFragmentElement.apply(null, arguments)
 }
 
-Fragment.__internal_type = 'span' // TODO
+Fragment[KEY_INTERNAL_TYPE] = 'x-fragment' // TODO

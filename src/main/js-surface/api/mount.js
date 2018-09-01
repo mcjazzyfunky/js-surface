@@ -1,27 +1,19 @@
 import isElement from './isElement'
-
 import preact from 'preact'
 
-export default function mount(element, target) {
+export default function mount(element, container) {
   if (!isElement(element)) {
     throw new TypeError(
-      '[mount] First argument must be a virtual element')
+      '[mount] First argument "element" must be a virtual element')
   }
 
-  const
-    targetNode = typeof target === 'string'
-      ? document.getElementById(target)
-      : target
-
-  if (!targetNode || !targetNode.tagName) {
+  if (!container || !container.tagName) {
     throw new TypeError(
-      '[mount] Second argument must be a valid target element')
+      '[mount] Second argument "container" must be a DOM element')
   }
 
   try {
-    preact.render(
-      element,
-      targetNode)
+    preact.render(element, container)
   } catch (e) {
     let errorMsg =
       e instanceof Error
@@ -31,7 +23,12 @@ export default function mount(element, target) {
     errorMsg = '[mount] Could not mount element: ' + errorMsg
 
     if (e instanceof Error) {
-      e.message = errorMsg
+      try {
+        // normally this should not be a problem - but who knows?
+        e.message = errorMsg
+      } catch (ignore) {
+        // ignore possible error message
+      }
 
       throw e
     } else {
@@ -39,4 +36,3 @@ export default function mount(element, target) {
     }
   }
 }
-

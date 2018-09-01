@@ -1,3 +1,4 @@
+import { KEY_INTERNAL_TYPE } from '../constant/constants'
 import { h } from 'preact'
 
 const
@@ -6,7 +7,7 @@ const
 
   VirtualElement = {
     ['VirtualElement'](type, attrs, children) {
-      const internalType = type.__internal_type || type
+      const internalType = type[KEY_INTERNAL_TYPE] || type
 
       this.nodeName = internalType
       this.attributes = attrs || undefined

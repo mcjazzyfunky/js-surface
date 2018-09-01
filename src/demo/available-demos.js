@@ -4,16 +4,15 @@ import SimpleCounter from './core/SimpleCounter'
 import ComplexCounter from './core/ComplexCounter'
 import I18n from './core/I18n'
 import PerformanceTest1 from './core/PerformanceTest1'
-
+import Fragments from './core/Fragments'
+import Iterators from './core/Iterators'
+import InnerHtml from './core/InnerHtml'
 
 // based on core + classes 
 import HelloWorld2 from './classes/HelloWorld2'
 import VerySimpleCounter from './classes/VerySimpleCounter'
 import Clock from './classes/Clock'
 import StopWatch from './classes/StopWatch'
-import Fragments from './classes/Fragments'
-import Iterators from './classes/Iterators'
-import InnerHtml from './classes/InnerHtml'
 import Contexts from './classes/Contexts'
 import Injections from './classes/Injections'
 import ErrorBoundaries from './classes/ErrorBoundaries'
@@ -33,8 +32,8 @@ export default [
   ['Performance Test 1 (core)', PerformanceTest1],
   ['Performance Test 2 (classes)', PerformanceTest2],
   ['Performance Test functional (classes)', PerformanceTest3],
-  ['Fragments (classes)', Fragments],
-  ['Iterators (classes)', Iterators],
+  ['Fragments (core)', Fragments],
+  ['Iterators (core)', Iterators],
   ['Inner HTML (classes)', InnerHtml],
   ['Contexts (classes)', Contexts],
   ['Injections (classes)', Injections],

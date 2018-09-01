@@ -1,3 +1,4 @@
+import { KEY_INTERNAL_TYPE } from '../internal/constant/constants'
 import validateComponentConfig from '../internal/validation/validateComponentConfig'
 import validateProperty from '../internal/validation/validateProperty'
 import printError from '../internal/helper/printError'
@@ -72,7 +73,7 @@ export default function defineComponent(config) {
 
         for (let i = 0; i < injectedContexts.length; ++i) {
           if (i === 0) {
-            node = preact.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
+            node = preact.createElement(injectedContexts[0].Consumer[KEY_INTERNAL_TYPE], null, value => {
               contextValues[0] = value
 
               for (let j = 0; j < contextInfoPairs.length; ++j) {
@@ -156,7 +157,7 @@ export default function defineComponent(config) {
     }
   }())
 
-  Object.defineProperty(ret, '__internal_type', {
+  Object.defineProperty(ret, KEY_INTERNAL_TYPE, {
     enumerable: false,
     value: internalType
   })
