@@ -327,7 +327,11 @@ export default defineComponent({
 
     Logger: {
       type: Logger,
-      inject: LoggerCtx
+      optional: true,
+
+      inject: {
+        context: LoggerCtx
+      }
     },
 
     onChange: {

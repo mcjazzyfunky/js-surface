@@ -45,13 +45,10 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
 
       globals: {
         'js-surface': 'jsSurface',
-        'js-spec': 'jsSpec',
-        'preact': 'preact',
-        'preact-context': 'preactContext'
       }
     },
 
-    external: ['js-spec'],
+    external: [],
 
     plugins: [
       resolve({
