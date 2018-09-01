@@ -23,13 +23,20 @@ export default function mount(element, target) {
       element,
       targetNode)
   } catch (e) {
-    const errorMsg =
+    let errorMsg =
       e instanceof Error
         ? e.message
         : String(e)
+      
+    errorMsg = '[mount] Could not mount element: ' + errorMsg
 
-    throw new Error(
-      '[mount] Could not mount element - error message: ' + errorMsg)
+    if (e instanceof Error) {
+      e.message = errorMsg
+
+      throw e
+    } else {
+      throw new Error(errorMsg)
+    }
   }
 }
 

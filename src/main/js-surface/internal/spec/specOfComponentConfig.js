@@ -49,14 +49,25 @@ const
 
             inject:
               Spec.optional(
-                Spec.valid(it => it != null && typeof it === 'object'
-                  && !!it.__internal_context)
-                  .usingHint('Must be a context'))
+                Spec.shape({
+                  context: 
+                    Spec.valid(it => it != null && typeof it === 'object'
+                      && !!it.__internal_context)
+                      .usingHint('Must be a context')
+                }))
           }),
 
           Spec.valid(it => !it.hasOwnProperty('optional')
             || !it.hasOwnProperty('defaultValue'))
-            .usingHint('Parmeters "optional" and "defaultValue" must not be set both at once'))),
+            .usingHint('Parmeters "optional" and "defaultValue" must not be set both at once'),
+          
+          Spec.valid(it => !it.hasOwnProperty('inject')
+            || !it.hasOwnProperty('defaultValue'))
+            .usingHint('Parameters "inject" and "defaultValue" must not be set both at once'),
+
+          Spec.valid(it => !it.hasOwnProperty('inject')
+            || it.optional === true)
+            .usingHint('If parameter "inject" is provided then parameter "optional" has to be set to true'))),
       
       Spec.valid(it => !it.hasOwnProperty('children') || !it.children.hasOwnProperty('defaultValue'))
         .usingHint('Must not provide a default value for property "children"')

@@ -36,8 +36,11 @@ const Counter = defineComponent({
 
     logger: {
       type: Object,
-      defaultValue: nopLogger, 
-      inject: LoggerCtx
+      optional: true,
+
+      inject: {
+        context: LoggerCtx
+      }
     }
   },
 

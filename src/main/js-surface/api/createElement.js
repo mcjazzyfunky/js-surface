@@ -67,13 +67,13 @@ export default function createElement(/* arguments */) {
     if (typeof type === 'function' && meta) {
       const
         componentName = meta ? meta.displayName : null,
-        propsValidator = meta.validator || null
+        propsValidator = meta.validate || null
 
       if (meta) {
         const result = validateProperties(ret.props, propsConfig, propsValidator, componentName, isCtxProvider)
 
         if (result) {
-          console.error(result)
+          throw result
         }
       }
     }

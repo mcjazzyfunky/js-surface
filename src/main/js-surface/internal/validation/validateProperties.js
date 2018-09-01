@@ -44,7 +44,7 @@ export default function validateProperties(
 
   if (propsValidator) {
     const
-      validator = propsValidator && propsValidator['js-spec:validate'] || validator,
+      validator = propsValidator && propsValidator['js-spec:validate'] || propsValidator,
       error = validator(props)
 
     if (error === false) {

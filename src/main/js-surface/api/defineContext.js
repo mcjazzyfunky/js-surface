@@ -1,7 +1,8 @@
+import preact from 'preact'
 import preactContext from 'preact-context'
 import validateContextConfig from '../internal/validation/validateContextConfig'
 import printError from '../internal/helper/printError'
-import validateProperty from '../internal/validation/validateProperty'
+import validateProperties from '../internal/validation/validateProperties'
 import createElement from './createElement'
 
 export default function defineContext(config) {
@@ -21,24 +22,44 @@ export default function defineContext(config) {
     internalProvider = internalContext.Provider,
     internalConsumer = internalContext.Consumer,
 
-    Provider = function (...args) {
-      return createElement(Provider, ...args)
-    },
+    Provider = (function () {
+      let createComponentElement = null
 
-    Consumer = (...args) => {
-      return createElement(Consumer, ...args)
-    }
-  
-  if (process.env.NODE_ENV === 'development') {
-    internalContext.Provider.propTypes = {
-      value: props => {
-        const result = validateProperty(props.value, 'value', config)
+      return function () {
+        if (createComponentElement === null) {
+          createComponentElement = createElement.bind(null, Provider)
+        }
 
-        return !result
-          ? null
-          : new Error(`Error while providing context "${config.displayName}": `
-            +  result.message)
+        return createComponentElement.apply(null, arguments)
       }
+    }()),
+    
+    Consumer = (function () {
+      let createComponentElement = null
+
+      return function () {
+        if (createComponentElement === null) {
+          createComponentElement = createElement.bind(null, Consumer)
+        }
+
+        return createComponentElement.apply(null, arguments)
+      }
+    }())
+
+  if (process.env.NODE_ENV === 'development') {
+    const
+      oldRender = internalProvider.prototype.render,
+      displayName = config.displayName,
+      propsConfig = { value: config, children: { optional: true } } // TODO: optimize children validation
+
+    internalProvider.prototype.render = function (props, state) {
+      const result = validateProperties(props, propsConfig, null, displayName, true)
+
+      if (result) {
+        throw result
+      }
+
+      return oldRender.call(this, props, state)
     }
   }
 

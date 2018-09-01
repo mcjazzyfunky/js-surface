@@ -18,7 +18,7 @@ for (const format of ['umd', 'cjs', 'amd', 'esm']) {
   }
 }
 
-for (const submoduleName of ['classes', 'devtools', 'dom-factories', 'portal', 'util']) {
+for (const submoduleName of ['classes', 'dom-factories', 'portal', 'util']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createSubmoduleConfig(submoduleName, format, productive))

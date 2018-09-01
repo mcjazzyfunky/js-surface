@@ -2,7 +2,6 @@ import validateComponentConfig from '../internal/validation/validateComponentCon
 import validateProperty from '../internal/validation/validateProperty'
 import printError from '../internal/helper/printError'
 import createElement from './createElement'
-
 import preact from 'preact'
 
 export default function defineComponent(config) {
@@ -54,7 +53,7 @@ export default function defineComponent(config) {
 
         if (index === -1) {
           index = injectedContexts.length
-          injectedContexts.push(inject)
+          injectedContexts.push(inject.context)
         }
 
         contextInfoPairs.push([propName, index])
@@ -62,51 +61,73 @@ export default function defineComponent(config) {
     }
 
     if (injectedContexts.length > 0) {
-      const innerComponent = internalType
+      const innerComponentType = internalType
 
-      internalType = class CustomComponent extends preact.Component {
-        constructor(props) {
-          super(props)
+      const render = function (props) {
+        const
+          contextValues = new Array(injectedContexts.length),
+          adjustedProps = Object.assign({}, props)
 
-          this.__meta = normalizedConfig
+        let node = null
+
+        for (let i = 0; i < injectedContexts.length; ++i) {
+          if (i === 0) {
+            node = preact.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
+              contextValues[0] = value
+
+              for (let j = 0; j < contextInfoPairs.length; ++j) {
+                let [propName, contextIndex] = contextInfoPairs[i]
+
+                if (props[propName] === undefined) {
+                  adjustedProps[propName] = contextValues[contextIndex]
+                }
+              }
+
+              return preact.createElement(innerComponentType, adjustedProps)
+            })
+          } else {
+            const currNode = node
+            
+            node = preact.createElement(injectedContexts[i].Consumer, null, value => {
+              contextValues[i] = value
+
+              return currNode
+            })
+          }
         }
 
-        render() {
-          const
-            contextValues = new Array(injectedContexts.length),
-            adjustedProps = Object.assign({}, this.props)
+        return node
+      }
 
-          let node = null
-
-          for (let i = 0; i < injectedContexts.length; ++i) {
-            if (i === 0) {
-              node = preact.createElement(injectedContexts[0].Consumer.__internal_type, null, value => {
-                contextValues[0] = value
-
-                for (let j = 0; j < contextInfoPairs.length; ++j) {
-                  let [propName, contextIndex] = contextInfoPairs[i]
-
-                  if (this.props[propName] === undefined) {
-                    adjustedProps[propName] = contextValues[contextIndex]
-                  }
-                }
-
-                return preact.createElement(innerComponent, adjustedProps)
-              })
-            } else {
-              const currNode = node
+      internalType =
+        config.render 
+          ? render
+          : class extends preact.Component {
+            constructor(props) {
+              super(props)
               
-              node = preact.createElement(injectedContexts[i].Consumer, null, value => {
-                contextValues[i] = value
+              this.__meta = normalizedConfig
+              this.__innerComponent = null
 
-                return currNode
-              })
+              if (config.methods) {
+                this.__setInnerComponent = this.setInnerComponent.bind(this)
+              }
+            }
+
+            __setInnerComponent(ref) {
+              this.__innerComponent = ref
+            }
+
+            render() {
+              const props = this.props
+
+              if (config.methods) {
+                props.ref = this.setInnerComponent
+              }
+
+              return render(props)
             }
           }
-
-          return node
-        }
-      }
 
       internalType.displayName = config.displayName + '-wrap'
 
@@ -115,7 +136,9 @@ export default function defineComponent(config) {
           const methodName = config.methods[i]
 
           internalType.prototype[methodName] =
-            (...args) => innerComponent[methodName](...args)
+            function(...args) {
+              return this.__innerComponent[methodName](...args)
+            }
         }
       }
     }
@@ -151,8 +174,8 @@ function prettifyErrorMsg(errorMsg, config) {
     && typeof config.displayName === 'string'
     && config.displayName.trim().length > 0
     ? '[defineComponent] Invalid configuration for component '
-      + `"${config.displayName}": ${errorMsg} `
-    : `[defineComponent] Invalid component configuration: ${errorMsg}`
+      + `"${config.displayName}" => ${errorMsg} `
+    : `[defineComponent] Invalid component configuration => ${errorMsg}`
 }
 
 function deriveComponent(config) {
