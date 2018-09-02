@@ -1,5 +1,4 @@
 import validateContextConfig from '../internal/validation/validateContextConfig'
-import printError from '../internal/helper/printError'
 import validateProperties from '../internal/validation/validateProperties'
 import defineHiddenProperty from '../internal/helper/defineHiddenProperty'
 import createElement from './createElement'
@@ -18,7 +17,6 @@ export default function defineContext(config) {
     if (error) {
       const errorMsg = prettifyErrorMsg(error.message, config)
 
-      printError(errorMsg)
       throw new TypeError(errorMsg)
     }
   }

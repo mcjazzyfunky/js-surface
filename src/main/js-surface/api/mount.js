@@ -11,7 +11,7 @@ export default function mount(element, container) {
     throw new TypeError(
       '[mount] Second argument "container" must be a DOM element')
   }
-
+ 
   try {
     preact.render(element, container)
   } catch (e) {

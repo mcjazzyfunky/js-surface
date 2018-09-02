@@ -5,7 +5,7 @@ let createFragmentElement = null // will be set below
 
 export default function Fragment(/* arguments */) {
   createFragmentElement =
-    createFragmentElement || createElement.bind(Fragment)
+    createFragmentElement || createElement.bind(null, Fragment)
 
   return createFragmentElement.apply(null, arguments)
 }

@@ -1,7 +1,11 @@
 import VirtualElement from '../internal/element/VirtualElement'
 import validateProperties from '../internal/validation/validateProperties'
 
-import { KEY_INTERNAL_IS_CTX_PROVIDER } from '../internal/constant/constants'
+import {
+  KEY_INTERNAL_TYPE,
+  KEY_INTERNAL_DEFAULTS,
+  KEY_INTERNAL_IS_CTX_PROVIDER
+} from '../internal/constant/constants'
 
 import preact from 'preact'
 
@@ -44,25 +48,22 @@ export default function createElement(/* arguments */) {
   const
     meta = type.meta || null,
     isCtxProvider = !!type[KEY_INTERNAL_IS_CTX_PROVIDER],
-    propsConfig = meta === null ? null : meta.properties || null
+    propsConfig = meta === null ? null : meta.properties || null,
+    internalType = type[KEY_INTERNAL_TYPE],
+    defaults = internalType ? internalType[KEY_INTERNAL_DEFAULTS] : null
+ 
+  if (defaults) {
+    for (let i = 0; i < defaults.length; ++i) {
+      const [propName, getDefault] = defaults[i]
 
-  if (propsConfig) {
-    for (let propName in propsConfig) {
-      if (propsConfig.hasOwnProperty(propName)) {
-        const propConfig = propsConfig[propName]
+      props = props || {}
 
-        if (propConfig.hasOwnProperty('defaultValue')) {
-          if (propName !== 'children') {
-            if (!props || !props.hasOwnProperty(propName)) {
-              props = props || {} 
-              props[propName] = propConfig.defaultValue
-            }
-          }
-        }
+      if (props[propName] === undefined) {
+        props[propName] = getDefault()
       }
     }
   }
-  
+
   const ret = new VirtualElement(type, props, children)
 
   if (process.env.NODE_ENV === 'development') {

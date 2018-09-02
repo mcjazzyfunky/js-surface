@@ -1,9 +1,8 @@
-import { KEY_INTERNAL_TYPE } from '../internal/constant/constants'
+import { KEY_INTERNAL_TYPE, KEY_INTERNAL_DEFAULTS } from '../internal/constant/constants'
 import validateComponentConfig from '../internal/validation/validateComponentConfig'
-import validateProperty from '../internal/validation/validateProperty'
-import printError from '../internal/helper/printError'
 import createElement from './createElement'
 import preact from 'preact'
+import defineHiddenProperty from '../internal/helper/defineHiddenProperty'
 
 export default function defineComponent(config) {
   if (process.env.NODE_ENV === 'development') {
@@ -12,7 +11,6 @@ export default function defineComponent(config) {
     if (error) {
       const errorMsg = prettifyErrorMsg(error.message, config)
 
-      printError(errorMsg)
       throw new TypeError(errorMsg)
     }
   }
@@ -145,6 +143,8 @@ export default function defineComponent(config) {
     }
   }
 
+  internalType.displayName = config.displayName
+
   const ret = (function () {
     let createComponentElement = null
 
@@ -157,10 +157,24 @@ export default function defineComponent(config) {
     }
   }())
 
-  Object.defineProperty(ret, KEY_INTERNAL_TYPE, {
-    enumerable: false,
-    value: internalType
-  })
+  let defaults = null
+
+  if (config.properties) {
+    for (const propName in config.properties) {
+      if (config.properties.hasOwnProperty(propName)) {
+        const propConfig = config.properties[propName]
+        
+        if (propConfig.hasOwnProperty('defaultValue')) {
+          defaults = defaults || []
+
+          defaults.push([propName, () => propConfig.defaultValue])
+        }
+      }
+    }
+  }
+
+  defineHiddenProperty(internalType, KEY_INTERNAL_DEFAULTS, defaults)
+  defineHiddenProperty(ret, KEY_INTERNAL_TYPE, internalType)
 
   ret.meta = normalizedConfig
 
@@ -186,16 +200,10 @@ function deriveComponent(config) {
 }
 
 function deriveSimpleComponent(config) {
-  return Object.assign(
-    config.render.bind(),
-    convertConfig(config))
+  return config.render.bind()
 }
 
 function deriveAdvancedComponent(config) {
-  // config is already normalized
-
-  const convertedConfig = convertConfig(config)
-
   class Component extends preact.Component {
     constructor(props) {
       super(props)
@@ -298,100 +306,5 @@ function deriveAdvancedComponent(config) {
     }
   }
 
-  Object.assign(Component, convertedConfig)
-
   return Component
 }
-
-function convertConfig(config) {
-  // config is already normalized
-
-  const ret = {
-    displayName: config.displayName,
-    defaultProps: {},
-  }
-
-  ret.displayName = config.displayName
-
-  if (config.properties) {
-    for (const propName of Object.keys(config.properties)) {
-      const propCfg = config.properties[propName]
-
-      if (propCfg.hasOwnProperty('defaultValue') && propCfg.defaultValue === undefined) {
-        ret.defaultProps[propName] = undefined
-      } else if (propCfg.defaultValue !== undefined) {
-        ret.defaultProps[propName] = propCfg.defaultValue
-      } else if (propCfg.getDefaultValue) {
-        Object.defineProperty(ret.defaultProps, propName, {
-          enumerable: true,
-
-          get: () => propCfg.getDefaultValue()
-        })
-      }
-    }
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    ret.propTypes = {
-      '*': props => {
-        let result = null
-
-        const
-          propNames = config.properties ? Object.keys(config.properties) : [],
-          messages = [],
-          normalizedProps = props
-
-        if (config.properties) {
-          for (let i = 0; i < propNames.length; ++i) {
-            const
-              propName = propNames[i],
-              propValue = normalizedProps[propName],
-              propConfig = config.properties[propName],
-              result = validateProperty(propValue, propName, propConfig)
-
-            if (result) {
-              messages.push(result.message)
-            }
-          }
-        }
-
-        const
-          usedPropNames = Object.keys(props),
-          invalidPropNames = []
-
-        for (let i = 0; i < usedPropNames.length; ++i) {
-          const usedPropName = usedPropNames[i]
-
-          if (!config.properties.hasOwnProperty(usedPropName)) {
-            invalidPropNames.push(usedPropName)
-          }
-        }
-
-        if (invalidPropNames.length == 1) {
-          messages.push(`Invalid prop key "${invalidPropNames[0]}"`)
-        } else if (invalidPropNames.length > 1) {
-          messages.push('Invalid prop keys: ' + invalidPropNames.join(', '))
-        }
-
-        if (config.validate) {
-          const error = config.validate(normalizedProps)
-
-          if (error) {
-            messages.push(error instanceof Error ? error.message : String(error))
-          }
-        }
-
-        if (messages.length === 1) {
-          result = new Error(messages[0])
-        } else if (messages.length > 1) {
-          result = new Error(`\n- ${messages.join('\n- ')}`)
-        }
-
-        return result
-      }
-    }
-  }
-
-  return ret
-}
-

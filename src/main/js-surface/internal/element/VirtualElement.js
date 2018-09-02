@@ -6,6 +6,8 @@ const
   VNode = h('a').constructor,
 
   VirtualElement = {
+    // we want to make sure that the classes name is really
+    // "VirtualElement" even if minimized/uglified
     ['VirtualElement'](type, attrs, children) {
       const internalType = type[KEY_INTERNAL_TYPE] || type
 
