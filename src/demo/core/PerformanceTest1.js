@@ -7,7 +7,7 @@ const { div } = Html
 
 function runTests() {
   const
-    iterationCount = 100000,
+    iterationCount = 400000,
     tests = []
 
   let report = ''

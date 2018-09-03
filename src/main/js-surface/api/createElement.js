@@ -7,73 +7,76 @@ import {
   KEY_INTERNAL_IS_CTX_PROVIDER
 } from '../internal/constant/constants'
 
-import preact from 'preact'
-
 export default function createElement(/* arguments */) {
   const
     argCount = arguments.length,
     type = arguments[0],
     secondArg = arguments[1],
 
-    skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
-        && (typeof secondArg !== 'object' || secondArg instanceof VirtualElement
-          || typeof secondArg[Symbol.iterator] === 'function'),
+    skippedProps = secondArg !== undefined && secondArg !== null
+      && (typeof secondArg !== 'object' || !!secondArg[Symbol.iterator]
+        || secondArg instanceof VirtualElement)
 
-    hasChildren = argCount > 2 || argCount === 2 && skippedProps
+  let
+    props = skippedProps ? null : secondArg,
+    children = null
 
-  let children = null
-
-  if (hasChildren) {
-    const
-      firstChildIdx = 1 + !skippedProps,
-      childCount = argCount - firstChildIdx
+  if (argCount > 2 || argCount === 2 && skippedProps) {
+    const firstChildIdx = skippedProps ? 1 : 2
 
     children = []
 
-    for (let i = 0; i < childCount; ++i) {
-      addChildren(children, arguments[firstChildIdx + i])
-    }
-  }
+    for (let i = firstChildIdx; i < argCount; ++i) {
+      const item = arguments[i]
 
-  let props = null
-
-  if (hasChildren && !skippedProps){
-    if (secondArg !== undefined && secondArg !== null) {
-      props = secondArg
-    }
-  } else if (!hasChildren && argCount === 2) {
-    props = secondArg || null
-  }
-
-  const
-    meta = type.meta || null,
-    isCtxProvider = !!type[KEY_INTERNAL_IS_CTX_PROVIDER],
-    propsConfig = meta === null ? null : meta.properties || null,
-    internalType = type[KEY_INTERNAL_TYPE],
-    defaults = internalType ? internalType[KEY_INTERNAL_DEFAULTS] : null
- 
-  if (defaults) {
-    for (let i = 0; i < defaults.length; ++i) {
-      const [propName, getDefault] = defaults[i]
-
-      props = props || {}
-
-      if (props[propName] === undefined) {
-        props[propName] = getDefault()
+      if (item === undefined || item === null || typeof item !== 'object') {
+        children.push(item)
+      } else if (item instanceof Array) {
+        for (let j = 0; j < item.length; ++j) {
+          addFlattened(children, item[j])
+        }
+      } else if (item[Symbol.iterator]) {
+        for (let x of item) {
+          addFlattened(children, x)
+        }
+      } else {
+        children.push(item)
       }
     }
   }
 
-  const ret = new VirtualElement(type, props, children)
+  const internalType = type[KEY_INTERNAL_TYPE]
 
-  if (process.env.NODE_ENV === 'development') {
+  if (internalType) {
+    const defaults = internalType[KEY_INTERNAL_DEFAULTS]
+ 
+    if (defaults) {
+      for (let i = 0; i < defaults.length; ++i) {
+        const [propName, getDefault] = defaults[i]
+
+        props = props || {}
+
+        if (props[propName] === undefined) {
+          props[propName] = getDefault()
+        }
+      }
+    }
+  }
+ 
+  if (process.env.NODE_ENV === 'development' && internalType) {
+    const
+      meta = type.meta || null,
+      isCtxProvider = !!type[KEY_INTERNAL_IS_CTX_PROVIDER],
+      propsConfig = meta === null ? null : meta.properties || null
+  
     if (typeof type === 'function' && meta) {
       const
         componentName = meta ? meta.displayName : null,
         propsValidator = meta.validate || null
 
       if (meta) {
-        const result = validateProperties(ret.props, propsConfig, propsValidator, componentName, isCtxProvider)
+        const result = validateProperties(
+          props, propsConfig, propsValidator, componentName, isCtxProvider)
 
         if (result) {
           throw result
@@ -82,38 +85,21 @@ export default function createElement(/* arguments */) {
     }
   }
 
-  if (preact.options.vnode) {
-    preact.options.vnode(ret)
-  }
-
-  return ret
+  return new VirtualElement(type, props, children)
 }
 
-function addChildren(targetArray, children) {
-  const type = typeof children 
+// --- locals -------------------------------------------------------
 
-  if (children === undefined || children === null || children === false) {
-    // nothing to do
-  } else if (type !== 'object') {
-    const
-      lastIndex = targetArray.length - 1,
-      latest = lastIndex === -1 ? null : targetArray[lastIndex],
-      typeLatest = typeof latest
-
-    if (lastIndex >= 0 && typeLatest !== 'object' && typeLatest !== 'symbol') {
-      targetArray[lastIndex] = String(latest) + children 
-    } else {
-      targetArray.push(children)
+function addFlattened(array, item) {
+  if (Array.isArray(item)) {
+    for (let i = 0; i < item.length; ++i) {
+      array.push(item[i])
     }
-  } else if (!children[Symbol.iterator]) {
-    targetArray.push(children)
-  } else if (Array.isArray(children)) {
-    for (let i = 0; i < children.length; ++i) {
-      addChildren(targetArray, children[i])
+  } else if (item && typeof item === 'object' && item[Symbol.iterator]) {
+    for (const x of item) {
+      addFlattened(array, x)
     }
   } else {
-    for (const child of children) {
-      addChildren(targetArray, child)
-    }
+    array.push(item)
   }
 }

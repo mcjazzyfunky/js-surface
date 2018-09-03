@@ -21,6 +21,10 @@ const
   }.VirtualElement
 
 VirtualElement.prototype = Object.create(VNode, {
+  constructor: {
+    value: VirtualElement
+  },
+
   props: {
     enumerable: true,
 
