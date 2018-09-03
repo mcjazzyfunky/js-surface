@@ -29,18 +29,12 @@ export default function createElement(/* arguments */) {
     for (let i = firstChildIdx; i < argCount; ++i) {
       const item = arguments[i]
 
-      if (item === undefined || item === null || typeof item !== 'object') {
+      if (item === undefined || item === null || typeof item !== 'object'
+        || item instanceof VirtualElement) {
+
         children.push(item)
-      } else if (item instanceof Array) {
-        for (let j = 0; j < item.length; ++j) {
-          addFlattened(children, item[j])
-        }
-      } else if (item[Symbol.iterator]) {
-        for (let x of item) {
-          addFlattened(children, x)
-        }
       } else {
-        children.push(item)
+        addFlattened(children, item)
       }
     }
   }
@@ -93,7 +87,7 @@ export default function createElement(/* arguments */) {
 function addFlattened(array, item) {
   if (Array.isArray(item)) {
     for (let i = 0; i < item.length; ++i) {
-      array.push(item[i])
+      addFlattened(array, item[i])
     }
   } else if (item && typeof item === 'object' && item[Symbol.iterator]) {
     for (const x of item) {
