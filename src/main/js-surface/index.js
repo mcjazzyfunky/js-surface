@@ -1,4 +1,3 @@
-import 'preact/devtools'
 import createElement from './api/createElement'
 import defineComponent from './api/defineComponent'
 import defineContext from './api/defineContext'

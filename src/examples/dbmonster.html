@@ -5,8 +5,7 @@
 	<meta http-equiv=X-UA-Compatible content=IE=edge>
 	<meta name=viewport content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>DBmonster</title>
-	<script src="../../dist/js-surface.umd.production.js"></script>
-	<script src="../../dist/classes.umd.production.js"></script>
+	<script src="../../dist/submodules/all/js-surface.all.umd.development.js"></script>
 	<script src=https://localvoid.github.io/perf-monitor/0.1/perf-monitor.js></script>
 </head>
 <body>
@@ -257,8 +256,7 @@
 
 	<script>
 		const container = document.getElementById('root')
-        const { mount, createElement: h, defineComponent } = jsSurface
-        const { Component } = jsSurfaceCommon
+        const { mount, createElement: h, defineComponent, Component } = jsSurface
 
 		function bootstrap () {
 			'use strict'

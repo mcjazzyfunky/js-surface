@@ -29,9 +29,9 @@ export default function createElement(/* arguments */) {
     for (let i = firstChildIdx; i < argCount; ++i) {
       const item = arguments[i]
 
-      if (item === undefined || item === null || typeof item !== 'object'
-        || item instanceof VirtualElement) {
-
+      if (item === undefined || item === null) {
+        // nothing to do
+      } else if (typeof item !== 'object' || item instanceof VirtualElement) {
         children.push(item)
       } else {
         addFlattened(children, item)
@@ -93,7 +93,7 @@ function addFlattened(array, item) {
     for (const x of item) {
       addFlattened(array, x)
     }
-  } else {
+  } else if (item !== undefined && item !== null) {
     array.push(item)
   }
 }

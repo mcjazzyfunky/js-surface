@@ -41,7 +41,8 @@ function createCoreConfig(moduleFormat, productive, copyAssets) {
         : `dist/js-surface.${moduleFormat}.development.js`,
 
       format: moduleFormat,
-      name: 'jsSurface', 
+      name: 'jsSurface',
+      exports: 'named',
       sourcemap: productive ? false : 'inline',
 
       globals: {
@@ -90,7 +91,8 @@ function createSubmoduleConfig(submoduleName, moduleFormat, productive) {
 
       format: moduleFormat,
       name: 'jsSurface', 
-      sourcemap: productive ? false : 'inline',
+      exports: 'named',
+      //sourcemap: productive ? false : 'inline', // TODO
 
       globals:
         submoduleName === 'all'
