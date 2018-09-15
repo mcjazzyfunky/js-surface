@@ -30,7 +30,7 @@ const Counter = defineComponent({
 
     initialValue: {
       type: Number,
-      constraint: Spec.integer,
+      validate: Spec.integer,
       defaultValue: 0
     },
 

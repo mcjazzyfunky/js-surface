@@ -29,7 +29,7 @@ const
             type:
               Spec.optional(Spec.function),
             
-            constraint:
+            validate:
               Spec.optional(
                 Spec.or(
                   Spec.function,

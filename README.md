@@ -40,7 +40,7 @@ const Counter = defineComponent({
   properties: {
     initialValue: {
       type: Number,
-      constraint: Spec.integer, // using a third-party spec library
+      validate: Spec.integer, // using a third-party spec library
       defaultValue: 0
     }
   },
@@ -319,9 +319,9 @@ export default defineComponent({
 
     name: {
       type: String,
-      constraint: Spec.match(/^[a-zA-Z]+$/),
-                  // 3rd-party spec lib
       nullable: true,
+      validate: Spec.match(/^[a-zA-Z]+$/),
+                  // 3rd-party spec lib
       defaultValue: null
     }
 
@@ -398,7 +398,7 @@ A `defineContext` invocation looks like follows:
 const MyContext = defineContext({
   displayName: 'MyContext', // for error messages etc.
   type: Number,
-  constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
+  validate: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
   defaultValue: 5
 });
 ```

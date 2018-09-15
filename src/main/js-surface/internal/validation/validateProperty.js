@@ -14,9 +14,9 @@ export default function validateProperty(
     propInfo = `'${propName}' of `
       + `${isCtxProvider ? 'context provider for' : 'component'} '${componentName}'`
     
-  let constraint = propConfig.constraint || null
+  let validate = propConfig.validate || null
 
-  constraint = constraint && constraint['js-spec:validate'] || constraint
+  validate = validate && validate['js-spec:validate'] || validate
 
   if (!valueIsSet) {
     if (!propConfig.hasOwnProperty('defaultValue') && propConfig.optional !== true) {
@@ -67,9 +67,9 @@ export default function validateProperty(
   }
   
   if (!errMsg && !(nullable && value === null)
-    && (valueIsSet || propConfig.optional !== true) && constraint) {
+    && (valueIsSet || propConfig.optional !== true) && validate) {
 
-    let err = constraint(value)
+    let err = validate(value)
       
     if (err === undefined || err === null || err === true) {
       // everything fine

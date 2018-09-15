@@ -27,7 +27,7 @@ const App = defineComponent({
   properties: {
     defaultLocale: {
       type: String,
-      constraint: Spec.oneOf('en', 'fr', 'de'),
+      validate: Spec.oneOf('en', 'fr', 'de'),
       defaultValue: 'en'
     }
   },
