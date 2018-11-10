@@ -1,90 +1,99 @@
-import { createElement, defineComponent } from 'js-surface'
-import { Component } from 'js-surface/classes'
-import { Html } from 'js-surface/dom-factories'
-import { h } from 'preact'
-
-const { div } = Html
+import { createElement } from 'js-surface';
+import hyperscript from 'js-hyperscript/surface';
+//import { Html } from 'js-dom-factories/surface';
 
 function runTests() {
   const
-    iterationCount = 400000,
-    tests = []
+    iterationCount = 100000,
+    contentContainer = document.getElementById('main-content'),
+    tests = [];
 
-  let report = ''
+  contentContainer.innerHTML = 'Please wait - performance stests are running ...';
+  let report = '';
 
   tests.push({
-    name: 'Using createElement from preact',
-
-    run() {
-      for (let i = 0; i < iterationCount; ++i) {
-        h('div',
-          { className: 'my-class', id: 'my-id' },
-          h('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5))  
-      }
-    }
-  }),
-  tests.push({
-    name: 'Using createElement from js-surface',
+    displayName: 'Using createElement of "js-surface"',
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
         createElement('div',
           { className: 'my-class', id: 'my-id' },
-          createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5))  
+          createElement('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));  
       }
     }
-  }),
+  });
 
   tests.push({
-    name: 'Using DOM factories"',
+    displayName: 'Using "js-hyperscript" (test 1)',
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        div(
+        hyperscript('div',
           { className: 'my-class', id: 'my-id' },
-          div({ className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5))  
+          hyperscript('div', { className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));  
       }
     }
-  })
+  });
+
+  tests.push({
+    displayName: 'Using "js-hyperscript" (test 2)',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        hyperscript('#my-id', { className: 'my-class' },
+          hyperscript('#my-id2', { className: 'my-class2' }, 'my-div', 1, 2, 3, 4, 5));  
+      }
+    }
+  });
+
+  tests.push({
+    displayName: 'Using "js-hyperscript" (test 3)',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        hyperscript('#my-id.my-class > #my-id2.my-class2', 'my-div', 1, 2, 3, 4, 5);
+      }
+    }
+  });
+
+  /*
+  tests.push({
+    displayName: 'Using "js-dom-factories"',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        Html.div({ className: 'my-class', id: 'my-id' },
+          Html.div({ className: 'my-class2', id: 'my-id2'}, 'my-div', 1, 2, 3, 4, 5));   
+      }
+    }
+  });
+  */
 
   for (let i = 0; i < tests.length; ++i) {
     const
       test = tests[i],
-      startTime = Date.now()
+      startTime = Date.now();
     
-    test.run()
+    test.run();
 
     const
       stopTime = Date.now(),
-      duration = (stopTime - startTime) + ' ms'
+      duration = (stopTime - startTime) + ' ms';
 
-    const message = `Run time for test '${test.name}': ${duration}`
+    const message = `Run time for test '${test.displayName}': ${duration}`;
 
     if (i == 0) {
-      report = message
+      report = message;
     } else {
-      report += '\n' + message
+      report += '\n' + message;
     }
   }
 
-  report += '\nAll tests finished.'
-
-  return report
+  report += '\nAll tests finished.';
+  
+  return report;
 }
 
-const Test1 = defineComponent({
-  displayName: 'Test1',
+const report = runTests();
 
-  main: class extends Component {
-    componentDidMount() {
-      this.report = runTests()
-      this.forceUpdate()
-    }
-
-    render() {
-      return h('pre', null, this.report)
-    }
-  }
-})
-
-export default createElement(Test1)
+export default createElement('pre', report);

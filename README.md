@@ -3,7 +3,7 @@
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
-based on [preact](https://www.preactjs.com)).
+based on "react" and "react-dom").
 Be aware that jsSurface is currently only for research purposes, it's currently
 NOT meant to be used in real-world applications.
 
@@ -16,23 +16,11 @@ But first, here's a small demo application to get a glimpse of how components
 are implemented with jsSurface (it's a simple "Counter" application):
 
 ```javascript
-import { defineComponent, mount } from 'js-surface';
-
-// Be aware that "Component" is just a changeable add-ons to
-// jsSurface - means, this is just some kind of syntactical sugar
-// for those you like to implement components in a object oriented way
-import { Component } from 'js-surface/classes';
-
-// Just for those who do not want to use JSX (for demo purposes).
-// Everything would also work perfectly with JSX, of course.
-// Those DOM factory functions are only a add-on to jsSurface.
-// The core of jsSurface has also a "createElement" function,
-// of course, as all virtual DOM based libraries have.
-import { button, div } from 'js-surface/dom-factories'
-
-// A 3rd-party general purpose validation library.
-import { Spec } from 'js-spec'; 
-
+import { createElement as h, defineComponent, mount } from 'js-surface';
+import { view, Component } from 'js-surface/common';
+// Be aware that "view" and "Component" are just changeable add-ons to
+// jsSurface - means, they are just some kind of syntactical sugar.
+import { Spec } from 'js-spec'; // a 3rd-party general purpose validation library
 
 const Counter = defineComponent({
   displayName: 'Counter',
@@ -40,7 +28,7 @@ const Counter = defineComponent({
   properties: {
     initialValue: {
       type: Number,
-      validate: Spec.integer, // using a third-party spec library
+      constraint: Spec.integer, // using a third-party spec library
       defaultValue: 0
     }
   },
@@ -58,7 +46,8 @@ const Counter = defineComponent({
 
     render() {
       return (
-        buton({ onClick: this.onIncrementClick },
+        h('button',
+          { onClick: this.onIncrementClick },
           'Counter: ' + this.state.counter)
       );
     }
@@ -68,13 +57,13 @@ const Counter = defineComponent({
 const Demo = defineComponent({
   displayName: 'Demo',
 
-  render() {
+  main: view(() => {
     return (
-      div(
-        div('Please press the button to increase the counter'),
+      h('div',
+        h('div', 'Please press the button to increase the counter'),
         Counter())
     );
-  }
+  })
 });
 
 mount(Demo(), 'main-content');
@@ -186,26 +175,19 @@ long-term evolution):
   jsSurface on the other hand is not opinionated at all about the way components
   shall be implemented. A jsSurface component definition consists of some
   component meta information (like display name or declaration of the property
-  types) plus a `render` function for stateless functional Components or an
-  `init` function for complex components (complex components have also the
-  optional configuration parameters `methods`, `isErrorBoundary` and
-  `deriveStateFromProps` - see below for details)
+  types) plus one single descriptor called the `main` descriptor which describes
+  the complete behavior of the component.
 
-  As you may guess, the implementing complex components with function 
-  `init` and `deriveStateFromProps` etc. seems to really very handy.
-  Most developers would prefer some kind of Component class that makes
-  things easiear, other programmers would prefer support for some kind
-  of functional proramming paradigm. 
-  
-  For that reason the function `defineComponent` supports a third kind of
-  configuration where a so-called component normalizer is  expected that
-  has a method `normalzeComponent` that gets the component config an
-  returns a normalized component config.
-
-  For example the class "Component" of submodule "js-surface/classes" is
-  such a component normalizer - with it help you can implement components
-  in some React-like object oriended style.
-
+  As you may guess, that `main` descriptor is not really very handy to
+  be implemented. But be aware that you will normally not implement that
+  `main` descriptor directly but use some custom helper functions of your
+  choice to make that implementation much easiser.
+  So the component programming paradigm is completely separated from jsSurface
+  itself.
+  Nevertheless using React's Component class provides a very nice way to
+  implement components. Therefore the jsSurface package is bundles with an
+  additional package calles 'js-surface/common' which has also a Component class
+  with the exact same API as the React counterpart.
   But be aware this Component class is just an out-of-the-box add-on for
   convenience jsSurface does NOT depend on this add-on package at all.
 
@@ -248,12 +230,14 @@ use it for productive projects.
 
 ### jsSurface API
 
-Currently jsSurface core API consists of seven functions:
+Currently jsSurface core API consists of nine functions:
 
 * createElement(type, props?, ...children)
+* createPortal(child, container)
 * defineComponent(componentConfig)
 * defineContext(contextConfig)
 * isElement(it)
+* isNode(it)
 * mount(content, container)
 * unmount(container)
 * Fragment(props?, ...children)
@@ -276,6 +260,14 @@ Checks whether `it` is a proper virtual DOM element that has been created
 by function `createElement`.
 Return true or false.
 
+#### isNode(it)
+
+Checks whether `it` is a valid item for the children arguments for
+`createElement`.
+Valid nodes are: undefined, null, booleans, number, strings, arrays and other iterables and virtual element that have been ´createElement´.
+
+Return true or false.
+
 #### defineComponent(config): Function
 
 Components are basically defined the folowing way (be aware that you will NOT have to
@@ -296,8 +288,12 @@ export default defineComponent({
     }
   },
 
-  render({ name }) {
-    return h('div', `Hello ${name}!`);
+  main: {
+    functional: true, // indicates a stateless functional component
+
+    render({ name }) {
+      return h('div', `Hello ${name}!`);
+    }
   }
 })
 ```
@@ -306,82 +302,96 @@ Complex components:
 
 ```javascript
 export default defineComponent({
-  displayName: 'DatePicker',
+    displayName: 'DatePicker',
 
-  properties: {
-    value: {
-      type: Date,
-          
-      get defaultValue() {
-        return new Date(new Date().toDateString())
-      }
+    properties: {
+        value: {
+            type: Date,
+            
+            get defaultValue() {
+                return new Date(new Date().toDateString())
+            }
+        },
+
+        name: {
+            type: String,
+            constraint: Spec.match(/^[a-zA-Z]+$/),
+                        // 3rd-party spec lib
+            nullable: true,
+            defaultValue: null
+        }
+
+        Logger: {
+            type: Logger,
+            inject: LoggerCtx
+        },
+
+        onChange: {
+            type: Function,
+            nullable: true,
+            defaultValue: null
+        }
     },
 
-    name: {
-      type: String,
-      nullable: true,
-      validate: Spec.match(/^[a-zA-Z]+$/),
-                  // 3rd-party spec lib
-      defaultValue: null
+    methods: ['focus', 'blur'], // to declare public methods
+
+    // isErrorBoundary: true | false -- not needed in this example
+
+    main: {
+      functional: false, // indicates a complex component
+
+      init(getProps, getState, updateState, forceUpdate) {
+        // ... sorry, to complicated to show here in detail ....
+        // 
+        // Arguments:
+        //   getProps() returns current props
+        //   getState() returns current state (object)
+        //   updateState(updater, callback?) updates state (mostly) asynchronously
+        //   forceUpdate(callback) Refreshes the component view  
+        //
+        // Returns: {
+        //   render() - renders the content and returns a virtual dom view
+        //
+        //   beforeUpdate(nextProps, nextState) - will be called before the
+        //                                        view will be updated.
+        //
+        //   afterUpdate(prevProps, prevState) - will be called after the view
+        //                                       has been updated
+        //
+        //   finalize() will be called when the component will be unmounted
+        //
+        //   proxy - object that has only the public methods (see component
+        //           configuration parameter "methods") of the component
+        //           as properties
+        //
+        //   handleError(error, info) will be called if a descendant component
+        //                            throws an uncatched error (only needed
+        //                            if component configuration parameter
+        //                            'isErrorBoundary' is set to true)
+        // }
+        return {
+            render,
+            proxy, 
+            // [...]
+        }
     }
-
-    Logger: {
-      type: Logger,
-      optional: true,
-
-      inject: {
-        context: LoggerCtx
-      }
-    },
-
-    onChange: {
-      type: Function,
-      nullable: true,
-      defaultValue: null
-    }
-  },
-
-  methods: ['focus', 'blur'], // to declare public methods
-
-  // isErrorBoundary: true | false -- not needed in this example
-
-  init(getProps, getState, updateState, forceUpdate) {
-    // ... sorry, to complicated to show here in detail ....
-    // 
-    // Arguments:
-    //   getProps() returns current props
-    //   getState() returns current state (object)
-    //   updateState(updater, callback?) updates state (mostly) asynchronously
-    //   forceUpdate(callback) Refreshes the component view  
-    //
-    // Returns: {
-    //   render() - renders the content and returns a virtual dom view
-    //
-    //   beforeUpdate(nextProps, nextState) - will be called before the
-    //                                        view will be updated.
-    //
-    //   afterUpdate(prevProps, prevState) - will be called after the view
-    //                                       has been updated
-    //
-    //   finalize() will be called when the component will be unmounted
-    //
-    //   proxy - object that has only the public methods (see component
-    //           configuration parameter "methods") of the component
-    //           as properties
-    //
-    //   handleError(error, info) will be called if a descendant component
-    //                            throws an uncatched error (only needed
-    //                            if component configuration parameter
-    //                            'isErrorBoundary' is set to true)
-    // }
-    return {
-      render,
-      proxy, 
-      // [...]
-    }
-  }
 })
 ```
+
+**Important:
+
+Component configuration parameter "main" can - besides being object of the
+form { functional: true | false, ... } - also be a function.
+This function then will be called (passing the component configuration
+as argument) to determine the main description object
+(=> { functional: true | false, ... }).
+If that function has itself a function called "normalizeComponent" then the
+"normalizeComponent" function will be used instead of the function itself to
+determine the main description object.
+The reason for that is that this allows to use helper functions or even classes
+(classes needs to have a static "normalizeComponent" function) to generate
+the actual main description object.
+
 
 **TODO**: More info will follow...
 
@@ -396,10 +406,10 @@ A `defineContext` invocation looks like follows:
 
 ```javascript
 const MyContext = defineContext({
-  displayName: 'MyContext', // for error messages etc.
-  type: Number,
-  validate: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
-  defaultValue: 5
+    displayName: 'MyContext', // for error messages etc.
+    type: Number,
+    constraint: Spec.oneOf(1, 2, 3, 4, 5) // using a third-party spec library
+    defaultValue: 5
 });
 ```
 

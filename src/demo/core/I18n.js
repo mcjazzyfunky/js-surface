@@ -1,8 +1,5 @@
-import { defineContext, defineComponent } from 'js-surface'
-import { Html } from 'js-surface/dom-factories'
-import { Spec } from 'js-spec'
-
-const { div, label, option, select } = Html
+import { defineContext, createElement as h, defineComponent } from 'js-surface';
+import { Spec } from 'js-spec';
 
 const translations = {
   en: {
@@ -14,12 +11,12 @@ const translations = {
   fr: {
     salutation: 'Salut, Mesdames, Messieurs'
   }
-}
+};
 
-const LocaleCtx = defineContext({
+const LocaleContext = defineContext({
   displayName: 'LocaleCtx',
   defaultValue: 'en'
-})
+});
 
 const App = defineComponent({
   displayName: 'App',
@@ -27,43 +24,47 @@ const App = defineComponent({
   properties: {
     defaultLocale: {
       type: String,
-      validate: Spec.oneOf('en', 'fr', 'de'),
+      constraint: Spec.oneOf('en', 'fr', 'de'),
       defaultValue: 'en'
     }
   },
 
-  init(getProps, getState, updateState) {
-    updateState({ locale: getProps().defaultLocale })
+  main: {
+    functional: false,
+    
+    init: (getProps, getState, updateState) => {
+      updateState({ locale: getProps().defaultLocale });
 
-    return { 
-      render: () => {
-        const locale = getState().locale
+      return { 
+        render: () => {
+          const locale = getState().locale;
 
-        return (
-          LocaleCtx.Provider({ value: locale },
-            div(
-              label({ htmlFor: 'lang-selector' },
-                'Select language: '),
-              select(
-                {
-                  id: 'lang-selector',
-                  value: locale,
-                  onChange: ev => {
-                    const newLocale = ev.target.value
+          return (
+            h(LocaleContext.Provider, { value: locale },
+              h('div', null,
+                h('label',
+                  { htmlFor: 'lang-selector' },
+                  'Select language: '),
+                h('select',
+                  {
+                    id: 'lang-selector',
+                    value: locale,
+                    onChange: ev => {
+                      const newLocale = ev.target.value;
 
-                    updateState(() => ({ locale: newLocale }))
-                  }
-                },
-                option({ value: 'en' }, 'en'),
-                option({ value: 'fr' }, 'fr'),
-                option({ value: 'de' }, 'de')),
-              div(
-                LocaleText({ id: 'salutation'}))))
-        )
-      }
+                      updateState(() => ({ locale: newLocale }));
+                    }
+                  },
+                  h('option', { value: 'en' }, 'en'),
+                  h('option', { value: 'fr' }, 'fr'),
+                  h('option', { value: 'de' }, 'de')),
+                h('div', null, LocaleText({ id: 'salutation'}))))
+          );
+        }
+      };
     }
   }
-})
+});
 
 const LocaleText = defineComponent({
   displayName: 'LocaleText',
@@ -74,13 +75,17 @@ const LocaleText = defineComponent({
     }
   },
 
-  render(props) {
-    return (
-      div(
-        LocaleCtx.Consumer(locale =>
-          translations[locale][props.id]))
-    )
-  }
-})
+  main: {
+    functional: true,
 
-export default App()
+    render(props) {
+      return (
+        h('div', null,
+          h(LocaleContext.Consumer, locale =>
+            translations[locale][props.id]))
+      );
+    }
+  }
+});
+
+export default App();

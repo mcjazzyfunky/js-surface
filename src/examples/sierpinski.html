@@ -5,23 +5,23 @@
     <meta http-equiv=X-UA-Compatible content=IE=edge>
     <meta name=viewport content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sierpinski Triangle</title>
-    <script src="../../dist/js-surface.umd.production.js"></script>
-    <script src="../../dist/classes.umd.production.js"></script>
+    <script src="../../dist/js-surface.production.js"></script>
+    <script src="../../dist/common.production.js"></script>
   </head>
   <body>
     <div id=root></div>
 
     <style>
       html {
-        width: 100%
-        height: 100%
+        width: 100%;
+        height: 100%;
         overflow: hidden
       }
     </style>
 
     <script>
-      const { mount, createElement: h, defineComponent } = jsSurface
-      const { Component } = jsSurfaceCommon
+      const { mount, createElement: h, defineComponent } = jsSurface;
+      const { Component } = jsSurfaceCommon;
 
 
       var dotStyle = {
@@ -30,7 +30,7 @@
         font: 'normal 15px sans-serif',
         textAlign: 'center',
         cursor: 'pointer',
-      }
+      };
 
       var containerStyle = {
         position: 'absolute',
@@ -40,9 +40,9 @@
         width: '10px',
         height: '10px',
         background: '#eee',
-      }
+      };
 
-      var targetSize = 25
+      var targetSize = 25;
 
       const Dot = defineComponent({
         displayName: 'Dot',
@@ -50,22 +50,22 @@
         main:
           class Dot extends Component {
             constructor() {
-              super()
-              this.state = { hover: false }
+              super();
+              this.state = { hover: false };
             }
             enter() {
               this.setState({
                 hover: true
-              })
+              });
             }
             leave() {
               this.setState({
                 hover: false
-              })
+              });
             }
             render() {
-              var props = this.props
-              var s = props.size * 1.3
+              var props = this.props;
+              var s = props.size * 1.3;
               var style = Object.assign({}, dotStyle, {
                 width: s + 'px',
                 height: s + 'px',
@@ -74,15 +74,15 @@
                 borderRadius: (s / 2) + 'px',
                 lineHeight: (s) + 'px',
                 background: this.state.hover ? '#ff0' : dotStyle.background
-              })
+              });
               return (
                 h('div', {style: style, onMouseEnter: ()=>this.enter(), onMouseLeave: ()=>this.leave()},
                   this.state.hover ? '*' + props.text + '*' : props.text
                 )
-              )
+              );
             }
           }
-      })
+      });
 
       const SierpinskiTriangle = defineComponent({
         displayName: 'SierpinskiTriangle',
@@ -90,15 +90,15 @@
         main:
           class extends Component {
           render () {
-            var { x, y, s, children } = this.props
+            var { x, y, s, children } = this.props;
           if (s <= targetSize) {
             return (
               h(Dot, {x: x - (targetSize / 2), y: y - (targetSize / 2), size: targetSize, text: children})
-            )
-            return r
+            );
+            return r;
           }
-          var newSize = s / 2
-          var slowDown = false
+          var newSize = s / 2;
+          var slowDown = false;
           if (slowDown) {
             var e = performance.now()+0.8
             while (performance.now() < e) {
@@ -106,28 +106,28 @@
             }
           }
 
-          s /= 2
+          s /= 2;
 
           return [
             h(SierpinskiTriangle, {x: x, y: y-(s/2), s: s}, children),
             h(SierpinskiTriangle, {x: x-s, y: y+(s/2), s: s}, children),
             h(SierpinskiTriangle, {x: x+s, y: y+(s/2), s: s}, children)
-          ]
+          ];
         }
 
         shouldComponentUpdate(newProps) {
-          var oldProps = this.props
-          var o = oldProps
-          var n = newProps
+          var oldProps = this.props;
+          var o = oldProps;
+          var n = newProps;
           return !(
             o.x === n.x &&
             o.y === n.y &&
             o.s === n.s &&
             o.children === n.children
-          )
+          );
         }
         }
-      })
+      });
 
       const ExampleApplication = defineComponent({
         displayName: 'ExampleApplication',
@@ -135,25 +135,25 @@
         main: 
           class ExampleApplication extends Component {
             constructor() {
-              super()
-              this.state = { seconds: 0 }
-              this.tick = this.tick.bind(this)
+              super();
+              this.state = { seconds: 0 };
+              this.tick = this.tick.bind(this);
             }
             componentDidMount() {
-              this.intervalID = setInterval(this.tick, 1000)
+              this.intervalID = setInterval(this.tick, 1000);
             }
             tick() {
               this.setState(state => ({ seconds: (state.seconds % 10) + 1 }))
             }
             componentWillUnmount() {
-              clearInterval(this.intervalID)
+              clearInterval(this.intervalID);
             }
             render() {
-              const seconds = this.state.seconds
-              const elapsed = this.props.elapsed
-              const t = (elapsed / 200) % 10
-              const scale = 1 + (t > 5 ? 10 - t : t) / 10
-              const transform = 'scaleX(' + (scale / 2.1) + ') scaleY(0.7) translateZ(0.1px)'
+              const seconds = this.state.seconds;
+              const elapsed = this.props.elapsed;
+              const t = (elapsed / 200) % 10;
+              const scale = 1 + (t > 5 ? 10 - t : t) / 10;
+              const transform = 'scaleX(' + (scale / 2.1) + ') scaleY(0.7) translateZ(0.1px)';
               return (
                 h('div', {style: Object.assign({}, containerStyle, {transform: transform})},
                   h('div',
@@ -162,20 +162,20 @@
                     )
                   )
                 )
-              )
+              );
             }
           }
-      })
+      });
 
-      var start = new Date().getTime()
+      var start = new Date().getTime();
       function update() {
         mount(
           h(ExampleApplication, {elapsed: new Date().getTime() - start}),
           document.getElementById('root')
-        )
-        requestAnimationFrame(update)
+        );
+        requestAnimationFrame(update);
       }
-      requestAnimationFrame(update)
+      requestAnimationFrame(update);
     </script>
   </body>
 </html>

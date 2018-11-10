@@ -1,7 +1,4 @@
-import { defineComponent } from 'js-surface'
-import { Html } from 'js-surface/dom-factories'
-
-const { div } = Html
+import { createElement as h, defineComponent } from 'js-surface';
 
 const HelloWorld = defineComponent({
   displayName: 'HelloWorld',
@@ -13,9 +10,13 @@ const HelloWorld = defineComponent({
     }
   },
 
-  render({ name }) {
-    return div(`Hello ${name}!`)
-  }
-})
+  main: {
+    functional: true,
 
-export default HelloWorld({ name: 'Jane Doe' })
+    render({ name }) {
+      return h('div', `Hello ${name}!`);
+    }
+  }
+});
+
+export default HelloWorld({ name: 'Jane Doe' });

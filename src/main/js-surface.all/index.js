@@ -1,5 +1,0 @@
-export * from '../js-surface/index'
-export * from '../js-surface.classes/index'
-export * from '../js-surface.dom-factories/index'
-export * from '../js-surface.portal/index'
-export * from '../js-surface.util/index'
