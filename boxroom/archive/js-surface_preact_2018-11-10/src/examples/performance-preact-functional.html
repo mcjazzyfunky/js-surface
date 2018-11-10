@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <meta http-equiv=X-UA-Compatible content=IE=edge>
+  <title>Simple performance test</title>
+  <script src="https://unpkg.com/preact"></script>
+  <script src="https://unpkg.com/dio.js"></script>
+  <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+  <div id="main-content"></div>
+  <script>
+    const lib = 'preact'
+
+    let h, Component, render
+
+    if (lib === 'react') {
+      h = React.createElement
+      Component = React.Component
+      render = ReactDOM.render
+    } else if (lib === 'dio') {
+      h = dio.createElement
+      Component = dio.Component
+      render = dio.render
+    } else if (lib === 'preact') {
+      h = preact.h,
+      Component = preact.Component
+      render = preact.render
+    }
+
+    const
+      framesPerSecond = 240,
+      colors = ['red', 'yellow', 'orange'],
+      tileWidth = 5,
+      columnCount = 20,
+      rowCount = 20
+
+    let
+      startTime = Date.now(),
+      frameCount = 0,
+      actualFramesPerSecond = '0'
+
+    const
+      Tile = props => {
+        const
+          { width, color } = props,
+          
+          style = {
+            float: 'left',
+            width: width + 'px',
+            height: width + 'px',
+            backgroundColor: color,
+            padding: 0,
+            margin: 0
+          }
+          
+        return h('div', { style })
+      },
+
+      TileRow = props => {
+        const
+          { tileWidth, columnCount } = props,
+          tiles = []
+
+        for (let x = 0; x < columnCount; ++x) {
+          const
+            colorIdx = Math.floor(Math.random() * colors.length),       
+            color = colors[colorIdx]
+          
+          tiles.push(Tile({ width: tileWidth, color, key: x }))
+        }
+      
+        return h('div', { style: { clear: 'both' }}, tiles)
+      },
+
+      SpeedTest = () => {
+        const
+          rows = [],
+          
+          style = {
+          marginTop: 40,
+          marginLeft: 40
+        }
+
+        for (let y = 0; y < rowCount; ++y) {
+          rows.push(
+            TileRow({
+              tileWidth: tileWidth,
+              columnCount: columnCount,
+              key: y
+            }))
+        }
+        
+        return (
+          h('div',
+          null,
+          h('div',
+              null,
+              `Rows: ${rowCount}, columns: ${columnCount}`,
+              h('div',
+              { style },
+              rows)),
+          h('p',
+              { style: { clear: 'both' } },
+          `(actual frames per second: ${actualFramesPerSecond})`))
+        )
+      },
+
+    Main = class extends Component {
+      constructor(props) {
+        super(props)
+
+        this.intervalId = null
+      }
+
+      render() {
+        return h(SpeedTest, { tileWidth, columnCount, rowCount })
+      }
+
+      componentDidMount() {
+        this.intervalId = setInterval(() => {
+          ++frameCount
+          this.forceUpdate(); 
+
+          if (frameCount % 10 === 0) {
+            actualFramesPerSecond =
+              (frameCount * 1000.0 /
+              (Date.now() - startTime)).toFixed(2)
+            }
+         }, 1000 / framesPerSecond)
+      }
+
+      componentWillUnmount() {
+        clearInterval(this.intervalId)
+        this.intervalId = null
+      }
+    }
+
+    render(
+      h(Main),
+      document.getElementById('main-content'))
+
+  </script>
+</body>
