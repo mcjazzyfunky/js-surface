@@ -4,10 +4,7 @@ import VirtualNode from '../types/VirtualNode'
 import PropertiesConfig from './PropertiesConfig'
 import Component from './Component'
 
-export default interface StatelessComponentConfig<
-  P extends Props = {},
-  M extends Methods = {}
-> {
+export default interface StatelessComponentConfig<P extends Props = {}, M extends Methods = {}> {
   displayName: string,
   properties?: PropertiesConfig<P>,
   methods?: (keyof M)[],

@@ -1,13 +1,15 @@
 import ContextConfig from './types/ContextConfig'
 import { Spec, SpecValidator } from 'js-spec'
 import Context from './types/Context'
+import PropertyConfig from './types/PropertyConfig'
+import PropertiesConfig from './types/PropertiesConfig'
 import VirtualElement from './types/VirtualElement'
 import createElement from './createElement'
 
 export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   let error: Error | null = null
   
-  if (process.env.NODE_ENV === 'DEV') {
+  if (process.env.NODE_ENV === 'development' as any) {
     error = validateContextConfig(config)
 
     if (error) {
@@ -15,12 +17,22 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
     }
   }
 
-  const providerProperties = {}
-
-  for (const key of ['type', 'nullable', 'validate']) {
-    if (config.hasOwnProperty(key)) {
-      providerProperties[key] = config[key]
+  const
+    providerValuePropertyConfig: PropertyConfig<T> = {},
+    providerPropertiesConfig: PropertiesConfig<{ value: T }> = {
+      value: providerValuePropertyConfig
     }
+
+  if (config.hasOwnProperty('type')) {
+    providerValuePropertyConfig.type = config.type
+  }
+
+  if (config.hasOwnProperty('nullable')) {
+    providerValuePropertyConfig.nullable = config.nullable
+  }
+
+  if (config.hasOwnProperty('validate')) {
+    providerValuePropertyConfig.validate = config.validate
   }
 
   let
@@ -60,7 +72,7 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   Object.defineProperty(ret.Provider, 'meta', {
     value: Object.freeze({
       displayName: `${config.displayName}.Provider`,
-      properties: Object.freeze(providerProperties),
+      properties: Object.freeze(providerPropertiesConfig),
       render: ret.Provider
     }) 
   })
@@ -82,7 +94,7 @@ const REGEX_DISPLAY_NAME = /^([a-z]+:)*[A-Z][a-zA-Z0-9.]*$/
 
 let contextConfigSpec: SpecValidator = null
 
-if (process.env.NODE_ENV === 'DEV') {
+if (process.env.NODE_ENV === 'development' as any) {
   contextConfigSpec =
     Spec.strictShape({
       displayName: Spec.match(REGEX_DISPLAY_NAME),

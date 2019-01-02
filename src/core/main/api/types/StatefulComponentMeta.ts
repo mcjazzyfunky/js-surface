@@ -7,6 +7,7 @@ import Component from './Component'
 export default interface StatelessComponentMeta<P extends Props = {}, M extends Methods = {}> {
   displayName: string,
   properties?: PropertiesConfig<P>
+  validate?: (props: P) => null | Error | true | false,
   methods?: (keyof M)[]
   init: (self: Component) => () => VirtualElement
 }

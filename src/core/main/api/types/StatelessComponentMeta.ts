@@ -5,5 +5,6 @@ import VirtualElement from './VirtualElement'
 export default interface StatelessComponentMeta<P extends Props> {
   displayName: string,
   properties?: PropertiesConfig<P>
+  validate?: (props: P) => null | Error | true | false,
   render: (props: P) => VirtualElement
 }

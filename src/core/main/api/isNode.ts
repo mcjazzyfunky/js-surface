@@ -6,8 +6,7 @@ export default function isNode(it: any): boolean {
   if (!ret) {
     const type = typeof it
 
-    ret = type === 'boolean' || type === 'number'
-      || type === 'string' || type === 'bigint'
+    ret = type === 'boolean' || type === 'number' || type === 'string'
   }
 
   return ret

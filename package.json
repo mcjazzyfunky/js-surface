@@ -38,16 +38,17 @@
     "mocha": "^5.1.1",
     "nyc": "^13.0.1",
     "react-dom": "^16.7.0-alpha.0",
-    "rollup": "^0.66.6",
+    "rollup": "^1.0.0",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.5",
     "rollup-plugin-eslint": "^5.0.0",
-    "rollup-plugin-gzip": "^2.0.0",
+    "rollup-plugin-gzip": "^2.2.0",
     "rollup-plugin-livereload": "^0.6.0",
-    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-serve": "^0.6.0",
-    "rollup-plugin-typescript2": "^0.17.0",
+    "rollup-plugin-terser": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.18.1",
     "rollup-plugin-uglify": "^4.0.0",
     "rollup-plugin-uglify-es": "0.0.1",
     "shx": "^0.2.2",
@@ -58,7 +59,8 @@
     "ziptool": "^1.0.2"
   },
   "dependencies": {
-    "react": "^16.7.0-alpha.0"
+    "react": "^16.7.0-alpha.0",
+    "rollup-plugin-alias": "^1.5.1"
   },
   "scripts": {
     "clean": "shx rm -rf ./build ./dist",

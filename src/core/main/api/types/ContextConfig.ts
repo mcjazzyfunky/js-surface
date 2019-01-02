@@ -12,7 +12,7 @@ interface ContextConfig<T> {
     ? FunctionConstructor
     : T extends Symbol
     ? SymbolConstructor
-    : { (...args: any[]): T } | ObjectConstructor
+    : { new (...args: any[]): T } | ObjectConstructor
 
   nullable?: boolean,
   validate?: (value: T) => null | Error | true | false

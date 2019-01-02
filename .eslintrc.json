@@ -26,7 +26,7 @@
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "single", { "avoidEscape": true }],
-    "semi": "error",
+    "semi": ["error", "never"],
     "no-console": ["off"]
   }
 }

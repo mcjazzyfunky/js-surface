@@ -15,7 +15,7 @@ function defineComponent< P extends Props = {}, M extends Methods = {} >(
   config: StatefulComponentConfig<P, M>): StatefulComponentFactory
 
 function defineComponent(config: any): any {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' as any) {
     const error = validateComponentConfig(config)
 
     if (error) {
@@ -24,7 +24,7 @@ function defineComponent(config: any): any {
     }
   }
 
-  let createComponentElement = null
+  let createComponentElement: Function = null
 
   const ret = function (...args: any[]) {
     return createComponentElement(...args)

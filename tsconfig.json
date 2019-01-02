@@ -6,9 +6,11 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
+    "downlevelIteration": true,
     "sourceMap": true,
     "lib": ["es7", "dom"],
     "esModuleInterop": true,
+    "baseUrl": ".",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -17,6 +19,6 @@
     ]
   },
   "files": [
-    "src/main/js-react-utils.ts"
+    "src/core/main/index.ts"
   ]
 }
