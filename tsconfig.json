@@ -11,6 +11,11 @@
     "lib": ["es7", "dom"],
     "esModuleInterop": true,
     "baseUrl": ".",
+    
+    "paths": {
+      "js-surface": ["src/core/main/index.ts"],
+    },
+    
     "typeRoots": [
       "node_modules/@types"
     ],

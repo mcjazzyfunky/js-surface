@@ -1,10 +1,10 @@
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
 
-export default function unmount(target: Element) {
-  if (!target || !target.tagName) {
+export default function unmount(container: Element) {
+  if (!container || !container.tagName) {
     throw new TypeError(
-      '[unmount] First argument must be a valid target element')
+      '[unmount] First argument "container" must be a valid DOM element')
   }
 
-  ReactDOM.unmountComponentAtNode(target)
+  ReactDOM.unmountComponentAtNode(container)
 }

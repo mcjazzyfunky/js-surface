@@ -1,5 +1,6 @@
 /*.log
 /.rpt2_cache
+/.nyc_output
 /.project
 /.idea
 /.c9

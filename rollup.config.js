@@ -1,7 +1,7 @@
 //import { tslint } from 'rollup-plugin-tslint'
 import resolve from 'rollup-plugin-node-resolve'
-import alias from 'rollup-plugin-alias'
 import replace from 'rollup-plugin-replace'
+import commonjs from 'rollup-plugin-commonjs'
 import typescript from 'rollup-plugin-typescript2'
 import { uglify as uglify } from 'rollup-plugin-uglify'
 import { terser } from 'rollup-plugin-terser'
@@ -27,24 +27,22 @@ function createConfig(pkg, moduleFormat, productive) {
 
     output: {
       file: productive
-        ? `dist/${pkg}.${moduleFormat}.production.js`
-        : `dist/${pkg}.${moduleFormat}.development.js`,
+        ? `dist/js-surface.${pkg}.${moduleFormat}.production.js`
+        : `dist/js-surface.${pkg}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
       name: `jsSurface.${pkg}`,
       sourcemap: productive ? false : 'inline',
 
-      paths: {
-        'js-surface': './src/core/index.ts'
-      },
-
       globals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
         'js-spec': 'jsSpec',
         'js-surface': 'jsSurface'
       }
     },
 
-    external: ['js-surface'],
+    external: productive ? ['js-surface', 'js-spec'] : ['js-surface'],
 
     plugins: [
       resolve({
@@ -52,10 +50,7 @@ function createConfig(pkg, moduleFormat, productive) {
         main: true,
         browser: true,
       }),
-      alias({
-        resolve: ['.ts'],
-        'js-surface': './src/core/main/index.ts'
-      }),
+      commonjs(),
       // tslint({
       //}),
       replace({
