@@ -1,15 +1,29 @@
 import { createElement as h, defineComponent } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
+import { useState } from '../modules/use/main/index'
 
+import { div, button, label } from '../modules/html/main/index'
 
-const Test = defineComponent({
+const Counter = defineComponent({
   displayName: 'Test',
 
-  render: () => {
-    return h('div', 'Juhu')
+  init(self) {
+    let [getCount, setCount] = useState(self, 0)
+
+    function onIncrement() {
+      setCount(getCount() + 1)
+    }
+
+    return () => {
+      return (
+        div(
+          label('Counter: '),
+          button({ onClick: onIncrement }, getCount()))
+      )
+    }
   }
 })
 
-console.log(Test)
+console.log(Counter())
 
-mount(Test(), document.getElementById('main-content'))
+mount(Counter(), document.getElementById('main-content'))

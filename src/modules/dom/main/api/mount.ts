@@ -1,7 +1,8 @@
 import { kindOf, VirtualElement } from '../../../core/main/index'
-
 import React from 'react' 
 import ReactDOM from 'react-dom'
+
+const { useState, useEffect, useRef } = React as any
 
 export default function mount(element: VirtualElement, container: Element) { 
   if (kindOf(element) !== 'element') {
@@ -13,9 +14,6 @@ export default function mount(element: VirtualElement, container: Element) {
     throw new TypeError(
       '[mount] Second argument "container" must be a valid DOM element')
   }
-
-  console.log(element)
-  console.log(convertNode(element))
 
   ReactDOM.render(convertNode(element), container)
 }
@@ -144,8 +142,137 @@ function convertStatelessComponent(it: any): Function {
   return ret
 }
 
+
+type LifecycleHandlers = {
+  didMount: () => void,
+  didUpdate: () => void,
+  willUnmount: () => void
+}
+
 function convertStatefulComponent(it: any): Function {
-  const ret: Function = null // TODO 
+  const ret: any = (props: any) => {
+    const
+      currentProps = useRef(),
+      currentValues = useRef(),
+      [values, setValues] = useState({}),
+      [internals, setInternals] = useState(() => {
+        const
+          lifecycleHandlers = {} as LifecycleHandlers,
+          
+          self = new Component(
+            () => currentProps.current,
+            (key: string | Symbol, value: any) => {
+              if (!internals || !internals.isInitialized) {
+                values[key as any] = value
+              } else {
+                setValues((values: any) => ({ ...values, [key as any]: value }))
+              }
+            },
+            (key: string | Symbol) => currentValues.current[key as any],
+            () => setInternals(internals),
+            (handlers: LifecycleHandlers) => {
+              Object.assign(lifecycleHandlers, handlers)
+            }),
+          
+          render = it.meta.init(self)
+          
+       
+        return { self, render, lifecycleHandlers, isInitialized: false }
+      })
+
+    currentProps.current = props
+    currentValues.current = values
+
+    useEffect(() => {
+      if (!internals.isInitialized) {
+        internals.lifecycleHandlers.didMount()
+        internals.isInitialized = true
+      } else {
+        internals.lifecycleHandlers.didUpdate()
+      }
+    })
+
+    useEffect(() => {
+      return () => internals.lifecycleHandlers.willUnmount()
+    }, [])
+    
+    return convertNode(internals.render())
+  } 
+
+  ret.displayName = it.meta.displayName
 
   return ret
+}
+
+class Component {
+  constructor(
+    getProps: () => any,
+    setValue: (key: string | Symbol, value: any) => void,
+    getValue: (key: string | Symbol) => any,
+    update: () => void,
+    
+    setLifecycleHandlers: (handlers: {
+      didMount: () => void,
+      didUpdate: () => void,
+      willUnmount: () => void
+    }) => void
+  ) {
+      const listeners = {
+        didMount: [] as (() => void)[],
+        didUpdate: [] as (() => void)[],
+        willUnmount: [] as (() => void)[],
+      }
+
+      this.setValue = setValue
+      this.getValue = getValue
+      this.update = () => update()
+
+      for (const key of Object.keys(listeners)) {
+        (this as any)['on' + key[0].toUpperCase() + key.substr(1)] = (listener: () => void) => {
+          (listeners as any)[key].push(listener)
+
+          return () => {
+            (listeners as any)[key] = (listeners as any)[key].filter((it: any) => it !== listener)
+          }
+        }
+      }
+
+      setLifecycleHandlers({
+        didMount() {
+          listeners.didMount.forEach(listener => listener())
+        },
+
+        didUpdate() {
+          listeners.didUpdate.forEach(listener => listener())
+        },
+
+        willUnmount() {
+          listeners.didUpdate.forEach(listener => listener())
+        }
+      })
+
+  }
+
+  setValue(key: string | Symbol, value: any) {
+    // will be overridden by constructor
+  }
+
+  getValue(key: String | Symbol) {
+    // will be overridden by constructor
+  }
+  
+  update() {
+    // will be overridden by constructor
+  }
+
+  onDidMount() {
+    // will be overridden by constructor
+  }
+
+  onDidUpdate() {
+  }
+
+  onWillUnmount() {
+    // will be overridden by constructor
+  }
 }
