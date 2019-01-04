@@ -62,11 +62,11 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   })
 
   Object.defineProperty(ret.Provider, 'js-surface:kind', {
-    value: 'provider'
+    value: 'contextProvider'
   })
 
   Object.defineProperty(ret.Consumer, 'js-surface:kind', {
-    value: 'consumer'
+    value: 'contextConsumer'
   })
   
   Object.defineProperty(ret.Provider, 'meta', {

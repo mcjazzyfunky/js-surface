@@ -23,9 +23,9 @@ function createElement(/* arguments */): VirtualElement {
     children = []
 
     for (let i = 2 - (skippedProps ? 1 : 0); i < argCount; ++i) {
-      const child: any = children[i]
+      const child: any = arguments[i]
 
-      if (child && (Array.isArray(child) || typeof child[SYMBOL_ITERATOR] === 'function')) {
+      if (isIterableObject(child)) {
         pushItems(children, child)
       } else {
         children.push(child)
@@ -36,6 +36,8 @@ function createElement(/* arguments */): VirtualElement {
   if (argCount > 1 && !skippedProps) {
     if (!hasChildren) {
       props = secondArg
+    } else if (!secondArg) {
+      props = { children }
     } else {
       props = {}
 
@@ -81,7 +83,7 @@ function pushItems(array: any[], items: Iterable<any>) {
     for (let i = 0; i < items.length; ++i) {
       const item = items[i]
 
-      if (item && (Array.isArray(item) || typeof item[SYMBOL_ITERATOR] === 'function')) {
+      if (isIterableObject(item)) { 
         pushItems(array, item)
       } else {
         array.push(item)
@@ -89,11 +91,15 @@ function pushItems(array: any[], items: Iterable<any>) {
     }
   } else {
     for (const item of items) {
-      if (item && (Array.isArray(item) || typeof item[SYMBOL_ITERATOR] === 'function')) {
+      if (isIterableObject(item)) {
         pushItems(array, item)
       } else {
         array.push(item)
       }
     }
   }
+}
+
+function isIterableObject(it: any) {
+  return it !== null && typeof it === 'object' && (Array.isArray(it) || typeof it[SYMBOL_ITERATOR] === 'function')
 }

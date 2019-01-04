@@ -26,11 +26,15 @@ function defineComponent(config: any): any {
 
   let createComponentElement: Function = null
 
-  const ret = function (...args: any[]) {
-    return createComponentElement(...args)
+  const ret = function (/* arguments */) {
+    return createComponentElement.apply(null, arguments)
   }
   
   createComponentElement = createElement.bind(null, ret)
+
+  Object.defineProperty(ret, 'js-surface:kind', {
+    value: 'componentFactory'
+  })
 
   Object.defineProperty(ret, 'meta', {
     value: convertConfigToMeta(config)

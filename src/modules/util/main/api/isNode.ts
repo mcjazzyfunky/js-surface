@@ -1,7 +1,7 @@
-import isElement from './isElement'
+import { kindOf } from '../../../core/main/index'
 
 export default function isNode(it: any): boolean {
-  let ret = it === null || it === undefined || isElement(it)
+  let ret = it === null || it === undefined || kindOf(it) === 'element'
 
   if (!ret) {
     const type = typeof it
