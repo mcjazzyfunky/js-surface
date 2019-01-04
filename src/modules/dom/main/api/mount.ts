@@ -223,6 +223,7 @@ class Component {
         willUnmount: [] as (() => void)[],
       }
 
+      this.getProps = getProps
       this.setValue = setValue
       this.getValue = getValue
       this.update = () => update()
@@ -251,6 +252,10 @@ class Component {
         }
       })
 
+  }
+
+  getProps(): any {
+    // will be overridden by constructor
   }
 
   setValue(key: string | Symbol, value: any) {

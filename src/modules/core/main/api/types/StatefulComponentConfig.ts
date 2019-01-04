@@ -9,5 +9,5 @@ export default interface StatelessComponentConfig<P extends Props = {}, M extend
   properties?: PropertiesConfig<P>,
   methods?: (keyof M)[],
   validate?: (props: P) => null | Error | true | false,
-  init: (self: Component, ref?: any) => (props: P) => VirtualNode
+  init: (self: Component<P>, ref?: any) => (props: P) => VirtualNode
 }
