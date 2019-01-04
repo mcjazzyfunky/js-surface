@@ -1,4 +1,4 @@
-import { isElement, VirtualElement } from 'js-surface'
+import { isElement, VirtualElement } from '../../../core/main/index'
 
 import React from 'react' 
 import ReactDOM from 'react-dom'

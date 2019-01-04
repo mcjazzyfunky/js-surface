@@ -1,4 +1,4 @@
-import { createElement } from 'js-surface'
+import { createElement } from '../../core/main/index'
 
 function f(tagName: string) {
   return createElement.bind(null, tagName)

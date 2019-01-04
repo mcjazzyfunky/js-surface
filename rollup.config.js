@@ -42,7 +42,7 @@ function createConfig(pkg, moduleFormat, productive) {
       }
     },
 
-    external: productive ? ['js-surface', 'js-spec'] : ['js-surface'],
+    external: productive ? ['js-surface', 'js-spec', 'react', 'react-dom'] : ['js-surface', 'react', 'react-dom'],
 
     plugins: [
       resolve({
@@ -55,9 +55,15 @@ function createConfig(pkg, moduleFormat, productive) {
       //}),
       replace({
         exclude: 'node_modules/**',
+        delimiters: ['', ''],
 
         values: {
-          'process.env.NODE_ENV': productive ? "'production'" : "'development'"
+          'process.env.NODE_ENV': productive ? "'production'" : "'development'",
+          "'../core/main/index'": "'js-surface'",
+          "'../../core/main/index'": "'js-surface'",
+          "'../../../core/main/index'": "'js-surface'",
+          "'../../../../core/main/index'": "'js-surface'",
+          "'../../../../../core/main/index'": "'js-surface'",
         }
       }),
       typescript({
