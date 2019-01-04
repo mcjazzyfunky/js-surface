@@ -1,11 +1,13 @@
 import commonjs from 'rollup-plugin-commonjs'
 import typescript from 'rollup-plugin-typescript2'
+import resolve from 'rollup-plugin-node-resolve'
 import replace from 'rollup-plugin-replace'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
 export default {
-  input: 'src/demo/demo.tsx',
+  input: 'src/demo/demo.ts',
+
   output: {
     file: './build/demo.js',
     format: 'umd',
@@ -13,14 +15,14 @@ export default {
     globals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
-      'js-spec': 'jsSpec',
-      'js-spec/dev-only': 'jsSpec'
+      'js-spec': 'jsSpec'
     }
   },
 
-  external: ['react', 'react-dom', 'js-spec', 'js-spec/dev-only'],
+  external: ['react', 'react-dom', 'js-spec'],
   
   plugins: [
+    resolve(),
     commonjs(),
     replace({
       exclude: 'node_modules/**',
@@ -30,13 +32,13 @@ export default {
       }
     }),
     typescript(),
-    //serve({
-    //  open: true,
-    //  contentBase: '.',
-    //  openPage: '/src/demo/demo.html'
-    //}),
-    //livereload({
-    //  watch: ['src/demo', 'build']
-    //})
+    serve({
+      open: true,
+      contentBase: '.',
+      openPage: '/src/demo/index.html'
+    }),
+    livereload({
+      watch: ['src/demo', 'build']
+    })
   ]
 }

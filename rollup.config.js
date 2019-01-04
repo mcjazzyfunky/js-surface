@@ -23,7 +23,7 @@ export default configs
 
 function createConfig(pkg, moduleFormat, productive) {
   return {
-    input: `src/${pkg}/main/index.ts`, 
+    input: `src/modules/${pkg}/main/index.ts`, 
 
     output: {
       file: productive

@@ -13,7 +13,7 @@
     "baseUrl": ".",
     
     "paths": {
-      "js-surface": ["src/core/main/index.ts"],
+      "js-surface": ["src/modules/core/main/index.ts"],
     },
     
     "typeRoots": [
@@ -24,6 +24,10 @@
     ]
   },
   "files": [
-    "src/core/main/index.ts"
-  ]
+    "src/modules/core/main/index.ts"
+  ],
+
+  "include": [
+		"./**/src/**/*.ts"
+  ],
 }
