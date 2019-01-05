@@ -116,29 +116,23 @@ function convertNodes(elements: any[]) {
 function adjustEntity(it: any): void {
   const kind = kindOf(it)
 
-  let internalType: any = null
-
   switch (kind) {
     case 'componentFactory':
-      internalType = it.meta.render
-        ? convertStatelessComponent(it)
-        : convertStatefulComponent(it)
+      if (it.meta.render) {
+         convertStatelessComponent(it)
+      } else {
+         convertStatefulComponent(it)
+      }
 
       break
 
     case 'contextConsumer':
-      internalType = convertContextConsumer(it)
+      convertContext(it.context)
       break
     
     case 'contextProvider':
-      internalType = convertContextProvider(it)
+      convertContext(it.context)
       break
-  }
-
-  if (internalType) {
-    Object.defineProperty(it, '__internal_type', {
-      value: internalType
-    })
   }
 }
 
@@ -147,9 +141,12 @@ function convertStatelessComponent(it: any): Function {
 
   ret.displayName = it.meta.displayName
 
+  Object.defineProperty(it, '__internal_type', {
+    value: ret
+  })
+
   return ret
 }
-
 
 type LifecycleHandlers = {
   didMount: () => void,
@@ -169,10 +166,8 @@ function convertStatefulComponent(it: any): Function {
           lifecycleHandlers = {} as LifecycleHandlers,
           
           consumeContext = (ctx: Context<any>) => {
-            if (!(ctx as any).__internal_type) {
-              Object.defineProperty(ctx, '__internal_type', {
-                value: convertContext(ctx)
-              })
+            if (!(ctx.Provider as any).__internal_type) {
+              convertContext(ctx)
             }
 
             const index = contextValues.current.length
@@ -220,46 +215,34 @@ function convertStatefulComponent(it: any): Function {
       return () => internals.lifecycleHandlers.willUnmount()
     }, [])
   
-    for (let i = 0; i < contextValues.current.length; ++i) {console.log(contextValues.current)
-      contextValues.current[i][1] = useContext(contextValues.current[i][0].__internal_type)
+    for (let i = 0; i < contextValues.current.length; ++i) {
+      contextValues.current[i][1] = useContext(contextValues.current[i][0].Provider.__internal_type._context)
     }
     
     return convertNode(internals.render())
   } 
 
   ret.displayName = it.meta.displayName
+  
+  Object.defineProperty(it, '__internal_type', {
+    value: ret
+  })
 
   return ret
-}
-
-function convertContextProvider(it: any): any {
-  const reactContextConsumer = it.context.Consumer.__internal_type
-
-  let reactContext = reactContextConsumer ? reactContextConsumer._context : null
-
-  if (!reactContext) {
-    reactContext = convertContext(it.context)
-  }
-
-  return reactContext.Provider
-}
-
-function convertContextConsumer(it: any): any {
-  const reactContextProvider = it.context.Provider.__internal_type
-
-  let reactContext = reactContextProvider ? reactContextProvider._context : null
-
-  if (!reactContext) {
-    reactContext = convertContext(it.context)
-  }
-
-  return reactContext.Consumer
 }
 
 function convertContext(it: any): any {
   const ret = React.createContext(it.Provider.meta.properties.value.defaultValue)
   
   // TODO
+
+  Object.defineProperty(it.Provider, '__internal_type', {
+    value: ret.Provider
+  })
+
+  Object.defineProperty(it.Consumer, '__internal_type', {
+    value: ret.Consumer
+  })
 
   return ret
 }
