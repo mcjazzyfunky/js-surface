@@ -1,7 +1,7 @@
-import { kindOf } from '../../../core/main/index'
+import { createElement } from '../../../core/main/index'
 
 export default function isElement(it: any): boolean {
-  return kindOf(it) === 'element'
+  return it instanceof VirtualElementClass
 }
 
 Object.defineProperty(isElement, 'js-spec:validate', {
@@ -11,3 +11,7 @@ Object.defineProperty(isElement, 'js-spec:validate', {
       : new Error('Must be a valid element')
   }
 })
+
+// --- locals -------------------------------------------------------
+
+const VirtualElementClass = createElement('div').constructor

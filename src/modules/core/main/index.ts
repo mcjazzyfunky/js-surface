@@ -2,8 +2,6 @@
 export { default as createElement } from './api/createElement'
 export { default as defineComponent } from './api/defineComponent'
 export { default as defineContext } from './api/defineContext'
-export { default as kindOf } from './api/kindOf'
-export { default as isNode } from '../../util/main/api/isNode'
 export { default as Fragment } from './api/Fragment'
 
 // types

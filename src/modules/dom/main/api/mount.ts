@@ -1,11 +1,11 @@
-import { kindOf, VirtualElement, Context } from '../../../core/main/index'
+import { createElement, VirtualElement, Context } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
 
 const { useState, useEffect, useRef, useContext } = React as any
 
 export default function mount(element: VirtualElement, container: Element) { 
-  if (kindOf(element) !== 'element') {
+  if (!isElement(element)) {
     throw new TypeError(
       '[mount] First argument "element" must be a virtual element')
   }
@@ -21,10 +21,16 @@ export default function mount(element: VirtualElement, container: Element) {
 // --- locals -------------------------------------------------------
 
 const
+  VirtualElementClass = createElement('div').constructor,
+
   SYMBOL_ITERATOR =
     typeof Symbol === 'function' && Symbol.iterator
       ? Symbol.iterator
       : '@@iterator'
+
+function isElement(it: any) {
+  return it instanceof VirtualElementClass
+}
 
 function isIterableObject(it: any): boolean {
   return typeof it === 'object' && (Array.isArray(it) || typeof it[SYMBOL_ITERATOR] === 'function')
@@ -33,18 +39,17 @@ function isIterableObject(it: any): boolean {
 function convertNode(node: any) {
   if (isIterableObject(node)) {
     return convertNodes(node)
-  } else if (kindOf(node) !== 'element') {
+  } else if (!isElement(node)) {
     return node
   }
 
   const
     type = node.type,
-    kind = kindOf(type),
     props = node.props,
     children = props ? props.children || null : null,
     newChildren = children ? convertNodes(children) : null
 
-  if (kind !== null && kind !== 'element' && !type.__internal_type) {
+  if (type && type['js-surface:kind'] && !type.__internal_type) {
     adjustEntity(type)
   }
 
@@ -56,7 +61,7 @@ function convertNode(node: any) {
     newProps.children = newChildren
   }
 
-  if (kindOf(type) === 'contextConsumer' && newProps.children && typeof newProps.children[0] === 'function') { 
+  if (type && type['js-surface:kind'] === 'contextConsumer' && newProps.children && typeof newProps.children[0] === 'function') { 
     const consume = newProps.children[0]
     newProps.children[0] = (value: any) => convertNode(consume(value))
   }
@@ -103,7 +108,7 @@ function convertNodes(elements: any[]) {
   for (let i = 0; i < elements.length; ++i) {
     const child = elements[i]
 
-    if (kindOf(child) === 'element') {
+    if (isElement(child)) {
       ret[i] = convertNode(child)
     } else if (isIterableObject(child)) {
       ret[i] = convertNodes(child)
@@ -114,7 +119,7 @@ function convertNodes(elements: any[]) {
 }
 
 function adjustEntity(it: any): void {
-  const kind = kindOf(it)
+  const kind: string = it['js-surface:kind'] 
 
   switch (kind) {
     case 'componentFactory':

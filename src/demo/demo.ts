@@ -4,11 +4,6 @@ import { useState, useEffect, useProps, useContext } from '../modules/use/main/i
 
 import { div, button, label } from '../modules/html/main/index'
 
-const TestCtx = defineContext<string>({
-  displayName: 'TestCtx',
-  defaultValue: 'Woohoo'
-})
-
 interface CounterProps {
   label: string
 }
@@ -19,7 +14,6 @@ const Counter = defineComponent<CounterProps>({
   init(self) {
     const
       getProps = useProps(self, { label: 'Counter' }),
-      getTest = useContext(self, TestCtx),
       [getCount, setCount] = useState(self, 0)
 
     useEffect(self, () => {
@@ -39,7 +33,6 @@ const Counter = defineComponent<CounterProps>({
 
       return (
         div(
-          getTest(),
           label(props.label),
           ': ',
           button({ onClick: onIncrement }, getCount()))
@@ -48,7 +41,4 @@ const Counter = defineComponent<CounterProps>({
   }
 })
 
-mount(
-    TestCtx.Provider({ value: 'xyz'},
-    
-    Counter()), document.getElementById('main-content'))
+mount(Counter(), document.getElementById('main-content'))
