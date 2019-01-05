@@ -1,8 +1,8 @@
-import { kindOf, VirtualElement } from '../../../core/main/index'
+import { kindOf, VirtualElement, Context } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
 
-const { useState, useEffect, useRef } = React as any
+const { useState, useEffect, useRef, useContext } = React as any
 
 export default function mount(element: VirtualElement, container: Element) { 
   if (kindOf(element) !== 'element') {
@@ -125,6 +125,14 @@ function adjustEntity(it: any): void {
         : convertStatefulComponent(it)
 
       break
+
+    case 'contextConsumer':
+      internalType = convertContextConsumer(it)
+      break
+    
+    case 'contextProvider':
+      internalType = convertContextProvider(it)
+      break
   }
 
   if (internalType) {
@@ -154,10 +162,25 @@ function convertStatefulComponent(it: any): Function {
     const
       currentProps = useRef(),
       currentValues = useRef(),
+      contextValues = useRef([]),
       [values, setValues] = useState({}),
       [internals, setInternals] = useState(() => {
         const
           lifecycleHandlers = {} as LifecycleHandlers,
+          
+          consumeContext = (ctx: Context<any>) => {
+            if (!(ctx as any).__internal_type) {
+              Object.defineProperty(ctx, '__internal_type', {
+                value: convertContext(ctx)
+              })
+            }
+
+            const index = contextValues.current.length
+
+            contextValues.current[index] = [ctx, undefined]
+
+            return () => contextValues.current[index][1]
+          },
           
           self = new Component(
             () => currentProps.current,
@@ -170,6 +193,7 @@ function convertStatefulComponent(it: any): Function {
             },
             (key: string | Symbol) => currentValues.current[key as any],
             () => setInternals(internals),
+            consumeContext,
             (handlers: LifecycleHandlers) => {
               Object.assign(lifecycleHandlers, handlers)
             }),
@@ -195,6 +219,10 @@ function convertStatefulComponent(it: any): Function {
     useEffect(() => {
       return () => internals.lifecycleHandlers.willUnmount()
     }, [])
+  
+    for (let i = 0; i < contextValues.current.length; ++i) {console.log(contextValues.current)
+      contextValues.current[i][1] = useContext(contextValues.current[i][0].__internal_type)
+    }
     
     return convertNode(internals.render())
   } 
@@ -204,13 +232,47 @@ function convertStatefulComponent(it: any): Function {
   return ret
 }
 
+function convertContextProvider(it: any): any {
+  const reactContextConsumer = it.context.Consumer.__internal_type
+
+  let reactContext = reactContextConsumer ? reactContextConsumer._context : null
+
+  if (!reactContext) {
+    reactContext = convertContext(it.context)
+  }
+
+  return reactContext.Provider
+}
+
+function convertContextConsumer(it: any): any {
+  const reactContextProvider = it.context.Provider.__internal_type
+
+  let reactContext = reactContextProvider ? reactContextProvider._context : null
+
+  if (!reactContext) {
+    reactContext = convertContext(it.context)
+  }
+
+  return reactContext.Consumer
+}
+
+function convertContext(it: any): any {
+  const ret = React.createContext(it.Provider.meta.properties.value.defaultValue)
+  
+  // TODO
+
+  return ret
+}
+
 class Component {
   constructor(
     getProps: () => any,
     setValue: (key: string | Symbol, value: any) => void,
     getValue: (key: string | Symbol) => any,
-    update: () => void,
+    forceUpdate: () => void,
     
+    consumeContext: (ctx: Context<any>) => () => any,
+
     setLifecycleHandlers: (handlers: {
       didMount: () => void,
       didUpdate: () => void,
@@ -226,7 +288,8 @@ class Component {
       this.getProps = getProps
       this.setValue = setValue
       this.getValue = getValue
-      this.update = () => update()
+      this.forceUpdate = () => forceUpdate()
+      this.consumeContext = consumeContext
 
       for (const key of Object.keys(listeners)) {
         (this as any)['on' + key[0].toUpperCase() + key.substr(1)] = (listener: () => void) => {
@@ -265,8 +328,12 @@ class Component {
   getValue(key: String | Symbol) {
     // will be overridden by constructor
   }
-  
-  update() {
+
+  consumeContext<T>(ctx: Context<T>) {
+    // will be overridden by constructor
+  }
+
+  forceUpdate() {
     // will be overridden by constructor
   }
 

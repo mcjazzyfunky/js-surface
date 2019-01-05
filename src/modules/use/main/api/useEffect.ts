@@ -1,5 +1,4 @@
 import { Component } from '../../../core/main/index'
-import { isArray } from 'util';
 
 export default function useEffect(self: Component, action: () => (void | null | (() => void)), getInputs?: () => any[]) {
   if (!getInputs) {

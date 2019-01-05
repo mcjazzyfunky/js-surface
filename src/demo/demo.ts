@@ -1,20 +1,26 @@
-import { createElement as h, defineComponent } from '../modules/core/main/index'
+import { defineComponent, defineContext } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
-import { useState, useEffect, useProps } from '../modules/use/main/index'
+import { useState, useEffect, useProps, useContext } from '../modules/use/main/index'
 
 import { div, button, label } from '../modules/html/main/index'
+
+const TestCtx = defineContext<string>({
+  displayName: 'TestCtx',
+  defaultValue: 'Woohoo'
+})
 
 interface CounterProps {
   label: string
 }
 
 const Counter = defineComponent<CounterProps>({
-  displayName: 'Test',
+  displayName: 'Counter',
 
   init(self) {
-    const getProps = useProps(self, { label: 'Counter' })
-
-    let [getCount, setCount] = useState(self, 0)
+    const
+      getProps = useProps(self, { label: 'Counter' }),
+      getTest = useContext(self, TestCtx),
+      [getCount, setCount] = useState(self, 0)
 
     useEffect(self, () => {
       console.log('Component did render')
@@ -33,12 +39,16 @@ const Counter = defineComponent<CounterProps>({
 
       return (
         div(
+          getTest(),
           label(props.label),
           ': ',
           button({ onClick: onIncrement }, getCount()))
       )
-    }
+   }
   }
 })
 
-mount(Counter(), document.getElementById('main-content'))
+mount(
+    TestCtx.Provider({ value: 'xyz'},
+    
+    Counter()), document.getElementById('main-content'))

@@ -18,7 +18,7 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   }
 
   const
-    providerValuePropertyConfig: PropertyConfig<T> = {},
+    providerValuePropertyConfig: PropertyConfig<T> = { defaultValue: config.defaultValue },
     providerPropertiesConfig: PropertiesConfig<{ value: T }> = {
       value: providerValuePropertyConfig
     }
@@ -39,8 +39,8 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
     createProvider: (...args: any[]) => VirtualElement = null,
     createConsumer: (...args: any[]) => VirtualElement = null
 
-  let ret: Context<T> = {
-    Provider(...args: any[]): VirtualElement {
+  let ret: Context<T> = new ContextClass(
+    (...args: any[]) => {
       if (createProvider === null) {
         createProvider = createElement.bind(null, ret.Provider)
       }
@@ -48,25 +48,29 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
       return createProvider(...args)
     },
 
-    Consumer(...args: any[]): VirtualElement {
+    (...args: any[]) => {
       if (createConsumer === null) {
         createConsumer = createElement.bind(null, ret.Consumer)
       }
 
       return createConsumer(...args)
     }
-  } as any as Context<T>
+  ) as any as Context<T>
   
-  Object.defineProperty(ret, 'js-surface:kind', {
-    value: 'context'
-  })
-
   Object.defineProperty(ret.Provider, 'js-surface:kind', {
     value: 'contextProvider'
+  })
+  
+  Object.defineProperty(ret.Provider, 'context', {
+    value: ret
   })
 
   Object.defineProperty(ret.Consumer, 'js-surface:kind', {
     value: 'contextConsumer'
+  })
+  
+  Object.defineProperty(ret.Consumer, 'context', {
+    value: ret
   })
   
   Object.defineProperty(ret.Provider, 'meta', {
@@ -127,3 +131,14 @@ function validateContextConfig<T>(config: ContextConfig<T>): Error | null {
   return ret
 }
 
+const ContextClass = class Context {
+  constructor(provider: any, consumer: any ) {
+    Object.defineProperty(this, 'Provider', {
+      value: provider
+    })
+    
+    Object.defineProperty(this, 'Consumer', {
+      value: consumer
+    })
+  }
+}
