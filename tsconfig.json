@@ -24,7 +24,13 @@
     ]
   },
   "files": [
-    "src/modules/core/main/index.ts"
+    "src/modules/core/main/index.ts",
+    "src/modules/dom/main/index.ts",
+    "src/modules/html/main/index.ts",
+    "src/modules/svg/main/index.ts",
+    "src/modules/use/main/index.ts",
+    "src/modules/use2/main/index.ts",
+    "src/modules/util/main/index.ts"
   ],
 
   "include": [

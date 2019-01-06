@@ -42,7 +42,7 @@ function createConfig(pkg, moduleFormat, productive) {
       }
     },
 
-    external: productive ? ['js-surface', 'js-spec', 'react', 'react-dom'] : ['js-surface', 'react', 'react-dom'],
+    external: ['js-surface', 'js-spec', 'react', 'react-dom'],
 
     plugins: [
       resolve({
