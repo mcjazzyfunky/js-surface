@@ -1,8 +1,12 @@
 export default function* useEffect(action: () => (void | null | (() => void)), getInputs?: () => any[]) {
   if (!getInputs) {
-    let cleanup: Function | void
+    let cleanup: Function | void = null
 
     const listener = () => {
+      if (cleanup) {
+        cleanup()
+      }
+
       cleanup = action()
     }
 
@@ -14,8 +18,19 @@ export default function* useEffect(action: () => (void | null | (() => void)), g
 
     yield {
       type: 'handleLifecycle',
+      event: 'didUpdate',
+      callback: listener 
+    }
+
+    yield {
+      type: 'handleLifecycle',
       event: 'willUnmount',
-      callback: () => cleanup ? cleanup() : void 0
+
+      callback() {
+        if (cleanup) {
+          cleanup()
+        }
+      }
     }
   } else {
     let
@@ -31,8 +46,12 @@ export default function* useEffect(action: () => (void | null | (() => void)), g
       }
 
       if (!isEqual(inputs, oldInputs)) {
+        if (cleanup) {
+          cleanup()
+        }
+
         oldInputs = inputs
-       cleanup = action()
+        cleanup = action()
       }
     }
 
@@ -46,6 +65,17 @@ export default function* useEffect(action: () => (void | null | (() => void)), g
       type: 'handleLifecycle',
       event: 'didUpdate',
       callback
+    }
+
+    yield {
+      type: 'handleLifecycle',
+      event: 'willUnmount',
+
+      callback() {
+        if (cleanup) {
+          cleanup()
+        }
+      }
     }
   }
 }

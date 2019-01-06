@@ -1,19 +1,29 @@
 import { Component } from '../../../core/main/index'
 
-export default function useEffect(self: Component, action: () => (void | null | (() => void)), getInputs?: () => any[]) {
+export default function useEffect(self: Component, action: () => (void | (() => void)), getInputs?: () => any[]) {
   if (!getInputs) {
-    const listener = () => {
-      const handleOnUnmount = action()
+    let cleanup: void | (() => void)
 
-      if (handleOnUnmount) {
-        self.onWillUnmount(handleOnUnmount)
+    const listener = () => {
+      if (cleanup) {
+        cleanup()
       }
+
+      cleanup = action()
     }
 
     self.onDidMount(listener)
     self.onDidUpdate(listener)
+
+    self.onWillUnmount(() => {
+      if (cleanup) {
+        cleanup
+      }
+    })
   } else {
-    let oldInputs: any[]
+    let
+      cleanup: void | (() => void),
+      oldInputs: any[]
 
     const listener = () => {
       const inputs = getInputs()
@@ -26,16 +36,22 @@ export default function useEffect(self: Component, action: () => (void | null | 
       if (!isEqual(inputs, oldInputs)) {
         oldInputs = inputs
 
-        const handleOnUnmount = action()
-
-        if (handleOnUnmount) {
-          self.onWillUnmount(handleOnUnmount)
+        if (cleanup) {
+          cleanup()
         }
+
+        cleanup = action()
       }
     }
 
     self.onDidMount(listener)
     self.onDidUpdate(listener)
+    
+    self.onWillUnmount(() => {
+      if (cleanup) {
+        cleanup()
+      }
+    })
   }
 }
 

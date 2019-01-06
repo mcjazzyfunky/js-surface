@@ -267,17 +267,24 @@ function convertStatefulComponent(it: any): Function {
 }
 
 function convertContext(it: any): any {
-  const ret = React.createContext(it.Provider.meta.properties.value.defaultValue)
+  const ret =
+    it.Provider.__internal_type && it.Provider.__internal_type._context
+      || it.Consumer.__internal_type && it.Consumer.__internal_type._context
+      || React.createContext(it.Provider.meta.properties.value.defaultValue)
   
   // TODO
 
-  Object.defineProperty(it.Provider, '__internal_type', {
-    value: ret.Provider
-  })
+  if (!it.Provider.__internal_type) {
+    Object.defineProperty(it.Provider, '__internal_type', {
+      value: ret.Provider
+    })
+  }
 
-  Object.defineProperty(it.Consumer, '__internal_type', {
-    value: ret.Consumer
-  })
+  if (!it.Consumer.__internal_type) {
+    Object.defineProperty(it.Consumer, '__internal_type', {
+      value: ret.Consumer
+    })
+  }
 
   return ret
 }
@@ -372,61 +379,137 @@ function convertStatefulComponentWithGenerators(it: any) {
         internals = {
           props,
           state: [] as any,
-          render: null as any
-        }
+          contexts: [] as any,
+          render: null as any,
+          setInternals: null as any, // will be set later,
+          isInitialized: false,
 
-      const iter: any = init()
-
-      let nextInput: any = undefined
-
-      while (true) {
-        const { done, value } = iter.next(nextInput)
-
-        if (done) {
-          internals.render = value 
-          break
-        }
-
-        if (typeof value === 'function') {
-
-        } else {
-          switch (value.type) {
-            case 'handleProps':
-              nextInput = () => internals.props
-              break
-
-            case 'handleState': {
-              let index = internals.state.length
-
-              internals.state[index] = value.initialValue
-
-              nextInput = [
-                () => internals.state[index],
-                (nextValue: any) => {
-                  if (!setInternals) {
-                    internals.state[index] = nextValue
-                  } else {
-                    setInternals((internals: any) => {
-                      internals.state[index] = nextValue
-                      return internals
-                    })
-                  }
-                }
-              ]
-            }
-
-            break
+          lifecycle: {
+            didMount: [] as any,
+            didUpdate: [] as any,
+            willUnmount: [] as any
           }
         }
-      } 
+
+      internals.render = processIterator(init(), internals)
 
       return internals
     })
 
-    internals.props = props
+    useEffect(() => {
+      if (!internals.isInitialized) {
+        internals.isInitialized = true
 
-    return internals.render()
+        internals.lifecycle.didMount.forEach((it: any) => it())
+      } else {
+        internals.lifecycle.didUpdate.forEach((it: any) => it())
+      }
+    })
+
+    useEffect(() => {
+      return () => internals.lifecycle.willUnmount.forEach((it: any) => it())
+    }, [])
+  
+    for (let i = 0; i < internals.contexts.length; ++i) {
+      internals.contexts[i][1] = useContext(internals.contexts[i][0].Provider.__internal_type._context)
+    }
+
+    internals.props = props
+    internals.setInternals = setInternals
+
+    return convertNode(internals.render())
   }
 
+  (reactComponent as any).displayName = it.meta.displayName
+
   it['__internal_type'] = reactComponent 
+}
+
+function processIterator(iterator: any, internals: any) {
+  let ret = undefined
+  let nextInput: any = undefined
+
+  while (true) {
+    const { done, value } = iterator.next(nextInput)
+
+    if (done) {
+      ret = value 
+      break
+    }
+
+    if (value && typeof value.next === 'function') {
+      nextInput = processIterator(value, internals)
+    } else {
+      switch (value.type) {
+        case 'handleProps':
+          nextInput = () => internals.props
+          break
+
+        case 'handleContext': {
+          if (!value.context.__internal_type) {
+            convertContext(value.context)
+          }
+
+          const index = internals.contexts.length
+          internals.contexts[index] = [value.context, useContext(value.context)]
+          nextInput = () => internals.contexts[index][1]
+          break
+        }
+
+        case 'handleState': {
+          let index = internals.state.length
+
+          internals.state[index] = value.initialValue
+
+          nextInput = [
+            () => internals.state[index],
+            (nextValue: any) => {
+              if (!internals.setInternals) {
+                internals.state[index] = nextValue
+              } else {
+                internals.setInternals((internals: any) => {
+                  internals.state[index] = nextValue
+                  return internals
+                })
+              }
+            }
+          ]
+
+          break
+        }
+
+        case 'handleForceUpdate':
+          nextInput = () => { 
+            if (internals.setInternals) {
+              internals.setInternals(internals)
+            }
+          }
+
+          break
+
+        case 'handleLifecycle': {
+          const
+            event = value.event,
+            callback = () => value.callback()
+
+          switch (event) {
+            case 'didMount':
+            case 'didUpdate':
+            case 'willUnmount':
+              internals.lifecycle[event].push(callback)
+
+              nextInput = () => {
+                internals.lifecycle[event] = internals.lifecycle[event].filter((it: Function) => it !== callback)
+              }
+
+              break
+          }
+
+          break
+        }
+      }
+    }
+  } 
+
+  return ret
 }

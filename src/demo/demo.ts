@@ -1,15 +1,19 @@
 import { defineComponent, defineContext } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
-//import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
-import { useState, useEffect, useProps, usePrevious } from '../modules/use-generators/main/index'
+import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
+//import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use-generators/main/index'
 
 import { div, button, label } from '../modules/html/main/index'
+
+const ThemeCtx = defineContext({
+  displayName: 'ThemeCtx',
+  defaultValue: 'white'
+})
 
 interface CounterProps {
   label: string
 }
 
-/*
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
@@ -45,22 +49,16 @@ const Counter = defineComponent<CounterProps>({
    }
   }
 })
-*/
 
-
+/*
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
   *init() {
-    const [getState, setState ] = yield { type: 'handleState', initialValue: 111 }
-setState(1111111)
-    return () => 'Result is ' + getState()
-
-
-
     const
       getProps = yield useProps({ label: 'Counter' }),
       [getCount, setCount] = yield useState(0),
+      getTheme = yield useContext(ThemeCtx),
       getPreviousCount = yield usePrevious(getCount)
 
     yield useEffect(() => {
@@ -82,6 +80,7 @@ setState(1111111)
 
       return (
         div(
+          { style: { backgroundColor: getTheme() } },
           label(props.label),
           ': ',
           button({ onClick: onIncrement }, getCount()))
@@ -89,5 +88,6 @@ setState(1111111)
    }
   }
 })
+*/
 
 mount(Counter(), document.getElementById('main-content'))
