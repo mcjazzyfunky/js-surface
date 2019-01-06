@@ -191,7 +191,7 @@ function convertStatefulComponent(it: any): Function {
                 setValues((values: any) => ({ ...values, [key as any]: value }))
               }
             },
-            (key: string | Symbol) => currentValues.current[key as any],
+            (key: string | Symbol) => currentValues.current ? currentValues.current[key as any] : undefined,
             () => setInternals(internals),
             consumeContext,
             (handlers: LifecycleHandlers) => {

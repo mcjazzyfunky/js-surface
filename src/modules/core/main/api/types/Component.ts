@@ -8,7 +8,7 @@ type Unsubscribe = () => void
 export default interface Component<P extends Props = {}, M extends Methods = {}> {
   getProps(): P,
   setValue<T = any>(key: string | Symbol, value: T): void,
-  getValue<T = any>(key: string | Symbol): T,
+  getValue<T = any>(key: string | Symbol): T | undefined,
   forceUpdate(): void,
   setMethodsHandler(handler: M): void
   consumeContext<T = any>(ctx: Context<T>): () => T,
