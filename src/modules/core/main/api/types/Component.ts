@@ -14,5 +14,5 @@ export default interface Component<P extends Props = {}, M extends Methods = {}>
   onDidMount(listener: Listener): Unsubscribe,
   onDidUpdate(listener: Listener): Unsubscribe,
   onWillUnmount(listener: Listener): Unsubscribe,
-  // plus some more lifecycle events
+  // plus some more lifecycle methods
 }

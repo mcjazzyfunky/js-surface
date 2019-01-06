@@ -19,6 +19,8 @@ This file is a complete mess :( - sorry for that - will be fixed some day
 import { createElement, VirtualElement, Context } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
+import { any } from 'prop-types';
+
 const { useState, useEffect, useRef, useContext } = React as any
 
 export default function mount(element: VirtualElement, container: Element) { 
@@ -142,8 +144,10 @@ function adjustEntity(it: any): void {
     case 'componentFactory':
       if (it.meta.render) {
          convertStatelessComponent(it)
-      } else {
+      } else if (it.meta.init.length > 0) {
          convertStatefulComponent(it)
+      } else {
+        convertStatefulComponentWithGenerators(it)
       }
 
       break
@@ -355,4 +359,74 @@ class Component {
   onWillUnmount() {
     // will be overridden by constructor
   }
+}
+
+function convertStatefulComponentWithGenerators(it: any) {
+  const init = it.meta.init
+
+  const reactComponent = (props: any) => {
+    let ret = null
+
+    const [internals, setInternals] = useState(() => {
+      const
+        internals = {
+          props,
+          state: [] as any,
+          render: null as any
+        }
+
+      const iter: any = init()
+
+      let nextInput: any = undefined
+
+      while (true) {
+        const { done, value } = iter.next(nextInput)
+
+        if (done) {
+          internals.render = value 
+          break
+        }
+
+        if (typeof value === 'function') {
+
+        } else {
+          switch (value.type) {
+            case 'handleProps':
+              nextInput = () => internals.props
+              break
+
+            case 'handleState': {
+              let index = internals.state.length
+
+              internals.state[index] = value.initialValue
+
+              nextInput = [
+                () => internals.state[index],
+                (nextValue: any) => {
+                  if (!setInternals) {
+                    internals.state[index] = nextValue
+                  } else {
+                    setInternals((internals: any) => {
+                      internals.state[index] = nextValue
+                      return internals
+                    })
+                  }
+                }
+              ]
+            }
+
+            break
+          }
+        }
+      } 
+
+      return internals
+    })
+
+    internals.props = props
+
+    return internals.render()
+  }
+
+  it['__internal_type'] = reactComponent 
 }
