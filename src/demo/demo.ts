@@ -1,7 +1,7 @@
 import { defineComponent, defineContext } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
-import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
-//import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use-generators/main/index'
+//import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
+import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use2/main/index'
 
 import { div, button, label } from '../modules/html/main/index'
 
@@ -14,6 +14,7 @@ interface CounterProps {
   label: string
 }
 
+/*
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
@@ -49,8 +50,8 @@ const Counter = defineComponent<CounterProps>({
    }
   }
 })
+*/
 
-/*
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
@@ -88,6 +89,5 @@ const Counter = defineComponent<CounterProps>({
    }
   }
 })
-*/
 
 mount(Counter(), document.getElementById('main-content'))

@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['core', 'dom', 'html', 'svg', 'use', 'use-generators', 'util']) {
+for (const pkg of ['core', 'dom', 'html', 'svg', 'use', 'use2', 'util']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
