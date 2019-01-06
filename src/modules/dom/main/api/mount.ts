@@ -1,7 +1,24 @@
+/*
+
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+This file is a complete mess :( - sorry for that - will be fixed some day
+
+*/
+
 import { createElement, VirtualElement, Context } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
-
 const { useState, useEffect, useRef, useContext } = React as any
 
 export default function mount(element: VirtualElement, container: Element) { 
@@ -165,7 +182,7 @@ function convertStatefulComponent(it: any): Function {
       currentProps = useRef(),
       currentValues = useRef(),
       contextValues = useRef([]),
-      [values, setValues] = useState({}),
+      [state, setState] = useState([]),
       [internals, setInternals] = useState(() => {
         const
           lifecycleHandlers = {} as LifecycleHandlers,
@@ -184,14 +201,24 @@ function convertStatefulComponent(it: any): Function {
           
           self = new Component(
             () => currentProps.current,
-            (key: string | Symbol, value: any) => {
-              if (!internals || !internals.isInitialized) {
-                values[key as any] = value
-              } else {
-                setValues((values: any) => ({ ...values, [key as any]: value }))
+            (initialValue: any) => {
+              const index = state.length
+
+              state[index] = initialValue 
+
+              function get() {
+                return state[index]
               }
+
+              function set(value: any) {
+                setState((state: any[]) => {
+                  state[index] = value
+                  return state
+                })
+              }
+
+              return [get, set]
             },
-            (key: string | Symbol) => currentValues.current ? currentValues.current[key as any] : undefined,
             () => setInternals(internals),
             consumeContext,
             (handlers: LifecycleHandlers) => {
@@ -205,7 +232,6 @@ function convertStatefulComponent(it: any): Function {
       })
 
     currentProps.current = props
-    currentValues.current = values
 
     useEffect(() => {
       if (!internals.isInitialized) {
@@ -255,8 +281,7 @@ function convertContext(it: any): any {
 class Component {
   constructor(
     getProps: () => any,
-    setValue: (key: string | Symbol, value: any) => void,
-    getValue: (key: string | Symbol) => any,
+    handleState: (initialValue: any) => [() => any, (newValue: any) => void],
     forceUpdate: () => void,
     
     consumeContext: (ctx: Context<any>) => () => any,
@@ -274,8 +299,7 @@ class Component {
       }
 
       this.getProps = getProps
-      this.setValue = setValue
-      this.getValue = getValue
+      this.handleState = handleState,
       this.forceUpdate = () => forceUpdate()
       this.consumeContext = consumeContext
 
@@ -309,15 +333,11 @@ class Component {
     // will be overridden by constructor
   }
 
-  setValue(key: string | Symbol, value: any) {
+  handleState(initialValue: any) { 
     // will be overridden by constructor
   }
 
-  getValue(key: String | Symbol) {
-    // will be overridden by constructor
-  }
-
-  consumeContext<T>(ctx: Context<T>) {
+  consumeContext(ctx: Context<any>) {
     // will be overridden by constructor
   }
 

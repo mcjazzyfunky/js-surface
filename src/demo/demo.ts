@@ -22,7 +22,9 @@ const Counter = defineComponent<CounterProps>({
     }, () => [])
 
     useEffect(self, () => {
-      console.log(`Component did render (current counter value ${getCount()}, previously ${getPreviousCount()})`)
+      console.log(`Component did render (`
+        + `current counter value ${getCount()}, `
+        + `previously ${getPreviousCount()})`)
     })
 
     function onIncrement() {
