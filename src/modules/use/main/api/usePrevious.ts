@@ -1,9 +1,9 @@
 import { Component } from '../../../core/main/index'
 import useEffect from './useEffect'
 
-export default function usePrevious<T>(self: Component, getCurrent: () => T) {
+export default function usePrevious<T>(self: Component, getCurrent: () => T | undefined) {
   let
-    current = getCurrent(),
+    current: T = undefined,
     previous: T = undefined
 
   useEffect(self, () => {

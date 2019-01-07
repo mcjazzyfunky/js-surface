@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "repository": {
@@ -15,6 +15,7 @@
   "files": [
     "index.js",
     "dom.js",
+    "hooks.js",
     "html.js",
     "svg.js",
     "use.js",
@@ -41,6 +42,8 @@
     "js-spec": "^0.1.61",
     "mocha": "^5.1.1",
     "nyc": "^13.0.1",
+    "react": "16.7.0-alpha.0",
+    "react-dom": "16.7.0-alpha.0",
     "rollup": "^1.0.0",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -61,6 +64,7 @@
     "ziptool": "^1.0.2"
   },
   "depencencies": {
+    "js-spec": "^0.1.61",
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0"
   },

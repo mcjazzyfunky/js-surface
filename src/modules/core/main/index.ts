@@ -3,6 +3,7 @@ export { default as createElement } from './api/createElement'
 export { default as defineComponent } from './api/defineComponent'
 export { default as defineContext } from './api/defineContext'
 export { default as Fragment } from './api/Fragment'
+export { default as Dispatcher } from './api/Dispatcher'
 
 // types
 export { default as Component } from './api/types/Component'
