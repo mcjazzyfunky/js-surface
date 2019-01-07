@@ -93,7 +93,7 @@ function createElement(/* arguments */): VirtualElement {
         }
       }
 
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'development' as any) {
         const error = validateProperties(
           props, type.meta.properties, type.meta.validate, type.meta.variableProps, type.meta.displayName,
           type['js-surface:kind'] === 'constexProvider')

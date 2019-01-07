@@ -1,131 +1,70 @@
-import { defineComponent, defineContext } from '../modules/core/main/index'
+import { defineComponent, defineContext, VirtualElement } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
-import { useCallback, useState, useEffect, usePrevious } from '../modules/hooks/main/index'
+import { useForceUpdate, useRef } from '../modules/hooks/main/index'
+import { br, div, label, option, select } from '../modules/html/main/index'
 
-//import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
-//import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use2/main/index'
+import availableDemos from './available-demos'
 
-import { button, div, label } from '../modules/html/main/index'
+// --- Component DemoSelector ---------------------------------------
 
-const ThemeCtx = defineContext({
-  displayName: 'ThemeCtx',
-  defaultValue: 'white'
-})
-
-interface CounterProps {
-  label: string
+type DemoSelectorProps = {
+  demos: [string, VirtualElement][]
 }
 
-const Counter = defineComponent<CounterProps>({
-  displayName: 'Counter',
-
-  defaultProps: {
-    label: 'Count'
-  },
+const DemoSelector = defineComponent<DemoSelectorProps>({
+  displayName: 'DemoSelector',
 
   render(props) {
     const
-      [count, setCount] = useState(() => 0),
-      previousCount = usePrevious(count),
-      onIncrement = useCallback(() => setCount(count + 1))
+      forceUpdate = useForceUpdate(),
+      demoIdx = useRef(parseInt(document.location.href.replace(/^.*idx=/, ''), 10) || 0)
 
-    useEffect(() => {
-      console.log('Component did mount')
-    }, [])
+    function startDemo(idx: number) {
+      demoIdx.current = idx
+      document.location.href = document.location.href.replace(/#.*$/, '') + '#idx=' + idx
+      forceUpdate()
+    }
 
-    useEffect(() => {
-      console.log(`Component did render (`
-        + `current counter value ${count}, `
-        + `previously ${previousCount})`)
-    })
+    const options = []
+
+    for (let i = 0; i < props.demos.length; ++i) {
+      const demo = props.demos[i]
+          
+      options.push(option({ key: i, value: i }, demo[0]))
+    }
 
     return (
       div(
-        label(props.label),
-        ': ',
-        button({ onClick: onIncrement }, count))
+        div(
+          label('Select demo: '),
+            select({
+              onChange: (ev: any) => startDemo(ev.target.value),
+              value: demoIdx.current,
+              autoFocus: true
+            }, options)),
+            br(),
+            div(props.demos[demoIdx.current][1])))
+  }
+})
+
+// --- Component Demo -----------------------------------------------
+
+type DemoProps = {
+  demos: [string, VirtualElement][]
+}
+
+const Demo = defineComponent<DemoProps>({
+  displayName: 'Demo',
+
+  render(props) {
+    return (
+      div(
+        div(
+          DemoSelector({ demos: props.demos })))
     )
   }
 })
 
+// --- main ---------------------------------------------------------
 
-
-/*
-const Counter = defineComponent<CounterProps>({
-  displayName: 'Counter',
-
-  init(self) {
-    const
-      getProps = useProps(self, { label: 'Counter' }),
-      [getCount, setCount] = useState(self, 0),
-      getPreviousCount = usePrevious(self, getCount)
-
-    useEffect(self, () => {
-      console.log('Component did mount')
-    }, () => [])
-
-    useEffect(self, () => {
-      console.log(`Component did render (`
-        + `current counter value ${getCount()}, `
-        + `previously ${getPreviousCount()})`)
-    })
-
-    function onIncrement() {
-      setCount(getCount() + 1)
-    }
-
-    return () => {
-      const props = getProps()
-
-      return (
-        div(
-          label(props.label),
-          ': ',
-          button({ onClick: onIncrement }, getCount()))
-      )
-   }
-  }
-})
-*/
-
-/*
-const Counter = defineComponent<CounterProps>({
-  displayName: 'Counter',
-
-  *init() {
-    const
-      getProps = yield useProps({ label: 'Counter' }),
-      [getCount, setCount] = yield useState(0),
-      getTheme = yield useContext(ThemeCtx),
-      getPreviousCount = yield usePrevious(getCount)
-
-    yield useEffect(() => {
-      console.log('Component did mount')
-    }, () => [])
-
-    yield useEffect(() => {
-      console.log(`Component did render (`
-        + `current counter value ${getCount()}, `
-        + `previously ${getPreviousCount()})`)
-    })
-
-    function onIncrement() {
-      setCount(getCount() + 1)
-    }
-
-    return () => {
-      const props = getProps()
-
-      return (
-        div(
-          { style: { backgroundColor: getTheme() } },
-          label(props.label),
-          ': ',
-          button({ onClick: onIncrement }, getCount()))
-      )
-   }
-  }
-})
-*/
-
-mount(Counter(), document.getElementById('main-content'))
+mount(Demo({ demos: availableDemos }), document.getElementById('main-content'))
