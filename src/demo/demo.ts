@@ -20,9 +20,12 @@ interface CounterProps {
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
-  render(currProps) {
+  render(props) {
+    props = withDefaults(props, {
+      label: 'Count'
+    })
+
     const
-      props = withDefaults(currProps, { label: 'Count' }),
       [count, setCount] = useState(() => 0),
       previousCount = usePrevious(count),
       onIncrement = useCallback(() => setCount(count + 1))
