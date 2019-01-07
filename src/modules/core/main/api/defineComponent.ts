@@ -84,10 +84,17 @@ const
             return errorMsg ? new Error(errorMsg) : null
           }))),
 
+  specOfDefaultProps =
+    Spec.and(
+      Spec.object,
+      Spec.hasSomeKeys,
+      Spec.keysOf(Spec.match(REGEX_PROP_NAME))),
+
   specOfStatelessComponentConfig = 
     Spec.strictShape({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       properties: Spec.optional(specOfPropertiesConfig),
+      defaultProps: Spec.optional(specOfDefaultProps),
       variableProps: Spec.optional(Spec.boolean),
       validate: Spec.optional(Spec.function),
       render: Spec.function
@@ -97,6 +104,7 @@ const
     Spec.strictShape({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       properties: Spec.optional(specOfPropertiesConfig),
+      defaultProps: Spec.optional(specOfDefaultProps),
       variableProps: Spec.optional(Spec.boolean),
       validate: Spec.optional(Spec.function),
 
@@ -121,7 +129,10 @@ const
           when: Spec.prop('init', Spec.function),
           then: specOfStatefulComponentConfig
         }
-      ))
+      ),
+    (it => it.properties && it.defaultProps
+      ? new Error('Not allowed to configure both parameters "properties" and "defaultProps" at once')
+      : null))
 
 function validateComponentConfig(config: any): null | Error {
   let ret = null
@@ -159,6 +170,20 @@ function convertConfigToMeta(config: any): any {
       ret.properties[key] =
         Object.freeze(Object.assign({}, config.properties[key]))
     }
+  }
+
+  if (config.defaultProps) {
+    const keys = Object.keys(config.defaultProps)
+
+    ret.defaultProps = {}
+
+    for (let i = 0; i < keys.length; ++i) {
+      const key = keys[i]
+
+      ret.defaultProps[key] = config.defaultProps[key]
+    }
+
+    Object.freeze(ret.defaultProps)
   }
 
   if (config.render) {

@@ -1,7 +1,6 @@
 import { defineComponent, defineContext } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
 import { useCallback, useState, useEffect, usePrevious } from '../modules/hooks/main/index'
-import { withDefaults } from '../modules/util/main/index'
 
 //import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
 //import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use2/main/index'
@@ -20,11 +19,19 @@ interface CounterProps {
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
-  render(props) {
-    props = withDefaults(props, {
-      label: 'Count'
-    })
+  //defaultProps: {
+  //  label: 'Count'
+  //},
 
+  properties: {
+    label: {
+      type: String,
+      validate: () => new Error('juhu'),
+      defaultValue: 'Counter'
+    }
+  },
+
+  render(props) {
     const
       [count, setCount] = useState(() => 0),
       previousCount = usePrevious(count),
