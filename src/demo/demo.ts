@@ -19,16 +19,8 @@ interface CounterProps {
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
-  //defaultProps: {
-  //  label: 'Count'
-  //},
-
-  properties: {
-    label: {
-      type: String,
-      validate: () => new Error('juhu'),
-      defaultValue: 'Counter'
-    }
+  defaultProps: {
+    label: 'Count'
   },
 
   render(props) {
