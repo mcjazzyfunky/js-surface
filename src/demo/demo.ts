@@ -1,11 +1,12 @@
 import { defineComponent, defineContext } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
 import { useCallback, useState, useEffect, usePrevious } from '../modules/hooks/main/index'
+import { withDefaults } from '../modules/util/main/index'
 
 //import { useState, useEffect, useProps, usePrevious } from '../modules/use/main/index'
 //import { useState, useEffect, useProps, usePrevious, useContext } from '../modules/use2/main/index'
 
-import * as h from '../modules/html/main/index'
+import { button, div, label } from '../modules/html/main/index'
 
 const ThemeCtx = defineContext({
   displayName: 'ThemeCtx',
@@ -19,8 +20,9 @@ interface CounterProps {
 const Counter = defineComponent<CounterProps>({
   displayName: 'Counter',
 
-  render({ label = 'Counter' }) {
+  render(currProps) {
     const
+      props = withDefaults(currProps, { label: 'Count' }),
       [count, setCount] = useState(() => 0),
       previousCount = usePrevious(count),
       onIncrement = useCallback(() => setCount(count + 1))
@@ -36,10 +38,10 @@ const Counter = defineComponent<CounterProps>({
     })
 
     return (
-      h.div(
-        h.label(label),
+      div(
+        label(props.label),
         ': ',
-        h.button({ onClick: onIncrement }, count))
+        button({ onClick: onIncrement }, count))
     )
   }
 })
