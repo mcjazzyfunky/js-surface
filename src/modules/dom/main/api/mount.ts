@@ -23,18 +23,28 @@ import { any } from 'prop-types';
 
 const { useState, useEffect, useRef, useContext } = React as any
 
-export default function mount(element: VirtualElement, container: Element) { 
+export default function mount(element: VirtualElement, container: Element | string) { 
   if (!isElement(element)) {
     throw new TypeError(
       '[mount] First argument "element" must be a virtual element')
   }
 
-  if (!container || !container.tagName) {
+  if (!container || (typeof container !== 'string' && !container.tagName)) {
     throw new TypeError(
-      '[mount] Second argument "container" must be a valid DOM element')
+      '[mount] Second argument "container" must be a DOM element or the id of the corresponding DOM element')
   }
 
-  ReactDOM.render(convertNode(element), container)
+  const target =
+    typeof container === 'string'
+      ? document.getElementById(container)
+      : container
+
+  if (!target) {
+    throw new TypeError(
+      `[mount] Could not find container DOM element with id "${container}"`)
+  }
+
+  ReactDOM.render(convertNode(element), target)
 }
 
 // --- locals -------------------------------------------------------
@@ -144,10 +154,8 @@ function adjustEntity(it: any): void {
     case 'componentFactory':
       if (it.meta.render) {
          convertStatelessComponent(it)
-      } else if (it.meta.init.length > 0) {
-         convertStatefulComponent(it)
       } else {
-        convertStatefulComponentWithGenerators(it)
+         convertStatefulComponent(it)
       }
 
       break
@@ -371,150 +379,4 @@ class Component {
   onWillUnmount() {
     // will be overridden by constructor
   }
-}
-
-function convertStatefulComponentWithGenerators(it: any) {
-  const init = it.meta.init
-
-  const reactComponent = (props: any) => {
-    let ret = null
-
-    const [internals, setInternals] = useState(() => {
-      const
-        internals = {
-          props,
-          state: [] as any,
-          contexts: [] as any,
-          render: null as any,
-          setInternals: null as any, // will be set later,
-          isInitialized: false,
-
-          lifecycle: {
-            didMount: [] as any,
-            didUpdate: [] as any,
-            willUnmount: [] as any
-          }
-        }
-
-      internals.render = processIterator(init(), internals)
-
-      return internals
-    })
-
-    useEffect(() => {
-      if (!internals.isInitialized) {
-        internals.isInitialized = true
-
-        internals.lifecycle.didMount.forEach((it: any) => it())
-      } else {
-        internals.lifecycle.didUpdate.forEach((it: any) => it())
-      }
-    })
-
-    useEffect(() => {
-      return () => internals.lifecycle.willUnmount.forEach((it: any) => it())
-    }, [])
-  
-    for (let i = 0; i < internals.contexts.length; ++i) {
-      internals.contexts[i][1] = useContext(internals.contexts[i][0].Provider.__internal_type._context)
-    }
-
-    internals.props = props
-    internals.setInternals = setInternals
-
-    return convertNode(internals.render())
-  }
-
-  (reactComponent as any).displayName = it.meta.displayName
-
-  it['__internal_type'] = reactComponent 
-}
-
-function processIterator(iterator: any, internals: any) {
-  let ret = undefined
-  let nextInput: any = undefined
-
-  while (true) {
-    const { done, value } = iterator.next(nextInput)
-
-    if (done) {
-      ret = value 
-      break
-    }
-
-    if (value && typeof value.next === 'function') {
-      nextInput = processIterator(value, internals)
-    } else {
-      switch (value.type) {
-        case 'handleProps':
-          nextInput = () => internals.props
-          break
-
-        case 'handleContext': {
-          if (!value.context.__internal_type) {
-            convertContext(value.context)
-          }
-
-          const index = internals.contexts.length
-          internals.contexts[index] = [value.context, useContext(value.context)]
-          nextInput = () => internals.contexts[index][1]
-          break
-        }
-
-        case 'handleState': {
-          let index = internals.state.length
-
-          internals.state[index] = value.initialValue
-
-          nextInput = [
-            () => internals.state[index],
-            (nextValue: any) => {
-              if (!internals.setInternals) {
-                internals.state[index] = nextValue
-              } else {
-                internals.setInternals((internals: any) => {
-                  internals.state[index] = nextValue
-                  return internals
-                })
-              }
-            }
-          ]
-
-          break
-        }
-
-        case 'handleForceUpdate':
-          nextInput = () => { 
-            if (internals.setInternals) {
-              internals.setInternals(internals)
-            }
-          }
-
-          break
-
-        case 'handleLifecycle': {
-          const
-            event = value.event,
-            callback = () => value.callback()
-
-          switch (event) {
-            case 'didMount':
-            case 'didUpdate':
-            case 'willUnmount':
-              internals.lifecycle[event].push(callback)
-
-              nextInput = () => {
-                internals.lifecycle[event] = internals.lifecycle[event].filter((it: Function) => it !== callback)
-              }
-
-              break
-          }
-
-          break
-        }
-      }
-    }
-  } 
-
-  return ret
 }

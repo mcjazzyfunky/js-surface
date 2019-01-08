@@ -7,6 +7,8 @@ type Unsubscribe = () => void
 
 export default interface Component<P extends Props = {}, M extends Methods = {}> {
   props: P,
+  // Would it make sense to add a "prevProps" property
+  // as sugar for convenience reasons???
   handleState<T>(initialValue: T): [() => T, (newValue: T) => void],
   forceUpdate(): void,
   setMethods(methods: M): void
@@ -14,5 +16,5 @@ export default interface Component<P extends Props = {}, M extends Methods = {}>
   onDidMount(listener: Listener): Unsubscribe,
   onDidUpdate(listener: Listener): Unsubscribe,
   onWillUnmount(listener: Listener): Unsubscribe,
-  // plus some more lifecycle methods
+  // plus some more methods (mostly for lifecycle)
 }

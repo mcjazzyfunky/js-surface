@@ -1,7 +1,7 @@
 import { defineComponent, defineContext, VirtualElement } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
 import { useForceUpdate, useRef } from '../modules/hooks/main/index'
-import { br, div, label, option, select } from '../modules/html/main/index'
+import { br, div, h4, label, option, select } from '../modules/html/main/index'
 
 import availableDemos from './available-demos'
 
@@ -17,7 +17,7 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
   render(props) {
     const
       forceUpdate = useForceUpdate(),
-      demoIdx = useRef(parseInt(document.location.href.replace(/^.*idx=/, ''), 10) || 0)
+      demoIdx = useRef(getCurrentDemoIndex())
 
     function startDemo(idx: number) {
       demoIdx.current = idx
@@ -42,8 +42,8 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
               value: demoIdx.current,
               autoFocus: true
             }, options)),
-            br(),
             div(null,
+              h4('Example: ', props.demos[demoIdx.current][0]),
               props.demos[demoIdx.current][1])))
   }
 })
@@ -60,12 +60,15 @@ const Demo = defineComponent<DemoProps>({
   render(props) {
     return (
       div(null,
-        div(null,
-          DemoSelector({ demos: props.demos })))
+        DemoSelector({ demos: props.demos }))
     )
   }
 })
 
+function getCurrentDemoIndex() {
+  return parseInt(document.location.href.replace(/^.*idx=/, ''), 10) || 0
+}
+
 // --- main ---------------------------------------------------------
 
-mount(Demo({ demos: availableDemos }), document.getElementById('main-content'))
+mount(Demo({ demos: availableDemos }), 'main-content')
