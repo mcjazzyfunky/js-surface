@@ -1,5 +1,5 @@
 import { defineComponent } from '../../modules/core/main/index'
-import { useCallback, useState } from '../../modules/hooks/main/index'
+import { useState } from '../../modules/use/main/index'
 import { button, div, label } from '../../modules/html/main/index'
 
 interface SimpleCounterProps {
@@ -15,16 +15,18 @@ const SimpleCounter = defineComponent<SimpleCounterProps>({
     initialValue: 0
   },
 
-  render(props) {
+  init(c) {
     const
-      [count, setCount] = useState(() => props.initialValue),
-      onIncrement = useCallback(() => setCount(count + 1))
+      [getCount, setCount] = useState(c, c.props.initialValue),
+      onIncrement = () => setCount(getCount() + 1)
 
-    return (
-      div(null,
-        label(null, props.label + ': '),
-        button({ onClick: onIncrement }, count))
-    )
+    return props => {
+      return (
+        div(null,
+          label(null, props.label + ': '),
+          button({ onClick: onIncrement }, getCount()))
+      )
+    }
   }
 })
 

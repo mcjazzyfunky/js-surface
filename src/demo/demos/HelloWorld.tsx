@@ -1,5 +1,4 @@
-/* @jsx createElement */
-import { createElement, defineComponent } from '../../modules/core/main/index'
+import { defineComponent } from '../../modules/core/main/index'
 import { div } from '../../modules/html/main/index'
 
 interface HelloWorldProps {
