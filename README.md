@@ -1,6 +1,25 @@
 # jsSurface
 
-**Remark: This README document is just a early draft - totally incomplete yet**
+**Remark: This README document is just an early draft - totally incomplete yet**
+
+### Installation
+
+```
+git clone https://github.com/js-works/js-surface.git
+cd js-surface
+npm install
+
+# To start the demos
+npm run demo
+
+# To build the project
+npm run build
+
+# To prepare for publishing
+npm run dist
+```
+
+### Introduction
 
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
@@ -90,7 +109,7 @@ export default defineComponent({
 
 mount(Demo(), 'main-content');
 ```
-### Alternative API for stateful/effectful components
+#### Alternative API for stateful/effectful components
 
 React's hook API was really a ground-breaking improvement in UI development.
 Nevertheless it also was a bit controversial as it seems a bit unusual and
@@ -127,6 +146,8 @@ const Counter = defineComponent({
   }
 })
 ```
+
+### Motivation
 
 What parts of React's API allow some different still reasonable view?
 
@@ -314,7 +335,7 @@ What parts of React's API allow some different still reasonable view?
 
 Factory functions for all HTML entities (to be used in non-JSX context: `div('some text')`)
 
-##### Module "_svg_" (js-surface/svg)
+#### Module "_svg_" (js-surface/svg)
 
 Factory functions for all SVG entities
 
