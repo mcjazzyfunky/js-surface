@@ -5,6 +5,7 @@
 ### Installation
 
 ```
+# To download project and dependences
 git clone https://github.com/js-works/js-surface.git
 cd js-surface
 npm install
