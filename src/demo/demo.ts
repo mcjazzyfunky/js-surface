@@ -34,16 +34,17 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
     }
 
     return (
-      div(
-        div(
-          label('Select demo: '),
+      div(null,
+        div(null,
+          label(null, 'Select demo: '),
             select({
               onChange: (ev: any) => startDemo(ev.target.value),
               value: demoIdx.current,
               autoFocus: true
             }, options)),
             br(),
-            div(props.demos[demoIdx.current][1])))
+            div(null,
+              props.demos[demoIdx.current][1])))
   }
 })
 
@@ -58,8 +59,8 @@ const Demo = defineComponent<DemoProps>({
 
   render(props) {
     return (
-      div(
-        div(
+      div(null,
+        div(null,
           DemoSelector({ demos: props.demos })))
     )
   }

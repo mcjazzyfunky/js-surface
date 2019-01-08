@@ -6,7 +6,7 @@ type Listener = () => void
 type Unsubscribe = () => void
 
 export default interface Component<P extends Props = {}, M extends Methods = {}> {
-  getProps(): P,
+  props: P,
   handleState<T>(initialValue: T): [() => T, (newValue: T) => void],
   forceUpdate(): void,
   setMethods(methods: M): void

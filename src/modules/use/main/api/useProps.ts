@@ -1,8 +1,8 @@
 import { Component, Props } from '../../../core/main/index'
 
-export default function useProps<P extends Props>(self: Component<P>, defaultProps?: Partial<P>) {
+export default function useProps<P extends Props>(c: Component<P>, defaultProps?: Partial<P>) {
   let
-    originalProps = self.getProps(),
+    originalProps = c.props,
     adjustedProps = originalProps
 
   if (defaultProps) {
@@ -10,7 +10,7 @@ export default function useProps<P extends Props>(self: Component<P>, defaultPro
   }
 
   return () => {
-    const props = self.getProps()
+    const props = c.props
 
     if (props !== originalProps) {
       originalProps = props

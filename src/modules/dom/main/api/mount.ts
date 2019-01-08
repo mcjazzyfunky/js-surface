@@ -183,7 +183,7 @@ type LifecycleHandlers = {
 function convertStatefulComponent(it: any): Function {
   const ret: any = (props: any) => {
     const
-      currentProps = useRef(),
+      currentProps = useRef(props),
       currentValues = useRef(),
       contextValues = useRef([]),
       [state, setState] = useState([]),
@@ -254,7 +254,7 @@ function convertStatefulComponent(it: any): Function {
       contextValues.current[i][1] = useContext(contextValues.current[i][0].Provider.__internal_type._context)
     }
     
-    return convertNode(internals.render())
+    return convertNode(internals.render(props))
   } 
 
   ret.displayName = it.meta.displayName
@@ -309,7 +309,11 @@ class Component {
         willUnmount: [] as (() => void)[],
       }
 
-      this.getProps = getProps
+      Object.defineProperty(this, 'props', {
+        enumerable: true,
+        get: getProps
+      })
+
       this.handleState = handleState,
       this.forceUpdate = () => forceUpdate()
       this.consumeContext = consumeContext
@@ -340,9 +344,10 @@ class Component {
 
   }
 
-  getProps(): any {
-    // will be overridden by constructor
-  }
+  // will be set by constructor
+  //get props(): any {
+  //  return ....
+  //}
 
   handleState(initialValue: any) { 
     // will be overridden by constructor

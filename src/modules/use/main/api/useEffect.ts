@@ -1,6 +1,6 @@
 import { Component } from '../../../core/main/index'
 
-export default function useEffect(self: Component, action: () => (void | (() => void)), getInputs?: () => any[]) {
+export default function useEffect(c: Component, action: () => (void | (() => void)), getInputs?: () => any[]) {
   if (!getInputs) {
     let cleanup: void | (() => void)
 
@@ -12,10 +12,10 @@ export default function useEffect(self: Component, action: () => (void | (() => 
       cleanup = action()
     }
 
-    self.onDidMount(listener)
-    self.onDidUpdate(listener)
+    c.onDidMount(listener)
+    c.onDidUpdate(listener)
 
-    self.onWillUnmount(() => {
+    c.onWillUnmount(() => {
       if (cleanup) {
         cleanup
       }
@@ -44,10 +44,10 @@ export default function useEffect(self: Component, action: () => (void | (() => 
       }
     }
 
-    self.onDidMount(listener)
-    self.onDidUpdate(listener)
+    c.onDidMount(listener)
+    c.onDidUpdate(listener)
     
-    self.onWillUnmount(() => {
+    c.onWillUnmount(() => {
       if (cleanup) {
         cleanup()
       }
