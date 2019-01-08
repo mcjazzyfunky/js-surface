@@ -1,6 +1,6 @@
 # jsSurface
 
-**Remark: This README document is just a early draft - totally incomplete yet
+**Remark: This README document is just a early draft - totally incomplete yet**
 
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
@@ -22,13 +22,13 @@ First, here's a small demo application to get a glimpse of how components
 are implemented with jsSurface:
 
 
-#### Hello world component
+#### Hello world component (pure ECMAScript)
 
 ```jsx
 import { defineComponent } from 'js-surface'
 import { mount } from 'js-surface/dom'
 
-// just if you do not want to use JSX, of course JSX is fully supported
+// just if you do not want to use JSX, of course JSX is also fully supported
 import { div } from 'js-surface/html'
 
 export default defineComponent({
@@ -44,7 +44,7 @@ export default defineComponent({
 })
 ```
 
-### Simple counter (using a React hook like API)
+#### Simple counter (using a React hook like API and JSX)
 
 ```jsx
 import { createElement, defineComponent } from 'js-surface'
@@ -90,6 +90,44 @@ export default defineComponent({
 
 mount(Demo(), 'main-content');
 ```
+### Alternative API for stateful/effectful components
+
+React's hook API was really a ground-breaking improvement in UI development.
+Nevertheless it also was a bit controversial as it seems a bit unusual and
+magical. As jsSurface is a R&D project it also shows how an alternative to
+such a hook API could look like. This alternative is based on a factory pattern
+and seperates the process into a initialization phase and a render phase.
+It is100% typesafe and 0% magical. However this alternative is a more verbose
+then the hook API and has the the main issue that values often have to be
+wrapped into getter functions or unwrapped from those.
+FYI: The author of jsSurface prefers the hook API.
+Anyway, here's what the alternative component API looks like:
+
+```jsx
+const Counter = defineComponent({
+  displayName: 'Counter',
+  
+  defaultProps: {
+    label: 'Counter'
+  },
+  
+  init(c) {
+    const
+      [getCount, setCount] = useState(c, 0),
+      onIncrement = () => setCount(getCount() + 1)
+    
+    return props => {
+      return (
+        <div>
+          <label>{props.label + ': '}</label>
+          <button onClick={onIncrement}>{getCount()}</button>
+        </div>
+      )
+    }
+  }
+})
+```
+
 What parts of React's API allow some different still reasonable view?
 
 * React's API is quite "optimized" for the use of JSX:
