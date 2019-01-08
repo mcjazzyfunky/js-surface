@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['core', 'dom', 'hooks', 'html', 'svg', 'use', 'use2', 'util']) {
+for (const pkg of ['all', 'core', 'dom', 'hooks', 'html', 'svg', 'use', 'use2', 'util']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -31,7 +31,7 @@ function createConfig(pkg, moduleFormat, productive) {
         : `dist/js-surface.${pkg}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
-      name: `jsSurface.${pkg}`,
+      name: pkg === 'all' ? 'jsSurface' : `jsSurface.${pkg}`,
       sourcemap: productive ? false : 'inline',
 
       globals: {
@@ -42,7 +42,7 @@ function createConfig(pkg, moduleFormat, productive) {
       }
     },
 
-    external: ['js-surface', 'js-spec', 'react', 'react-dom'],
+    external: pkg === 'all' ? ['js-spec', 'react', 'react-dom'] : ['js-surface', 'js-spec', 'react', 'react-dom'],
 
     plugins: [
       resolve({

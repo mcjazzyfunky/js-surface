@@ -4,7 +4,7 @@ import Fragment from '../Fragment'
 
 interface VirtualElement {
   type: string | StatelessComponentFactory | StatefulComponentFactory,
-  props: { [name: string]: any } | null 
+  props: { [name: string]: any }
 }
 
 export default VirtualElement

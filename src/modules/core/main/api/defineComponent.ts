@@ -9,10 +9,10 @@ import createElement from './createElement'
 import { Spec } from 'js-spec'
 
 function defineComponent<P extends Props = {} >(
-  config: StatelessComponentConfig<P>): StatelessComponentFactory 
+  config: StatelessComponentConfig<P>): StatelessComponentFactory<P>
 
 function defineComponent< P extends Props = {}, M extends Methods = {} >(
-  config: StatefulComponentConfig<P, M>): StatefulComponentFactory
+  config: StatefulComponentConfig<P, M>): StatefulComponentFactory<P, M>
 
 function defineComponent(config: any): any {
   if (process.env.NODE_ENV === 'development' as any) {
