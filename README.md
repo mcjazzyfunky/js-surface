@@ -1,5 +1,7 @@
 # jsSurface
 
+**Remark: This README document is just a early draft - totally incomplete yet
+
 jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
@@ -45,8 +47,9 @@ export default defineComponent({
 ### Simple counter (using a React hook like API)
 
 ```jsx
-import { createElement, defineComponent } from 'js-surface';
-import { mount } from 'js-surface/dom';
+import { createElement, defineComponent } from 'js-surface'
+import { useState } from 'js-surface/hooks'
+import { mount } from 'js-surface/dom'
 
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
@@ -254,11 +257,9 @@ What parts of React's API allow some different still reasonable view?
   instance which only expose those component functionalities that have
   explicitly defined to be exposed.
 
-### jsSurface API
+### Current API (not complete yet)
 
-Currently jsSurface core API consists of the following:
-
-#### Module "_core_" ('js-surface')
+#### Module "_core_" (js-surface)
 
 * `createElement(type, props?, ...children)`
 * `defineComponent(componentConfig)`
@@ -266,20 +267,20 @@ Currently jsSurface core API consists of the following:
 * `Fragment(props?, ...children)`
 * `Dispatcher` object to manage hooks
 
-#### Module "_dom_" ('js-surface/dom')
+#### Module "_dom_" (js-surface/dom)
 
 * `mount(content, container)`
 * `unmount(container)`
 
-#### Module "_html_" ('js-surface/html')
+#### Module "_html_" (js-surface/html)
 
 Factory functions for all HTML entities (to be used in non-JSX context: `div('some text')`)
 
-#### Module "_svg_" ('js-surface/svg')
+##### Module "_svg_" (js-surface/svg)
 
 Factory functions for all SVG entities
 
-### Module "_hooks_" ('js-surface/hooks')
+#### Module "_hooks_" (js-surface/hooks)
 
 Provides hooks to implement Component side-effects in a React-like fashion
 
@@ -291,7 +292,7 @@ Provides hooks to implement Component side-effects in a React-like fashion
 * usePrevious(subject)
 * useForceUpdate()
 
-### Module "_use_" ('js-surface/use')
+#### Module "_use_" (js-surface/use)
 
 Provides hooks to implement Component side-effects in an old-school non-magic fashion
 (similar functionality like the same-named hooks in "js-surface/hooks")
@@ -302,10 +303,12 @@ Provides hooks to implement Component side-effects in an old-school non-magic fa
 * usePrevious(provider)
 * useForceUpdate()
 
-### Modules "_util_" ('js-surface/util')
+#### Modules "_util_" (js-surface/util)
 
 * isElement(it)
 * isNode(it)
 
+### Project status
+
 **Important**: This project is in a very early state and it is not meant 
-to be used for productive projects.
+to be used in production.
