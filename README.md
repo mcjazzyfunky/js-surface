@@ -26,20 +26,20 @@ jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
 set of functions to build a base API for UI development.
 It also provides a reference implementation of that API (internally
 based on [React](https://www.reactjs.org)).
-Be aware that jsSurface is currently only for research purposes, it's currently
-NOT meant to be used in real-world applications (and most probably never will).
+Be aware that jsSurface is actually only for research purposes, it's currently
+NOT meant to be used in real-world applications (and most propably never will).
 
 You may ask: What's wrong with the original React API - React's API
-itself does only consist of a few functions and classes, isn't that minimal
+itself does only consist of a few functions and (legacy) classes, isn't that minimal
 enough?
 
-Short answer: React is a really great UI library, the React dev team does a
-remarkable job. There's nothing "wrong" with React.
-The purpose of the jsSurface R&D projectr is just to get a different look at
-things and to try out different approaches and alternative APIs.
+Short answer: React is a really great UI library, the React dev team did and
+does a remarkable job. There's nothing "wrong" with React.
+The purpose of the jsSurface R&D project is just to get a different look at
+things and to evaluate different approaches and alternative APIs.
 
 First, here's a small demo application to get a glimpse of how components
-are implemented with jsSurface:
+are currently implemented with jsSurface:
 
 
 #### Hello world component (pure ECMAScript)
@@ -64,7 +64,7 @@ export default defineComponent({
 })
 ```
 
-#### Simple counter (using a React hook like API and JSX)
+#### Simple counter (using a hook API and JSX)
 
 ```jsx
 import { createElement, defineComponent } from 'js-surface'
@@ -113,14 +113,14 @@ mount(Demo(), 'main-content');
 #### Alternative API for stateful/effectful components
 
 React's hook API was really a ground-breaking improvement in UI development.
-Nevertheless it also was a bit controversial as it seems a bit unusual and
+Nevertheless it also was a bit controversial as it seems a kind of unusual and
 magical. As jsSurface is a R&D project it also shows how an alternative to
 such a hook API could look like. This alternative is based on a factory pattern
 and seperates the process into a initialization phase and a render phase.
 It is100% typesafe and 0% magical. However this alternative is a more verbose
 then the hook API and has the the main issue that values often have to be
-wrapped into getter functions or unwrapped from those.
-FYI: The author of jsSurface prefers the hook API.
+wrapped into getter functions or unwrapped from those.<br>
+FYI: The author of jsSurface prefers the hook API.<br>
 Anyway, here's what the alternative component API looks like:
 
 ```jsx
@@ -150,7 +150,7 @@ const Counter = defineComponent({
 
 ### Motivation
 
-What parts of React's API allow some different still reasonable view?
+What parts of React's API may allow some different still reasonable view?
 
 * React's API is quite "optimized" for the use of JSX:
 
@@ -171,12 +171,12 @@ What parts of React's API allow some different still reasonable view?
   FancyHeader('Some headline')
   ```
 
-  Be aware that it does really you should ALWAYS use JSX with
-  TypeScript, the non-JSX usage is only meant for those who
-  want to implement UIs in pure EcmaScript>=2015.
+  Be aware that you should ALWAYS use JSX with TypeScript
+  the non-JSX usage is only meant for those who want to
+  UIs in pure ECMAScript.
 
   In React's API, the main representation of component types are
-  component classes or render functions (for function components).
+  render functions (for function components) or component classes.
   Neither will component classes be instantiated by the user directly
   nor will render functions be called directly. The only useful
   usage of component types are that they will be passed as first argument to
@@ -243,39 +243,6 @@ What parts of React's API allow some different still reasonable view?
     { it => <SomeComponent/> }
   </SomeCtx.Consumer>
   ```
-* React is quite opinonated about the way that complex components shall be
-  implemented.
-  The fact that complex component types are represented by extensions of
-  React's Component class shows that this class-based approach is the prefered
-  way of UI programming in React. Even if you like to use other approaches
-  (like for example some functional styles) you still have to map every
-  other component type implementation approach to React's component class.
-
-  jsSurface on the other hand is not opinionated at all about the way components
-  shall be implemented. A jsSurface component definition consists of some
-  component meta information (like display name or declaration of the property
-  types) plus a `render` function for stateless functional Components or an
-  `init` function for complex components (complex components have also the
-  optional configuration parameters `methods`, `isErrorBoundary` and
-  `deriveStateFromProps` - see below for details)
-
-  As you may guess, the implementing complex components with function 
-  `init` and `deriveStateFromProps` etc. seems to really very handy.
-  Most developers would prefer some kind of Component class that makes
-  things easiear, other programmers would prefer support for some kind
-  of functional proramming paradigm. 
-  
-  For that reason the function `defineComponent` supports a third kind of
-  configuration where a so-called component normalizer is  expected that
-  has a method `normalzeComponent` that gets the component config an
-  returns a normalized component config.
-
-  For example the class "Component" of submodule "js-surface/classes" is
-  such a component normalizer - with it help you can implement components
-  in some React-like object oriended style.
-
-  But be aware this Component class is just an out-of-the-box add-on for
-  convenience jsSurface does NOT depend on this add-on package at all.
 
 * React handles ```props.children``` in a quite special way
   (mainly for performance reasons):<br>
@@ -286,7 +253,8 @@ What parts of React's API allow some different still reasonable view?
   This is handled differently in jsSurface:<br>
   If there are one ore more children then ```props.children``` will always be
   an array in jsSurface and all contained arrays and other iterable objects
-  will be flattened immediately by `createElement`.
+  will be flattened immediately by `createElement` (similar as it's done by
+  the famous Preact library).
 
 * Reacts provides the possibility for a sophisticated validation of the
   components' properties, which is great.
@@ -344,29 +312,29 @@ Factory functions for all SVG entities
 
 Provides hooks to implement Component side-effects in a React-like fashion
 
-* useState(initialValueProvider)
-* useEffect(action, dependencies?)
-* useContext(ctx)
-* useRef(initialValue)
-* usCallback(callback)
-* usePrevious(subject)
-* useForceUpdate()
+* `useState(initialValueProvider)`
+* `useEffect(action, dependencies?)`
+* `useContext(ctx)`
+* `useRef(initialValue)`
+* `usCallback(callback)`
+* `usePrevious(subject)`
+* `useForceUpdate()`
 
 #### Module "_use_" (js-surface/use)
 
 Provides hooks to implement Component side-effects in an old-school non-magic fashion
 (similar functionality like the same-named hooks in "js-surface/hooks")
 
-* useState(initialValueProvider)
-* useEffect(action, dependencies?)
-* useContext(ctx)
-* usePrevious(provider)
-* useForceUpdate()
+* `useState(initialValueProvider)`
+* `useEffect(action, dependencies?)`
+* `useContext(ctx)`
+* `usePrevious(provider)`
+* `useForceUpdate()`
 
 #### Modules "_util_" (js-surface/util)
 
-* isElement(it)
-* isNode(it)
+* `isElement(it)`
+* `isNode(it)`
 
 ### Project status
 
