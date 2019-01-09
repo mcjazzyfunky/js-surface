@@ -98,18 +98,6 @@ function convertNode(node: any) {
     newProps.children[0] = (value: any) => convertNode(consume(value))
   }
 
-  if (newProps && newProps.ref && typeof type !== 'string') {
-    const oldRef = newProps.ref
-
-    newProps.ref = (ref: any) => {
-      const proxy = ref && ref.__proxy ? ref.__proxy : null
-
-      return proxy
-        ? oldRef(proxy)
-        : oldRef(ref)
-    }
-  }
-
   let ret = null
 
   if (!newProps || !newProps.children) {
