@@ -5,14 +5,6 @@ import Props from './types/Props'
 import PropertiesConfig from './types/PropertiesConfig'
 import PropertyConfig from './types/PropertyConfig'
 
-
-declare module JSX {
-  type Element = VirtualElement 
-  interface IntrinsicElements {
-    [elemName: string]: any;
-  }
-}
-
 function createElement(type: string | StatelessComponentFactory | StatefulComponentFactory, props?: Props, ...children: any[]): VirtualElement
 function createElement(/* arguments */): VirtualElement {
   const
