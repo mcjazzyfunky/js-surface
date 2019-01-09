@@ -1,6 +1,5 @@
 /* @jsx createElement */
-import { createElement, defineComponent, VirtualElement } from '../../modules/core/main/index'
-import { div } from '../../modules/html/main/index'
+import { createElement, defineComponent } from '../../modules/core/main/index'
 
 interface HelloWorldProps {
   name?: string

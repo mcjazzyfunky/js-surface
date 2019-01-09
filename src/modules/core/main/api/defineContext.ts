@@ -76,7 +76,7 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   Object.defineProperty(ret.Provider, 'meta', {
     value: Object.freeze({
       displayName: `${config.displayName}.Provider`,
-      properties: Object.freeze(providerPropertiesConfig),
+      properties: Object.freeze({...providerPropertiesConfig, children: {}}), // TODO
       render: ret.Provider
     }) 
   })
@@ -84,7 +84,7 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
   Object.defineProperty(ret.Consumer, 'meta', {
     value: Object.freeze({
       displayName: `${config.displayName}.Consumer`,
-      properties: Object.freeze({}),
+      properties: Object.freeze({ children: {} }), // TODO
       render: ret.Provider
     }) 
   })

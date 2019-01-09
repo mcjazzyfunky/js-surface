@@ -1,6 +1,6 @@
-import mount from './api/mount'
+import mount, { convertContext } from './api/mount'
 import unmount from './api/unmount'
-import { Dispatcher } from '../../core/main/index'
+import { Context, Dispatcher } from '../../core/main/index'
 import React from 'react'
 
 const { useState, useEffect, useContext } = React as any
@@ -8,7 +8,14 @@ const { useState, useEffect, useContext } = React as any
 Dispatcher.init({
   useState,
   useEffect,
-  useContext
+
+  useContext(ctx: any) {
+    if (!ctx.Provider.__internalType) {
+      convertContext(ctx)
+    }
+
+    return useContext(ctx.Provider.__internal_type._context)
+  }
 })
 
 export {

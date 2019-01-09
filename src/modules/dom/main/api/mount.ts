@@ -273,7 +273,7 @@ function convertStatefulComponent(it: any): Function {
   return ret
 }
 
-function convertContext(it: any): any {
+export function convertContext(it: any): any {
   const ret =
     it.Provider.__internal_type && it.Provider.__internal_type._context
       || it.Consumer.__internal_type && it.Consumer.__internal_type._context
