@@ -1,16 +1,23 @@
 import createElement from './createElement'
 import VirtualElement from './types/VirtualElement'
 import StatelessComponentMeta from './types/StatelessComponentMeta'
+import StatelessComponentFactory from './types/StatelessComponentFactory'
 
 let createFragment: (...args: any[]) => VirtualElement = null
 
-export default function Fragment(...args: any[]): VirtualElement {
+type FragmentProps = {
+  key?: number | string
+}
+
+function Fragment(props?: FragmentProps, ...args: any[]): VirtualElement {
   if (!createFragment) {
     createFragment = createElement.bind(null, Fragment)
   }
 
   return createFragment(...args)
 }
+
+export default Fragment as StatelessComponentFactory<FragmentProps>
 
 
 const meta: StatelessComponentMeta<{ key?: any }> = Object.freeze({
@@ -25,7 +32,10 @@ const meta: StatelessComponentMeta<{ key?: any }> = Object.freeze({
           ? null
           : new Error('Must be a string or a number')
       }
-    })
+    }),
+    children: {
+      // TODO
+    }
   }),
 
   render: Fragment
