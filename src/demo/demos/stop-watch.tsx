@@ -1,14 +1,29 @@
-import { createElement as h, defineComponent }  from '../../modules/core/main/index'
-import { useRef, useState } from '../../modules/hooks/main'
+/* @jsx createElement */
+import { createElement, defineComponent }  from '../../modules/core/main/index'
+import { useCallback, useEffect, useRef, useState } from '../../modules/hooks/main'
 
 const StopWatch = defineComponent({
   displayName: 'StopWatch',
 
-  render(props) {
+  render() {
     const
       timerIdRef = useRef(null),
       [time, setTime] = useState(() => 0),
-      [isRunning, setRunning] = useState(() => false)
+      [isRunning, setRunning] = useState(() => false),
+
+      onStartStop = useCallback(() => {
+        if (isRunning) {
+          stopTimer()
+        } else {
+          startTimer()
+        }
+      }),
+
+      onReset = useCallback(resetTimer)
+
+    useEffect(() => {
+      return () => stopTimer()
+    }, [])
     
     function startTimer() {
       if (!isRunning) {
@@ -35,41 +50,18 @@ const StopWatch = defineComponent({
       setTime(0)
     }
 
-    function onWillUnmount() {
-      stopTimer()
-    }
-
-    const bind = {
-      startStopButton: {
-        onClick: () => {
-          if (isRunning) {
-            stopTimer()
-          } else {
-            startTimer()
-          }
-        }
-      },
-
-      resetButton: {
-        onClick: () => {
-          resetTimer()
-        }
-      }
-    }
-
     return (
-      h('div', null,
-        h('div', null,
-        `Time: ${time} `),
-        h('br'),
-        h('div',
-          h('button',
-            { ...bind.startStopButton },
-            isRunning ? 'Stop' : 'Start'),
-          ' ',
-          h('button',
-            { ...bind.resetButton },
-            'Reset')))
+      <div>
+        <div>Time: {time}</div>
+        <br/>
+        <button onClick={onStartStop}>
+          { isRunning ? 'Stop' : 'Start'}
+        </button>
+        {' '}
+        <button onClick={onReset}>
+          Reset
+        </button>
+      </div>
     )
   }
 })
