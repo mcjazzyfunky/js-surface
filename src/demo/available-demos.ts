@@ -5,6 +5,7 @@ import simpleCounterAlt from './demos/simple-counter-alt'
 import complexCounter from './demos/complex-counter'
 import stopWatch from './demos/stop-watch'
 import fragments from './demos/fragments'
+import clock from './demos/clock'
 import i18n from './demos/i18n'
 import iterators from './demos/iterators'
 import performanceTest from './demos/performance-test'
@@ -16,6 +17,7 @@ const demos: [string, VirtualElement][] = [
   ['Complex counter', complexCounter],
   ['Stop watch', stopWatch],
   ['Fragments', fragments],
+  ['Clock', clock],
   ['Internationalization', i18n],
   ['Iterators', iterators],
   ['Performance test', performanceTest]
