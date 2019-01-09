@@ -8,6 +8,7 @@ import fragments from './demos/fragments'
 import clock from './demos/clock'
 import i18n from './demos/i18n'
 import iterators from './demos/iterators'
+import mousePositionHook from './demos/mouse-position-hook'
 import performanceTest from './demos/performance-test'
 
 const demos: [string, VirtualElement][] = [
@@ -20,6 +21,7 @@ const demos: [string, VirtualElement][] = [
   ['Clock', clock],
   ['Internationalization', i18n],
   ['Iterators', iterators],
+  ['Mouse position hook', mousePositionHook],
   ['Performance test', performanceTest]
 ]
 
