@@ -1,7 +1,7 @@
 /* @jsx createElement */
 import { createElement, defineComponent } from '../../modules/core/main/index'
 
-interface HelloWorldProps {
+type HelloWorldProps = {
   name?: string
 }
 

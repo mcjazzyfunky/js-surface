@@ -8,8 +8,8 @@ import StatefulComponentFactory from './types/StatefulComponentFactory'
 import createElement from './createElement'
 import { Spec } from 'js-spec'
 
-function defineComponent<P extends Props = {} >(
-  config: StatelessComponentConfig<P>): StatelessComponentFactory<P>
+function defineComponent<P extends Props = {}, M extends Methods = {}>(
+  config: StatelessComponentConfig<P>): StatelessComponentFactory<P, M>
 
 function defineComponent< P extends Props = {}, M extends Methods = {} >(
   config: StatefulComponentConfig<P, M>): StatefulComponentFactory<P, M>

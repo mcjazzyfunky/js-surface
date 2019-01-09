@@ -2,13 +2,13 @@ import { defineComponent } from '../../modules/core/main/index'
 import { useState } from '../../modules/use/main/index'
 import { button, div, label } from '../../modules/html/main/index'
 
-interface SimpleCounterProps {
+type CounterProps = {
   label?: string,
   initialValue?: number
 }
 
-const SimpleCounter = defineComponent<SimpleCounterProps>({
-  displayName: 'SimpleCounter',
+const Counter = defineComponent<CounterProps>({
+  displayName: 'Counter',
 
   defaultProps: {
     label: 'Counter',
@@ -30,4 +30,4 @@ const SimpleCounter = defineComponent<SimpleCounterProps>({
   }
 })
 
-export default SimpleCounter()
+export default Counter()

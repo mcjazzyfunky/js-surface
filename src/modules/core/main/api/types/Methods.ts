@@ -1,5 +1,5 @@
-type Methods = {
-  [name: string]: Function
+interface Methods {
+  [name: string]: (...args: any[]) => any 
 }
 
 export default Methods

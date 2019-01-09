@@ -70,7 +70,13 @@ const TileRow = defineComponent({
   }
 })
 
-const SpeedTest = defineComponent({
+type SpeedTestProps = {
+  columnCount: number,
+  rowCount: number,
+  tileWidth: number
+}
+
+const SpeedTest = defineComponent<SpeedTestProps>({
   displayName: 'SpeedTest',
 
   properties: {
