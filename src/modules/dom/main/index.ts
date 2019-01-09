@@ -1,9 +1,9 @@
 import mount, { convertContext } from './api/mount'
 import unmount from './api/unmount'
-import { Context, Dispatcher } from '../../core/main/index'
+import { Context, Dispatcher, Methods } from '../../core/main/index'
 import React from 'react'
 
-const { useState, useEffect, useContext } = React as any
+const { useState, useEffect, useContext, useImperativeMethods } = React as any
 
 Dispatcher.init({
   useState,
@@ -15,6 +15,10 @@ Dispatcher.init({
     }
 
     return useContext(ctx.Provider.__internal_type._context)
+  },
+
+  useMethods(ref: any, getMethods: () => Methods) {
+    useImperativeMethods(ref, getMethods)
   }
 })
 

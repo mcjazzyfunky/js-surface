@@ -86,8 +86,9 @@ function convertNode(node: any) {
   }
 
   const
-    newType = typeof type === 'function' && type.__internal_type ? type.__internal_type : type,
-    newProps = props ? { ...props } : null
+    newType = typeof type === 'function' && type.__internal_type ? type.__internal_type : type
+  
+  let newProps = props ? { ...props } : null
 
   if (newChildren && newChildren !== children) {
     newProps.children = newChildren
@@ -99,6 +100,25 @@ function convertNode(node: any) {
   }
 
   let ret = null
+
+  // TODO - optimize
+
+  if (newProps) {
+    delete newProps.key
+    delete newProps.ref
+  }
+
+  if (node.key !== null || node.ref !== null) {
+    newProps = newProps ? Object.assign({}, newProps) : {}
+
+    if (node.key !== undefined && node.key !== null) {
+      newProps.key = node.key
+    }
+
+    if (node.ref !== undefined && node.ref !== null) {
+      newProps.ref = node.ref
+    }
+  }
 
   if (!newProps || !newProps.children) {
     ret = React.createElement(newType, newProps)
@@ -162,9 +182,13 @@ function adjustEntity(it: any): void {
 }
 
 function convertComponent(it: any): Function {
-  const ret: any = (props: any) => convertNode(it.meta.render(props))
+  let ret: any = (props: any, ref: any = null) => convertNode(it.meta.render(props, ref))
 
   ret.displayName = it.meta.displayName
+
+  if (it.meta.render.length > 1) {
+    ret = React.forwardRef(ret)
+  }
 
   Object.defineProperty(it, '__internal_type', {
     value: ret

@@ -1,10 +1,14 @@
 import ComponentFactory from './ComponentFactory'
 import AltComponentFactory from './ComponentFactory'
-import Fragment from '../Fragment'
+import Props from './Props'
+import Key from './Key'
+import Ref from './Ref'
 
 interface VirtualElement {
   type: string | ComponentFactory | AltComponentFactory,
-  props: { [name: string]: any }
+  props: Props | null,
+  key: Key,
+  ref: Ref
 }
 
 export default VirtualElement

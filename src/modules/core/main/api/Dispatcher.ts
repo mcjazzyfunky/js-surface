@@ -1,9 +1,11 @@
 import Context from './types/Context'
+import Methods from './types/Methods'
 
 interface Dispatcher {
   useState<T>(init: () => T): [T, (newValue: T) => void],
   useEffect(effect: () => void, inputs?: any[]): void,
   useContext<T>(ctx: Context<T>): T,
+  useMethods<M extends Methods>(ref: any, getMethods: () => M): void
 }
 
 let dispatcher: Dispatcher = null
@@ -45,6 +47,14 @@ const Dispatcher: Dispatcher & { init: (handler: Dispatcher) => void }= Object.f
     }
 
     return dispatcher.useContext(ctx)
+  },
+
+  useMethods<M extends Methods>(ref: any, getMethods: () => M): void {
+    if (dispatcher === null) {
+      throw new Error('[Dispatcher.useMethods] Dispatcher has not been initalized')
+    }
+
+    return dispatcher.useMethods(ref, getMethods)
   }
 })
 

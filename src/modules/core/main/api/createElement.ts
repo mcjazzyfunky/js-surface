@@ -4,6 +4,8 @@ import VirtualElement from './types/VirtualElement'
 import Props from './types/Props'
 import PropertiesConfig from './types/PropertiesConfig'
 import PropertyConfig from './types/PropertyConfig'
+import Key from './types/Key'
+import Ref from './types/Ref'
 
 function createElement(type: string | ComponentFactory | AltComponentFactory, props?: Props, ...children: any[]): VirtualElement
 function createElement(/* arguments */): VirtualElement {
@@ -17,12 +19,19 @@ function createElement(/* arguments */): VirtualElement {
           || typeof secondArg[Symbol.iterator] === 'function'),
 
     originalProps = skippedProps ? null : (secondArg || null),
-    hasChildren = argCount > 2 || argCount === 2 && skippedProps
+    hasChildren = argCount > 2 || argCount === 2 && skippedProps,
+    needsToCopyProps = hasChildren || (originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined))
 
 
   let
     props: Props = null,
     children: any[] = null
+
+  if (needsToCopyProps) {
+    if (!props) {
+      props = {}
+    }
+  }
 
   if (hasChildren) {
     children = []
@@ -106,7 +115,22 @@ function createElement(/* arguments */): VirtualElement {
     }
   }
 
-  return new VirtualElementClass(type, props)
+  let
+    key = null,
+    ref = null
+
+  // TODO - fix!!!!
+  if (originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined)) {
+    props = Object.assign({}, props)
+
+    delete props.key
+    delete props.ref
+
+    key = originalProps.key === undefined ? null : originalProps.key
+    ref = originalProps.ref === undefined ? null : originalProps.ref
+  }
+
+  return new VirtualElementClass(type, props, key, ref)
 }
 
 export default createElement
@@ -121,11 +145,20 @@ const
 
 const VirtualElementClass = class VirtualElement {
   type: string | ComponentFactory | AltComponentFactory
-  props: Object | null
+  props: Props | null
+  key: Key
+  ref: Ref 
 
-  constructor(type: string | ComponentFactory | AltComponentFactory, props: Object | null) {
+  constructor(
+    type: string | ComponentFactory | AltComponentFactory,
+    props: Props | null,
+    key: Key,
+    ref: Ref
+  ) {
     this.type = type
     this.props = props
+    this.key = key
+    this.ref = ref
   }
 }
 
