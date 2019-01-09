@@ -69,6 +69,13 @@ function getCurrentDemoIndex() {
   return parseInt(document.location.href.replace(/^.*idx=/, ''), 10) || 0
 }
 
+declare module JSX {
+  type Element = VirtualElement 
+  interface IntrinsicElements {
+    [elemName: string]: any;
+  }
+}
+
 // --- main ---------------------------------------------------------
 
 mount(Demo({ demos: availableDemos }), 'main-content')

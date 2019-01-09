@@ -21,3 +21,4 @@ export { default as StatelessComponentFactory } from './api/types/StatelessCompo
 export { default as StatelessComponentMeta } from './api/types/StatelessComponentMeta'
 export { default as VirtualElement } from './api/types/VirtualElement'
 export { default as VirtualNode } from './api/types/VirtualNode'
+

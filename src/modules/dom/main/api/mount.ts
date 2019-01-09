@@ -19,7 +19,6 @@ This file is a complete mess :( - sorry for that - will be fixed some day
 import { createElement, VirtualElement, Context } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
-import { any } from 'prop-types';
 
 const { useState, useEffect, useRef, useContext } = React as any
 

@@ -1,8 +1,9 @@
-import { defineComponent } from '../../modules/core/main/index'
+/* @jsx createElement */
+import { createElement, defineComponent, VirtualElement } from '../../modules/core/main/index'
 import { div } from '../../modules/html/main/index'
 
 interface HelloWorldProps {
-  name: string
+  name?: string
 }
 
 const HelloWorld = defineComponent<HelloWorldProps>({
@@ -20,9 +21,12 @@ const HelloWorld = defineComponent<HelloWorldProps>({
   }
 })
 
-export default
-  div(null,
-    div(null,
-      HelloWorld()),
-    div(null,
-      HelloWorld({ name: 'Jane Doe' })))
+export default 
+  <div>
+    <div>
+      <HelloWorld/>
+    </div>
+    <div>
+      <HelloWorld name="Jane Doe"/>
+    </div>
+  </div> 

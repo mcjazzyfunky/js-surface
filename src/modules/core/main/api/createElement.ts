@@ -1,10 +1,19 @@
-import ComponentFactory from './types/StatelessComponentFactory'
+import StatelessComponentFactory from './types/StatelessComponentFactory'
+import StatefulComponentFactory from './types/StatelessComponentFactory'
 import VirtualElement from './types/VirtualElement'
 import Props from './types/Props'
 import PropertiesConfig from './types/PropertiesConfig'
 import PropertyConfig from './types/PropertyConfig'
 
-function createElement(...args: any[]): VirtualElement
+
+declare module JSX {
+  type Element = VirtualElement 
+  interface IntrinsicElements {
+    [elemName: string]: any;
+  }
+}
+
+function createElement(type: string | StatelessComponentFactory | StatefulComponentFactory, props?: Props, ...children: any[]): VirtualElement
 function createElement(/* arguments */): VirtualElement {
   const
     argCount = arguments.length,
@@ -119,10 +128,10 @@ const
       : '@@iterator'
 
 const VirtualElementClass = class VirtualElement {
-  type: string | ComponentFactory
+  type: string | StatelessComponentFactory | StatefulComponentFactory
   props: Object | null
 
-  constructor(type: string | ComponentFactory, props: Object | null) {
+  constructor(type: string | StatelessComponentFactory | StatefulComponentFactory, props: Object | null) {
     this.type = type
     this.props = props
   }
