@@ -1,5 +1,5 @@
 import VirtualElement from './VirtualElement'
-import StatelessComponentMeta from './StatefulComponentMeta'
+import AltComponentMeta from './AltComponentMeta'
 import Props from './Props'
 import Methods from './Methods'
 
@@ -8,7 +8,7 @@ type ExtProps<P extends Props> = P & {
   ref?: any // TODO
 }
 
-export default interface StatelessComponentFactory<P extends Props = {}, M extends Methods = {}> {
+export default interface AltComponentFactory<P extends Props = {}, M extends Methods = {}> {
   (props?: ExtProps<P>, ...children: any[]): VirtualElement,
-  meta: StatelessComponentMeta
+  meta: AltComponentMeta<P, M>
 }

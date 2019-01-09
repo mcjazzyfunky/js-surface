@@ -1,11 +1,11 @@
-import StatelessComponentFactory from './types/StatelessComponentFactory'
-import StatefulComponentFactory from './types/StatelessComponentFactory'
+import ComponentFactory from './types/ComponentFactory'
+import AltComponentFactory from './types/ComponentFactory'
 import VirtualElement from './types/VirtualElement'
 import Props from './types/Props'
 import PropertiesConfig from './types/PropertiesConfig'
 import PropertyConfig from './types/PropertyConfig'
 
-function createElement(type: string | StatelessComponentFactory | StatefulComponentFactory, props?: Props, ...children: any[]): VirtualElement
+function createElement(type: string | ComponentFactory | AltComponentFactory, props?: Props, ...children: any[]): VirtualElement
 function createElement(/* arguments */): VirtualElement {
   const
     argCount = arguments.length,
@@ -120,10 +120,10 @@ const
       : '@@iterator'
 
 const VirtualElementClass = class VirtualElement {
-  type: string | StatelessComponentFactory | StatefulComponentFactory
+  type: string | ComponentFactory | AltComponentFactory
   props: Object | null
 
-  constructor(type: string | StatelessComponentFactory | StatefulComponentFactory, props: Object | null) {
+  constructor(type: string | ComponentFactory | AltComponentFactory, props: Object | null) {
     this.type = type
     this.props = props
   }

@@ -1,9 +1,9 @@
-import StatelessComponentFactory from './StatelessComponentFactory'
-import StatefulComponentFactory from './StatelessComponentFactory'
+import ComponentFactory from './ComponentFactory'
+import AltComponentFactory from './ComponentFactory'
 import Fragment from '../Fragment'
 
 interface VirtualElement {
-  type: string | StatelessComponentFactory | StatefulComponentFactory,
+  type: string | ComponentFactory | AltComponentFactory,
   props: { [name: string]: any }
 }
 

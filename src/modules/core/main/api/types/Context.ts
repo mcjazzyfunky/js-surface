@@ -1,6 +1,6 @@
-import StatelessComponentFactory from './StatelessComponentFactory'
+import ComponentFactory from './ComponentFactory'
 
 export default interface Context<T> {
-  Provider: StatelessComponentFactory<{ value: T }>,
-  Consumer: StatelessComponentFactory<{}>
+  Provider: ComponentFactory<{ value: T }>,
+  Consumer: ComponentFactory<{}>
 }

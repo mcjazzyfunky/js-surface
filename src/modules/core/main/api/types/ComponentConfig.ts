@@ -18,7 +18,7 @@ type WithDefaultProps<P extends Props = {}> = {
   render: (props: P, ref?: any) => VirtualNode
 }
 
-type StatelessComponentConfig<P extends Props = {}>
+type ComponentConfig<P extends Props = {}>
   = WithProperties<P> | WithDefaultProps<P> 
 
-export default StatelessComponentConfig
+export default ComponentConfig

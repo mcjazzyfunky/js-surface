@@ -22,7 +22,7 @@ type WithDefaultProps<P extends Props = {}, M extends Methods = {}> = {
   init: ((self: Component<P>, ref?: any) => (props: P) => VirtualNode) | (() => any) // TODO
 }
 
-type StatelessComponentConfig<P extends Props = {}, M extends Methods = {}> =
+type ComponentConfig<P extends Props = {}, M extends Methods = {}> =
   WithProperties<P, M> | WithDefaultProps<P, M>
 
-export default StatelessComponentConfig
+export default ComponentConfig

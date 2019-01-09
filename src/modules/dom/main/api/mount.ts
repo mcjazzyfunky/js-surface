@@ -156,9 +156,9 @@ function adjustEntity(it: any): void {
   switch (kind) {
     case 'componentFactory':
       if (it.meta.render) {
-         convertStatelessComponent(it)
+         convertComponent(it)
       } else {
-         convertStatefulComponent(it)
+         convertAltComponent(it)
       }
 
       break
@@ -173,7 +173,7 @@ function adjustEntity(it: any): void {
   }
 }
 
-function convertStatelessComponent(it: any): Function {
+function convertComponent(it: any): Function {
   const ret: any = (props: any) => convertNode(it.meta.render(props))
 
   ret.displayName = it.meta.displayName
@@ -191,7 +191,7 @@ type LifecycleHandlers = {
   willUnmount: () => void
 }
 
-function convertStatefulComponent(it: any): Function {
+function convertAltComponent(it: any): Function {
   const ret: any = (props: any) => {
     const
       currentProps = useRef(props),

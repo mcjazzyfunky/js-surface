@@ -1,18 +1,18 @@
 import Props from './types/Props'
 import Methods from './types/Methods'
 import PropertiesConfig from './types/PropertiesConfig'
-import StatelessComponentConfig from './types/StatelessComponentConfig'
-import StatelessComponentFactory from './types/StatelessComponentFactory'
-import StatefulComponentConfig from './types/StatefulComponentConfig'
-import StatefulComponentFactory from './types/StatefulComponentFactory'
+import ComponentConfig from './types/ComponentConfig'
+import ComponentFactory from './types/ComponentFactory'
+import AltComponentConfig from './types/AltComponentConfig'
+import AltComponentFactory from './types/AltComponentFactory'
 import createElement from './createElement'
 import { Spec } from 'js-spec'
 
 function defineComponent<P extends Props = {}, M extends Methods = {}>(
-  config: StatelessComponentConfig<P>): StatelessComponentFactory<P, M>
+  config: ComponentConfig<P>): ComponentFactory<P, M>
 
 function defineComponent< P extends Props = {}, M extends Methods = {} >(
-  config: StatefulComponentConfig<P, M>): StatefulComponentFactory<P, M>
+  config: AltComponentConfig<P, M>): AltComponentFactory<P, M>
 
 function defineComponent(config: any): any {
   if (process.env.NODE_ENV === 'development' as any) {
@@ -90,7 +90,7 @@ const
       Spec.hasSomeKeys,
       Spec.keysOf(Spec.match(REGEX_PROP_NAME))),
 
-  specOfStatelessComponentConfig = 
+  specOfComponentConfig = 
     Spec.strictShape({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       properties: Spec.optional(specOfPropertiesConfig),
@@ -100,7 +100,7 @@ const
       render: Spec.function
     }),
 
-  specOfStatefulComponentConfig = 
+  specOfAltComponentConfig = 
     Spec.strictShape({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       properties: Spec.optional(specOfPropertiesConfig),
@@ -117,17 +117,17 @@ const
       init: Spec.function
     }),
 
-  specOfComponentConfig =
+  specOfCombinedComponentConfig =
     Spec.and(
       Spec.object,
       Spec.or(
         {
           when: Spec.prop('render', Spec.function),
-          then: specOfStatelessComponentConfig 
+          then: specOfComponentConfig 
         },
         {
           when: Spec.prop('init', Spec.function),
-          then: specOfStatefulComponentConfig
+          then: specOfAltComponentConfig
         }
       ),
     (it => it.properties && it.defaultProps
@@ -136,7 +136,7 @@ const
 
 function validateComponentConfig(config: any): null | Error {
   let ret = null
-  const error = specOfComponentConfig.validate(config)
+  const error = specOfCombinedComponentConfig.validate(config)
 
   if (error) {
     let errorMsg = 'Invalid configuration for component'
