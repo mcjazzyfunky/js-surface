@@ -1,10 +1,20 @@
 import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useEffect, useState } from '../../modules/hooks/main/index';
+import { useEffect, useState, useMethods } from '../../modules/hooks/main/index';
+
+type Methods = {
+  sayHello: () => void
+}
 
 const ComponentA = defineComponent({
   displayName: 'ComponentA',
 
-  render() {
+  render(_, ref) {
+    useMethods(ref, () => ({
+      sayHello() {
+        console.log('>> ComponentA says "Hello"')
+      }
+    }))
+
     useEffect(() => {
       console.log('Did mount ComponentA...')
 
@@ -18,7 +28,13 @@ const ComponentA = defineComponent({
 const ComponentB = defineComponent({
   displayName: 'ComponentB',
 
-  render() {
+  render(_, ref) {
+    useMethods(ref, () => ({
+      sayHello() {
+        console.log('ComponentB says "Hello"')
+      }
+    }))
+    
     useEffect(() => {
       console.log('Did mount ComponentB...')
 
@@ -46,13 +62,17 @@ const Demo = defineComponent({
     }, [])
 
     return state.showComponentA 
-      ? ComponentA({ ref: printRefCallbackInfo.bind(null, 'ComponentA') })
-      : ComponentB({ ref: printRefCallbackInfo.bind(null, 'ComponentB') })
+      ? ComponentA({ ref: refCallback.bind(null, 'ComponentA') })
+      : ComponentB({ ref: refCallback.bind(null, 'ComponentB') })
   }
 })
 
-function printRefCallbackInfo(type: string, ref: any) {
-  console.log(`Invoked ref callback - ${type}: `, String(ref))
+function refCallback(type: string, ref: any) {
+  console.log(`Invoked ref callback => ${type}: `, 'Ref:', ref)
+  
+  if (ref) {
+    ref.sayHello()
+  }
 }
 
 export default Demo()

@@ -3,16 +3,11 @@ import Methods from './types/Methods'
 import PropertiesConfig from './types/PropertiesConfig'
 import ComponentConfig from './types/ComponentConfig'
 import ComponentFactory from './types/ComponentFactory'
-import AltComponentConfig from './types/AltComponentConfig'
-import AltComponentFactory from './types/AltComponentFactory'
 import createElement from './createElement'
 import { Spec } from 'js-spec'
 
 function defineComponent<P extends Props = {}, M extends Methods = {}>(
   config: ComponentConfig<P>): ComponentFactory<P, M>
-
-function defineComponent< P extends Props = {}, M extends Methods = {} >(
-  config: AltComponentConfig<P, M>): AltComponentFactory<P, M>
 
 function defineComponent(config: any): any {
   if (process.env.NODE_ENV === 'development' as any) {
@@ -98,45 +93,12 @@ const
       variableProps: Spec.optional(Spec.boolean),
       validate: Spec.optional(Spec.function),
       render: Spec.function
-    }),
+    })
 
-  specOfAltComponentConfig = 
-    Spec.strictShape({
-      displayName: Spec.match(REGEX_DISPLAY_NAME),
-      properties: Spec.optional(specOfPropertiesConfig),
-      defaultProps: Spec.optional(specOfDefaultProps),
-      variableProps: Spec.optional(Spec.boolean),
-      validate: Spec.optional(Spec.function),
-
-      methods:
-        Spec.optional(
-          Spec.and(
-            Spec.arrayOf(Spec.string),
-            Spec.unique())),
-
-      init: Spec.function
-    }),
-
-  specOfCombinedComponentConfig =
-    Spec.and(
-      Spec.object,
-      Spec.or(
-        {
-          when: Spec.prop('render', Spec.function),
-          then: specOfComponentConfig 
-        },
-        {
-          when: Spec.prop('init', Spec.function),
-          then: specOfAltComponentConfig
-        }
-      ),
-    (it => it.properties && it.defaultProps
-      ? new Error('Not allowed to configure both parameters "properties" and "defaultProps" at once')
-      : null))
 
 function validateComponentConfig(config: any): null | Error {
   let ret = null
-  const error = specOfCombinedComponentConfig.validate(config)
+  const error = specOfComponentConfig.validate(config)
 
   if (error) {
     let errorMsg = 'Invalid configuration for component'

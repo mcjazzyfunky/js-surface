@@ -65,7 +65,7 @@ function isElement(it: any) {
 }
 
 function isIterableObject(it: any): boolean {
-  return typeof it === 'object' && (Array.isArray(it) || typeof it[SYMBOL_ITERATOR] === 'function')
+  return it !== null && typeof it === 'object' && (Array.isArray(it) || typeof it[SYMBOL_ITERATOR] === 'function')
 }
 
 function convertNode(node: any) {
@@ -165,8 +165,6 @@ function adjustEntity(it: any): void {
     case 'componentFactory':
       if (it.meta.render) {
          convertComponent(it)
-      } else {
-         convertAltComponent(it)
       }
 
       break
@@ -203,92 +201,6 @@ type LifecycleHandlers = {
   willUnmount: () => void
 }
 
-function convertAltComponent(it: any): Function {
-  const ret: any = (props: any) => {
-    const
-      currentProps = useRef(props),
-      currentValues = useRef(),
-      contextValues = useRef([]),
-      [state, setState] = useState([]),
-      [internals, setInternals] = useState(() => {
-        const
-          lifecycleHandlers = {} as LifecycleHandlers,
-          
-          consumeContext = (ctx: Context<any>) => {
-            if (!(ctx.Provider as any).__internal_type) {
-              convertContext(ctx)
-            }
-
-            const index = contextValues.current.length
-
-            contextValues.current[index] = [ctx, undefined]
-
-            return () => contextValues.current[index][1]
-          },
-          
-          self = new Component(
-            () => currentProps.current,
-            (initialValue: any) => {
-              const index = state.length
-
-              state[index] = initialValue 
-
-              function get() {
-                return state[index]
-              }
-
-              function set(value: any) {
-                setState((state: any[]) => {
-                  state[index] = value
-                  return state
-                })
-              }
-
-              return [get, set]
-            },
-            () => setInternals(internals),
-            consumeContext,
-            (handlers: LifecycleHandlers) => {
-              Object.assign(lifecycleHandlers, handlers)
-            }),
-          
-          render = it.meta.init(self)
-          
-       
-        return { self, render, lifecycleHandlers, isInitialized: false }
-      })
-
-    currentProps.current = props
-
-    useEffect(() => {
-      if (!internals.isInitialized) {
-        internals.lifecycleHandlers.didMount()
-        internals.isInitialized = true
-      } else {
-        internals.lifecycleHandlers.didUpdate()
-      }
-    })
-
-    useEffect(() => {
-      return () => internals.lifecycleHandlers.willUnmount()
-    }, [])
-  
-    for (let i = 0; i < contextValues.current.length; ++i) {
-      contextValues.current[i][1] = useContext(contextValues.current[i][0].Provider.__internal_type._context)
-    }
-    
-    return convertNode(internals.render(props))
-  } 
-
-  ret.displayName = it.meta.displayName
-  
-  Object.defineProperty(it, '__internal_type', {
-    value: ret
-  })
-
-  return ret
-}
-
 export function convertContext(it: any): any {
   const ret =
     it.Provider.__internal_type && it.Provider.__internal_type._context
@@ -310,88 +222,4 @@ export function convertContext(it: any): any {
   }
 
   return ret
-}
-
-class Component {
-  constructor(
-    getProps: () => any,
-    handleState: (initialValue: any) => [() => any, (newValue: any) => void],
-    forceUpdate: () => void,
-    
-    consumeContext: (ctx: Context<any>) => () => any,
-
-    setLifecycleHandlers: (handlers: {
-      didMount: () => void,
-      didUpdate: () => void,
-      willUnmount: () => void
-    }) => void
-  ) {
-      const listeners = {
-        didMount: [] as (() => void)[],
-        didUpdate: [] as (() => void)[],
-        willUnmount: [] as (() => void)[],
-      }
-
-      Object.defineProperty(this, 'props', {
-        enumerable: true,
-        get: getProps
-      })
-
-      this.handleState = handleState,
-      this.forceUpdate = () => forceUpdate()
-      this.consumeContext = consumeContext
-
-      for (const key of Object.keys(listeners)) {
-        (this as any)['on' + key[0].toUpperCase() + key.substr(1)] = (listener: () => void) => {
-          (listeners as any)[key].push(listener)
-
-          return () => {
-            (listeners as any)[key] = (listeners as any)[key].filter((it: any) => it !== listener)
-          }
-        }
-      }
-
-      setLifecycleHandlers({
-        didMount() {
-          listeners.didMount.forEach(listener => listener())
-        },
-
-        didUpdate() {
-          listeners.didUpdate.forEach(listener => listener())
-        },
-
-        willUnmount() {
-          listeners.didUpdate.forEach(listener => listener())
-        }
-      })
-
-  }
-
-  // will be set by constructor
-  //get props(): any {
-  //  return ....
-  //}
-
-  handleState(initialValue: any) { 
-    // will be overridden by constructor
-  }
-
-  consumeContext(ctx: Context<any>) {
-    // will be overridden by constructor
-  }
-
-  forceUpdate() {
-    // will be overridden by constructor
-  }
-
-  onDidMount() {
-    // will be overridden by constructor
-  }
-
-  onDidUpdate() {
-  }
-
-  onWillUnmount() {
-    // will be overridden by constructor
-  }
 }

@@ -110,43 +110,6 @@ export default defineComponent({
 
 mount(Demo(), 'main-content');
 ```
-#### Alternative API for stateful/effectful components
-
-React's hook API was really a ground-breaking improvement in UI development.
-Nevertheless it also was a bit controversial as it seems a kind of unusual and
-magical. As jsSurface is a R&D project it also shows how an alternative to
-such a hook API could look like. This alternative is based on a factory pattern
-and seperates the process into a initialization phase and a render phase.
-It is100% typesafe and 0% magical. However this alternative is a more verbose
-then the hook API and has the the main issue that values often have to be
-wrapped into getter functions or unwrapped from those.<br>
-FYI: The author of jsSurface prefers the hook API.<br>
-Anyway, here's what the alternative component API looks like:
-
-```jsx
-const Counter = defineComponent({
-  displayName: 'Counter',
-  
-  defaultProps: {
-    label: 'Counter'
-  },
-  
-  init(c) {
-    const
-      [getCount, setCount] = useState(c, 0),
-      onIncrement = () => setCount(getCount() + 1)
-    
-    return props => {
-      return (
-        <div>
-          <label>{props.label + ': '}</label>
-          <button onClick={onIncrement}>{getCount()}</button>
-        </div>
-      )
-    }
-  }
-})
-```
 
 ### Motivation
 
@@ -318,17 +281,6 @@ Provides hooks to implement Component side-effects in a React-like fashion
 * `useRef(initialValue)`
 * `usCallback(callback)`
 * `usePrevious(subject)`
-* `useForceUpdate()`
-
-#### Module "_use_" (js-surface/use)
-
-Provides hooks to implement Component side-effects in an old-school non-magic fashion
-(similar functionality like the same-named hooks in "js-surface/hooks")
-
-* `useState(initialValueProvider)`
-* `useEffect(action, dependencies?)`
-* `useContext(ctx)`
-* `usePrevious(provider)`
 * `useForceUpdate()`
 
 #### Modules "_util_" (js-surface/util)

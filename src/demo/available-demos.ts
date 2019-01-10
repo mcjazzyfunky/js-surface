@@ -1,7 +1,6 @@
 import { VirtualElement } from '../modules/core/main/index'
 import helloWorld from './demos/hello-world'
 import simpleCounter from './demos/simple-counter'
-import simpleCounterAlt from './demos/simple-counter-alt'
 import complexCounter from './demos/complex-counter'
 import stopWatch from './demos/stop-watch'
 import fragments from './demos/fragments'
@@ -17,7 +16,6 @@ import performanceTest2 from './demos/performance-test2'
 const demos: [string, VirtualElement][] = [
   ['Hello world', helloWorld],
   ['Simple counter', simpleCounter],
-  ['Simple counter (alternative)', simpleCounterAlt],
   ['Complex counter', complexCounter],
   ['Stop watch', stopWatch],
   ['Fragments', fragments],

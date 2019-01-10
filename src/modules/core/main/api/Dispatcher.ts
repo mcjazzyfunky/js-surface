@@ -8,53 +8,57 @@ interface Dispatcher {
   useMethods<M extends Methods>(ref: any, getMethods: () => M): void
 }
 
-let dispatcher: Dispatcher = null
+let globalDispatcher: Dispatcher = null
 
-const Dispatcher: Dispatcher & { init: (handler: Dispatcher) => void }= Object.freeze({
-  init(handler: Dispatcher): void {
-    if (handler === null || typeof handler !== 'object') {
-      throw new Error('[Dispatcher.init] First argument "handler" must be an object')
+const Dispatcher: Dispatcher & { init: (dispatcher: Dispatcher) => void } = Object.freeze({
+  init(dispatcher: Dispatcher): void {
+    if (dispatcher === null || typeof dispatcher !== 'object') {
+      throw new Error('[Dispatcher.init] First argument "dispatcher" must be an object')
     }
 
     for (const method of ['useState', 'useEffect', 'useContext']) {
-      if (typeof (handler as any)[method] !== 'function') {
-        throw new Error(`[Dispatcher.init] First argument "handler" must have a method "${method}"`)
+      if (typeof (dispatcher as any)[method] !== 'function') {
+        throw new Error(`[Dispatcher.init] First argument "dispatcher" must have a method "${method}"`)
       }
     }
 
-    dispatcher = handler
+    if (globalDispatcher) {
+      throw new Error('[Dispatcher.init] Dispatcher has already been initialized')
+    }
+
+    globalDispatcher = dispatcher
   },
 
   useState<T>(init: () => T): [T, (newValue: T) => void] {
-    if (dispatcher === null) {
+    if (globalDispatcher === null) {
       throw new Error('[Dispatcher.useState] Dispatcher has not been initalized')
     }
 
-    return dispatcher.useState(init)
+    return globalDispatcher.useState(init)
   },
 
   useEffect(effect: () => void, inputs?: any[]): void {
-    if (dispatcher === null) {
+    if (globalDispatcher === null) {
       throw new Error('[Dispatcher.useEffect] Dispatcher has not been initalized')
     }
 
-    dispatcher.useEffect(effect, inputs)
+    globalDispatcher.useEffect(effect, inputs)
   },
   
   useContext<T>(ctx: Context<T>): T {
-    if (dispatcher === null) {
+    if (globalDispatcher === null) {
       throw new Error('[Dispatcher.useContext] Dispatcher has not been initalized')
     }
 
-    return dispatcher.useContext(ctx)
+    return globalDispatcher.useContext(ctx)
   },
 
   useMethods<M extends Methods>(ref: any, getMethods: () => M): void {
-    if (dispatcher === null) {
+    if (globalDispatcher === null) {
       throw new Error('[Dispatcher.useMethods] Dispatcher has not been initalized')
     }
 
-    return dispatcher.useMethods(ref, getMethods)
+    return globalDispatcher.useMethods(ref, getMethods)
   }
 })
 

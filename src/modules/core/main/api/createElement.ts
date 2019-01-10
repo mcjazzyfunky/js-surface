@@ -1,5 +1,4 @@
 import ComponentFactory from './types/ComponentFactory'
-import AltComponentFactory from './types/ComponentFactory'
 import VirtualElement from './types/VirtualElement'
 import Props from './types/Props'
 import PropertiesConfig from './types/PropertiesConfig'
@@ -7,7 +6,7 @@ import PropertyConfig from './types/PropertyConfig'
 import Key from './types/Key'
 import Ref from './types/Ref'
 
-function createElement(type: string | ComponentFactory | AltComponentFactory, props?: Props, ...children: any[]): VirtualElement
+function createElement(type: string | ComponentFactory, props?: Props, ...children: any[]): VirtualElement
 function createElement(/* arguments */): VirtualElement {
   const
     argCount = arguments.length,
@@ -144,13 +143,13 @@ const
       : '@@iterator'
 
 const VirtualElementClass = class VirtualElement {
-  type: string | ComponentFactory | AltComponentFactory
+  type: string | ComponentFactory
   props: Props | null
   key: Key
   ref: Ref 
 
   constructor(
-    type: string | ComponentFactory | AltComponentFactory,
+    type: string | ComponentFactory,
     props: Props | null,
     key: Key,
     ref: Ref

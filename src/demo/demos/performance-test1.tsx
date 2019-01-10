@@ -1,16 +1,16 @@
 import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useState, useEffect } from '../../modules/hooks/main/index'
+import { useCallback, useEffect, useState } from '../../modules/hooks/main/index'
 import { div } from '../../modules/html/main/index'
-//import React from '../../../node_modules/react/umd/react.production.min'
+import React from 'react'
 
-const h = (window as any).React.createElement
+const h = React.createElement
 
 function runTests() {
   const
-    iterationCount = 400000,
+    iterationCount = 1000000,
     tests = []
 
-  let report = ''
+  let result = ''
 
   tests.push({
     name: 'Using createElement from React',
@@ -62,37 +62,72 @@ function runTests() {
     const message = `Run time for test '${test.name}': ${duration}`
 
     if (i == 0) {
-      report = message
+      result = message
     } else {
-      report += '\n' + message
+      result += '\n' + message
     }
   }
 
-  report += '\nAll tests finished.'
+  result += '\nAll tests finished.'
 
-  return report
+  return result
 }
 
 const PerformanceTest = defineComponent({
   displayName: 'PerformanceTest',
 
   render() {
-    const [report, setReport] = useState(() => null as string)
+    const
+      [result, setResult] = useState(() => null as string),
+      [isRunning, setRunning] = useState(() => false),
+      onStart = useCallback(() => startTest())
+
+    function startTest() {
+      setRunning(true)
+    }
 
     useEffect(() => {
-      setReport(runTests())
-    }, [])
+      if (isRunning) {
+        const result = runTests()
+        
+        setRunning(false)
+        setResult(result)
+      }
+    })
 
     return (
       <div>
         <h4>Measuring time to build virtual dom trees</h4>
         {
-          report === null
-            ? <div>Running performance test - please wait...</div>
-            : <pre>{report}</pre>
+          !isRunning
+            ? <div>
+                <Report result={result}/>
+                <button onClick={onStart}>
+                  { result === null ? 'Start test' : 'Restart test' }
+                </button>
+              </div>
+            : <div>Running performance test - please wait...</div>
         }
       </div>
     )
+  }
+})
+
+type ReportProps = {
+  result: string
+}
+
+const Report = defineComponent<ReportProps>({
+  displayName: 'Report',
+
+  render({ result }) {
+    let ret = null
+    
+    if (result && result.trim().length > 0) {
+      ret = <pre>{result}</pre>
+    }
+
+    return ret
   }
 })
 
