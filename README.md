@@ -30,6 +30,7 @@ npm run build
 # To build and prepare the project for publishing
 npm run dist
 ```
+Research project to evaluate and implement alternative UI library APIs
 
 ### Introduction
 
