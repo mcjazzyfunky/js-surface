@@ -5,6 +5,8 @@
 [![Build status](https://travis-ci.com/js-works/js-surface.svg)](https://travis-ci.org/js-works/js-surface)
 [![Coverage status](https://coveralls.io/repos/github/js-works/js-surface/badge.svg?branch=master)](https://coveralls.io/github/js-works/js-surface?branch=master)
 
+Research project to evaluate and implement alternative UI library APIs
+
 **Remark: This README document is just an early draft - totally incomplete yet**
 
 ### Installation
@@ -30,7 +32,6 @@ npm run build
 # To build and prepare the project for publishing
 npm run dist
 ```
-Research project to evaluate and implement alternative UI library APIs
 
 ### Introduction
 
@@ -52,7 +53,6 @@ things and to evaluate different approaches and alternative APIs.
 
 First, here's a small demo application to get a glimpse of how components
 are currently implemented with jsSurface:
-
 
 #### Hello world component (pure ECMAScript)
 
