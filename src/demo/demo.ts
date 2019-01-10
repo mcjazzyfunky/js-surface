@@ -72,3 +72,16 @@ function getCurrentDemoIndex() {
 // --- main ---------------------------------------------------------
 
 mount(Demo({ demos: availableDemos }), 'main-content')
+
+declare module 'react'
+declare module 'react-dom'
+
+declare global {
+  module JSX {
+  type Element = any 
+
+  interface IntrinsicElements {
+    [key: string]: any
+  }
+}
+}

@@ -1,12 +1,9 @@
 import VirtualElement from './api/types/VirtualElement'
 
 declare  module JSX {
-    type Element = VirtualElement 
-  
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
+  type Element = any 
 
-declare module 'react'
-declare module 'react-dom'
+  interface IntrinsicElements {
+    [key: string]: any
+  }
+}

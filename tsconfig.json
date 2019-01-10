@@ -36,6 +36,6 @@
   ],
 
   "include": [
-		"./src/modules/*.ts*"
+		"./src/**/*.ts*"
   ],
 }
