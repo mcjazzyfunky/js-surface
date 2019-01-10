@@ -63,7 +63,7 @@ import { mount } from 'js-surface/dom'
 // just if you do not want to use JSX, of course JSX is also fully supported
 import { div } from 'js-surface/html'
 
-export default defineComponent({
+const HelloWorld = defineComponent({
   displayName: 'HelloWorld',
 
   defaultProps: {
@@ -74,6 +74,8 @@ export default defineComponent({
     return div(`Hello, ${props.name}!`)
   }
 })
+
+mount(HelloWorld(), 'main-content')
 ```
 
 #### Simple counter (using a hook API and JSX)
@@ -86,7 +88,7 @@ import { mount } from 'js-surface/dom'
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
 
-export default defineComponent({
+const Counter = defineComponent({
   displayName: 'Counter',
 
   // if you do not want property validation, the following "properties" 
@@ -120,7 +122,7 @@ export default defineComponent({
   }
 });
 
-mount(Demo(), 'main-content');
+mount(<Counter/>, 'main-content')
 ```
 
 ### Motivation
