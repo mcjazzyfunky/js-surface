@@ -1,0 +1,9 @@
+{
+  "entities": [
+    { "name": "./build/source", "root": true}
+  ],
+  "options": {
+    "output": "./dist/source/source.zip",
+    "level": 9
+  }
+}
