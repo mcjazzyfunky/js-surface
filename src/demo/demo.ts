@@ -1,7 +1,7 @@
-import { defineComponent, defineContext, VirtualElement } from '../modules/core/main/index'
+import { defineComponent, VirtualElement } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
 import { useForceUpdate, useRef } from '../modules/hooks/main/index'
-import { br, div, h4, label, option, select } from '../modules/html/main/index'
+import { div, h4, label, option, select } from '../modules/html/main/index'
 
 import availableDemos from './available-demos'
 
@@ -67,13 +67,6 @@ const Demo = defineComponent<DemoProps>({
 
 function getCurrentDemoIndex() {
   return parseInt(document.location.href.replace(/^.*idx=/, ''), 10) || 0
-}
-
-declare module JSX {
-  type Element = VirtualElement 
-  interface IntrinsicElements {
-    [elemName: string]: any;
-  }
 }
 
 // --- main ---------------------------------------------------------

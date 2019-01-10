@@ -21,4 +21,3 @@ export { default as ComponentFactory } from './api/types/ComponentFactory'
 export { default as ComponentMeta } from './api/types/ComponentMeta'
 export { default as VirtualElement } from './api/types/VirtualElement'
 export { default as VirtualNode } from './api/types/VirtualNode'
-

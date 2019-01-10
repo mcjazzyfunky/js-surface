@@ -22,7 +22,7 @@
     ],
 
     "types": [
-      "node", "react", "react-dom", "mocha", "chai"
+      "node", "mocha", "chai"
     ]
   },
   "files": [
@@ -36,6 +36,6 @@
   ],
 
   "include": [
-		"./**/src/**/*.ts*"
+		"./src/modules/*.ts*"
   ],
 }
