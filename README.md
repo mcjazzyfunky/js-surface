@@ -247,20 +247,11 @@ What parts of React's API may allow some different still reasonable view?
   libraries - while it recommended to use the jsSurface independent validation
   library ["js-spec"](https://github.com/js-works/js-spec).
 
-* The React API lacks a bit of information hiding:
-  As for complex components you always have the underlying component class
-  or in case of references even the component instance directly,
-  you always have access to a lot of data and methods you do not really
-  need to have access to.
-  
-  In jsSurface that's different: As component types are only represented by
-  a corresponding factory method (that does only create a virtual element by
-  using the `createElement` function) you do NOT have access to the
-  underlying component implementation. And also you will never have access to
-  the component instance: Refs will not pass the component instance itself as
-  it is done with React, but instead will only pass a proxy for the component
-  instance which only expose those component functionalities that have
-  explicitly defined to be exposed.
+* In jsSurface component types are represented by a corresponding factory
+  function (that does create a virtual element by using the `createElement` function).
+  That's simplifies the implemention of user interfaces in pure ECMAScript
+  if desired - nevertheless it is recommended to use JSX as this is the
+  de-facto standard in React-like UI development.
 
 ### Current API (not complete yet)
 
