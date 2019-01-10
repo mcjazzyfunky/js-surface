@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { createElement, defineComponent } from '../../modules/core/main/index'
 
 type HelloWorldProps = {

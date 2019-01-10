@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { createElement, defineComponent } from 'js-surface'
 
 const demoContent = {

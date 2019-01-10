@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { createElement, createElement as h, defineComponent, defineContext } from '../../modules/core/main/index'
 import { useState, useContext } from '../../modules/hooks/main/index'
 import { Spec } from 'js-spec'

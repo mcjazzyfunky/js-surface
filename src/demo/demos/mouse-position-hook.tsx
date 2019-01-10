@@ -1,6 +1,5 @@
-/* @jsx createElement */
 import { createElement, defineComponent }  from '../../modules/core/main/index'
-import { useCallback, useEffect, useRef, useState } from '../../modules/hooks/main'
+import { useEffect, useRef, useState } from '../../modules/hooks/main'
 
 const Demo = defineComponent({
   displayName: 'Demo',

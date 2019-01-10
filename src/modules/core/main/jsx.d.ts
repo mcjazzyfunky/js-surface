@@ -1,9 +1,11 @@
 import VirtualElement from './api/types/VirtualElement'
 
-declare  module JSX {
-  type Element = any 
+declare global {
+  module JSX {
+    type Element = VirtualElement 
 
-  interface IntrinsicElements {
-    [key: string]: any
+    interface IntrinsicElements {
+      [key: string]: any
+    }
   }
 }

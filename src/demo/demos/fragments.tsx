@@ -1,4 +1,3 @@
-/* @jsx createElement */
 import { createElement, defineComponent, Fragment } from '../../modules/core/main/index'
 
 const FragmentDemo = defineComponent({
