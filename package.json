@@ -34,6 +34,7 @@
     "chai": "^4.1.2",
     "cli-watch": "^1.0.7",
     "copyfiles": "^2.0.0",
+    "coveralls": "^3.0.2",
     "cross-conf-env": "^1.1.2",
     "cross-env": "^5.2.0",
     "js-spec": "^0.1.61",
@@ -71,6 +72,7 @@
     "test": "nyc mocha -r ts-node/register -r source-map-support/register src/modules/**/test/**/*.ts",
     "test-watch": "mocha -w -r ts-node/register -r source-map-support/register src/modules/**/test/**/*.ts",
     "demo": "rollup --c rollup.demo.config.js -w",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
     "dist": "npm run clean && npm run test && npm run build && npm run zipsource"
   },
@@ -80,8 +82,7 @@
     "include": [
       "src/modules"
     ],
-    "exclude": [
-    ],
+    "exclude": [],
     "extension": [
       ".ts"
     ],

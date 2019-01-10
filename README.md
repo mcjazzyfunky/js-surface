@@ -5,7 +5,6 @@
 [![Build status](https://travis-ci.org/js-works/js-surface.svg)](https://travis-ci.org/js-works/js-surface)
 [![Coverage status](https://coveralls.io/repos/github/js-works/js-surface/badge.svg?branch=master)](https://coveralls.io/github/js-works/js-surface?branch=master)
 
-
 **Remark: This README document is just an early draft - totally incomplete yet**
 
 ### Installation
@@ -16,13 +15,19 @@ git clone https://github.com/js-works/js-surface.git
 cd js-surface
 npm install
 
+# To run tests
+npm run test
+
+# To run tests with watching
+npm run test-watch
+
 # To start the demos
 npm run demo
 
 # To build the project
 npm run build
 
-# To prepare for publishing
+# To build and prepare the project for publishing
 npm run dist
 ```
 
