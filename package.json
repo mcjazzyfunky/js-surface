@@ -38,7 +38,7 @@
     "cross-env": "^5.2.0",
     "js-spec": "^0.1.61",
     "mocha": "^5.1.1",
-    "nyc": "^13.0.1",
+    "nyc": "^13.1.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "rollup": "^1.0.0",
@@ -74,5 +74,21 @@
     "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
     "dist": "npm run clean && npm run test && npm run build && npm run zipsource"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "nyc": {
+    "temp-directory": "./coverage/.nyc_output",
+    "include": [
+      "src/modules"
+    ],
+    "exclude": [
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "all": true
+  }
 }

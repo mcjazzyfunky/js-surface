@@ -22,6 +22,7 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
     function startDemo(idx: number) {
       demoIdx.current = idx
       document.location.href = document.location.href.replace(/#.*$/, '') + '#idx=' + idx
+      console.clear()
       forceUpdate()
     }
 
@@ -50,12 +51,12 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
 
 // --- Component Demo -----------------------------------------------
 
-type DemoProps = {
+type DemoAppProps = {
   demos: [string, VirtualElement][]
 }
 
-const Demo = defineComponent<DemoProps>({
-  displayName: 'Demo',
+const DemoApp = defineComponent<DemoAppProps>({
+  displayName: 'DemoApp',
 
   render(props) {
     return (
@@ -71,7 +72,7 @@ function getCurrentDemoIndex() {
 
 // --- main ---------------------------------------------------------
 
-mount(Demo({ demos: availableDemos }), 'main-content')
+mount(DemoApp({ demos: availableDemos }), 'main-content')
 
 declare module 'react'
 declare module 'react-dom'

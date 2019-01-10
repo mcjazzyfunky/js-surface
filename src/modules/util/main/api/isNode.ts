@@ -7,6 +7,7 @@ export default function isNode(it: any): boolean {
     const type = typeof it
 
     ret = type === 'boolean' || type === 'number' || type === 'string'
+      || Array.isArray(it) || typeof it[SYMBOL_ITERATOR] === 'function'
   }
 
   return ret
@@ -19,3 +20,10 @@ Object.defineProperty(isNode, 'js-spec:validate', {
       : new Error('Must be a valid node')
   }
 })
+
+// --- locals -------------------------------------------------------
+
+const SYMBOL_ITERATOR =
+  typeof Symbol === 'function' && Symbol.iterator
+    ? Symbol.iterator
+    : '@@iterator'

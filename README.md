@@ -1,5 +1,11 @@
 # jsSurface
 
+[![Licence](https://img.shields.io/badge/licence-LGPLv3-blue.svg?style=flat)](https://github.com/js-works/js-spec/blob/master/LICENSE)
+[![npm version](https://img.shields.io/npm/v/js-surface.svg?style=flat)](https://www.npmjs.com/package/js-surface)
+[![Build status](https://travis-ci.org/js-works/js-surface.svg)](https://travis-ci.org/js-works/js-surface)
+[![Coverage status](https://coveralls.io/repos/github/js-works/js-surface/badge.svg?branch=master)](https://coveralls.io/github/js-works/js-surface?branch=master)
+
+
 **Remark: This README document is just an early draft - totally incomplete yet**
 
 ### Installation
