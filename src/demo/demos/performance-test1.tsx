@@ -3,6 +3,10 @@ import { useCallback, useEffect, useState } from '../../modules/hooks/main/index
 import { div } from '../../modules/html/main/index'
 import React from 'react'
 
+const
+  c = createElement,
+  h = React.createElement
+
 function runTests() {
   const
     iterationCount = 1000000,
@@ -15,9 +19,12 @@ function runTests() {
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        React.createElement('div',
+        h('div',
           { className: 'my-class', id: 'my-id', key: 1 },
-          React.createElement('div', { className: 'my-class2', id: 'my-id2', key: 2}, 'some text', [1, 2, 3, 4, 5]))  
+          h('div',
+            { className: 'my-class2', id: 'my-id2', key: 2},
+            h('div', null, h('div', null, h('div', null, h('div')))),
+            'some text', [1, 2, 3, 4, 5]))  
       }
     }
   }),
@@ -27,9 +34,12 @@ function runTests() {
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        createElement('div',
+        c('div',
           { className: 'my-class', id: 'my-id', key: 1 },
-          createElement('div', { className: 'my-class2', id: 'my-id2', key: 2 }, 'some text', [1, 2, 3, 4, 5]))  
+          c('div',
+            { className: 'my-class2', id: 'my-id2', key: 2 },
+            c('div', null, c('div', null, c('div', null, c('div')))),
+            'some text', [1, 2, 3, 4, 5]))  
       }
     }
   }),
@@ -41,7 +51,9 @@ function runTests() {
       for (let i = 0; i < iterationCount; ++i) {
         div(
           { className: 'my-class', id: 'my-id', key: 1 },
-          div({ className: 'my-class2', id: 'my-id2', key: 2}, 'some text', [1, 2, 3, 4, 5]))  
+          div({ className: 'my-class2', id: 'my-id2', key: 2},
+            div(div(div(div()))),
+            'some text', [1, 2, 3, 4, 5]))  
       }
     }
   })

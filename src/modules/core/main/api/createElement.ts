@@ -15,28 +15,33 @@ function createElement(/* arguments */): VirtualElement {
 
     skippedProps = argCount > 1 && secondArg !== undefined && secondArg !== null
         && (typeof secondArg !== 'object' || secondArg instanceof VirtualElementClass
-          || typeof secondArg[Symbol.iterator] === 'function'),
+          || typeof secondArg[Symbol.iterator] === 'function' || Array.isArray(secondArg)),
 
     originalProps = skippedProps ? null : (secondArg || null),
-    hasKeyOrRef = originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined),
+    hasKeyOrRef = originalProps && (originalProps.hasOwnProperty('key') || originalProps.hasOwnProperty('ref')),
     hasChildren = argCount > 2 || argCount === 2 && skippedProps,
     needsToCopyProps = hasChildren || hasKeyOrRef
 
-
   let
-    props: Props = needsToCopyProps ? {} : originalProps,
+    props: any = null,
     children: any[] = null
 
   if (needsToCopyProps) {
     props = {}
 
-    if (originalProps) {
-      for (const key in props) {
-        if (originalProps.hasOwnProperty(key) && key !== 'key' && key !== 'ref') {
-          props[key] = originalProps[key]
+    for (const key in originalProps) {
+      if (originalProps.hasOwnProperty(key) && key !== 'key' && key !== 'ref') {
+        if (key === 'children') {
+          throw new Error('[createElement] Props must not have key "children" - pass children as arguments instead')
         }
+
+        props[key] = originalProps[key]
       }
     }
+  } else if (!originalProps && hasChildren) {
+    props = {}
+  } else {
+    props = originalProps
   }
 
   if (hasChildren) {
@@ -51,72 +56,64 @@ function createElement(/* arguments */): VirtualElement {
         children.push(child)
       }
     }
+
+    props.children = children
   }
 
-  if (argCount > 1 && !skippedProps) {
-    if (!hasChildren) {
-      props = secondArg
-    } else if (!secondArg) {
-      props = { children }
-    } else {
-      props = {}
-
-      const keys = Object.keys(secondArg)
-
-      for (let i = 0; i < keys.length; ++i) {
-        const key = keys[i]
-        
-        props[key] = secondArg[key] 
-      }
-
-      props.children = children
-    }
-  } else if (hasChildren) {
-    props = { children }
-  }
-
-  // TODO - optimize!
   if (type && type.meta) {
-    if (type.meta.defaultProps) {
-      if (!props) {
-        props = Object.assign({}, type.meta.defaultProps)
-      } else if (props === originalProps) {
-        props = Object.assign({}, type.meta.defaultProps, props)
-      } else {
-        props = Object.assign({}, type.meta.defaultProps, props)
-      }
-    } else if (type.meta.properties) {
-      const keys = Object.keys(type.meta.properties)
+    const id = type['js-surface:id']
+      
+    let defaultProps = defaultPropsById[id]
 
-      for (let i = 0; i < keys.length; ++i) {
-        const
-          key = keys[i]
+    if (defaultProps === undefined) {
+      if (type.meta.defaultProps) {
+        defaultProps = []
 
-        if (!props || !props.hasOwnProperty(key)) {
-          const propConfig = type.meta.properties[key]
-
-          if (propConfig && propConfig.hasOwnProperty('defaultValue')) {
-            const defaultValue = propConfig.defaultValue
-
-            if (!props) {
-              props = { [key]: defaultValue }
-            } else if (props === originalProps) {
-              props = Object.assign({ [key]: defaultValue }, props)
-            } else {
-              props[key] = defaultValue
-            }
+        for (const key in type.meta.defaultProps) {
+          if (type.meta.defaultProps.hasOwnProperty(key)) {
+            defaultProps.push([key, () => type.meta.defaultProps[key]]) // TODO
           }
         }
-      }
+      } else if (type.meta.properties) {
+        for (const key in type.meta.properties) {
+          if (type.meta.properties.hasOwnProperty(key) && type.meta.properties[key].hasOwnProperty('defaultValue')) {
+            if (!defaultProps) {
+              defaultProps = []
+            }
 
-      if (process.env.NODE_ENV === 'development' as any) {
-        const error = validateProperties(
-          props, type.meta.properties, type.meta.validate, type.meta.variableProps, type.meta.displayName,
-          type['js-surface:kind'] === 'constexProvider')
+            defaultProps.push([key, () => type.meta.properties[key].defaultValue]) // TODO
+          }
 
-        if (error) {
-          throw error
+          defaultProps = defaultProps || null
         }
+      } else {
+        defaultProps = null
+      }
+    
+      defaultPropsById[id] = defaultProps
+    }
+    
+    if (defaultProps) {
+       for (let i = 0; i < defaultProps.length; ++i) {
+         const [key, getter] = defaultProps[i]
+
+         if (!props || !props.hasOwnProperty(key)) {
+           if (!props) {
+             props = {}
+           }
+
+           props[key] = getter()
+         }
+       }
+    }
+
+    if (process.env.NODE_ENV === 'development' as any && props && type.meta.properties) {
+      const error = validateProperties(
+        props, type.meta.properties, type.meta.validate, type.meta.variableProps, type.meta.displayName,
+        type['js-surface:kind'] === 'contextProvider')
+
+      if (error) {
+        throw error
       }
     }
   }
@@ -126,9 +123,10 @@ function createElement(/* arguments */): VirtualElement {
     ref = null
 
   if (hasKeyOrRef) {
-    key = originalProps.key === undefined ? null : originalProps.key
-    ref = originalProps.ref === undefined ? null : originalProps.ref
+    key = originalProps.key
+    ref = originalProps.ref
   }
+
 
   return new VirtualElementClass(type, props, key, ref)
 }
@@ -137,7 +135,10 @@ export default createElement
 
 // --- locals -------------------------------------------------------
 
+
 const
+  defaultPropsById: any = {},
+
   SYMBOL_ITERATOR =
     typeof Symbol === 'function' && Symbol.iterator
       ? Symbol.iterator

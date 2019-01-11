@@ -30,6 +30,10 @@ function defineComponent(config: any): any {
   Object.defineProperty(ret, 'js-surface:kind', {
     value: 'componentFactory'
   })
+  
+  Object.defineProperty(ret, 'js-surface:id', {
+    value: nextId++
+  })
 
   Object.defineProperty(ret, 'meta', {
     value: convertConfigToMeta(config)
@@ -41,6 +45,8 @@ function defineComponent(config: any): any {
 export default defineComponent
 
 // --- locals ---------------------------------------------------
+
+let nextId = 1
 
 const
   REGEX_DISPLAY_NAME = /^([a-z]+:)*[A-Z][a-zA-Z0-9.]*$/,
