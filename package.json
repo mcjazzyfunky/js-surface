@@ -72,6 +72,7 @@
     "test": "nyc mocha -r ts-node/register -r source-map-support/register src/modules/**/test/**/*.ts",
     "test-watch": "mocha -w -r ts-node/register -r source-map-support/register src/modules/**/test/**/*.ts",
     "demo": "rollup --c rollup.demo.config.js -w",
+    "demo-experimental": "rollup --c rollup.demo.experimental.config.js -w",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
     "dist": "npm run clean && npm run test && npm run build && npm run zipsource"

@@ -284,8 +284,8 @@ Provides hooks to implement Component side-effects in a React-like fashion
 * `useEffect(action, dependencies?)`
 * `useContext(ctx)`
 * `useRef(initialValue)`
-* `usCallback(callback)`
-* `usePrevious(subject)`
+* `useCallback(callback)`
+* `usePrevious(value)`
 * `useForceUpdate()`
 
 #### Modules "_util_" (js-surface/util)

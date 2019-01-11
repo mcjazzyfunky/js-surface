@@ -31,7 +31,8 @@
     "src/modules/html/main/index.ts",
     "src/modules/hooks/main/index.ts",
     "src/modules/svg/main/index.ts",
-    "src/modules/util/main/index.ts"
+    "src/modules/util/main/index.ts",
+    "src/modules/experimental/main/index.ts"
   ],
 
   "include": [
