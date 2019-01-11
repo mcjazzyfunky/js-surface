@@ -18,17 +18,24 @@ function createElement(/* arguments */): VirtualElement {
           || typeof secondArg[Symbol.iterator] === 'function'),
 
     originalProps = skippedProps ? null : (secondArg || null),
+    hasKeyOrRef = originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined),
     hasChildren = argCount > 2 || argCount === 2 && skippedProps,
-    needsToCopyProps = hasChildren || (originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined))
+    needsToCopyProps = hasChildren || hasKeyOrRef
 
 
   let
-    props: Props = null,
+    props: Props = needsToCopyProps ? {} : originalProps,
     children: any[] = null
 
   if (needsToCopyProps) {
-    if (!props) {
-      props = {}
+    props = {}
+
+    if (originalProps) {
+      for (const key in props) {
+        if (originalProps.hasOwnProperty(key) && key !== 'key' && key !== 'ref') {
+          props[key] = originalProps[key]
+        }
+      }
     }
   }
 
@@ -118,13 +125,7 @@ function createElement(/* arguments */): VirtualElement {
     key = null,
     ref = null
 
-  // TODO - fix!!!!
-  if (originalProps && (originalProps.key !== undefined || originalProps.ref !== undefined)) {
-    props = Object.assign({}, props)
-
-    delete props.key
-    delete props.ref
-
+  if (hasKeyOrRef) {
     key = originalProps.key === undefined ? null : originalProps.key
     ref = originalProps.ref === undefined ? null : originalProps.ref
   }

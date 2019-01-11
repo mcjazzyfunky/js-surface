@@ -2,7 +2,6 @@ import { defineComponent, VirtualElement } from '../modules/core/main/index'
 import { mount } from '../modules/dom/main/index'
 import { useForceUpdate, useRef } from '../modules/hooks/main/index'
 import { div, h4, label, option, select } from '../modules/html/main/index'
-
 import availableDemos from './available-demos'
 
 // --- Component DemoSelector ---------------------------------------
