@@ -1,5 +1,8 @@
-import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useCallback, useMethods, useRef, useState } from '../../modules/hooks/main/index'
+import { createElement, defineComponent } from '../../modules/core/main'
+import { createRef } from '../../modules/util/main'
+import { init, hooks1 } from '../../modules/experimental/main'
+
+const { useMethods, useState } = hooks1
 
 type CounterProps = {
   label?: string,
@@ -18,42 +21,41 @@ const Counter = defineComponent<CounterProps, CounterMethods>({
     initialValue: 0
   },
 
-  render(props, ref) {
+  render: init((c, ref) => {
     const
-      [count, setCount] = useState(() => props.initialValue),
-      onIncrement = useCallback(() => setCount(count + 1)),
-      onDecrement = useCallback(() => setCount(count - 1))
+      [getCount, setCount] = useState(c, c.props.initialValue),
+      onIncrement = () => setCount(getCount() + 1),
+      onDecrement = () => setCount(getCount() - 1)
     
-    useMethods(ref, () => ({
+    useMethods(c, ref, () => ({
       reset(n: number) {
         setCount(n)
       }
-    }), [])
+    }), () => [])
 
-
-    return (
+    return props => (
       <div>
         <label>{props.label}: </label>
         <button onClick={onDecrement}>-</button>
-        {` ${count} `}
+        {` ${getCount()} `}
         <button onClick={onIncrement}>+</button>
       </div>
     )
-  }
+  })
 })
 
 const App = defineComponent({
   displayName: 'App',
 
-  render() {
+  render: init(c => {
     const
-      counterRef = useRef<CounterMethods>(),
-      onResetTo0 = useCallback(() => counterRef.current.reset(0)),
-      onResetTo100 = useCallback(() => counterRef.current.reset(100))
+      counterRef = createRef(),
+      onResetTo0 = () => counterRef.current.reset(0),
+      onResetTo100 = () => counterRef.current.reset(100)
 
-    return (
+    return () => (
       <div>
-        <Counter ref={counterRef}/>
+        <Counter ref={counterRef} />
         <br/>
         <div>
           <button onClick={onResetTo0}>Set to 0</button>
@@ -62,7 +64,7 @@ const App = defineComponent({
         </div>
       </div>
     )
-  }
+  })
 })
 
 export default <App/>

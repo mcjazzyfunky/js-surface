@@ -12,7 +12,7 @@ export default interface Component<P extends Props = {}, M extends Methods = {}>
   handleState<T>(initialValue: T): [() => T, (newValue: T) => void],
   consumeContext<T = any>(ctx: Context<T>): () => T,
   forceUpdate(): void,
-  setMethods(methods: M): void
+  handleMethods(methods: M): void
   onDidMount(listener: Listener): Unsubscribe,
   onDidUpdate(listener: Listener): Unsubscribe,
   onWillUnmount(listener: Listener): Unsubscribe,

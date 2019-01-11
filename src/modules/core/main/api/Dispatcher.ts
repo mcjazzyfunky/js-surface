@@ -5,7 +5,7 @@ interface Dispatcher {
   useState<T>(init: () => T): [T, (newValue: T) => void],
   useEffect(effect: () => void, inputs?: any[]): void,
   useContext<T>(ctx: Context<T>): T,
-  useMethods<M extends Methods>(ref: any, getMethods: () => M): void
+  useMethods<M extends Methods>(ref: any, create: () => M, inputs?: any[]): void
 }
 
 let globalDispatcher: Dispatcher = null
@@ -42,7 +42,6 @@ const Dispatcher: Dispatcher & { init: (dispatcher: Dispatcher) => void } = Obje
       throw new Error('[Dispatcher.useEffect] Dispatcher has not been initalized')
     }
 
-    // TODO
     if (inputs === null || inputs === undefined) {
       globalDispatcher.useEffect(effect)
     } else {
@@ -58,12 +57,12 @@ const Dispatcher: Dispatcher & { init: (dispatcher: Dispatcher) => void } = Obje
     return globalDispatcher.useContext(ctx)
   },
 
-  useMethods<M extends Methods>(ref: any, getMethods: () => M): void {
+  useMethods<M extends Methods>(ref: any, create: () => M, inputs?: any[]): void {
     if (globalDispatcher === null) {
       throw new Error('[Dispatcher.useMethods] Dispatcher has not been initalized')
     }
 
-    return globalDispatcher.useMethods(ref, getMethods)
+    return globalDispatcher.useMethods(ref, create, inputs)
   }
 })
 

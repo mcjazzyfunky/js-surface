@@ -4,6 +4,7 @@ import * as hooks from '../../hooks/main/index'
 import * as html from '../../html/main/index'
 import * as svg from '../../svg/main/index'
 import * as util from '../../util/main/index'
+import * as experimental from '../../util/main/index'
 
 export {
   core,
@@ -11,5 +12,6 @@ export {
   hooks,
   html,
   svg,
-  util
+  util,
+  experimental
 }

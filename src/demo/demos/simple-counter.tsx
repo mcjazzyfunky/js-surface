@@ -1,5 +1,5 @@
 import { defineComponent } from '../../modules/core/main/index'
-import { useCallback, useState } from '../../modules/hooks/main/index'
+import { useCallback, useEffect, useState } from '../../modules/hooks/main/index'
 import { button, div, label } from '../../modules/html/main/index'
 
 type CounterProps = {
@@ -19,6 +19,15 @@ const Counter = defineComponent<CounterProps>({
     const
       [count, setCount] = useState(() => props.initialValue),
       onIncrement = useCallback(() => setCount(count + 1))
+
+    useEffect(() => {
+      console.log('Component has been mounted')
+    }, [])
+
+    useEffect(() => {
+      console.log('Component has been rendered')
+    })
+    
 
     return (
       div(null,

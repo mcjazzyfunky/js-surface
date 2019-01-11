@@ -5,5 +5,5 @@ export default interface Component<P extends Props = {}, M extends Methods = {}>
   handleState<T>(value: T): [() => T, (value: T) => void],
   handleEffect(action: () => void, getDeps?: () => any[]): void
   consumeContext<T>(ctx: Context<T>): () => T,
-  setMethods(methods: M): void
+  handleMethods(ref: any, create: () => M, getInputs?: () => any[]): void
 }

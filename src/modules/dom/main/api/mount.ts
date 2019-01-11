@@ -1,26 +1,6 @@
-/*
-
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-This file is a complete mess :( - sorry for that - will be fixed some day
-
-*/
-
 import { createElement, VirtualElement, Context, Fragment } from '../../../core/main/index'
 import React from 'react' 
 import ReactDOM from 'react-dom'
-
-const { useState, useEffect, useRef, useContext } = React as any
 
 Object.defineProperty(Fragment, '__internal_type', {
   value: React.Fragment

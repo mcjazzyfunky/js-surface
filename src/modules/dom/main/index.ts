@@ -1,6 +1,6 @@
 import mount, { convertContext } from './api/mount'
 import unmount from './api/unmount'
-import { Context, Dispatcher, Methods } from '../../core/main/index'
+import { Dispatcher, Methods } from '../../core/main/index'
 import React from 'react'
 
 const { useState, useEffect, useContext, useImperativeMethods } = React as any
@@ -10,11 +10,7 @@ Dispatcher.init({
 
   // TODO
   useEffect(action: () => void, deps) {
-    if (deps === undefined || deps === null) {
-      useEffect(action)
-    } else {
-      useEffect(action, deps)
-    }
+    useEffect(action, deps)
   },
 
   useContext(ctx: any) {
