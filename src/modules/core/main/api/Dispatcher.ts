@@ -42,7 +42,12 @@ const Dispatcher: Dispatcher & { init: (dispatcher: Dispatcher) => void } = Obje
       throw new Error('[Dispatcher.useEffect] Dispatcher has not been initalized')
     }
 
-    globalDispatcher.useEffect(effect, inputs)
+    // TODO
+    if (inputs === null || inputs === undefined) {
+      globalDispatcher.useEffect(effect)
+    } else {
+      globalDispatcher.useEffect(effect, inputs)
+    }
   },
   
   useContext<T>(ctx: Context<T>): T {

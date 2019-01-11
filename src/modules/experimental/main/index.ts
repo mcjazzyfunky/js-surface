@@ -1,9 +1,13 @@
 import init from './api/init'
-import Hooks1 from './api/Hooks1'
-import Hooks2 from './api/Hooks2'
+import hooks1 from './api/hooks1'
+
+// types
+import Component from './api/types/Component'
 
 export {
   init,
-  Hooks1,
-  Hooks2
+  hooks1,
+
+  // types
+  Component
 }

@@ -7,7 +7,15 @@ const { useState, useEffect, useContext, useImperativeMethods } = React as any
 
 Dispatcher.init({
   useState,
-  useEffect,
+
+  // TODO
+  useEffect(action: () => void, deps) {
+    if (deps === undefined || deps === null) {
+      useEffect(action)
+    } else {
+      useEffect(action, deps)
+    }
+  },
 
   useContext(ctx: any) {
     if (!ctx.Provider.__internalType) {

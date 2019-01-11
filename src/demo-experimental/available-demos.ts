@@ -1,8 +1,10 @@
 import { VirtualElement } from '../modules/core/main/index'
-import clock from './demos/clock'
+import simpleCounter from './demos/simple-counter'
+import i18n from './demos/i18n'
 
 const demos: [string, VirtualElement][] = [
-  ['Clock', clock],
+  ['Simple counter', simpleCounter],
+  ['Internationalization', i18n]
 ]
 
 export default demos

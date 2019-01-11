@@ -1,6 +1,8 @@
 import { createElement, createElement as h, defineComponent, defineContext } from '../../modules/core/main/index'
-import { useState, useContext } from '../../modules/hooks/main/index'
+import { init, hooks1 } from '../../modules/experimental/main'
 import { Spec } from 'js-spec'
+
+const { useState, useContext } = hooks1
 
 const translations: Record<string, Record<string, string>> = {
   en: {
@@ -34,14 +36,14 @@ const App = defineComponent<AppProps>({
     }
   },
 
-  render(props) {
-    const [locale, setLocale] = useState(() => props.defaultLocale)
+  render: init(c => {
+    const [getLocale, setLocale] = useState(c, c.props.defaultLocale)
 
-    return (
-      <LocaleCtx.Provider value={locale}>
+    return props => (
+      <LocaleCtx.Provider value={getLocale()}>
         <div>
           <label htmlFor="lang-selector">Select language: </label>
-          <select id="lang-selector" value={locale} onChange={(ev: any) => setLocale(ev.target.value)}>
+          <select id="lang-selector" value={getLocale()} onChange={(ev: any) => setLocale(ev.target.value)}>
             <option value="en">en</option>
             <option value="fr">fr</option>
             <option value="de">de</option>
@@ -50,7 +52,7 @@ const App = defineComponent<AppProps>({
         </div>
       </LocaleCtx.Provider>
     )
-  }
+  })
 })
 
 interface LocaleTextProps {
@@ -66,15 +68,15 @@ const LocaleText = defineComponent<LocaleTextProps>({
     }
   },
 
-  render(props) {
-    const locale = useContext(LocaleCtx)
+  render: init(c => {
+    const getLocale = useContext(c, LocaleCtx)
 
-    return (
+    return props => (
       <p>
-        { translations[locale][props.id] }
+        { translations[getLocale()][props.id] }
       </p>
     )
-  }
+  })
 })
 
 export default <App defaultLocale="en"/>
