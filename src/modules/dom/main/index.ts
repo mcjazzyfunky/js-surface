@@ -1,11 +1,10 @@
 import { Dispatcher, Fragment } from '../../core/main'
 import { convertContext } from './adpation/adaptMount' // TODO
-import Adapter from './types/Adapter'
-import ReactAdapter from './adapters/ReactAdapter'
 import adaptMount from './adpation/adaptMount'
 import adaptUnmount from './adpation/adaptUnmount'
 
-const adapter: Adapter = ReactAdapter
+import adapter from './adapters/ReactAdapter'
+// import adapter from './adapters/PreactAdapter'
 
 Dispatcher.init({
   useContext(ctx: any) {
