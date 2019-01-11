@@ -1,6 +1,5 @@
 import { createElement, defineComponent } from '../../modules/core/main'
-import { createRef } from '../../modules/util/main'
-import { init, hooks1 } from '../../modules/experimental/main'
+import { createRef, init, hooks1 } from '../../modules/experimental/main'
 
 const { useMethods, useState } = hooks1
 
