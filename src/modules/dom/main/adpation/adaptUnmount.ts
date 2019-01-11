@@ -1,6 +1,10 @@
-import ReactDOM from 'react-dom'
+import Adapter from '../types/Adapter'
 
-export default function unmount(container: Element | string) {
+export default function adaptUnmount(adapter: Adapter) {
+  return (container: any) => unmount(adapter, container)
+}
+
+function unmount(adapter: Adapter, container: Element | string) {
   if (!container || (typeof container !== 'string' && !container.tagName)) {
     throw new TypeError(
       '[unmount] First argument "container" must be a DOM element or the id of the corresponding DOM element')
@@ -16,5 +20,5 @@ export default function unmount(container: Element | string) {
       `[unmount] Could not find container DOM element with id "${container}"`)
   }
 
-  ReactDOM.unmountComponentAtNode(target)
+  adapter.unmount(target)
 }

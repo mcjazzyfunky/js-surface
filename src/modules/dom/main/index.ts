@@ -1,32 +1,36 @@
-import mount, { convertContext } from './api/mount'
-import unmount from './api/unmount'
-import { Dispatcher, Methods } from '../../core/main/index'
-import React from 'react'
+import { Dispatcher, Fragment } from '../../core/main'
+import { convertContext } from './adpation/adaptMount' // TODO
+import Adapter from './types/Adapter'
+import ReactAdapter from './adapters/ReactAdapter'
+import adaptMount from './adpation/adaptMount'
+import adaptUnmount from './adpation/adaptUnmount'
 
-const { useState, useEffect, useContext, useImperativeMethods } = React as any
+const adapter: Adapter = ReactAdapter
 
 Dispatcher.init({
-  useState,
-
-  // TODO
-  useEffect(action: () => void, deps) {
-    useEffect(action, deps)
-  },
-
   useContext(ctx: any) {
-    if (!ctx.Provider.__internalType) {
-      convertContext(ctx)
+    if (!ctx.Provider.__internal_type) {
+      convertContext(adapter, ctx)
     }
 
-    return useContext(ctx.Provider.__internal_type._context)
+    return adapter.useContext(ctx.Provider.__internal_type._context) // TODO
   },
 
-  useMethods(ref: any, getMethods: () => Methods) {
-    useImperativeMethods(ref, getMethods)
-  }
+  useEffect: adapter.useEffect,
+  useMethods: adapter.useMethods,
+  useState: adapter.useState
 })
+
+Object.defineProperty(Fragment, '__internal_type', {
+  value: adapter.Fragment
+})
+
+const
+  mount = adaptMount(adapter),
+  unmount = adaptUnmount(adapter)
 
 export {
   mount,
   unmount
 }
+

@@ -25,21 +25,20 @@ const Counter = defineComponent<CounterProps, CounterMethods>({
       [getCount, setCount] = useState(c, c.props.initialValue),
       onIncrement = () => setCount(getCount() + 1),
       onDecrement = () => setCount(getCount() - 1)
-    
+
     useMethods(c, ref, () => ({
       reset(n: number) {
         setCount(n)
       }
-    }), () => [])
+    }))
 
-    return props => (
+    return props => 
       <div>
         <label>{props.label}: </label>
         <button onClick={onDecrement}>-</button>
         {` ${getCount()} `}
         <button onClick={onIncrement}>+</button>
       </div>
-    )
   })
 })
 
