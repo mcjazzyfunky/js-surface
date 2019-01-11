@@ -1,3 +1,6 @@
+// TODO
+
+/*
 import * as Dyo from 'dyo'
 
 import Adapter from '../types/Adapter'
@@ -6,16 +9,17 @@ const DyoAdapter: Adapter = {
   createElement: Dyo.createElement,
   createContext: Dyo.createContext,
   forwardRef: Dyo.forwardRef,
+  
+  Fragment: Dyo.Fragment,
 
-  useContext: (): any => null, // Dyo.useContext,
-  useEffect: (): any => null, // Dyo.useEffect,
-  useState: (): any => [{}, () => {}], // Dyo.useState,
-  useMethods: (): any => null, // Dyo.useImperativeMethods,
+  useContext: Dyo.useContext,
+  useEffect: Dyo.useEffect,
+  useState: Dyo.useState,
+  useMethods: Dyo.useImperativeMethods,
 
   mount: Dyo.render,
   unmount: Dyo.unmountComponentAtNode,
-
-  Fragment: Dyo.Fragment
 }
 
 export default DyoAdapter
+*/
