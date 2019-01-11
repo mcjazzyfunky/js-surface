@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import Adapter from '../types/Adapter'
 
 const ReactAdapter: Adapter = {
@@ -16,7 +15,7 @@ const ReactAdapter: Adapter = {
   mount: ReactDOM.render,
   unmount: ReactDOM.unmountComponentAtNode,
 
-  Fragment: React.Fragment
+  Fragment: React.Fragment,
 }
 
 export default ReactAdapter

@@ -38,11 +38,12 @@ function createConfig(pkg, moduleFormat, productive) {
         'react': 'React',
         'react-dom': 'ReactDOM',
         'js-spec': 'jsSpec',
-        'js-surface': 'jsSurface'
+        'js-surface': 'jsSurface',
+        'dyo': 'Dyo'
       }
     },
 
-    external: pkg === 'all' ? ['js-spec', 'react', 'react-dom'] : ['js-surface', 'js-spec', 'react', 'react-dom'],
+    external: pkg === 'all' ? ['js-spec', 'react', 'react-dom', 'dyo'] : ['js-surface', 'js-spec', 'react', 'react-dom', 'dyo'],
 
     plugins: [
       resolve({

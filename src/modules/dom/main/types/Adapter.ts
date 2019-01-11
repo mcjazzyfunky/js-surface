@@ -1,4 +1,4 @@
-import { useState } from "src/modules/hooks/main";
+import { Context} from '../../../core/main'
 
 export default interface Adapter {
   createElement: any,

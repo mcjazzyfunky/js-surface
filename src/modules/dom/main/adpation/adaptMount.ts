@@ -183,13 +183,11 @@ type LifecycleHandlers = {
 }
 
 export function convertContext(adapter: Adapter, it: any): any {
-  const ret =
-    it.Provider.__internal_type && it.Provider.__internal_type._context
-      || it.Consumer.__internal_type && it.Consumer.__internal_type._context
-      || adapter.createContext(it.Provider.meta.properties.value.defaultValue)
+  const ret = adapter.createContext(it.Provider.meta.properties.value.defaultValue)
   
-  // TODO
-
+  ret.Provider._context = ret
+  ret.Consumer._context = ret
+      
   if (!it.Provider.__internal_type) {
     Object.defineProperty(it.Provider, '__internal_type', {
       value: ret.Provider
