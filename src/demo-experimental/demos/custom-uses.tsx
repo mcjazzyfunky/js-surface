@@ -1,15 +1,18 @@
 import { createElement, defineComponent } from '../../modules/core/main'
-import { init, useData, useEffect, useState, Component } from '../../modules/experimental/main'
+import { init, useData, useEffect, useProps, useState, Component } from '../../modules/experimental/main'
 
 const Demo = defineComponent({
   displayName: 'Demo',
 
   render: init(c => {
     let 
-      [data, prevData] = useData(c, {
+      [props, prevProps] = useData(c, useProps(c),
+        (a, b) => { props = a, prevProps = b }),
+
+      [data, prevData] = useData(c, { 
         time: useTime(c, 1000),
         mousePos: useMousePos(c)
-      }, (curr, prev) => { data = curr, prevData = prev })
+      }, (a, b) => { data = a, prevData = b })
 
     return () => ( 
       <div>
