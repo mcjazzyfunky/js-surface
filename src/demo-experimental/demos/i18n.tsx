@@ -1,8 +1,6 @@
 import { createElement, createElement as h, defineComponent, defineContext } from '../../modules/core/main/index'
-import { init, hooks1 } from '../../modules/experimental/main'
+import { init, useState, useContext } from '../../modules/experimental/main'
 import { Spec } from 'js-spec'
-
-const { useState, useContext } = hooks1
 
 const translations: Record<string, Record<string, string>> = {
   en: {

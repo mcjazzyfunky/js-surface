@@ -19,7 +19,7 @@ export default function init<P extends Props = {}, M extends Methods = {}>
       handleState<T>(value: T): [() => T, (value: T) => void] {
         const index = states.length
 
-        states[index] = [() => value, null, null]
+        states[index] = [() => value, value, null]
 
         function get(): T {
            return states[index][1]

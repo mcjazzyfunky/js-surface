@@ -1,15 +1,11 @@
-import init from './api/init'
-import hooks1 from './api/hooks1'
-import createRef from './api/createRef'
+export { default as createRef} from './api/createRef'
+export { default as init } from './api/init'
+export { default as useContext } from './api/useContext'
+export { default as useData } from './api/useData'
+export { default as useEffect } from './api/useEffect'
+export { default as useForceUpdate } from './api/useForceUpdate'
+export { default as useMethods } from './api/useMethods'
+export { default as useProps } from './api/useProps'
+export { default as useState } from './api/useState'
 
-// types
-import Component from './api/types/Component'
-
-export {
-  createRef,
-  init,
-  hooks1,
-
-  // types
-  Component
-}
+export { default as Component } from './api/types/Component'

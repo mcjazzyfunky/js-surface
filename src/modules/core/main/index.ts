@@ -6,7 +6,6 @@ export { default as Fragment } from './api/Fragment'
 export { default as Dispatcher } from './api/Dispatcher'
 
 // types
-export { default as Component } from './api/types/Component'
 export { default as ComponentConfig } from './api/types/ComponentConfig'
 export { default as ComponentFactory } from './api/types/ComponentFactory'
 export { default as ComponentMeta } from './api/types/ComponentMeta'

@@ -9,7 +9,7 @@
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "sourceMap": true,
-    "lib": ["es7", "dom"],
+    "lib": ["es5", "es6", "dom"],
     "esModuleInterop": true,
     "baseUrl": ".",
     

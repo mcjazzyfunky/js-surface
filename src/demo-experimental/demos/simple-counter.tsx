@@ -1,7 +1,5 @@
 import { createElement, defineComponent } from '../../modules/core/main'
-import { init, hooks1 } from '../../modules/experimental/main'
-
-const { useEffect, useState } = hooks1
+import { init, useEffect, useState } from '../../modules/experimental/main'
 
 type CounterProps = {
   label?: string,
