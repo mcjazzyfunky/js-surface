@@ -1,78 +1,49 @@
 import Component from './types/Component'
 import useState from './useState'
 import useEffect from './useEffect'
+import { VirtualNode } from '../../../../modules/core/main'
 import useForceUpdate from './useForceUpdate'
 
+type Data = Record<string, any>
+type Getters<T extends Data> = { [K in keyof T]: () => T[K]} 
+type View<T extends Data> = (render: (data: T) => VirtualNode) => () => VirtualNode
 
-function useData<T extends { [K in keyof T]: () => ReturnType<T[K]> }>(
-  c: Component,
-  source: T,
-  action: (current: { [K in keyof T]: ReturnType<T[K]> }, previous: { [K in keyof T]: ReturnType<T[K]>}) => void
-): [ { [K in keyof T]: ReturnType<T[K]> }, { [K in keyof T]: ReturnType<T[K]> } ]
 
-function useData<T>(c: Component, get: () => T, action: (current: T, previous: T) => void): [T, T | undefined]
+function useData<T extends Data>(c: Component, getters: Getters<T>): [T, T, View<T>] {
+  const
+    curr: T = {} as T,
+    prev: T = {} as T,
+    view: View<T> = (render: (data: T) => VirtualNode) => () => render(curr),
+    [, setDummy] = useState(c, false)
 
-function useData(c: Component, source: any, action: (current: any, previous: any) => void) {
-  let ret: any
+  updateDataObject(curr, getters)
+  clearDataObject(prev, getters)
 
-  if (typeof source === 'function') {
-    ret = useSingleData(c, source, action) 
-  } else {
-    ret = useMultiData(c, source, action)
+  useEffect(c, () => {
+    setDummy((it: boolean) => {
+      Object.assign(prev, curr)
+      updateDataObject(curr, getters)
+      return !it
+    })
+  })
+
+  return [curr, prev, view]
+}
+
+function updateDataObject(obj: any, getters: any) {
+  for (let propName in getters) {
+    if (getters.hasOwnProperty(propName)) {
+      obj[propName] = getters[propName]()
+    }
   }
+}
 
-  return ret
+function clearDataObject(obj: any, getters: any) {
+  for (let propName in getters) {
+    if (getters.hasOwnProperty(propName)) {
+      obj[propName] = undefined 
+    }
+  }
 }
 
 export default useData
-
-// --- local --------------------------------------------------------
-
-function useSingleData<T>(c: Component, get: () => T, action: (current: T, previous: T) => void): [T, T | undefined] {
-  let
-    current: T = get(),
-    previous: T = undefined
-
-  useEffect(c, () => {
-    previous = current
-    current = get()
-
-    action(current, previous)
-  })
-
-  action(current, undefined)
-
-  return [current, undefined]
-}
-
-function useMultiData<T>(c: Component, source: { [key: string]: () => any}, action: (current: T, previous: T) => void): [T, T | undefined] {
-  const
-    keys = Object.keys(source)
-
-  function get() {
-    const ret: any = {}
-
-    for (let i = 0; i < keys.length; ++i) {
-      const key = keys[i]
-
-      ret[key] = source[key]()
-    }
-
-    return ret
-  }
-
-  let
-    current: any = get(),
-    previous: any = undefined
-
-  useEffect(c, () => {
-    previous = current
-    current = get()
-
-    action(current, previous)
-  })
-
-  action(current, undefined)
-  
-  return [current, undefined]
-}
