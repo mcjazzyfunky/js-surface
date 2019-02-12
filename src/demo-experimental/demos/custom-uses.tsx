@@ -17,7 +17,7 @@ const Demo = defineComponent({
     return () => ( 
       <div>
         <div>Time: {data.time.toLocaleTimeString()}</div>
-        <div>Mouse: {data.mousePos || <i>please move mouse...</i>}</div>
+        <div>Mouse: {data.mousePos ? `${data.mousePos.x},${data.mousePos.y}`  : <i>please move mouse...</i>}</div>
       </div>
     )
   })

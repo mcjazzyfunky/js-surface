@@ -13,7 +13,7 @@ const ReactAdapter: Adapter = {
   useContext: React.useContext,
   useEffect: React.useEffect,
   useState: React.useState,
-  useMethods: React.useImperativeMethods,
+  useMethods: React.useImperativeHandle,
 
   mount: ReactDOM.render,
   unmount: ReactDOM.unmountComponentAtNode,

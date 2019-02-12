@@ -22,6 +22,8 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
       demoIdx.current = idx
       document.location.href = document.location.href.replace(/#.*$/, '') + '#idx=' + idx
       console.clear()
+      
+      console.log('start demo', idx)
       forceUpdate()
     }
 

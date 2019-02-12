@@ -1,5 +1,5 @@
 import { createElement, defineComponent }  from '../../modules/core/main/index'
-import { useState, useEffect } from '../../modules/hooks/main/index'
+import { useState, useEffect, useForceUpdate } from '../../modules/hooks/main/index'
 
 const
   framesPerSecond = 240,
@@ -95,12 +95,14 @@ const SpeedTest = defineComponent<SpeedTestProps>({
     
   render(props) {
     const
-      [data, setData] = useState(() => ({
-        intervalId : null,
+      forceUpdate = useForceUpdate(),
+
+      data = {
+        intervalId: null as NodeJS.Timeout,
         startTime: Date.now(),
         frameCount: 0,
         actualFramesPerSecond: '0'
-      })),
+      },
 
       rows = [],
         
@@ -112,7 +114,7 @@ const SpeedTest = defineComponent<SpeedTestProps>({
       useEffect(() => {
         data.intervalId = setInterval(() => {
           ++data.frameCount
-          setData(data)
+          forceUpdate()
 
           if (data.frameCount % 10 === 0) {
             data.actualFramesPerSecond =
