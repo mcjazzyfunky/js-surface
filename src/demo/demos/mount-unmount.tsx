@@ -1,5 +1,5 @@
 import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useEffect, useState, useMethods } from '../../modules/hooks/main/index';
+import { useEffect, useState, useMethods, useForceUpdate } from '../../modules/hooks/main/index';
 
 type Methods = {
   sayHello: () => void
@@ -13,7 +13,7 @@ const ComponentA = defineComponent({
       sayHello() {
         console.log('>> ComponentA says "Hello"')
       }
-    }))
+    }), [])
 
     useEffect(() => {
       console.log('Did mount ComponentA...')
@@ -33,7 +33,7 @@ const ComponentB = defineComponent({
       sayHello() {
         console.log('ComponentB says "Hello"')
       }
-    }))
+    }), [])
     
     useEffect(() => {
       console.log('Did mount ComponentB...')
@@ -50,12 +50,13 @@ const Demo = defineComponent({
 
   render() {
     const
-      [state, setState] = useState(() => ({ showComponentA: true }))
+      [state] = useState(() => ({ showComponentA: true })),
+      forceUpdate = useForceUpdate()
 
     useEffect(() => {
       const intervalId = setInterval(() => {
         state.showComponentA = !state.showComponentA
-        setState(state)
+        forceUpdate()
       }, 3000)
 
       return () => clearInterval(intervalId)

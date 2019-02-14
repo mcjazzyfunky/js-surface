@@ -166,7 +166,13 @@ function convertComponent(adapter: Adapter, it: any): Function {
   ret.displayName = it.meta.displayName
 
   if (it.meta.render.length > 1) {
-    ret = adapter.forwardRef(ret)
+    if (adapter.name === 'react') {
+      ret = adapter.api.forwardRef(ret)
+    } else {
+      const inner = ret
+      // Dyo
+      ret = (props: any) => inner(props, props ? props.ref : undefined)
+    }
   }
 
   Object.defineProperty(it, '__internal_type', {
@@ -184,7 +190,22 @@ type LifecycleHandlers = {
 
 export function convertContext(adapter: Adapter, it: any): any {
   const ret = adapter.createContext(it.Provider.meta.properties.value.defaultValue)
-  
+ 
+  if (adapter.name === 'dyo') {
+    ret.Provider = (props: any) => {
+      const [, provide] = adapter.api.useContext(ret)
+
+      provide(props.value)
+      return props.children
+    }
+
+    ret.Consumer = (props: any) => {
+      const value = adapter.useContext(ret)
+
+      return props[0](value)
+    }
+  }
+
   ret.Provider._context = ret
   ret.Consumer._context = ret
       

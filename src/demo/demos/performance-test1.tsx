@@ -9,7 +9,7 @@ const
 
 function runTests() {
   const
-    iterationCount = 1000000,
+    iterationCount = 300000,
     tests = []
 
   let result = ''
@@ -106,12 +106,12 @@ const PerformanceTest = defineComponent({
     })
 
     return (
-      <div>
+      <div> 
         <h4>Measuring time to build virtual dom trees</h4>
-        {
+        { 
           !isRunning
             ? <div>
-                <Report result={result}/>
+                <Report result={result}/> 
                 <button onClick={onStart}>
                   { result === null ? 'Start tests' : 'Restart tests' }
                 </button>
@@ -126,6 +126,8 @@ const PerformanceTest = defineComponent({
 type ReportProps = {
   result: string
 }
+
+function X() { return <div>xxx</div> }
 
 const Report = defineComponent<ReportProps>({
   displayName: 'Report',

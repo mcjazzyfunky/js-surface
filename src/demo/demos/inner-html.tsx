@@ -9,9 +9,7 @@ const Demo = defineComponent({
         h('div', null, 'If you can read the following formated text then everything is fine:'),
         h('br'),
         h('div', {
-          dangerouslySetInnerHTML: {
-            __html: '&gt;&gt; <i>Hope</i> <b>you</b> can read <i>this</i> test <b>line</b>.'
-          }
+          innerHTML: '&gt;&gt; <i>Hope</i> <b>you</b> can read <i>this</i> test <b>line</b>.',
         }))
     )
   }

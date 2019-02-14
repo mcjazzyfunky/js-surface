@@ -1,25 +1,31 @@
-// TODO
+import * as Dyo from '../../../../../../dyo/index'
 
-/*
-import * as Dyo from 'dyo'
+import { Context } from '../../../core/main'
 
 import Adapter from '../types/Adapter'
 
 const DyoAdapter: Adapter = {
+  name: 'dyo',
+  api: Dyo,
   createElement: Dyo.createElement,
   createContext: Dyo.createContext,
-  forwardRef: Dyo.forwardRef,
-  
   Fragment: Dyo.Fragment,
-
-  useContext: Dyo.useContext,
+  useContext: (ctx: Context<any>) => Dyo.useContext(ctx)[0],
   useEffect: Dyo.useEffect,
   useState: Dyo.useState,
-  useMethods: Dyo.useImperativeMethods,
+  
+  useMethods(ref, getHandler) {
+    const handler = getHandler() // TODO
+
+    if (ref && typeof ref === 'object') {
+      ref.current = handler
+    } else if (typeof ref === 'function') {
+      ref(handler)
+    }
+  },
 
   mount: Dyo.render,
   unmount: Dyo.unmountComponentAtNode,
 }
 
 export default DyoAdapter
-*/
