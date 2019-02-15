@@ -1,4 +1,4 @@
-import * as Dyo from '../../../../../../dyo/index'
+import * as Dyo from 'dyo'
 
 import { Context } from '../../../core/main'
 
@@ -14,7 +14,7 @@ const DyoAdapter: Adapter = {
   useEffect: Dyo.useEffect,
   useState: Dyo.useState,
   
-  useMethods(ref, getHandler) {
+  useMethods(ref: any, getHandler: Function) {
     const handler = getHandler() // TODO
 
     if (ref && typeof ref === 'object') {

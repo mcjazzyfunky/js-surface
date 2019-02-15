@@ -37,6 +37,7 @@
     "coveralls": "^3.0.2",
     "cross-conf-env": "^1.1.2",
     "cross-env": "^5.2.0",
+    "dyo": "0.0.19",
     "js-spec": "^0.1.63",
     "mocha": "^5.1.1",
     "nyc": "^13.2.0",
@@ -77,9 +78,7 @@
     "zipsource": "shx rm -rf ./build/source && shx mkdir -p ./build/source && copyfiles -a ./* ./build/source && shx cp -r ./src ./build/source && shx mkdir -p ./dist/source && cd build/source && bestzip ../../dist/source/source.zip . && cd ../..",
     "dist": "npm run clean && npm run test && npm run build && npm run zipsource"
   },
-  "dependencies": {
-    "dyo": "0.0.18"
-  },
+  "dependencies": {},
   "nyc": {
     "temp-directory": "./coverage/.nyc_output",
     "include": [

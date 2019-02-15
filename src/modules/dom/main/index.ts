@@ -3,7 +3,7 @@ import adaptMount from './adpation/adaptMount'
 import adaptUnmount from './adpation/adaptUnmount'
 
 import adapter from './adapters/ReactAdapter'
-//import adapter from './adapters/DyoAdapter'
+// import adapter from './adapters/DyoAdapter'
 // import adapter from './adapters/PreactAdapter'
 
 Dispatcher.init({
