@@ -10,7 +10,7 @@ import gzip from 'rollup-plugin-gzip'
 const configs = []
 
 for (const pkg of ['all', 'core', 'dom', 'hooks', 'html', 'svg', 'util', 'experimental']) {
-  for (const format of ['umd', 'cjs', 'amd', 'esm']) { // TODO
+  for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
     }
@@ -58,14 +58,17 @@ function createConfig(pkg, moduleFormat, productive) {
         exclude: 'node_modules/**',
         delimiters: ['', ''],
 
-        values: {
-          'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-          "'../core/main/index'": "'js-surface'",
-          "'../../core/main/index'": "'js-surface'",
-          "'../../../core/main/index'": "'js-surface'",
-          "'../../../../core/main/index'": "'js-surface'",
-          "'../../../../../core/main/index'": "'js-surface'",
-        }
+        values:
+          pkg === 'all' ? {
+            'process.env.NODE_ENV': productive ? "'production'" : "'development'",
+          } : {
+            'process.env.NODE_ENV': productive ? "'production'" : "'development'",
+            "'../core/main/index'": "'js-surface'",
+            "'../../core/main/index'": "'js-surface'",
+            "'../../../core/main/index'": "'js-surface'",
+            "'../../../../core/main/index'": "'js-surface'",
+            "'../../../../../core/main/index'": "'js-surface'",
+          }
       }),
       typescript({
         exclude: 'node_modules/**',
