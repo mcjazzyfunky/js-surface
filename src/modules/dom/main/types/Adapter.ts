@@ -5,6 +5,7 @@ export default interface Adapter {
   api: any,
   createElement: any,
   createContext: any,
+  forwardRef: any,
 
   useContext: any,
   useEffect: any,

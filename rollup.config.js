@@ -1,4 +1,4 @@
-//import { tslint } from 'rollup-plugin-tslint'
+//import tslint from 'rollup-plugin-tslint'
 import resolve from 'rollup-plugin-node-resolve'
 import replace from 'rollup-plugin-replace'
 import commonjs from 'rollup-plugin-commonjs'
@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['all', 'core', 'dom', 'hooks', 'html', 'svg', 'util', 'experimental']) {
+for (const pkg of ['all', 'core', 'dom', 'hooks', 'html', 'svg', 'util']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -35,15 +35,14 @@ function createConfig(pkg, moduleFormat, productive) {
       sourcemap: productive ? false : 'inline',
 
       globals: {
+        'js-surface/core': 'jsSurface.core',
         'react': 'React',
         'react-dom': 'ReactDOM',
-        'js-spec': 'jsSpec',
-        'js-surface': 'jsSurface',
         'dyo': 'Dyo'
       }
     },
 
-    external: pkg === 'all' ? ['js-spec', 'react', 'react-dom', 'dyo'] : ['js-surface', 'js-spec', 'react', 'react-dom', 'dyo'],
+    external: ['js-surface/core', 'react', 'react-dom', 'dyo'], 
 
     plugins: [
       resolve({
@@ -52,7 +51,9 @@ function createConfig(pkg, moduleFormat, productive) {
         browser: true,
       }),
       commonjs(),
-      // tslint({
+      // TODO: Configure "tslint.json" properly and fix all errors
+      //tslint({
+      //  throwOnError: true
       //}),
       replace({
         exclude: 'node_modules/**',
@@ -63,11 +64,11 @@ function createConfig(pkg, moduleFormat, productive) {
             'process.env.NODE_ENV': productive ? "'production'" : "'development'",
           } : {
             'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-            "'../core/main/index'": "'js-surface'",
-            "'../../core/main/index'": "'js-surface'",
-            "'../../../core/main/index'": "'js-surface'",
-            "'../../../../core/main/index'": "'js-surface'",
-            "'../../../../../core/main/index'": "'js-surface'",
+            "'../core/main/index'": "'js-surface/core'",
+            "'../../core/main/index'": "'js-surface/core'",
+            "'../../../core/main/index'": "'js-surface/core'",
+            "'../../../../core/main/index'": "'js-surface/core'",
+            "'../../../../../core/main/index'": "'js-surface/core'",
           }
       }),
       typescript({

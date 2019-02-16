@@ -1,9 +1,9 @@
-import { Dispatcher, Fragment } from '../../core/main'
+import { Dispatcher, Fragment } from '../../core/main/index'
 import adaptMount from './adpation/adaptMount'
 import adaptUnmount from './adpation/adaptUnmount'
 
 import adapter from './adapters/ReactAdapter'
-// import adapter from './adapters/DyoAdapter'
+//import adapter from './adapters/DyoAdapter'
 // import adapter from './adapters/PreactAdapter'
 
 Dispatcher.init({
@@ -13,7 +13,7 @@ Dispatcher.init({
 
       result.Provider._context = result
       result.Consumer._context = result
-      
+
       Object.defineProperty(ctx.Provider, '__internal_type', {
         value: result.Provider
       })
@@ -44,4 +44,3 @@ export {
   mount,
   unmount
 }
-

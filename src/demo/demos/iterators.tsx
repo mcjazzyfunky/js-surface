@@ -1,4 +1,4 @@
-import { createElement, defineComponent } from 'js-surface'
+import { createElement, defineComponent } from '../../modules/core/main/index'
 
 const demoContent = {
   [Symbol.iterator]: function * () {

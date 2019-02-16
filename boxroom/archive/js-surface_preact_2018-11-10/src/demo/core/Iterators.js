@@ -1,4 +1,4 @@
-import { createElement as h, defineComponent } from 'js-surface'
+import { createElement as h, defineComponent } from 'js-surface/core'
 
 const helloWorldContent = {
   [Symbol.iterator]: function * () {

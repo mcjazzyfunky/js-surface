@@ -57,7 +57,7 @@ are currently implemented with jsSurface:
 #### Hello world component (pure ECMAScript)
 
 ```jsx
-import { defineComponent } from 'js-surface'
+import { defineComponent } from 'js-surface/core'
 import { mount } from 'js-surface/dom'
 
 // just if you do not want to use JSX, of course JSX is also fully supported
@@ -81,7 +81,7 @@ mount(HelloWorld(), 'main-content')
 #### Simple counter (using a hook API and JSX)
 
 ```jsx
-import { createElement, defineComponent } from 'js-surface'
+import { createElement, defineComponent } from 'js-surface/core'
 import { useState } from 'js-surface/hooks'
 import { mount } from 'js-surface/dom'
 

@@ -1,6 +1,6 @@
 import ComponentFactory from './types/ComponentFactory'
-import VirtualElement from './types/VirtualElement'
 import Props from './types/Props'
+import VirtualElement from './types/VirtualElement'
 import PropertiesConfig from './types/PropertiesConfig'
 import PropertyConfig from './types/PropertyConfig'
 import Key from './types/Key'

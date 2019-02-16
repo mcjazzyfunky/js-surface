@@ -22,6 +22,7 @@ const ReactAdapter: Adapter = {
   },
 
   createContext: React.createContext,
+  forwardRef: React.forwardRef,
   Fragment: React.Fragment,
   useContext: React.useContext,
   useEffect: React.useEffect,

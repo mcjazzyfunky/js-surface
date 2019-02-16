@@ -1,5 +1,5 @@
-import { createElement, VirtualElement, Context, Fragment } from '../../../core/main/index'
-import Adapter from '../types/Adapter' 
+import { createElement, VirtualElement } from '../../../core/main/index'
+import Adapter from '../types/Adapter'
 
 export default function adaptMount(adapter: Adapter) {
   return (element: any, container: any) => {
@@ -7,7 +7,7 @@ export default function adaptMount(adapter: Adapter) {
   }
 }
 
-function mount(adapter: Adapter, element: VirtualElement, container: Element | string) { 
+function mount(adapter: Adapter, element: VirtualElement, container: Element | string) {
   if (!isElement(element)) {
     throw new TypeError(
       '[mount] First argument "element" must be a virtual element')
@@ -68,14 +68,14 @@ function convertNode(adapter: Adapter, node: any) {
 
   const
     newType = typeof type === 'function' && type.__internal_type ? type.__internal_type : type
-  
+
   let newProps = props ? { ...props } : null
 
   if (newChildren && newChildren !== children) {
     newProps.children = newChildren
   }
 
-  if (type && type['js-surface:kind'] === 'contextConsumer' && newProps.children && typeof newProps.children[0] === 'function') { 
+  if (type && type['js-surface:kind'] === 'contextConsumer' && newProps.children && typeof newProps.children[0] === 'function') {
     const consume = newProps.children[0]
     newProps.children[0] = (value: any) => convertNode(adapter, consume(value))
   }
@@ -140,7 +140,7 @@ function convertNodes(adapter: Adapter, elements: any[]) {
 }
 
 function adjustEntity(adapter: Adapter, it: any): void {
-  const kind: string = it['js-surface:kind'] 
+  const kind: string = it['js-surface:kind']
 
   switch (kind) {
     case 'componentFactory':
@@ -153,7 +153,7 @@ function adjustEntity(adapter: Adapter, it: any): void {
     case 'contextConsumer':
       convertContext(adapter, it.context)
       break
-    
+
     case 'contextProvider':
       convertContext(adapter, it.context)
       break
@@ -166,13 +166,7 @@ function convertComponent(adapter: Adapter, it: any): Function {
   ret.displayName = it.meta.displayName
 
   if (it.meta.render.length > 1) {
-    if (adapter.name === 'react') {
-      ret = adapter.api.forwardRef(ret)
-    } else {
-      const inner = ret
-      // Dyo
-      ret = (props: any) => inner(props, props ? props.ref : undefined)
-    }
+    ret = adapter.forwardRef(ret)
   }
 
   Object.defineProperty(it, '__internal_type', {
@@ -190,25 +184,10 @@ type LifecycleHandlers = {
 
 export function convertContext(adapter: Adapter, it: any): any {
   const ret = adapter.createContext(it.Provider.meta.properties.value.defaultValue)
- 
-  if (adapter.name === 'dyo') {
-    ret.Provider = (props: any) => {
-      const [, provide] = adapter.api.useContext(ret)
-
-      provide(props.value)
-      return props.children
-    }
-
-    ret.Consumer = (props: any) => {
-      const value = adapter.useContext(ret)
-
-      return props[0](value)
-    }
-  }
 
   ret.Provider._context = ret
   ret.Consumer._context = ret
-      
+
   if (!it.Provider.__internal_type) {
     Object.defineProperty(it.Provider, '__internal_type', {
       value: ret.Provider
