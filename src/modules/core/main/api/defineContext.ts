@@ -96,7 +96,9 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
 
 const REGEX_DISPLAY_NAME = /^([a-z]+:)*[A-Z][a-zA-Z0-9.]*$/
 
-let contextConfigSpec: SpecValidator = null
+let
+  contextConfigSpec: SpecValidator,
+  validateContextConfig: <T>(config: ContextConfig<T>) => null | Error
 
 if (process.env.NODE_ENV === 'development' as any) {
   contextConfigSpec =
@@ -107,28 +109,28 @@ if (process.env.NODE_ENV === 'development' as any) {
       validate: Spec.optional(Spec.function),
       defaultValue: Spec.any
     })
-}
 
-function validateContextConfig<T>(config: ContextConfig<T>): Error | null {
-  let ret = null
+  validateContextConfig = config => {
+    let ret = null
 
-  const error = contextConfigSpec.validate(config)
+    const error = contextConfigSpec.validate(config)
 
-  if (error) {
-    let errorMsg = 'Invalid configuration for context'
+    if (error) {
+      let errorMsg = 'Invalid configuration for context'
 
-    if (config && typeof config.displayName === 'string'
-      && config.displayName.match(config.displayName)) {
-      
-      errorMsg += ` "${config.displayName}"`
+      if (config && typeof config.displayName === 'string'
+        && config.displayName.match(config.displayName)) {
+        
+        errorMsg += ` "${config.displayName}"`
+      }
+
+      errorMsg += ` => ${error.message}`
+
+      ret = new Error(errorMsg)
     }
 
-    errorMsg += ` => ${error.message}`
-
-    ret = new Error(errorMsg)
+    return ret
   }
-
-  return ret
 }
 
 const ContextClass = class Context {

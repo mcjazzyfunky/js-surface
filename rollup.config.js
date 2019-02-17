@@ -38,11 +38,12 @@ function createConfig(pkg, moduleFormat, productive) {
         'js-surface/core': 'jsSurface.core',
         'react': 'React',
         'react-dom': 'ReactDOM',
-        'dyo': 'Dyo'
+        'dyo': 'Dyo',
+        'js-spec': 'jsSpec'
       }
     },
 
-    external: ['js-surface/core', 'react', 'react-dom', 'dyo'], 
+    external: ['js-surface/core', 'react', 'react-dom', 'dyo'].concat(productive ? 'js-spec' : []), 
 
     plugins: [
       resolve({

@@ -4,7 +4,7 @@ import PropertiesConfig from './types/PropertiesConfig'
 import ComponentConfig from './types/ComponentConfig'
 import ComponentFactory from './types/ComponentFactory'
 import createElement from './createElement'
-import { Spec } from 'js-spec'
+import { Spec, SpecValidator } from 'js-spec'
 
 function defineComponent<P extends Props = {}, M extends Methods = {}>(
   config: ComponentConfig<P>): ComponentFactory<P, M>
@@ -50,8 +50,15 @@ let nextId = 1
 
 const
   REGEX_DISPLAY_NAME = /^([a-z]+:)*[A-Z][a-zA-Z0-9.]*$/,
-  REGEX_PROP_NAME = /^[a-z][a-zA-Z0-9]*$/,
+  REGEX_PROP_NAME = /^[a-z][a-zA-Z0-9]*$/
 
+let
+  specOfPropertiesConfig: SpecValidator,
+  specOfDefaultProps: SpecValidator,
+  specOfComponentConfig: SpecValidator,
+  validateComponentConfig: (config: any) => Error  | null
+
+if (process.env.NODE_ENV === 'development' as any) {
   specOfPropertiesConfig =
     Spec.and(
       Spec.object,
@@ -83,13 +90,13 @@ const
             }
 
             return errorMsg ? new Error(errorMsg) : null
-          }))),
+          })))
 
   specOfDefaultProps =
     Spec.and(
       Spec.object,
       Spec.hasSomeKeys,
-      Spec.keysOf(Spec.match(REGEX_PROP_NAME))),
+      Spec.keysOf(Spec.match(REGEX_PROP_NAME)))
 
   specOfComponentConfig = 
     Spec.strictShape({
@@ -101,26 +108,26 @@ const
       render: Spec.function
     })
 
+  validateComponentConfig = (config: any): null | Error => {
+    let ret = null
+    const error = specOfComponentConfig.validate(config)
 
-function validateComponentConfig(config: any): null | Error {
-  let ret = null
-  const error = specOfComponentConfig.validate(config)
+    if (error) {
+      let errorMsg = 'Invalid configuration for component'
 
-  if (error) {
-    let errorMsg = 'Invalid configuration for component'
+      if (config && typeof config.displayName === 'string'
+        && config.displayName.match(REGEX_DISPLAY_NAME)) {
 
-    if (config && typeof config.displayName === 'string'
-      && config.displayName.match(REGEX_DISPLAY_NAME)) {
+        errorMsg += ` "${config.displayName}"`
+      }
 
-      errorMsg += ` "${config.displayName}"`
+      errorMsg += ` => ${error.message}`
+
+      ret = new Error(errorMsg)
     }
 
-    errorMsg += ` => ${error.message}`
-
-    ret = new Error(errorMsg)
+    return ret
   }
-
-  return ret
 }
 
 function convertConfigToMeta(config: any): any {
