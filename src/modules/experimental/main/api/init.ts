@@ -1,5 +1,5 @@
 import Component from './types/Component'
-import { Context, Methods, Props, VirtualNode, Dispatcher } from '../../../core/main'
+import { Context, Methods, Props, VirtualNode, useContext, useEffect, useMethods, useState } from '../../../core/main'
 
 export default function init<P extends Props = {}, M extends Methods = {}>
   (f: (c: Component<P, M>, ref?: any) => ((props: P) => VirtualNode)): (props: P, ref?: any) => VirtualNode {
@@ -59,11 +59,11 @@ export default function init<P extends Props = {}, M extends Methods = {}>
     }
 
     if (methods[1]) {
-      Dispatcher.useMethods(methods[0], methods[1], methods[2])
+      useMethods(methods[0], methods[1], methods[2])
     }
 
     for (let i = 0; i < states.length; ++i) {
-      const [value, setValue] = Dispatcher.useState(states[i][0])
+      const [value, setValue] = useState(states[i][0])
 
       states[i][1] = value
       states[i][2] = setValue
@@ -74,11 +74,11 @@ export default function init<P extends Props = {}, M extends Methods = {}>
         effect = effects[i][0],
         deps = effects[i][1] ? effects[i][1]() : undefined
 
-      Dispatcher.useEffect(effect, deps)
+      useEffect(effect, deps)
     }
 
     for (let i = 0; i < contexts.length; ++i) {
-      contexts[i][1] = Dispatcher.useContext(contexts[i][0])
+      contexts[i][1] = useContext(contexts[i][0])
     }
 
     return render(props)

@@ -1,5 +1,5 @@
-import { createElement, defineComponent }  from '../../modules/core/main/index'
-import { useRef, useEffect, useForceUpdate } from '../../modules/hooks/main/index'
+import { createElement, defineComponent, useRef, useEffect, useForceUpdate }
+  from '../../modules/core/main/index'
 
 const
   framesPerSecond = 240,

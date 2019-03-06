@@ -1,7 +1,7 @@
-import { createElement } from '../../core/main/index'
+import { h } from '../../core/main/index'
 
 function f(tagName: string) {
-  return createElement.bind(null, tagName)
+  return h.bind(null, tagName)
 }
 
 export const

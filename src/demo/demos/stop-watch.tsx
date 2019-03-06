@@ -1,5 +1,5 @@
-import { createElement, defineComponent }  from '../../modules/core/main/index'
-import { useCallback, useEffect, useRef, useState } from '../../modules/hooks/main'
+import { createElement, defineComponent, useCallback, useEffect, useRef, useState } 
+  from '../../modules/core/main/index'
 
 const StopWatch = defineComponent({
   displayName: 'StopWatch',

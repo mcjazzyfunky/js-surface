@@ -3,13 +3,20 @@ import Methods from './types/Methods'
 import PropertiesConfig from './types/PropertiesConfig'
 import ComponentConfig from './types/ComponentConfig'
 import ComponentFactory from './types/ComponentFactory'
-import createElement from './createElement'
+import h from './h'
 import { Spec, SpecValidator } from 'js-spec'
+import { metadata } from 'src/modules/svg/main';
 
 function defineComponent<P extends Props = {}, M extends Methods = {}>(
   config: ComponentConfig<P>): ComponentFactory<P, M>
 
 function defineComponent(config: any): any {
+  const createInternalType = (defineComponent as any).__apply
+
+  if (!createInternalType) {
+    throw new Error('[defineComponent] Adapter has not been initialized')
+  }
+
   if (process.env.NODE_ENV === 'development' as any) {
     const error = validateComponentConfig(config)
 
@@ -25,7 +32,7 @@ function defineComponent(config: any): any {
     return createComponentElement.apply(null, arguments)
   }
   
-  createComponentElement = createElement.bind(null, ret)
+  createComponentElement = h.bind(null, ret)
 
   Object.defineProperty(ret, 'js-surface:kind', {
     value: 'componentFactory'
@@ -35,8 +42,14 @@ function defineComponent(config: any): any {
     value: nextId++
   })
 
+  const meta = convertConfigToMeta(config)
+
   Object.defineProperty(ret, 'meta', {
-    value: convertConfigToMeta(config)
+    value: convertConfigToMeta(meta)
+  })
+
+  Object.defineProperty(ret, '__internal_type', {
+    value: createInternalType(ret)
   })
 
   return ret

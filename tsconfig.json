@@ -28,11 +28,10 @@
   "files": [
     "src/modules/all/main/index.ts",
     "src/modules/core/main/index.ts",
-    "src/modules/dom/main/index.ts",
+    "src/modules/adapt-react/main/index.ts",
+    "src/modules/adapt-dyo/main/index.ts",
     "src/modules/html/main/index.ts",
-    "src/modules/hooks/main/index.ts",
     "src/modules/svg/main/index.ts",
-    "src/modules/util/main/index.ts",
     "src/modules/experimental/main/index.ts"
   ],
 

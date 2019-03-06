@@ -1,5 +1,5 @@
-import { createElement, defineComponent }  from '../../modules/core/main/index'
-import { useEffect, useRef, useState } from '../../modules/hooks/main'
+import { createElement, defineComponent, useEffect, useState }
+  from '../../modules/core/main/index'
 
 const Demo = defineComponent({
   displayName: 'Demo',

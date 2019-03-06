@@ -1,6 +1,8 @@
-import { defineComponent, VirtualElement } from '../modules/core/main/index'
-import { mount } from '../modules/dom/main/index'
-import { useForceUpdate, useRef } from '../modules/hooks/main/index'
+import { defineComponent, mount, VirtualElement, useForceUpdate, useRef }
+  from '../modules/core/main/index'
+
+import '../modules/adapt-dyo/main/index'
+
 import { div, h4, label, option, select } from '../modules/html/main/index'
 import availableDemos from './available-demos'
 
@@ -74,6 +76,3 @@ function getCurrentDemoIndex() {
 // --- main ---------------------------------------------------------
 
 mount(DemoApp({ demos: availableDemos }), 'main-content')
-
-declare module 'react'
-declare module 'react-dom'

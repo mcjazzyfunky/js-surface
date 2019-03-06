@@ -1,5 +1,4 @@
-import { defineComponent } from '../../modules/core/main/index'
-import { useCallback, useEffect, useState } from '../../modules/hooks/main/index'
+import { defineComponent, useCallback, useEffect, useState } from '../../modules/core/main/index'
 import { button, div, label } from '../../modules/html/main/index'
 
 type CounterProps = {

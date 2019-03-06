@@ -1,5 +1,6 @@
-import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useCallback, useEffect, useState } from '../../modules/hooks/main/index'
+import { createElement, defineComponent, useCallback, useEffect, useState }
+  from '../../modules/core/main/index'
+
 import { div } from '../../modules/html/main/index'
 import React from 'react'
 

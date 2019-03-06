@@ -1,5 +1,5 @@
-import { createElement, defineComponent } from '../../modules/core/main/index'
-import { useEffect, useState, useMethods, useForceUpdate } from '../../modules/hooks/main/index';
+import { createElement, defineComponent, useEffect, useMethods, useForceUpdate, useState }
+  from '../../modules/core/main/index'
 
 type Methods = {
   sayHello: () => void

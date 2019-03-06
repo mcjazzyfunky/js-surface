@@ -4,9 +4,15 @@ import Context from './types/Context'
 import PropertyConfig from './types/PropertyConfig'
 import PropertiesConfig from './types/PropertiesConfig'
 import VirtualElement from './types/VirtualElement'
-import createElement from './createElement'
+import createElement from './h'
 
 export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
+  const createInternalTypes = (defineContext as any).__apply
+
+  if (!createInternalTypes) {
+    throw new Error('[defineContext] Adapter has not been initialized')
+  }
+
   let error: Error | null = null
   
   if (process.env.NODE_ENV === 'development' as any) {
@@ -89,6 +95,19 @@ export default function defineContext<T>(config: ContextConfig<T>): Context<T> {
     }) 
   })
 
+  const [internalType, internalProvider, internalConsumer] = createInternalTypes(ret, config)
+
+  Object.defineProperty(ret, '__internal_type', {
+    value: internalType 
+  })
+  
+  Object.defineProperty(ret.Provider, '__internal_type', {
+    value: internalProvider 
+  })
+
+  Object.defineProperty(ret.Consumer, '__internal_type', {
+    value: internalConsumer 
+  })
   return ret
 }
 

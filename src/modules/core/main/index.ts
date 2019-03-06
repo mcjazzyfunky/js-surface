@@ -1,11 +1,25 @@
 // functions
+export { default as childCount } from './api/childCount'
 export { default as createElement } from './api/createElement'
 export { default as defineComponent } from './api/defineComponent'
 export { default as defineContext } from './api/defineContext'
+export { default as forEachChild } from './api/forEachChild'
+export { default as h } from './api/h'
+export { default as isElement } from './api/isElement'
+export { default as mount } from './api/mount'
+export { default as propsOf } from './api/propsOf'
+export { default as typeOf } from './api/typeOf'
+export { default as toChildArray } from './api/toChildArray'
+export { default as unmount } from './api/unmount'
+export { default as useCallback } from './api/useCallback'
+export { default as useContext } from './api/useContext'
+export { default as useEffect } from './api/useEffect'
+export { default as useForceUpdate } from './api/useForceUpdate'
+export { default as useMethods } from './api/useMethods'
+export { default as usePrevious } from './api/usePrevious'
+export { default as useRef } from './api/useRef'
+export { default as useState } from './api/useState'
 export { default as Fragment } from './api/Fragment'
-
-// singletons
-export { default as Dispatcher } from './api/Dispatcher'
 
 // types
 export { default as ComponentConfig } from './api/types/ComponentConfig' // TODO - splint into two config types?
