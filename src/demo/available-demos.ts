@@ -11,6 +11,7 @@ import i18n from './demos/i18n'
 import iterators from './demos/iterators'
 import mousePositionHook from './demos/mouse-position-hook'
 import mountUnmount from './demos/mount-unmount'
+import errorBoundary from './demos/error-boundary'
 import performanceTest1 from './demos/performance-test1'
 import performanceTest2 from './demos/performance-test2'
 
@@ -27,6 +28,7 @@ const demos: [string, VirtualElement][] = [
   ['Iterators', iterators],
   ['Mouse position hook', mousePositionHook],
   ['Mount/Unmout', mountUnmount],
+  ['Error boundary', errorBoundary],
   ['Performance test 1', performanceTest1],
   ['Performance test 2', performanceTest2]
 ]

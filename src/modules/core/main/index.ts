@@ -19,10 +19,11 @@ export { default as useMethods } from './api/useMethods'
 export { default as usePrevious } from './api/usePrevious'
 export { default as useRef } from './api/useRef'
 export { default as useState } from './api/useState'
+export { default as Boundary } from './api/Boundary'
 export { default as Fragment } from './api/Fragment'
 
 // types
-export { default as ComponentConfig } from './api/types/ComponentConfig' // TODO - splint into two config types?
+export { default as ComponentConfig } from './api/types/ComponentConfig' // TODO - split into two config types?
 export { default as ComponentFactory } from './api/types/ComponentFactory'
 export { default as ComponentMeta } from './api/types/ComponentMeta'
 export { default as Context } from './api/types/Context'

@@ -5,18 +5,11 @@ import ComponentConfig from './types/ComponentConfig'
 import ComponentFactory from './types/ComponentFactory'
 import h from './h'
 import { Spec, SpecValidator } from 'js-spec'
-import { metadata } from 'src/modules/svg/main';
 
 function defineComponent<P extends Props = {}, M extends Methods = {}>(
   config: ComponentConfig<P>): ComponentFactory<P, M>
 
 function defineComponent(config: any): any {
-  const createInternalType = (defineComponent as any).__apply
-
-  if (!createInternalType) {
-    throw new Error('[defineComponent] Adapter has not been initialized')
-  }
-
   if (process.env.NODE_ENV === 'development' as any) {
     const error = validateComponentConfig(config)
 
@@ -49,7 +42,23 @@ function defineComponent(config: any): any {
   })
 
   Object.defineProperty(ret, '__internal_type', {
-    value: createInternalType(ret)
+    configurable: true,
+
+    get() {
+      const createInternalType = (defineComponent as any).__apply
+
+      if (!createInternalType) {
+        throw new Error('[defineComponent] Adapter has not been initialized')
+      }
+
+      const internalType = createInternalType(ret)
+
+      Object.defineProperty(ret, '__internal_type', {
+        value: internalType
+      })
+
+      return internalType
+    }
   })
 
   return ret

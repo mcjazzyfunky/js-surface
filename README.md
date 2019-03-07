@@ -58,7 +58,7 @@ const HelloWorld = defineComponent({
 
   defaultProps: {
     name: 'world'
-  }
+  },
 
   render(props) {
     return div(`Hello, ${props.name}!`)

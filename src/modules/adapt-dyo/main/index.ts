@@ -6,7 +6,7 @@ import {
   mount, unmount,
   typeOf, propsOf, toChildArray, forEachChild,
   useContext, useEffect, useMethods, useState,
-  Fragment, Props, Context,
+  Boundary, Fragment, Props, Context,
 } from '../../core/main/index'
 
 // TODO!!!
@@ -79,9 +79,17 @@ adapt(defineContext, (ctx: Context<any>, meta: any) => { // TODO
   return [internalContext, Provider, Consumer]
 })
 
-
 adapt(useContext, (ctx: any) => {
   return Dyo.useContext(ctx.Provider.__internal_context)[0]
+})
+
+adapt(Boundary, (props: any) => {
+  return (
+    Dyo.h(
+      DyoBoundary,
+      { handle: props.handle },
+      props.children)
+  )
 })
 
 adapt(typeOf, (it: any) => it.type) 
@@ -99,3 +107,13 @@ adapt(unmount, Dyo.unmountComponentAtNode)
 Object.defineProperty(Fragment, '__internal_type', {
   value: Dyo.Fragment
 })
+
+function DyoBoundary(props: any) {
+  Dyo.useBoundary((e: any) => {
+    props.handle(e.message, null)
+  })
+
+  return props.children
+}
+
+(DyoBoundary as any).displayName = 'Boundary (inner)'

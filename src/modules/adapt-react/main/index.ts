@@ -7,7 +7,7 @@ import {
   mount, unmount,
   typeOf, propsOf, toChildArray, forEachChild,
   useContext, useEffect, useMethods, useState,
-  Fragment, Props, Context,
+  Fragment, Boundary, Props, Context,
 } from '../../core/main/index'
 
 function adapt(base: any, delegate: any) {
@@ -40,7 +40,7 @@ adapt(defineComponent, (factory: any) => {
   const
      defaultProps = factory.meta.defaultProps
 
-  let ret = (props: Props, ref: any) => {
+  let ret: any = (props: Props, ref: any) => {
     if (defaultProps) {
       props = Object.assign({}, defaultProps, props) // TODO - performance
     }
@@ -51,6 +51,8 @@ adapt(defineComponent, (factory: any) => {
   if (factory.meta.memoize) {
     ret = React.memo(ret)
   }
+
+  ret.displayName = factory.meta.displayName
 
   if (factory.meta.render.length > 1) {
     ret = React.forwardRef(ret)
@@ -81,6 +83,32 @@ adapt(useState, React.useState)
 adapt(mount, ReactDOM.render)
 adapt(unmount, ReactDOM.unmountComponentAtNode)
 
+adapt(Boundary, (props: any) => {
+  return (
+    React.createElement(
+      ReactBoundary,
+      { handle: props.handle },
+      props.children)
+  )
+})
+
 Object.defineProperty(Fragment, '__internal_type', {
   value: React.Fragment
 })
+
+class ReactBoundary extends React.Component {
+  static displayName = 'Boundary (inner)'
+
+  static getDerivedStateFromError() {
+  }
+
+  componentDidCatch(error: any, info: any) {
+    if (this.props.handle) {
+      this.props.handle(error, info)
+    }
+  }
+
+  render() {
+    return this.props.children
+  }
+}
