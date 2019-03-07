@@ -71,7 +71,7 @@ mount(HelloWorld(), 'main-content')
 #### Simple counter (using hook API and JSX)
 
 ```jsx
-import { createElement, defineComponent, mount, useState } from 'js-surface'
+import { createElement, defineComponent, mount, useCallback, useState } from 'js-surface'
 import 'js-surface/adapt-dyo' // to use Dyo under the hood
 
 // A 3rd-party general purpose validation library.
@@ -211,7 +211,7 @@ What are the main difference to React's API?
   ```
 
 * In React a virtual element is represented by an object of shape
-  `{ $$typeof, type, props, key, ref, ... }.
+  `{ $$typeof, type, props, key, ref, ... }`.
   To access `type` or `props` of a virtual elements you have to use
   `elem.type` and `elem.props`.<br>
   In js-surface on the other hand a virtual element is considered
@@ -221,7 +221,7 @@ What are the main difference to React's API?
 * In React the property `children` of `props` is a opaque datastructure.
   To handle that React provides a singleton Object called `Children`
   that provides some helper functions to work with `children`
-  (`Children.map`, `Children.forEach`, `Children.count` etc.).
+  (`Children.map`, `Children.forEach`, `Children.count` etc.).<br>
   In js-surface `children` are also represented as a opaque data
   structure. Similar to React, js-surface also has several helper functions
   to work with `children` (`mapChildren`, `forEachChild`, `childCount` etc.)
