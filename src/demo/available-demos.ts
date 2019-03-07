@@ -6,6 +6,7 @@ import stopWatch from './demos/stop-watch'
 import fragments from './demos/fragments'
 import innerHtml from './demos/inner-html'
 import clock from './demos/clock'
+import context from './demos/context'
 import i18n from './demos/i18n'
 import iterators from './demos/iterators'
 import mousePositionHook from './demos/mouse-position-hook'
@@ -21,6 +22,7 @@ const demos: [string, VirtualElement][] = [
   ['Fragments', fragments],
   ['innerHTML', innerHtml],
   ['Clock', clock],
+  ['Context', context],
   ['Internationalization', i18n],
   ['Iterators', iterators],
   ['Mouse position hook', mousePositionHook],

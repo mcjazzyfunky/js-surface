@@ -118,6 +118,7 @@ if (process.env.NODE_ENV === 'development' as any) {
       defaultProps: Spec.optional(specOfDefaultProps),
       variableProps: Spec.optional(Spec.boolean),
       validate: Spec.optional(Spec.function),
+      memoize: Spec.optional(Spec.boolean),
       render: Spec.function
     })
 
@@ -174,14 +175,14 @@ function convertConfigToMeta(config: any): any {
     Object.freeze(ret.defaultProps)
   }
 
-  if (config.render) {
-    ret.render = config.render
-  } else {
-    ret.init = config.init
+  ret.render = config.render
 
-    if (config.methods) {
-      ret.methods = Object.freeze(config.methods.slice(0))
-    }
+  if (config.memoize) {
+    ret.memoize = true
+  }
+
+  if (config.methods) {
+    ret.methods = Object.freeze(config.methods.slice(0))
   }
 
   return Object.freeze(ret)

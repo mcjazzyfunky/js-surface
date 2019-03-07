@@ -7,6 +7,7 @@ type WithProperties<P extends Props = {}> = {
   properties?: PropertiesConfig<P>,
   defaultProps?: never,
   validate?: (props: P) => null | Error | true | false,
+  memoize?: boolean,
   render: (props: P, ref?: any) => VirtualNode
 }
 
@@ -15,6 +16,7 @@ type WithDefaultProps<P extends Props = {}> = {
   properties?: never,
   defaultProps?: Partial<P>,
   validate?: (props: P) => null | Error | true | false,
+  memoize?: boolean,
   render: (props: P, ref?: any) => VirtualNode
 }
 

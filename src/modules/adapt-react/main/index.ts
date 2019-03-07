@@ -48,6 +48,10 @@ adapt(defineComponent, (factory: any) => {
     return factory.meta.render(props, ref)
   }
 
+  if (factory.meta.memoize) {
+    ret = React.memo(ret)
+  }
+
   if (factory.meta.render.length > 1) {
     ret = React.forwardRef(ret)
   }

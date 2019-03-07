@@ -15,11 +15,8 @@
   "files": [
     "index.js",
     "core.js",
-    "dom.js",
-    "hooks.js",
     "html.js",
     "svg.js",
-    "util.js",
     "dist"
   ],
   "devDependencies": {

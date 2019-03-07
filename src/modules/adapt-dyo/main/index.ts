@@ -42,6 +42,10 @@ adapt(defineComponent, (factory: any) => {
     return factory.meta.render(props, ref)
   }
 
+  if (factory.meta.memoize) {
+    ret = Dyo.memo(ret)
+  }
+
   if (factory.meta.render.length > 1) {
     const oldRet = ret
 
@@ -69,7 +73,7 @@ adapt(defineContext, (ctx: Context<any>, meta: any) => { // TODO
   function Consumer(props: any) {
     const [value] = Dyo.useContext(internalContext)
 
-    return props.children[0](value)
+    return props.children(value)
   }
 
   return [internalContext, Provider, Consumer]

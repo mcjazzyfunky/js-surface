@@ -65,7 +65,7 @@ const HelloWorld = defineComponent({
   }
 })
 
-mount(HelloWorld(), 'main-content')
+mount(HelloWorld(), 'app')
 ```
 
 #### Simple counter (using hook API and JSX)
@@ -109,9 +109,9 @@ const Counter = defineComponent({
       )
     }
   }
-});
+})
 
-mount(<Counter/>, 'main-content')
+mount(<Counter/>, 'app')
 ```
 
 ### Motivation
@@ -279,7 +279,9 @@ Helper functions for children
 * `childCount(children)`
 * `forEachChild(children, callback)`
 * `mapChildren(children, mapper)`
+* `onlyChild(children)`
 * `toChildArray(element)`
+* `withChildren(f)`
 
 #### Module "_js-surface/html_"
 
