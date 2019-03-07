@@ -1,6 +1,6 @@
 # jsSurface
 
-Research project to evaluate and implement alternative UI library APIs
+Research project to evaluate and implement a working UI library abstraction API. 
 
 [![Licence](https://img.shields.io/badge/licence-LGPLv3-blue.svg?style=flat)](https://github.com/js-works/js-spec/blob/master/LICENSE)
 [![npm version](https://img.shields.io/npm/v/js-surface.svg?style=flat)](https://www.npmjs.com/package/js-surface)
@@ -35,21 +35,11 @@ npm run dist
 
 ### Introduction
 
-jsSurface is a long-term R&D project to find a minimalistic but still pragmatic
-set of functions to build a base API for UI development.
-It also provides a reference implementation of that API (internally
-based on [React](https://www.reactjs.org)).
+jsSurface is a long-term R&D project to find a pragmatic
+set of functions to build a common API on top of some popular virtual DOM
+based UI libraries (currently React and Dyo).
 Be aware that jsSurface is actually only for research purposes, it's currently
 NOT meant to be used in real-world applications (and most propably never will).
-
-You may ask: What's wrong with the original React API - React's API
-itself does only consist of a few functions and (legacy) classes, isn't that minimal
-enough?
-
-Short answer: React is a really great UI library, the React dev team did and
-does a remarkable job. There's nothing "wrong" with React.
-The purpose of the jsSurface R&D project is just to get a different look at
-things and to evaluate different approaches and alternative APIs.
 
 First, here's a small demo application to get a glimpse of how components
 are currently implemented with jsSurface:
@@ -57,8 +47,8 @@ are currently implemented with jsSurface:
 #### Hello world component (pure ECMAScript)
 
 ```jsx
-import { defineComponent } from 'js-surface/core'
-import { mount } from 'js-surface/dom'
+import { defineComponent, mount } from 'js-surface'
+import 'js-surface/adapt-react' // to use React under the hood
 
 // just if you do not want to use JSX, of course JSX is also fully supported
 import { div } from 'js-surface/html'
@@ -78,12 +68,11 @@ const HelloWorld = defineComponent({
 mount(HelloWorld(), 'main-content')
 ```
 
-#### Simple counter (using a hook API and JSX)
+#### Simple counter (using hook API and JSX)
 
 ```jsx
-import { createElement, defineComponent } from 'js-surface/core'
-import { useState } from 'js-surface/hooks'
-import { mount } from 'js-surface/dom'
+import { createElement, defineComponent, mount, useState } from 'js-surface'
+import 'js-surface/adapt-dyo' // to use Dyo under the hood
 
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
@@ -127,7 +116,7 @@ mount(<Counter/>, 'main-content')
 
 ### Motivation
 
-What parts of React's API may allow some different still reasonable view?
+What are the main difference to React's API?
 
 * React's API is quite "optimized" for the use of JSX:
 
@@ -221,17 +210,21 @@ What parts of React's API may allow some different still reasonable view?
   </SomeCtx.Consumer>
   ```
 
-* React handles ```props.children``` in a quite special way
-  (mainly for performance reasons):<br>
-  If there's only one children ```props.children``` is not an one-element
-  array but the child itself.<br>
-  Arrays and iterables stay non-flattened by `createElement` itself, but
-  later at rendering.
-  This is handled differently in jsSurface:<br>
-  If there are one ore more children then ```props.children``` will always be
-  an array in jsSurface and all contained arrays and other iterable objects
-  will be flattened immediately by `createElement` (similar as it's done by
-  the famous Preact library).
+* In React a virtual element is represented by an object of shape
+  `{ $$typeof, type, props, key, ref, ... }.
+  To access `type` or `props` of a virtual elements you have to use
+  `elem.type` and `elem.props`.<br>
+  In js-surface on the other hand a virtual element is considered
+  an opaque data structure. To access `type` and `props` of a virtual
+  element you have to use `typeOf(elem)` and `propsOf(elem)`.
+
+* In React the property `children` of `props` is a opaque datastructure.
+  To handle that React provides a singleton Object called `Children`
+  that provides some helper functions to work with `children`
+  (`Children.map`, `Children.forEach`, `Children.count` etc.).
+  In js-surface `children` are also represented as a opaque data
+  structure. Similar to React, js-surface also has several helper functions
+  to work with `children` (`mapChildren`, `forEachChild`, `childCount` etc.)
 
 * Reacts provides the possibility for a sophisticated validation of the
   components' properties, which is great.
@@ -255,43 +248,46 @@ What parts of React's API may allow some different still reasonable view?
 
 ### Current API (not complete yet)
 
-#### Module "_core_" (js-surface)
+#### Module "_js-surface_"
 
+Basics:
 * `createElement(type, props?, ...children)`
 * `defineComponent(componentConfig)`
 * `defineContext(contextConfig)`
-* `Fragment(props?, ...children)`
-* `Dispatcher` object to manage hooks
-
-#### Module "_dom_" (js-surface/dom)
-
+* `h(type, props?, ...children)`
 * `mount(content, container)`
 * `unmount(container)`
+* `Fragment(props?, ...children)`
 
-#### Module "_html_" (js-surface/html)
+Hooks:
+* `useCallback(callback)`
+* `useContext(ctx)`
+* `useEffect(action, dependencies?)`
+* `useForceUpdate()`
+* `useMethods(ref, getter, inputs)`
+* `usePrevious(value)`
+* `useRef(initialValue)`
+* `useState(initialValue | initialValueProvider)`
+
+Helper functions for virtual elements and nodes
+* `isElement(it)`
+* `isNode(it)`
+* `propsOf(element)`
+* `typeOf(element)`
+
+Helper functions for children
+* `childCount(children)`
+* `forEachChild(children, callback)`
+* `mapChildren(children, mapper)`
+* `toChildArray(element)`
+
+#### Module "_js-surface/html_"
 
 Factory functions for all HTML entities (to be used in non-JSX context: `div('some text')`)
 
-#### Module "_svg_" (js-surface/svg)
+#### Module "_js-surface/svg_"
 
 Factory functions for all SVG entities
-
-#### Module "_hooks_" (js-surface/hooks)
-
-Provides hooks to implement Component side-effects in a React-like fashion
-
-* `useState(initialValueProvider)`
-* `useEffect(action, dependencies?)`
-* `useContext(ctx)`
-* `useRef(initialValue)`
-* `useCallback(callback)`
-* `usePrevious(value)`
-* `useForceUpdate()`
-
-#### Modules "_util_" (js-surface/util)
-
-* `isElement(it)`
-* `isNode(it)`
 
 ### Project status
 

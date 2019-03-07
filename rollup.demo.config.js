@@ -15,6 +15,7 @@ export default {
     globals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
+      'dyo': 'Dyo',
       'js-spec': 'jsSpec'
     }
   },
