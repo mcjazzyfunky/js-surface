@@ -14,7 +14,7 @@
     "baseUrl": ".",
     
     "paths": {
-      "js-surface/core": ["src/modules/core/main/index.ts"],
+      "js-surface": ["src/modules/core/main/index.ts"],
     },
     
     "typeRoots": [

@@ -31,7 +31,14 @@ function createConfig(pkg, moduleFormat, productive) {
         : `dist/js-surface.${pkg}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
-      name: pkg === 'all' ? 'jsSurface' : `jsSurface.${pkg}`,
+      
+      name: {
+        core: 'jsSurface',
+        all: 'jsSurface',
+        html: 'jsSurface.Html',
+        svg: 'jsSurface.Svg'
+      }[pkg] || `jsSurface.${pkg}`,
+     
       sourcemap: productive ? false : 'inline',
 
       globals: {
@@ -65,11 +72,11 @@ function createConfig(pkg, moduleFormat, productive) {
             'process.env.NODE_ENV': productive ? "'production'" : "'development'",
           } : {
             'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-            "'../core/main/index'": "'js-surface/core'",
-            "'../../core/main/index'": "'js-surface/core'",
-            "'../../../core/main/index'": "'js-surface/core'",
-            "'../../../../core/main/index'": "'js-surface/core'",
-            "'../../../../../core/main/index'": "'js-surface/core'",
+            "'../core/main/index'": "'js-surface'",
+            "'../../core/main/index'": "'js-surface'",
+            "'../../../core/main/index'": "'js-surface'",
+            "'../../../../core/main/index'": "'js-surface'",
+            "'../../../../../core/main/index'": "'js-surface'",
           }
       }),
       typescript({

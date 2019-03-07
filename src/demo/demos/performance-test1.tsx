@@ -3,10 +3,12 @@ import { createElement, defineComponent, useCallback, useEffect, useState }
 
 import { div } from '../../modules/html/main/index'
 import React from 'react'
+import * as Dyo from 'dyo'
 
 const
-  c = createElement,
-  h = React.createElement
+  s = createElement,
+  r = React.createElement,
+  d = Dyo.createElement
 
 function runTests() {
   const
@@ -20,11 +22,26 @@ function runTests() {
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        h('div',
+        r('div',
           { className: 'my-class', id: 'my-id', key: 1 },
-          h('div',
+          r('div',
             { className: 'my-class2', id: 'my-id2', key: 2},
-            h('div', null, h('div', null, h('div', null, h('div')))),
+            r('div', null, r('div', null, r('div', null, r('div')))),
+            'some text', [1, 2, 3, 4, 5]))  
+      }
+    }
+  }),
+  
+  tests.push({
+    name: 'Using createElement from Dyo',
+
+    run() {
+      for (let i = 0; i < iterationCount; ++i) {
+        d('div',
+          { className: 'my-class', id: 'my-id', key: 1 },
+          d('div',
+            { className: 'my-class2', id: 'my-id2', key: 2},
+            d('div', null, d('div', null, d('div', null, d('div')))),
             'some text', [1, 2, 3, 4, 5]))  
       }
     }
@@ -35,11 +52,11 @@ function runTests() {
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        c('div',
+        s('div',
           { className: 'my-class', id: 'my-id', key: 1 },
-          c('div',
+          s('div',
             { className: 'my-class2', id: 'my-id2', key: 2 },
-            c('div', null, c('div', null, c('div', null, c('div')))),
+            s('div', null, s('div', null, s('div', null, s('div')))),
             'some text', [1, 2, 3, 4, 5]))  
       }
     }
