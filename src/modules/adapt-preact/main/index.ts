@@ -1,5 +1,5 @@
-import React from 'preact/compat'
-import ReactDOM from 'preact/compat'
+import Preact from 'preact'
+import Hooks from 'preact/hooks'
 
 import {
   childCount,
@@ -40,12 +40,12 @@ function adjustedCreateElement(/* arguments */) {
     }
   }
 
-  return React.createElement.apply(null, args)
+  return Preact.createElement.apply(null, args)
 }
 
 adapt(createElement, adjustedCreateElement)
-adapt(isElement, React.isValidElement)
-adapt(childCount, React.Children)
+adapt(isElement, (it: any) => !!it && it.type && it.props)
+adapt(childCount,  (children: any) => Preact.toChildArray(children).length)
 
 adapt(defineComponent, (factory: any) => {
   const
@@ -60,64 +60,64 @@ adapt(defineComponent, (factory: any) => {
   }
 
   if (factory.meta.memoize) {
-    ret = React.memo(ret)
+    ret = (ret) // TODO: memo
   }
 
   ret.displayName = factory.meta.displayName
-
-  if (factory.meta.render.length > 1) {
-    ret = React.forwardRef(ret)
-  }
 
   return ret
 })
 
 adapt(defineContext, (ctx: Context<any>, meta: any) => {
-  const internalContext = React.createContext(meta.defaultValue)
+  const internalContext: any = Preact.createContext(meta.defaultValue)
 
   internalContext.Provider._context = internalContext
+
 
   return [internalContext, internalContext.Provider, internalContext.Consumer]
 })
 
 adapt(useContext, (ctx: any) => {
-  return React.useContext(ctx.Provider.__internal_type._context)
+  return Hooks.useContext(ctx.Provider.__internal_type._context)
 })
 
 adapt(typeOf, (it: any) => it.type) 
 adapt(propsOf, (it: any) => it.type)
-adapt(toChildArray, React.Children.toArray) 
-adapt(forEachChild, React.Children.forEach)
+adapt(toChildArray, Preact.toChildArray) 
+adapt(forEachChild, (children: any, action: any) => Preact.toChildArray(children).forEach((it, idx) => action(it, idx)))
 
-adapt(useEffect, React.useEffect)
+adapt(useEffect, Hooks.useEffect)
 adapt(useMethods, adjustedUseMethods)
-adapt(useState, React.useState)
+adapt(useState, Hooks.useState)
 
-adapt(mount, ReactDOM.render)
-adapt(unmount, ReactDOM.unmountComponentAtNode)
+adapt(mount, Preact.render)
+adapt(unmount, (container: any) => Preact.render(null, container))
 
 adapt(Boundary, (props: any) => {
   return (
-    React.createElement(
-      ReactBoundary,
+    Preact.createElement(
+      PreactBoundary as any,
       { handle: props.handle },
       props.children)
   )
 })
 
 Object.defineProperty(Fragment, '__internal_type', {
-  value: React.Fragment
+  value: Preact.Fragment
 })
 
-class ReactBoundary extends React.Component {
+class PreactBoundary extends Preact.Component {
   static displayName = 'Boundary (inner)'
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): any {
+    return null
   }
 
-  componentDidCatch(error: any, info: any) {
-    if (this.props.handle) {
-      this.props.handle(error, info)
+  componentDidCatch(error: any) {
+    const handle = (this.props as any).handle
+    
+    if (handle) {
+      handle(error, null)
     }
   }
 

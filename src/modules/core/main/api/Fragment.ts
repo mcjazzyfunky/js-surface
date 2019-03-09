@@ -14,7 +14,7 @@ function Fragment(props?: FragmentProps, ...args: any[]): VirtualElement {
     createFragment = createElement.bind(null, Fragment)
   }
 
-  return createFragment(...args)
+  return createFragment(props, ...args)
 }
 
 export default Fragment as ComponentFactory<FragmentProps>

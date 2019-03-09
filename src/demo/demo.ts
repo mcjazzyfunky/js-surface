@@ -1,7 +1,7 @@
 import { defineComponent, mount, VirtualElement, useForceUpdate, useRef }
   from '../modules/core/main/index'
 
-import '../modules/adapt-preact/main/index'
+import '../modules/adapt-react/main/index'
 
 import { div, h4, label, option, select } from '../modules/html/main/index'
 import availableDemos from './available-demos'
