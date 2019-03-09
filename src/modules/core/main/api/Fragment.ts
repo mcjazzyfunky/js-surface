@@ -6,7 +6,8 @@ import ComponentFactory from './types/ComponentFactory'
 let createFragment: (...args: any[]) => VirtualElement = null
 
 type FragmentProps = {
-  key?: number | string
+  key?: number | string,
+  children?: any
 }
 
 function Fragment(props?: FragmentProps, ...args: any[]): VirtualElement {

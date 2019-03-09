@@ -1,5 +1,5 @@
-import Preact from 'preact'
-import Hooks from 'preact/hooks'
+import * as Preact from 'preact'
+import * as Hooks from 'preact/hooks'
 
 import {
   childCount,
@@ -108,10 +108,6 @@ Object.defineProperty(Fragment, '__internal_type', {
 
 class PreactBoundary extends Preact.Component {
   static displayName = 'Boundary (inner)'
-
-  static getDerivedStateFromError(): any {
-    return null
-  }
 
   componentDidCatch(error: any) {
     const handle = (this.props as any).handle
