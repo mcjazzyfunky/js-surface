@@ -121,7 +121,7 @@ let
 
 if (process.env.NODE_ENV === 'development' as any) {
   contextConfigSpec =
-    Spec.strictShape({
+    Spec.exact({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       type: Spec.optional(Spec.function),
       nullable: Spec.optional(Spec.boolean),

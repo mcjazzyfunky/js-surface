@@ -88,7 +88,7 @@ if (process.env.NODE_ENV === 'development' as any) {
 
       Spec.valuesOf(
         Spec.and(
-          Spec.strictShape({
+          Spec.exact({
             type: Spec.optional(Spec.function),
             nullable: Spec.optional(Spec.boolean),
             validate: Spec.optional(Spec.function),
@@ -121,7 +121,7 @@ if (process.env.NODE_ENV === 'development' as any) {
       Spec.keysOf(Spec.match(REGEX_PROP_NAME)))
 
   specOfComponentConfig = 
-    Spec.strictShape({
+    Spec.exact({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       properties: Spec.optional(specOfPropertiesConfig),
       defaultProps: Spec.optional(specOfDefaultProps),
