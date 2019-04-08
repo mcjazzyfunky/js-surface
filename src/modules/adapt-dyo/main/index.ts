@@ -1,4 +1,4 @@
-import Dyo from 'dyo'
+import * as Dyo from 'dyo'
 
 import {
   childCount,
@@ -109,11 +109,11 @@ Object.defineProperty(Fragment, '__internal_type', {
 })
 
 function DyoBoundary(props: any) {
-  Dyo.useBoundary((e: any) => {
-    props.handle(e.message, null)
-  })
-
-  return props.children
+  return Dyo.h(Dyo.Boundary, {
+    fallback: (e: any) => {
+      props.handle(e.message, null)
+    }
+  }, ...props.children)
 }
 
 (DyoBoundary as any).displayName = 'Boundary (inner)'

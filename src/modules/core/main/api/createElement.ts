@@ -5,7 +5,7 @@ export default function createElement(...args: any[]) {
     throw new Error('[createElement] Adapter has not been initialized')
   }
 
-  if (args[0] && args[0].__internal_type) {
+  if (args[0] && args[0].__internal_type !== undefined) {
     args[0] = args[0].__internal_type
   }
 
