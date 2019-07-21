@@ -98,7 +98,7 @@ const Counter = defineComponent({
 
   render(props) {
     const
-      [count, setCount] = useState(),
+      [count, setCount] = useState(0),
       onIncrement = useCallback(() => setCount(count + 1))
 
       return (
