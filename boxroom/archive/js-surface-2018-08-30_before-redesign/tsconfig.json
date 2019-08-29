@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "jsx": "react",
+    "jsxFactory": "createElement",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "lib": ["es5", "es6", "dom"],
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    
+    "paths": {
+      "js-surface": ["src/modules/core/main/index.ts"],
+    },
+    
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+
+    "types": [
+      "node", "mocha", "chai"
+    ]
+  },
+  "files": [
+    "src/modules/all/main/index.ts",
+    "src/modules/core/main/index.ts",
+    "src/modules/adapt-react/main/index.ts",
+    "src/modules/adapt-dyo/main/index.ts",
+    "src/modules/html/main/index.ts",
+    "src/modules/svg/main/index.ts",
+    "src/modules/experimental/main/index.ts"
+  ],
+
+  "include": [
+		"./src/**/*.ts*"
+  ],
+}
