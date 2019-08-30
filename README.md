@@ -136,8 +136,8 @@ Basics:
 * `context(contextConfig)` or `context(displayName, defaultValue?, contextOptions?)`
 * `mount(content, container)`
 * `unmount(container)`
-* `Fragment({ key }?, ...children)`
-* `Boundary({ handler }, ...children)`
+* `Fragment`
+* `Boundary`
 
 Hooks:
 * `useCallback(callback)`
