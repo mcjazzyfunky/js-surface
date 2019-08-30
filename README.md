@@ -48,7 +48,7 @@ are currently implemented with jsSurface:
 #### Hello world component (pure ECMAScript)
 
 ```jsx
-import { component, mount } from 'js-surface'
+import { createElement, component, mount } from 'js-surface'
 import 'js-surface/adapt-react' // to use React under the hood
 
 const HelloWorld = component({
@@ -59,12 +59,12 @@ const HelloWorld = component({
   }
 })
 
-/* Also the following shorter syntax is possible:
+// Also the following short syntax is supported:
 
-const HelloWorld = component('HelloWorld', props => 
+const HelloWorld2 = component('HelloWorld', props => 
   <div>Hello ${props.name}</div>
 )
-*/
+
 
 mount(<HelloWorld/>, 'app')
 ```
@@ -90,12 +90,12 @@ const Counter = component({
 
   render({ initialValue = 0, label = 'Counter' }) {
     const
-      [count, setCount] = useState(0),
+      [count, setCount] = useState(initialValue),
       onIncrement = useCallback(() => setCount(count + 1))
 
       return (
         <div>
-          <label>{props.label}</label>
+          <label>{label}</label>
           <button onClick={onIncrement}>{count}</button>
         </div>
       )
