@@ -1,7 +1,7 @@
-import { createElement, defineComponent, useEffect, useState }
+import { createElement, component, useEffect, useState }
   from '../../modules/core/main/index'
 
-const Demo = defineComponent({
+const Demo: any = component({
   displayName: 'Demo',
 
   render() {

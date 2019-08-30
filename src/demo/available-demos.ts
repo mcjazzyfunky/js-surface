@@ -1,4 +1,4 @@
-import { VirtualElement } from '../modules/core/main/index'
+import { VirtualNode } from '../modules/core/main/index'
 import helloWorld from './demos/hello-world'
 import simpleCounter from './demos/simple-counter'
 import complexCounter from './demos/complex-counter'
@@ -15,7 +15,7 @@ import errorBoundary from './demos/error-boundary'
 import performanceTest1 from './demos/performance-test1'
 import performanceTest2 from './demos/performance-test2'
 
-const demos: [string, VirtualElement][] = [
+const demos: [string, VirtualNode][] = [
   ['Hello world', helloWorld],
   ['Simple counter', simpleCounter],
   ['Complex counter', complexCounter],

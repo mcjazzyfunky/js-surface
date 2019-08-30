@@ -1,13 +1,13 @@
 import {
-  createElement, defineContext, defineComponent, useEffect, useState
+  createElement, context, component, useEffect, useState
 } from '../../modules/core/main/index'
 
-const CounterCtx = defineContext({
+const CounterCtx = context<number>({
   displayName: 'CounterCtx',
   defaultValue: 0
 })
 
-const ContextDemo = defineComponent({
+const ContextDemo: any = component({ // TODO
   displayName: 'ContextDemo',
 
   render() {
@@ -29,7 +29,7 @@ const ContextDemo = defineComponent({
   }
 })
 
-const Output = defineComponent({
+const Output: any = component({ // TODO
   displayName: 'Output',
   memoize: true,
 

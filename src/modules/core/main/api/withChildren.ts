@@ -5,5 +5,11 @@ export default function withChildren(f: (childArray: any) => any) {
     throw new TypeError('[withChildren] First argument "f" must be a function')
   }
 
-  return (children: any) => f(toChildArray(children))
+  const g = (toChildArray as any).__apply
+
+  if (!g) {
+    throw new Error('[withChildren] Adapter has not been initialized')
+  }
+
+  return (children: any) => f(g(children))
 }

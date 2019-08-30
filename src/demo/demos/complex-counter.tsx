@@ -1,40 +1,41 @@
 import {
-  createElement, defineComponent, useCallback, useMethods, useRef, useState
+  createElement,
+  component,
+  useCallback,
+  useImperativeMethods,
+  useRef,
+  useState,
+  Ref
 } from '../../modules/core/main/index'
 
 type CounterProps = {
   label?: string,
-  initialValue?: number
+  initialValue?: number,
+  componentRef?: Ref<CounterMethods>
 }
 
 type CounterMethods = {
   reset(n: number): void
 }
 
-const Counter = defineComponent<CounterProps, CounterMethods>({
+const Counter: any = component<CounterProps>({
   displayName: 'Counter',
 
-  defaultProps: {
-    label: 'Counter',
-    initialValue: 0
-  },
-
-  render(props, ref) {
+  render({ initialValue = 0, label = 'Counter', componentRef }) {
     const
-      [count, setCount] = useState(() => props.initialValue),
+      [count, setCount] = useState(() => initialValue),
       onIncrement = useCallback(() => setCount(count + 1)),
       onDecrement = useCallback(() => setCount(count - 1))
-    
-    useMethods(ref, () => ({
+
+    useImperativeMethods(componentRef, () => ({
       reset(n: number) {
         setCount(n)
       }
     }), [])
 
-
     return (
       <div>
-        <label>{props.label}: </label>
+        <label>{label}: </label>
         <button onClick={onDecrement}>-</button>
         {` ${count} `}
         <button onClick={onIncrement}>+</button>
@@ -43,7 +44,7 @@ const Counter = defineComponent<CounterProps, CounterMethods>({
   }
 })
 
-const App = defineComponent({
+const App: any = component({
   displayName: 'App',
 
   render() {
@@ -54,7 +55,7 @@ const App = defineComponent({
 
     return (
       <div>
-        <Counter ref={counterRef}/>
+        <Counter componentRef={counterRef}/>
         <br/>
         <div>
           <button onClick={onResetTo0}>Set to 0</button>

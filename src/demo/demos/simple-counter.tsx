@@ -1,22 +1,17 @@
-import { defineComponent, useCallback, useEffect, useState } from '../../modules/core/main/index'
-import { button, div, label } from '../../modules/html/main/index'
+import { createElement, component, useCallback, useEffect, useState }
+ from '../../modules/core/main/index'
 
 type CounterProps = {
   label?: string,
   initialValue?: number
 }
 
-const Counter = defineComponent<CounterProps>({
+const Counter: any = component<CounterProps>({ // TODO
   displayName: 'Counter',
 
-  defaultProps: {
-    label: 'Counter',
-    initialValue: 0
-  },
-
-  render(props) {
+  render({ initialValue = 0, label = 'Counter' }) {
     const
-      [count, setCount] = useState(() => props.initialValue),
+      [count, setCount] = useState(() => initialValue),
       onIncrement = useCallback(() => setCount(count + 1))
 
     useEffect(() => {
@@ -29,11 +24,12 @@ const Counter = defineComponent<CounterProps>({
     
 
     return (
-      div(null,
-        label(null, props.label + ': '),
-        button({ onClick: onIncrement }, count))
+      <div>
+        <label>{label}</label>
+        <button onClick={onIncrement}>{count}</button>
+      </div>
     )
   }
 })
 
-export default Counter()
+export default <Counter/>

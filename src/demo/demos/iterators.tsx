@@ -1,4 +1,4 @@
-import { createElement, defineComponent } from '../../modules/core/main/index'
+import { createElement, component } from '../../modules/core/main/index'
 
 const demoContent = {
   [Symbol.iterator]: function * () {
@@ -33,7 +33,7 @@ const demoContent = {
   }
 }
 
-const App = defineComponent({
+const App: any = component({ // TODO
   displayName:  'App',
 
   render() {
@@ -50,4 +50,4 @@ const App = defineComponent({
   }
 })
 
-export default App()
+export default <App/>

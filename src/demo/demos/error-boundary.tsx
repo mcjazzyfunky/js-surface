@@ -1,12 +1,12 @@
 import {
   createElement,
-  defineComponent,
+  component,
   useCallback,
   useState,
   Boundary
 } from 'js-surface'; 
 
-const ErrorTrigger = defineComponent({ 
+const ErrorTrigger: any = component({ // TODO
   displayName: 'ErrorTrigger',
 
   render() {
@@ -26,7 +26,7 @@ const ErrorTrigger = defineComponent({
   }
 })
 
-const ErrorBoundary = defineComponent({
+const ErrorBoundary: any = component({ // TODO
   displayName: 'ErrorBoundary',
 
   render(props) {

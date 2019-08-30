@@ -1,21 +1,14 @@
-import { createElement, defineComponent } from '../../modules/core/main/index'
+import { createElement, component } from '../../modules/core/main/index'
 
 type HelloWorldProps = {
   name?: string
 }
 
-const HelloWorld = defineComponent<HelloWorldProps>({
+const HelloWorld: any = component<HelloWorldProps>({ // TODO
   displayName: 'HelloWorld',
 
-  properties: {
-    name: {
-      type: String,
-      defaultValue: 'world'
-    } 
-  },
-
-  render(props) {
-    return `Hello, ${props.name}!`
+  render({ name = 'world' }) {
+    return `Hello, ${name}!`
   }
 })
 

@@ -6,7 +6,7 @@ import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
 export default {
-  input: 'src/demo/demo.ts',
+  input: 'src/demo/demo.tsx',
 
   output: {
     file: './build/demo.js',
@@ -15,7 +15,7 @@ export default {
     globals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
-      'dyo': 'Dyo',
+      'dyo': 'dyo',
       'js-spec': 'jsSpec'
     }
   },

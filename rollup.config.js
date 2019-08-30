@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['all', 'core', 'adapt-react', 'adapt-dyo', 'html', 'svg']) {
+for (const pkg of ['core', 'adapt-react' /* 'adapt-preact', 'adapt-dyo' */]) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -34,9 +34,6 @@ function createConfig(pkg, moduleFormat, productive) {
       
       name: {
         core: 'jsSurface',
-        all: 'jsSurface',
-        html: 'jsSurface.Html',
-        svg: 'jsSurface.Svg'
       }[pkg] || `jsSurface.${pkg}`,
      
       sourcemap: productive ? false : 'inline',
@@ -50,7 +47,7 @@ function createConfig(pkg, moduleFormat, productive) {
       }
     },
 
-    external: ['js-surface', 'react', 'react-dom', 'dyo'].concat(productive ? 'js-spec' : []), 
+    external: ['js-surface', 'react', 'react-dom', 'preact', 'dyo'].concat(productive ? 'js-spec' : []), 
 
     plugins: [
       resolve({
@@ -67,17 +64,14 @@ function createConfig(pkg, moduleFormat, productive) {
         exclude: 'node_modules/**',
         delimiters: ['', ''],
 
-        values:
-          pkg === 'all' ? {
-            'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-          } : {
-            'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-            "'../core/main/index'": "'js-surface'",
-            "'../../core/main/index'": "'js-surface'",
-            "'../../../core/main/index'": "'js-surface'",
-            "'../../../../core/main/index'": "'js-surface'",
-            "'../../../../../core/main/index'": "'js-surface'",
-          }
+        values: {
+          'process.env.NODE_ENV': productive ? "'production'" : "'development'",
+          "'../core/main/index'": "'js-surface'",
+          "'../../core/main/index'": "'js-surface'",
+          "'../../../core/main/index'": "'js-surface'",
+          "'../../../../core/main/index'": "'js-surface'",
+          "'../../../../../core/main/index'": "'js-surface'",
+        }
       }),
       typescript({
         exclude: 'node_modules/**',

@@ -1,6 +1,8 @@
-import ComponentFactory from './ComponentFactory'
+import Component from './Component'
 
-export default interface Context<T> {
-  Provider: ComponentFactory<{ value: T, children?: any }>,
-  Consumer: ComponentFactory<{ children?: any }>
+type Context<T> = {
+  Provider: any, // Component<{ value: T, children?: any }>, // TODO
+  Consumer: any  //Component<{ children?: any }> // TODO
 }
+
+export default Context

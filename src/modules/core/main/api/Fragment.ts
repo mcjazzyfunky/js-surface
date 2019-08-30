@@ -1,47 +1,8 @@
-import createElement from './createElement'
-import VirtualElement from './types/VirtualElement'
-import ComponentMeta from './types/ComponentMeta'
-import ComponentFactory from './types/ComponentFactory'
-
-let createFragment: (...args: any[]) => VirtualElement = null
-
-type FragmentProps = {
-  key?: number | string,
-  children?: any
+// Just to make sure that the objects type name is 'Fragent'
+// even in production
+const obj = {
+  Fragment() {}
 }
 
-function Fragment(props?: FragmentProps, ...args: any[]): VirtualElement {
-  if (!createFragment) {
-    createFragment = createElement.bind(null, Fragment)
-  }
+export default Object.create(obj.Fragment.prototype)
 
-  return createFragment(props, ...args)
-}
-
-export default Fragment as ComponentFactory<FragmentProps>
-
-
-const meta: ComponentMeta<{ key?: any }> = Object.freeze({
-  displayName: 'Fragment',
-
-  properties: Object.freeze({
-    key: Object.freeze({
-      validate(it: any): null | Error {
-        const type = typeof it
-
-        return type === 'string' || type !== 'number'
-          ? null
-          : new Error('Must be a string or a number')
-      }
-    }),
-    children: {
-      // TODO
-    }
-  }),
-
-  render: Fragment
-})
-
-Object.defineProperty(Fragment, 'meta', {
-  value: meta
-})

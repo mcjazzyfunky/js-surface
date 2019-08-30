@@ -1,3 +1,4 @@
+/*
 import * as Preact from 'preact'
 import * as Hooks from 'preact/hooks'
 
@@ -121,3 +122,4 @@ class PreactBoundary extends Preact.Component {
     return this.props.children
   }
 }
+*/

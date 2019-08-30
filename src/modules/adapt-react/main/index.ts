@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom'
 
 import {
   childCount,
-  createElement, defineComponent, defineContext, isElement,
+  createElement, component, context, isElement,
   mount, unmount,
   typeOf, propsOf, toChildArray, forEachChild,
-  useContext, useEffect, useMethods, useState,
-  Fragment, Boundary, Props, Context,
+  useCallback, useContext, useEffect, useImperativeMethods, useRef, useState,
+  Fragment, Props
 } from '../../core/main/index'
 
 function adapt(base: any, delegate: any) {
@@ -35,66 +35,108 @@ function adjustedCreateElement(/* arguments */) {
 adapt(createElement, adjustedCreateElement)
 adapt(isElement, React.isValidElement)
 adapt(childCount, React.Children)
+adapt(component, buildComponent)
+adapt(context, buildContext) 
 
-adapt(defineComponent, (factory: any) => {
-  const
-     defaultProps = factory.meta.defaultProps
-
-  let ret: any = (props: Props, ref: any) => {
-    if (defaultProps) {
-      props = Object.assign({}, defaultProps, props) // TODO - performance
-    }
-
-    return factory.meta.render(props, ref)
-  }
-
-  if (factory.meta.memoize) {
-    ret = React.memo(ret)
-  }
-
-  ret.displayName = factory.meta.displayName
-
-  if (factory.meta.render.length > 1) {
-    ret = React.forwardRef(ret)
-  }
-
-  return ret
-})
-
-adapt(defineContext, (ctx: Context<any>, meta: any) => {
-  const internalContext = React.createContext(meta.defaultValue)
-
-  return [internalContext, internalContext.Provider, internalContext.Consumer]
-})
-
-adapt(useContext, (ctx: any) => {
-  return React.useContext(ctx.Provider.__internal_type._context)
-})
+adapt(useCallback, React.useCallback)
+adapt(useContext, React.useContext) 
 
 adapt(typeOf, (it: any) => it.type) 
 adapt(propsOf, (it: any) => it.type)
 adapt(toChildArray, React.Children.toArray) 
-adapt(forEachChild, React.Children.forEach)
+// adapt(forEachChild, React.Children.forEach) // TODO
 
 adapt(useEffect, React.useEffect)
-adapt(useMethods, React.useImperativeHandle)
+adapt(useImperativeMethods, React.useImperativeHandle)
 adapt(useState, React.useState)
+adapt(useRef, React.useRef)
 
 adapt(mount, ReactDOM.render)
 adapt(unmount, ReactDOM.unmountComponentAtNode)
 
-adapt(Boundary, (props: any) => {
-  return (
-    React.createElement(
-      ReactBoundary,
-      { handle: props.handle },
-      props.children)
-  )
+Object.defineProperty(createElement, '__boundary', {
+  get: () => ReactBoundary
 })
 
-Object.defineProperty(Fragment, '__internal_type', {
+Object.defineProperty(createElement, '__fragment', {
   value: React.Fragment
 })
+
+// --- locals -------------------------------------------------------
+
+function buildComponent<P extends Props = {}>(
+  displayName: string,
+  renderer: (props: P) => any,
+  validate?: (props: P) => boolean | null | Error, 
+  memoize?: boolean
+): any {
+  let ret: any = renderer.bind(null)
+  ret.displayName = displayName
+
+  if (validate) {
+    ret.propTypes = {
+      '*'(props: any) {
+        const
+          result = validate(props),
+
+          errorMsg =
+            result === false
+              ? 'Invalid value'
+              : result instanceof Error
+                ? result.message
+                : null
+
+        return !errorMsg
+          ? null
+          : new TypeError(
+            'Props validation error for component '
+            + `"${displayName}" => ${errorMsg}`)
+      }
+    }
+  }
+
+  if (memoize === true) {
+    ret = React.memo(ret)
+  }
+
+  return ret
+}
+
+function buildContext<T>(
+  displayName: string,
+  defaultValue: T,
+  validate: (value: T) => boolean | null | Error
+) { 
+  const
+    ret = React.createContext(defaultValue),
+    provider: any = ret.Provider
+
+  provider.displayName = displayName
+
+  if (validate) {
+    provider.propTypes = {
+      value: (props: any) => {
+        const
+          result = validate(props.value),
+
+          errorMsg =
+            result === false
+              ? 'Invalid value'
+              : result instanceof Error
+                ? result.message
+                : null
+
+        return !errorMsg
+          ? null
+          : new TypeError(
+            'Validation error for provider of context '
+            + `"${displayName}" => ${errorMsg}`)
+      }
+    }
+  }
+
+  return ret
+}
 
 class ReactBoundary extends React.Component {
   static displayName = 'Boundary (inner)'

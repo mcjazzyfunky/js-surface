@@ -1,154 +1,128 @@
-import { createElement, defineComponent, useRef, useEffect, useForceUpdate }
+import { createElement, component, useEffect, useRef, useForceUpdate }
   from '../../modules/core/main/index'
 
-const
-  framesPerSecond = 240,
-  colors = ['red', 'yellow', 'orange'],
-  tileWidth = 5,
-  columnCount = 20,
-  rowCount = 20
+const prefs = {
+  framesPerSecond: 240,
+  colors: ['red', 'yellow', 'orange'],
+  tileWidth: 5,
+  columnCount: 20,
+  rowCount: 20
+}
 
-const Tile = defineComponent({
-  displayName: 'Tile',
-  
-  properties: {
-    color: {
-      type: String,
-      defaultValue: 'white'
-    },
-    width: {
-      type: Number,
-      defaultValue: 3
+type TileProps = {
+  color?: string,
+  width?: number
+}
+
+const Tile: any = component<TileProps>('Tile', ({ // TODO
+  color = 'white',
+  width = 3
+}) => {
+  const
+    style = {
+      float: 'left',
+      width: width + 'px',
+      height: width + 'px',
+      backgroundColor: color,
+      padding: 0,
+      margin: 0
     }
-  },
-  
-  render(props) {
-    const
-      { width, color } = props,
     
-      style = {
-        float: 'left',
-        width: width + 'px',
-        height: width + 'px',
-        backgroundColor: color,
-        padding: 0,
-        margin: 0
-      }
-    
-    return <div style={style}/>
-  }
+  return <div style={style as any}/> // TODO
 })
 
-const TileRow = defineComponent({
-  displayName:  'TileRow',
-  
-  properties: {
-    tileWidth: {
-      type: Number,
-      defaultValue: 3
-    },
-    columnCount: {
-      type: Number
-    }
-  },
-  
-  render(props) {
-    const
-      { tileWidth, columnCount } = props,
-      tiles = []
+type TypeRowProps = {
+  tileWidth?: number,
+  columnCount?: number,
+  colors?: string[],
+}
 
-    for (let x = 0; x < columnCount; ++x) {
-      const
-        colorIdx = Math.floor(Math.random() * colors.length),       
-        color = colors[colorIdx]
-    
-      tiles.push(Tile({ width: tileWidth, color, key: x }))
-    }
+const TileRow: any = component<TypeRowProps>('TileRow', ({ // TODO
+  tileWidth = 3,
+  columnCount = prefs.columnCount,
+  colors = prefs.colors
+}) => {
+  const tiles = []
+
+  for (let x = 0; x < columnCount; ++x) {
+    const
+      colorIdx = Math.floor(Math.random() * colors.length),
+      color = colors[colorIdx]
   
-    return <div style={{ clear: 'both' }}>{tiles}</div>
+    tiles.push(<Tile width={tileWidth} color={color} key={x}/>)
   }
+
+  return <div style={{ clear: 'both' }}>{tiles}</div>
 })
 
 type SpeedTestProps = {
   columnCount: number,
   rowCount: number,
-  tileWidth: number
+  tileWidth?: number,
+  framesPerSecond?: number
 }
 
-const SpeedTest = defineComponent<SpeedTestProps>({
-  displayName: 'SpeedTest',
+const SpeedTest: any = component<SpeedTestProps>('SpeedTest', ({ // TODO
+  tileWidth = 3,
+  rowCount = prefs.rowCount,
+  columnCount = prefs.columnCount,
+  framesPerSecond = prefs.framesPerSecond
+}) => {
+  const
+    forceUpdate = useForceUpdate(),
+    intervalIdRef = useRef(null),
+    startTimeRef = useRef(Date.now()),
+    frameCountRef = useRef(0),
+    actualFramesPerSecondRef = useRef('0'),
 
-  properties: {
-    columnCount: {
-      type: Number
-    },
-
-    rowCount: {
-      type: Number
-    },
-
-    tileWidth: {
-      type: Number,
-      defaultValue: 3
-    }
-  },
-    
-  render(props) {
-    const
-      forceUpdate = useForceUpdate(),
-
-      data = useRef({
-        intervalId: null as NodeJS.Timeout,
-        startTime: Date.now(),
-        frameCount: 0,
-        actualFramesPerSecond: '0'
-      }).current,
-
-      rows = [],
-        
-      style = {
-        marginTop: 40,
-        marginLeft: 40
-      }
-
-      useEffect(() => {
-        data.intervalId = setInterval(() => {
-          ++data.frameCount
-          forceUpdate()
-
-          if (data.frameCount % 10 === 0) {
-            data.actualFramesPerSecond =
-              (data.frameCount * 1000.0 /
-                (Date.now() - data.startTime)).toFixed(2)
-          }
-        }, 1000 / framesPerSecond)
-
-        return () => clearInterval(data.intervalId)
-      }, [])
-  
-      for (let y = 0; y < props.rowCount; ++y) {
-        rows.push(
-          TileRow({
-            tileWidth: props.tileWidth,
-            columnCount: props.columnCount,
-            key: y
-          }))
-      }
+    rows = [],
       
-      return (
-        <div>
-          <div> 
-            Rows: {props.rowCount}, columns: {props.columnCount}
-            <div style={style}>{rows}</div>
-          </div>
-          <br/>
-          <div style={{ clear: 'both' }}>
-            (actual frames per second: {data.actualFramesPerSecond})
-          </div>
-        </div>
-      )
+    style = {
+      marginTop: 40,
+      marginLeft: 40
     }
-  })
+
+  useEffect(() => {
+    intervalIdRef.current = setInterval(() => {
+      ++frameCountRef.current
+      forceUpdate()
+
+      if (frameCountRef.current % 10 === 0) {
+        actualFramesPerSecondRef.current =
+          (frameCountRef.current * 1000.0 /
+            (Date.now() - startTimeRef.current)).toFixed(2)
+      }
+    }, 1000 / framesPerSecond)
+
+    return () => clearInterval(intervalIdRef.current)
+  }, [])
+
+  for (let y = 0; y < rowCount; ++y) {
+    rows.push(
+      <TileRow
+        tileWidth={tileWidth}
+        columnCount={columnCount}
+        key={y}
+      />)
+  }
+  
+  return (
+    <div>
+      <div> 
+        Rows: {rowCount}, columns: {columnCount}
+        <div style={style}>{rows}</div>
+      </div>
+      <br/>
+      <div style={{ clear: 'both' }}>
+        (actual frames per second: {actualFramesPerSecondRef.current})
+      </div>
+    </div>
+  )
+})
 
 export default
-  <SpeedTest tileWidth={tileWidth} columnCount={columnCount} rowCount={rowCount}/>
+  <SpeedTest
+    tileWidth={prefs.tileWidth}
+    columnCount={prefs.columnCount}
+    rowCount={prefs.rowCount}
+  />

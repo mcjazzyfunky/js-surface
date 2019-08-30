@@ -35,11 +35,12 @@ npm run dist
 
 ### Introduction
 
-jsSurface is a long-term R&D project to find a pragmatic
-set of functions to build a common API on top of some popular virtual DOM
-based UI libraries (currently React and Dyo).
+jsSurface is a R&D project to find a pragmatic API that can be used
+as wrapper API for the actual React and Dyo APIs with the goal to 
+provide a general API that can be used to write both React and Dyo
+components (maybe support Preact will follow someday)
 Be aware that jsSurface is actually only for research purposes, it's currently
-NOT meant to be used in real-world applications (and most propably never will).
+NOT meant to be used in real-world applications.
 
 First, here's a small demo application to get a glimpse of how components
 are currently implemented with jsSurface:
@@ -47,32 +48,32 @@ are currently implemented with jsSurface:
 #### Hello world component (pure ECMAScript)
 
 ```jsx
-import { defineComponent, mount } from 'js-surface'
+import { component, mount } from 'js-surface'
 import 'js-surface/adapt-react' // to use React under the hood
 
-// just if you do not want to use JSX, of course JSX is also fully supported
-import { div } from 'js-surface/html'
-
-const HelloWorld = defineComponent({
+const HelloWorld = component({
   displayName: 'HelloWorld',
 
-  defaultProps: {
-    name: 'world'
-  },
-
-  render(props) {
-    return div(`Hello, ${props.name}!`)
+  render({ name = 'World' }) {
+    return div(`Hello, ${name}!`)
   }
 })
+
+/* Also the following shorter syntax is possible:
+
+const HelloWorld = component('HelloWorld', props => 
+  <div>Hello ${props.name}</div>
+)
+*/
 
 mount(HelloWorld(), 'app')
 ```
 
-#### Simple counter (using hook API and JSX)
+#### Simple counter
 
 ```jsx
-import { createElement, defineComponent, mount, useCallback, useState } from 'js-surface'
-import 'js-surface/adapt-dyo' // to use Dyo under the hood
+import { createElement, component, mount, useCallback, useState } from 'js-surface'
+import 'js-surface/adapt-react' // to use React under the hood
 
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
@@ -80,23 +81,14 @@ import { Spec } from 'js-spec';
 const Counter = defineComponent({
   displayName: 'Counter',
 
-  // if you do not want property validation, the following "properties" 
-  // parameter can easily be replaced by a simple "defaultProps" configuration
-  // (see example below)
-  properties: {
-    initialValue: {
-      type: Number,
-      validate: Spec.integer, // using a third-party spec library
-      defaultValue: 0
-    }, 
-
-    label: {
-      type: String,
-      defaultValue: 'Counter'
+  validate: Spec.checkProps({
+    optional: {
+      initialValue: Spec.integer,
+      label: Spec.string
     }
-  },
+  }),
 
-  render(props) {
+  render({ initialValue = 0, label = 'Counter' }) {
     const
       [count, setCount] = useState(0),
       onIncrement = useCallback(() => setCount(count + 1))
@@ -116,115 +108,9 @@ mount(<Counter/>, 'app')
 
 ### Motivation
 
-What are the main difference to React's API?
-
-* React's API is quite "optimized" for the use of JSX:
-
-  While the following JSX syntax is really nice...
-
-  ```jsx
-  <FancyHeader>Some headline</FancyHeader>
-  ```
-  ... its non-JSX counterpart looks quite verbose ...
-
-  ```javascript
-  React.createElement(FancyHeader, null, 'Some headline')
-  ```
-
-  ... while it would be much nicer just to write ...
-  
-  ```javascript
-  FancyHeader('Some headline')
-  ```
-
-  Be aware that you should ALWAYS use JSX with TypeScript
-  the non-JSX usage is only meant for those who want to
-  UIs in pure ECMAScript.
-
-  In React's API, the main representation of component types are
-  render functions (for function components) or component classes.
-  Neither will component classes be instantiated by the user directly
-  nor will render functions be called directly. The only useful
-  usage of component types are that they will be passed as first argument to
-  the `React.createElement` function. Same for context provider
-  and consumers and the `Fragment` symbol.
-
-  In jsSurface things are different: Everything that can be used as first
-  argument of the `createElement` function besides strings is a factory
-  function that returns the result of a corresponding `createElement` call.
-  Besides the second argument (`props`) of the `createElement` function
-  and also for all the component factories is optional to provide a concice
-  syntax: All component types, `Fragment`, context providers, context
-  consumers are factory functions with an optional second `props` argument:
-
-  ```jsx
-  SomeComponent('some text')
-
-  // or when using jsSurface with JSX
-  <SomeComponent>Some text</SomeComponent>
-  ```
-
-  ```jsx
-  Fragment(
-    SomeComponent('some text'),
-    SomeComponent({ className: 'some-class'}, 'some text'))
-
-  // or when using jsSurface with JSX
-  <>
-    <SomeComponent>Some text</SomeComponent>
-    <SomeComponent className="some-class">some text</SomeComponent>
-  </>
-  ```
-  
-  ```jsx
-  Fragment({ key: someKey },
-    SomeComponent(),
-    SomeOtherComponent())
-  
-  // or when using jsSurface with JSX
-  <Fragment key={someKey}>
-    <SomeComponent/>
-    <SomeOtherComponent/>
-  </>
-  ```
-
-  ```jsx
-  SomeCtx.Provider({ value: someValue },
-    SomeComponent(),
-    SomeOtherComponent())
-  
-  // or when using jsSurface with JSX
-  <SomeCtx.Provider value={someValue}>
-    <SomeComponent/>
-    <SomeOtherComponent/>
-  </SomeCtx.Provider>
-  ```
-
-  ```jsx
-  SomeCtx.Consumer(value =>
-    SomeComponent(value))
-  
-  // or when using jsSurface with JSX
-  <SomeCtx.Consumer>
-    { it => <SomeComponent/> }
-  </SomeCtx.Consumer>
-  ```
-
-* In React a virtual element is represented by an object of shape
-  `{ $$typeof, type, props, key, ref, ... }`.
-  To access `type` or `props` of a virtual elements you have to use
-  `elem.type` and `elem.props`.<br>
-  In js-surface on the other hand a virtual element is considered
-  an opaque data structure. To access `type` and `props` of a virtual
-  element you have to use `typeOf(elem)` and `propsOf(elem)`.
-
-* In React the property `children` of `props` is a opaque datastructure.
-  To handle that React provides a singleton Object called `Children`
-  that provides some helper functions to work with `children`
-  (`Children.map`, `Children.forEach`, `Children.count` etc.).<br>
-  In js-surface `children` are also represented as a opaque data
-  structure. Similar to React, js-surface also has several helper functions
-  to work with `children` (`mapChildren`, `forEachChild`, `childCount` etc.)
+* Use the exact same code to implement both React and Dyo component.
+  Write a component and decide at build time what UI library shall be
+  used
 
 * Reacts provides the possibility for a sophisticated validation of the
   components' properties, which is great.
@@ -240,24 +126,18 @@ What are the main difference to React's API?
   libraries - while it recommended to use the jsSurface independent validation
   library ["js-spec"](https://github.com/js-works/js-spec).
 
-* In jsSurface component types are represented by a corresponding factory
-  function (that does create a virtual element by using the `createElement` function).
-  That's simplifies the implemention of user interfaces in pure ECMAScript
-  if desired - nevertheless it is recommended to use JSX as this is the
-  de-facto standard in React-like UI development.
-
 ### Current API (not complete yet)
 
 #### Module "_js-surface_"
 
 Basics:
 * `createElement(type, props?, ...children)`
-* `defineComponent(componentConfig)`
-* `defineContext(contextConfig)`
-* `h(type, props?, ...children)`
+* `component(componentConfig)` or `component(dispayName, renderer, componentOptions?)`
+* `context(contextConfig)` or `context(displayName, defaultValue?, contextOptions?)`
 * `mount(content, container)`
 * `unmount(container)`
-* `Fragment(props?, ...children)`
+* `Fragment({ key }?, ...children)`
+* `Boundary({ handler }, ...children)`
 
 Hooks:
 * `useCallback(callback)`
@@ -283,15 +163,6 @@ Helper functions for children
 * `toChildArray(element)`
 * `withChildren(f)`
 
-#### Module "_js-surface/html_"
-
-Factory functions for all HTML entities (to be used in non-JSX context: `div('some text')`)
-
-#### Module "_js-surface/svg_"
-
-Factory functions for all SVG entities
-
 ### Project status
 
-**Important**: This project is in a very early state and it is not meant 
-to be used in production.
+**Important**: This project is in a early alpha state.

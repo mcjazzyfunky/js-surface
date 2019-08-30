@@ -1,18 +1,16 @@
-import { defineComponent, mount, VirtualElement, useForceUpdate, useRef }
+import { createElement, component, mount, VirtualNode, useForceUpdate, useRef }
   from '../modules/core/main/index'
 
-import '../modules/adapt-dyo/main/index'
-
-import { div, h4, label, option, select } from '../modules/html/main/index'
+import '../modules/adapt-react/main/index'
 import availableDemos from './available-demos'
 
 // --- Component DemoSelector ---------------------------------------
 
 type DemoSelectorProps = {
-  demos: [string, VirtualElement][]
+  demos: [string, VirtualNode][]
 }
 
-const DemoSelector = defineComponent<DemoSelectorProps>({
+const DemoSelector: any = component<DemoSelectorProps>({
   displayName: 'DemoSelector',
 
   render(props) {
@@ -34,37 +32,44 @@ const DemoSelector = defineComponent<DemoSelectorProps>({
     for (let i = 0; i < props.demos.length; ++i) {
       const demo = props.demos[i]
           
-      options.push(option({ key: i, value: i }, demo[0]))
+      options.push(<option key={i} value={i}>{demo[0]}</option>)
     }
 
     return (
-      div(null,
-        div(null,
-          label(null, 'Select demo: '),
-            select({
-              onChange: (ev: any) => startDemo(ev.target.value),
-              value: demoIdx.current,
-              autoFocus: true
-            }, options)),
-            div(null,
-              h4('Example: ', props.demos[demoIdx.current][0]),
-              props.demos[demoIdx.current][1])))
+      <div>
+        <div>
+          <label>Select demo: </label>
+          <select
+            onChange={(ev: any) => startDemo(ev.target.value)}
+            value={demoIdx.current}
+            autoFocus={true}
+          >
+            {options}
+          </select>
+          <div>
+            <h4>Example: {props.demos[demoIdx.current][0]}</h4>
+            {props.demos[demoIdx.current][1]}
+          </div>
+        </div>
+      </div>
+    )
   }
 })
 
 // --- Component Demo -----------------------------------------------
 
 type DemoAppProps = {
-  demos: [string, VirtualElement][]
+  demos: [string, VirtualNode][]
 }
 
-const DemoApp = defineComponent<DemoAppProps>({
+const DemoApp: any = component<DemoAppProps>({
   displayName: 'DemoApp',
 
   render(props) {
     return (
-      div(null,
-        DemoSelector({ demos: props.demos }))
+      <div>
+        <DemoSelector demos={props.demos}/>
+      </div>
     )
   }
 })
@@ -75,4 +80,4 @@ function getCurrentDemoIndex() {
 
 // --- main ---------------------------------------------------------
 
-mount(DemoApp({ demos: availableDemos }), 'main-content')
+mount(<DemoApp demos={availableDemos}/>, 'main-content')

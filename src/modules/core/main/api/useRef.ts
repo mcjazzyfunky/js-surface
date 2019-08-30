@@ -1,7 +1,9 @@
-import useState from './useState'
-
 export default function useRef<T>(initialValue?: T): { current: T } {
-  const [ret] = useState(() => ({ current: initialValue}))
+  const f = (useRef as any).__apply
+  
+  if (!f) {
+    throw new Error('[useRef] Adapter has not been initialized')
+  }
 
-  return ret as any
+  return f(initialValue) as any
 }

@@ -1,7 +1,7 @@
-import { createElement, defineComponent, useCallback, useEffect, useRef, useState } 
+import { createElement, component, useCallback, useEffect, useRef, useState } 
   from '../../modules/core/main/index'
 
-const StopWatch = defineComponent({
+const StopWatch: any = component({ // TODO
   displayName: 'StopWatch',
 
   render() {
@@ -65,4 +65,4 @@ const StopWatch = defineComponent({
   }
 })
 
-export default StopWatch()
+export default <StopWatch/>

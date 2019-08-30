@@ -1,7 +1,7 @@
-import { createElement, defineComponent, useEffect, useState }
+import { createElement, component, useEffect, useState }
   from '../../modules/core/main/index'
 
-const Clock = defineComponent({
+const Clock: any = component({
   displayName: 'Clock',
 
   render() {

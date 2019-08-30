@@ -12,6 +12,6 @@ Object.defineProperty(isElement, 'js-spec:validate', {
   value(it: any) {
     return isElement(it)
       ? null
-      : new Error('Must be a valid element')
+      : new Error('Must be a virtual element')
   }
 })

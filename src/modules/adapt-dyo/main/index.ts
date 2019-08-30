@@ -1,3 +1,4 @@
+/*
 import * as Dyo from 'dyo'
 
 import {
@@ -117,3 +118,4 @@ function DyoBoundary(props: any) {
 }
 
 (DyoBoundary as any).displayName = 'Boundary (inner)'
+*/

@@ -1,11 +1,11 @@
-import forEachChild from './forEachChild'
+import toChildArray from './forEachChild'
 
 export default function mapChildren<T>(children: any, mapper: (child: any) => T) {
-  const ret: T[] = []
+  const f = (toChildArray as any).__apply
+  
+  if (!f) {
+    throw new Error('[mapChildren] Adapter has not been initialized')
+  }
 
-  forEachChild(children, child => {
-    ret.push(mapper(child))
-  })
-
-  return ret
+  return f(children).map(mapper)
 }

@@ -1,6 +1,6 @@
-import { createElement, defineComponent, Fragment } from '../../modules/core/main/index'
+import { createElement, component, Fragment } from '../../modules/core/main/index'
 
-const FragmentDemo = defineComponent({
+const FragmentDemo: any = component({ // TODO
   displayName:  'FragmentDemo',
 
   render() {
@@ -22,7 +22,7 @@ const FragmentDemo = defineComponent({
   }
 })
 
-const Options = defineComponent({
+const Options: any = component({ // TODO
   displayName: 'Options',
 
   render() {

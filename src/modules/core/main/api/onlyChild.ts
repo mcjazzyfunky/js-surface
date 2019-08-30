@@ -1,18 +1,17 @@
-import childCount from './childCount'
-import forEachChild from './forEachChild'
+import toChildArray from './toChildArray'
 
 function onlyChild<T>(children: any): T {
-  let ret: T
+  const f = (toChildArray as any).__apply
+  
+  if (!f) {
+    throw new Error('[onlyChild] Adapter has not been initialized')
+  }
 
-  const count = childCount(children)
+  const childArray = f(children) 
 
-  if (count !== 1) {
+  if (childArray.lenght !== 1) {
     throw new Error('[onlyChild] can only be used if exactly one child exists')
   }
 
-  forEachChild(children, child => {
-    ret = child
-  })
-
-  return ret
+  return childArray[1]
 }

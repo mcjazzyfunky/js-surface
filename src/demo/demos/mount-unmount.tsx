@@ -1,15 +1,19 @@
-import { createElement, defineComponent, useEffect, useMethods, useForceUpdate, useState }
+import { createElement, component, useEffect, useImperativeMethods, useForceUpdate, useState }
   from '../../modules/core/main/index'
 
 type Methods = {
   sayHello: () => void
 }
 
-const ComponentA = defineComponent({
+type ABProps = {
+  componentRef: any // TODO
+}
+
+const ComponentA: any = component<ABProps>({ // TODO
   displayName: 'ComponentA',
 
-  render(_, ref) {
-    useMethods(ref, () => ({
+  render({ componentRef }) {
+    useImperativeMethods(componentRef, () => ({
       sayHello() {
         console.log('>> ComponentA says "Hello"')
       }
@@ -25,11 +29,11 @@ const ComponentA = defineComponent({
   }
 })
 
-const ComponentB = defineComponent({
+const ComponentB: any = component<ABProps>({ // TODO
   displayName: 'ComponentB',
 
-  render(_, ref) {
-    useMethods(ref, () => ({
+  render({ componentRef }) {
+    useImperativeMethods(componentRef, () => ({
       sayHello() {
         console.log('ComponentB says "Hello"')
       }
@@ -45,7 +49,7 @@ const ComponentB = defineComponent({
   }
 })
 
-const Demo = defineComponent({
+const Demo: any = component({ // TODO
   displayName: 'Demo',
 
   render() {
@@ -63,8 +67,8 @@ const Demo = defineComponent({
     }, [])
 
     return state.showComponentA 
-      ? ComponentA({ ref: refCallback.bind(null, 'ComponentA') })
-      : ComponentB({ ref: refCallback.bind(null, 'ComponentB') })
+      ? ComponentA({ componentRef: refCallback.bind(null, 'ComponentA') })
+      : ComponentB({ componentRef: refCallback.bind(null, 'ComponentB') })
   }
 })
 
@@ -76,4 +80,4 @@ function refCallback(type: string, ref: any) {
   }
 }
 
-export default Demo()
+export default <Demo/>

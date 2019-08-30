@@ -1,14 +1,14 @@
-import { createElement, defineComponent, useCallback, useEffect, useState }
+import { createElement, component, useCallback, useEffect, useState }
   from '../../modules/core/main/index'
 
-import { div } from '../../modules/html/main/index'
 import React from 'react'
 import * as Dyo from 'dyo'
 
 const
   s = createElement,
   r = React.createElement,
-  d = Dyo.createElement
+  d = Dyo.createElement,
+  div = createElement.bind(null, 'div')
 
 function runTests() {
   const
@@ -70,7 +70,7 @@ function runTests() {
         div(
           { className: 'my-class', id: 'my-id', key: 1 },
           div({ className: 'my-class2', id: 'my-id2', key: 2},
-            div(div(div(div()))),
+            div(null, div(null, div(null, div()))),
             'some text', [1, 2, 3, 4, 5]))  
       }
     }
@@ -101,7 +101,7 @@ function runTests() {
   return result
 }
 
-const PerformanceTest = defineComponent({
+const PerformanceTest: any = component({ // TODO
   displayName: 'PerformanceTest',
 
   render() {
@@ -145,9 +145,7 @@ type ReportProps = {
   result: string
 }
 
-function X() { return <div>xxx</div> }
-
-const Report = defineComponent<ReportProps>({
+const Report: any = component<ReportProps>({ // TODO
   displayName: 'Report',
 
   render({ result }) {

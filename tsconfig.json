@@ -26,13 +26,8 @@
     ]
   },
   "files": [
-    "src/modules/all/main/index.ts",
     "src/modules/core/main/index.ts",
     "src/modules/adapt-react/main/index.ts",
-    "src/modules/adapt-dyo/main/index.ts",
-    "src/modules/html/main/index.ts",
-    "src/modules/svg/main/index.ts",
-    "src/modules/experimental/main/index.ts"
   ],
 
   "include": [

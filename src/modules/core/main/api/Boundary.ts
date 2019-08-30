@@ -1,27 +1,31 @@
-import defineComponent from './defineComponent'
+import { Spec } from 'js-spec'
+
+import createElement from './createElement'
+import component from './component'
 import isNode from './isNode'
 
+
+const Boundary = {} as any // TODO
+/*
 type BoundaryProps = {
   handle: (exception: any) => void,
   children?: any // TODO
 }
 
-const Boundary = defineComponent<BoundaryProps>({
+const Boundary: any = component<BoundaryProps>({ // TODO
   displayName: 'Boundary',
 
-  properties: {
-    handle: {
-      type: Function,
-      required: true
+  validate: Spec.checkProps({
+    required: {
+      handle: Spec.function
     },
-
-    children: {
-      validate: isNode
+    optional: {
+      children: isNode
     }
-  },
+  }),
 
   render(props) {
-    delegate = delegate || (Boundary as any).__apply  
+    const delegate: any = (createElement as any).__boundary
 
     if (!delegate) {
       throw new Error('[Boundary] Adapter has not been initialized')
@@ -30,10 +34,7 @@ const Boundary = defineComponent<BoundaryProps>({
     return delegate(props)
   }
 })
-
-// --- locals -------------------------------------------------------
-
-let delegate: any = null // TODO
+*/
 
 //--- exports -------------------------------------------------------
 

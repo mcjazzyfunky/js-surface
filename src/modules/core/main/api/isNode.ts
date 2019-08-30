@@ -17,7 +17,7 @@ Object.defineProperty(isNode, 'js-spec:validate', {
   value(it: any) {
     return isNode(it)
       ? null
-      : new Error('Must be a valid node')
+      : new Error('Must be a virtual node')
   }
 })
 
