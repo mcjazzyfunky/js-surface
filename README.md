@@ -66,7 +66,7 @@ const HelloWorld = component('HelloWorld', props =>
 )
 */
 
-mount(HelloWorld(), 'app')
+mount(<HelloWorld/>, 'app')
 ```
 
 #### Simple counter
@@ -78,7 +78,7 @@ import 'js-surface/adapt-react' // to use React under the hood
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
 
-const Counter = defineComponent({
+const Counter = component({
   displayName: 'Counter',
 
   validate: Spec.checkProps({
