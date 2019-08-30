@@ -7,12 +7,34 @@ import {
   mount, unmount,
   typeOf, propsOf, toChildArray, forEachChild,
   useCallback, useContext, useEffect, useImperativeMethods, useRef, useState,
-  Fragment, Props
+  Props
 } from '../../core/main/index'
 
-function adapt(base: any, delegate: any) {
-  Object.defineProperty(base, '__apply', {
-    value: delegate
+adapt(createElement, adjustedCreateElement)
+adapt(isElement, React.isValidElement)
+adapt(childCount, React.Children)
+adapt(component, buildComponent)
+adapt(context, buildContext) 
+adapt(useCallback, React.useCallback)
+adapt(useContext, React.useContext) 
+adapt(typeOf, (it: any) => it.type) 
+adapt(propsOf, (it: any) => it.type)
+adapt(toChildArray, React.Children.toArray) 
+// adapt(forEachChild, React.Children.forEach) // TODO
+adapt(useEffect, React.useEffect)
+adapt(useImperativeMethods, React.useImperativeHandle)
+adapt(useState, React.useState)
+adapt(useRef, React.useRef)
+adapt(mount, ReactDOM.render)
+adapt(unmount, ReactDOM.unmountComponentAtNode)
+adapt(createElement, ReactBoundary, '__boundary')
+adapt(createElement, React.Fragment, '__fragment')
+
+// --- locals -------------------------------------------------------
+
+function adapt(target: any, value: any, key = '__apply') {
+  Object.defineProperty(target, key, {
+    value: value
   })
 }
 
@@ -31,38 +53,6 @@ function adjustedCreateElement(/* arguments */) {
 
   return React.createElement.apply(null, args)
 }
-
-adapt(createElement, adjustedCreateElement)
-adapt(isElement, React.isValidElement)
-adapt(childCount, React.Children)
-adapt(component, buildComponent)
-adapt(context, buildContext) 
-
-adapt(useCallback, React.useCallback)
-adapt(useContext, React.useContext) 
-
-adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.type)
-adapt(toChildArray, React.Children.toArray) 
-// adapt(forEachChild, React.Children.forEach) // TODO
-
-adapt(useEffect, React.useEffect)
-adapt(useImperativeMethods, React.useImperativeHandle)
-adapt(useState, React.useState)
-adapt(useRef, React.useRef)
-
-adapt(mount, ReactDOM.render)
-adapt(unmount, ReactDOM.unmountComponentAtNode)
-
-Object.defineProperty(createElement, '__boundary', {
-  get: () => ReactBoundary
-})
-
-Object.defineProperty(createElement, '__fragment', {
-  value: React.Fragment
-})
-
-// --- locals -------------------------------------------------------
 
 function buildComponent<P extends Props = {}>(
   displayName: string,
@@ -138,19 +128,21 @@ function buildContext<T>(
   return ret
 }
 
-class ReactBoundary extends React.Component {
-  static displayName = 'Boundary (inner)'
+function ReactBoundary() {
+}
 
-  static getDerivedStateFromError() {
-  }
+const proto = Object.create(React.Component.prototype)
+ReactBoundary.prototype = proto
 
-  componentDidCatch(error: any, info: any) {
-    if (this.props.handle) {
-      this.props.handle(error, info)
-    }
-  }
+ReactBoundary.displayName = 'Boundary (inner)'
+ReactBoundary.getDerivedStateFromError = () => {}
 
-  render() {
-    return this.props.children
+proto.componentDidCatch = function (error: any, info: any) {
+  if (this.props.handle) {
+    this.props.handle(error, info)
   }
+}
+
+proto.render = function () {
+ return this.props.children
 }
