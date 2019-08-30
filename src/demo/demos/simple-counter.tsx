@@ -25,7 +25,7 @@ const Counter: any = component<CounterProps>({ // TODO
 
     return (
       <div>
-        <label>{label}</label>
+        <label>{label} </label>
         <button onClick={onIncrement}>{count}</button>
       </div>
     )

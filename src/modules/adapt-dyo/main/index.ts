@@ -1,17 +1,120 @@
-/*
 import * as Dyo from 'dyo'
 
 import {
   childCount,
-  createElement, defineComponent, defineContext, isElement,
+  createElement, component, context, isElement,
   mount, unmount,
   typeOf, propsOf, toChildArray, forEachChild,
-  useContext, useEffect, useMethods, useState,
-  Boundary, Fragment, Props, Context,
+  useCallback, useContext, useEffect, useImperativeMethods, useRef, useState,
+  Props
 } from '../../core/main/index'
 
-// TODO!!!
-function adjustedUseMethods(ref: any, getHandler: Function) {
+const h = Dyo.createElement
+
+adapt(createElement, adjustedCreateElement)
+adapt(isElement, Dyo.isValidElement)
+adapt(childCount, Dyo.Children.count)
+adapt(component, buildComponent)
+adapt(context, buildContext) 
+adapt(useCallback, Dyo.useCallback)
+adapt(useContext, useDyoContext) 
+adapt(typeOf, (it: any) => it.type) 
+adapt(propsOf, (it: any) => it.props)
+adapt(toChildArray, Dyo.Children.toArray) 
+// adapt(forEachChild, React.Children.forEach) // TODO
+adapt(useEffect, Dyo.useEffect)
+adapt(useImperativeMethods, useDyoImperativeMethods)
+adapt(useState, Dyo.useState)
+adapt(useRef, Dyo.useRef)
+adapt(mount, Dyo.render)
+adapt(unmount, Dyo.unmountComponentAtNode)
+adapt(createElement, DyoBoundary, '__boundary')
+adapt(createElement, Dyo.Fragment, '__fragment')
+
+// --- locals -------------------------------------------------------
+
+function adapt(target: any, value: any, key = '__apply') {
+  Object.defineProperty(target, key, {
+    value: value
+  })
+}
+
+function adjustedCreateElement(/* arguments */) {
+  // TODO
+  return Dyo.createElement.apply(null, arguments)
+}
+
+function buildComponent<P extends Props = {}>(
+  displayName: string,
+  renderer: (props: P) => any,
+  validate?: (props: P) => boolean | null | Error, 
+  memoize?: boolean
+): any {
+  let ret: any = renderer.bind(null)
+  ret.displayName = displayName
+
+  if (validate) {
+    ret.validate = validate
+  }
+
+  if (memoize === true) {
+    ret = Dyo.memo(ret)
+  }
+
+  return ret
+}
+
+function buildContext<T>(
+  displayName: string,
+  defaultValue: T,
+  validate: (value: T) => boolean | null | Error
+) {
+  const DyoContext = Dyo.Context
+
+  const Provider = ({ value, children }: any) =>
+    Dyo.createElement(DyoContext, { value }, children)
+
+  // TODO Consumer!!!
+  const Consumer: any = null
+  
+  const constr: any = () => {}
+
+  constr.__defaultValue = defaultValue
+
+  const ret: any = Object.create(constr.prototype)
+
+  ret.Provider = Provider
+  ret.Consumer = Consumer
+
+  Provider.displayName = displayName
+
+  if (validate) {
+    Provider.validate = validate
+  }
+
+  return ret
+}
+
+function useDyoContext(ctx: any): any {
+  let ret = Dyo.useContext(ctx.Provider)
+
+  if (ret === undefined) {
+    ret = ctx.constructor.__defaultValue
+  }
+
+  return ret
+}
+
+function DyoBoundary({ handle, children }: any) {
+  function fallback(error: any): any {
+    handle(error.message, null)
+    return null
+  }
+
+  return h(Dyo.Boundary, { fallback }, children)
+}
+
+function useDyoImperativeMethods(ref: any, getHandler: Function) {
   const handler = getHandler() // TODO
 
   if (ref && typeof ref === 'object') {
@@ -20,102 +123,3 @@ function adjustedUseMethods(ref: any, getHandler: Function) {
     ref(handler)
   }
 }
-
-function adapt(base: any, delegate: any) {
-  Object.defineProperty(base, '__apply', {
-    value: delegate
-  })
-}
-
-adapt(createElement, Dyo.createElement)
-adapt(isElement, Dyo.isValidElement)
-adapt(childCount, Dyo.Children)
-
-adapt(defineComponent, (factory: any) => {
-  const
-     defaultProps = factory.meta.defaultProps
-
-  let ret = (props: Props, ref: any) => {
-    if (defaultProps) {
-      props = Object.assign({}, defaultProps, props) // TODO - performance
-    }
-
-    return factory.meta.render(props, ref)
-  }
-
-  if (factory.meta.memoize) {
-    ret = Dyo.memo(ret)
-  }
-
-  if (factory.meta.render.length > 1) {
-    const oldRet = ret
-
-    ret = (props: any) => oldRet(props, props ? props.ref : undefined)
-  }
-
-  return ret
-})
-
-adapt(defineContext, (ctx: Context<any>, meta: any) => { // TODO
-  const internalContext = Dyo.createContext(meta.defaultValue)
-
-  Object.defineProperty(ctx.Provider, '__internal_context', {
-    value: internalContext
-  })
-
-  // TODO
-  function Provider(props: any) {
-    Dyo.useContext(internalContext)[1](props.value)
-
-    return props.children
-  }
-
-  // TODO
-  function Consumer(props: any) {
-    const [value] = Dyo.useContext(internalContext)
-
-    return props.children(value)
-  }
-
-  return [internalContext, Provider, Consumer]
-})
-
-adapt(useContext, (ctx: any) => {
-  return Dyo.useContext(ctx.Provider.__internal_context)[0]
-})
-
-adapt(Boundary, (props: any) => {
-  return (
-    Dyo.h(
-      DyoBoundary,
-      { handle: props.handle },
-      props.children)
-  )
-})
-
-adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.type)
-adapt(toChildArray, Dyo.Children.toArray) 
-adapt(forEachChild, Dyo.Children.forEach)
-
-adapt(useEffect, Dyo.useEffect)
-adapt(useMethods, adjustedUseMethods)
-adapt(useState, Dyo.useState)
-
-adapt(mount, Dyo.render)
-adapt(unmount, Dyo.unmountComponentAtNode)
-
-Object.defineProperty(Fragment, '__internal_type', {
-  value: Dyo.Fragment
-})
-
-function DyoBoundary(props: any) {
-  return Dyo.h(Dyo.Boundary, {
-    fallback: (e: any) => {
-      props.handle(e.message, null)
-    }
-  }, ...props.children)
-}
-
-(DyoBoundary as any).displayName = 'Boundary (inner)'
-*/

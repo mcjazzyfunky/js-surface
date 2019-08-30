@@ -12,13 +12,13 @@ import {
 
 adapt(createElement, adjustedCreateElement)
 adapt(isElement, React.isValidElement)
-adapt(childCount, React.Children)
+adapt(childCount, React.Children.count)
 adapt(component, buildComponent)
 adapt(context, buildContext) 
 adapt(useCallback, React.useCallback)
 adapt(useContext, React.useContext) 
 adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.type)
+adapt(propsOf, (it: any) => it.props)
 adapt(toChildArray, React.Children.toArray) 
 // adapt(forEachChild, React.Children.forEach) // TODO
 adapt(useEffect, React.useEffect)
