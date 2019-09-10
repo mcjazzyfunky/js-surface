@@ -91,19 +91,51 @@ const Counter = component({
   render({ initialValue = 0, label = 'Counter' }) {
     const
       [count, setCount] = useState(initialValue),
-      onIncrement = useCallback(() => setCount(count + 1))
+      onIncrement = useCallback(() => setCount(it => it + 1))
 
-      return (
-        <div>
-          <label>{label}</label>
-          <button onClick={onIncrement}>{count}</button>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <label>{label}</label>
+        <button onClick={onIncrement}>{count}</button>
+      </div>
+    )
   }
 })
 
 mount(<Counter/>, 'app')
+```
+
+In case you are using *ESLinter* with *eslint-plugin-react-hooks* the linter
+will not like the syntax above (due to the lowercase first letter of function
+`render`). That's why the author's preferred way to define components
+the following way:
+
+```javascript
+const Counter = component({
+  displayName: 'Counter',
+
+  validate: Spec.checkProps({
+    optional: {
+      initialValue: Spec.integer,
+      label: Spec.string
+    }
+  }),
+
+  render: CounterView
+})
+
+function CounterView({ initialValue = 0, label = 'Counter' }) {
+  const
+    [count, setCount] = useState(initialValue),
+    onIncrement = useCallback(() => setCount(it => it + 1))
+
+  return (
+    <div>
+      <label>{label}</label>
+      <button onClick={onIncrement}>{count}</button>
+    </div>
+  )
+}
 ```
 
 ### Motivation
