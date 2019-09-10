@@ -105,10 +105,10 @@ const Counter = component({
 mount(<Counter/>, 'app')
 ```
 
-In case you are using *ESLinter* with *eslint-plugin-react-hooks* the linter
-will not like the syntax above (due to the lowercase first letter of function
-`render`). That's why the author's preferred way to define components
-the following way:
+In case you are using *ESLint* with *eslint-plugin-react-hooks*, the linter
+will not like the usage above (due to the lowercase first letter of function
+`render`). That's why the preferred way to define components is the
+following:
 
 ```javascript
 const Counter = component({
