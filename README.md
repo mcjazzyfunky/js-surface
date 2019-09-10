@@ -45,7 +45,7 @@ NOT meant to be used in real-world applications.
 First, here's a small demo application to get a glimpse of how components
 are currently implemented with jsSurface:
 
-#### Hello world component (pure ECMAScript)
+#### Hello world component
 
 ```jsx
 import { createElement, component, mount } from 'js-surface'
