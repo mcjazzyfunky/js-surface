@@ -1,9 +1,18 @@
-export default function toChildArray(children: any): any[] { // TODO
-  const f = (toChildArray as any).__apply
-  
-  if (!f) {
-    throw new Error('[toChildArray] Adapter has not been initialized')
-  }
+// internal import
+import getAdapter from '../internal/helpers/getAdapter'
+import Children from './types/Children'
+import VirtualNode from './types/VirtualNode'
 
-  return f(children)
+// --- toChldArray --------------------------------------------------
+
+function toChildArray(children: Children): VirtualNode[] {
+  return adapter.toChildArray(children)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default toChildArray

@@ -1,16 +1,15 @@
+// internal imports
 import useCallback from './useCallback'
 import useState from './useState'
 
-export default function () {
-  const
-    useCallback2 = (useCallback as any).__apply,
-    useState2 = (useState as any).__apply
-  
-  if (!useCallback2 || !useState2) {
-    throw new Error('[useForceUpdate] Adapter has not been initialized')
-  }
+// --- useForceUpdate -----------------------------------------------
 
-  const [state, setState] = useState2(() => false)
+function useForceUpdate() {
+  const [state, setState] = useState(() => false)
 
-  return useCallback2(() => setState((it: any) => !it), null)
+  return useCallback(() => setState(it => !it), [])
 }
+
+// --- exports ------------------------------------------------------
+
+export default useForceUpdate

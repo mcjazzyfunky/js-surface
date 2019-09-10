@@ -1,11 +1,17 @@
-import toChildArray from './toChildArray'
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
+import Children from './types/Children'
 
-export default function childCount(children: any): number {
-  const f = (toChildArray as any).__apply
-  
-  if (!f) {
-    throw new Error('[childCount] Adapter has not been initialized')
-  }
+// --- childCount ---------------------------------------------------
 
-  return f(children).length
+function childCount(children: Children): number {
+  return adapter.childCount(children)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default childCount

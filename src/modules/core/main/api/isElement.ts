@@ -1,11 +1,10 @@
-export default function isElement(it: any): boolean {
-  const f = (isElement as any).__apply
-  
-  if (!f) {
-    throw new Error('[isElement] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
-  return f(it)
+// --- isElement ----------------------------------------------------
+
+function isElement(it: any): boolean {
+  return adapter.isElement(it)
 }
 
 Object.defineProperty(isElement, 'js-spec:validate', {
@@ -15,3 +14,11 @@ Object.defineProperty(isElement, 'js-spec:validate', {
       : new Error('Must be a virtual element')
   }
 })
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default isElement

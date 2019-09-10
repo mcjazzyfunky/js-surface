@@ -1,6 +1,9 @@
+// internal imports
 import isElement from './isElement'
 
-export default function isNode(it: any): boolean {
+// --- isNode -------------------------------------------------------
+
+function isNode(it: any): boolean {
   let ret = it === null || it === undefined || isElement(it)
 
   if (!ret) {
@@ -27,3 +30,7 @@ const SYMBOL_ITERATOR =
   typeof Symbol === 'function' && Symbol.iterator
     ? Symbol.iterator
     : '@@iterator'
+
+// --- exports ------------------------------------------------------
+
+export default isNode

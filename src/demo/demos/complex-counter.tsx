@@ -2,7 +2,7 @@ import {
   createElement,
   component,
   useCallback,
-  useImperativeMethods,
+  useImperativeHandle,
   useRef,
   useState,
   Ref
@@ -27,7 +27,7 @@ const Counter: any = component<CounterProps>({
       onIncrement = useCallback(() => setCount(count + 1)),
       onDecrement = useCallback(() => setCount(count - 1))
 
-    useImperativeMethods(componentRef, () => ({
+    useImperativeHandle(componentRef, () => ({
       reset(n: number) {
         setCount(n)
       }

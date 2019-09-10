@@ -1,8 +1,13 @@
+// external imports
 import { Spec } from 'js-spec'
 
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 import Context from './types/Context'
 import ContextConfig from './types/ContextConfig'
 import ContextOptions from './types/ContextOptions'
+
+// --- context ------------------------------------------------------
 
 function context<T>(config: ContextConfig<T>): Context<T>
 
@@ -13,12 +18,6 @@ function context<T>(
 ): Context<T>
 
 function context<T>(arg1: any, arg2?: any, arg3?: any): Context<T> {
-  const buildContext = (context as any).__apply
-  
-  if (!buildContext) {
-    throw new Error('[context] Adapter has not been initialized')
-  }
-
   let errorMsg: string
 
   if (process.env.NODE_ENV === 'development' as any) {
@@ -50,8 +49,8 @@ function context<T>(arg1: any, arg2?: any, arg3?: any): Context<T> {
   }
 
   return typeof arg1 === 'string'
-    ? buildContext(arg1, arg2, arg3.validate)
-    : buildContext(arg1.displayName, arg1.defaultValue, arg1.validate)
+    ? adapter.defineContext(arg1, arg2, arg3.validate)
+    : adapter.defineContext(arg1.displayName, arg1.defaultValue, arg1.validate)
 }
 
 // --- locals -------------------------------------------------------
@@ -75,6 +74,10 @@ if (process.env.NODE_ENV === 'development' as any) {
       validate: Spec.optional(Spec.function)
     })
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
 
 // --- exports ------------------------------------------------------
 

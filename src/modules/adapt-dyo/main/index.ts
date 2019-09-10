@@ -1,43 +1,39 @@
+// external imports
 import * as Dyo from 'dyo'
 
-import {
-  childCount,
-  createElement, component, context, isElement,
-  mount, unmount,
-  typeOf, propsOf, toChildArray, forEachChild,
-  useCallback, useContext, useEffect, useImperativeMethods, useRef, useState,
-  Props
-} from '../../core/main/index'
+// internal imports
+import { createElement, Props } from '../../core/main/index'
 
-const h = Dyo.createElement
+import Adapter from '../../core/main/internal/types/Adapter'
 
-adapt(createElement, adjustedCreateElement)
-adapt(isElement, Dyo.isValidElement)
-adapt(childCount, Dyo.Children.count)
-adapt(component, buildComponent)
-adapt(context, buildContext) 
-adapt(useCallback, Dyo.useCallback)
-adapt(useContext, useDyoContext) 
-adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.props)
-adapt(toChildArray, Dyo.Children.toArray) 
-// adapt(forEachChild, React.Children.forEach) // TODO
-adapt(useEffect, Dyo.useEffect)
-adapt(useImperativeMethods, useDyoImperativeMethods)
-adapt(useState, Dyo.useState)
-adapt(useRef, Dyo.useRef)
-adapt(mount, Dyo.render)
-adapt(unmount, Dyo.unmountComponentAtNode)
-adapt(createElement, DyoBoundary, '__boundary')
-adapt(createElement, Dyo.Fragment, '__fragment')
+const adapter: Adapter = (createElement as any).__adapter
+
+const adapt: Adapter = {
+  Boundary: DyoBoundary,
+  Fragment: Dyo.Fragment,
+
+  childCount: Dyo.Children.count,
+  createElement: adjustedCreateElement,
+  defineComponent: buildComponent,
+  defineContext: buildContext,
+  forEachChild: Dyo.Children.forEach,
+  useEffect: Dyo.useEffect,
+  useImperativeHandle: useDyoImperativeHandle,
+  useState: Dyo.useState,
+  isElement: Dyo.isValidElement,
+  mount: Dyo.render,
+  unmount: Dyo.render.bind(null, null),
+  propsOf: (it: any) => Dyo.isValidElement(it) ? it.props : null,
+  typeOf: (it: any) => Dyo.isValidElement(it) ? it.type : null,
+  toChildArray: Dyo.Children.toArray,
+  useCallback: Dyo.useCallback,
+  useContext: useDyoContext,
+  useRef: Dyo.useRef
+}
+
+Object.assign((createElement as any).__adapter, adapt)
 
 // --- locals -------------------------------------------------------
-
-function adapt(target: any, value: any, key = '__apply') {
-  Object.defineProperty(target, key, {
-    value: value
-  })
-}
 
 function adjustedCreateElement(/* arguments */) {
   // TODO
@@ -47,8 +43,8 @@ function adjustedCreateElement(/* arguments */) {
 function buildComponent<P extends Props = {}>(
   displayName: string,
   renderer: (props: P) => any,
-  validate?: (props: P) => boolean | null | Error, 
-  memoize?: boolean
+  memoize?: boolean,
+  validate?: (props: P) => boolean | null | Error
 ): any {
   let ret: any = renderer.bind(null)
   ret.displayName = displayName
@@ -111,10 +107,10 @@ function DyoBoundary({ handle, children }: any) {
     return null
   }
 
-  return h(Dyo.Boundary, { fallback }, children)
+  return Dyo.h(Dyo.Boundary, { fallback }, children)
 }
 
-function useDyoImperativeMethods(ref: any, getHandler: Function) {
+function useDyoImperativeHandle(ref: any, getHandler: Function) {
   const handler = getHandler() // TODO
 
   if (ref && typeof ref === 'object') {

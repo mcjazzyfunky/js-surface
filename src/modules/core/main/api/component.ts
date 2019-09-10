@@ -1,11 +1,16 @@
+// external imports
+import { Spec } from 'js-spec'
+
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 import Component from './types/Component'
 import VirtualElement from './types/VirtualElement'
 import VirtualNode from './types/VirtualNode' 
-import { Spec } from 'js-spec'
-
 import Props from './types/Props'
 import ComponentConfig from './types/ComponentConfig'
 import ComponentOptions from './types/ComponentOptions'
+
+// --- component ----------------------------------------------------
 
 function component<P extends Props>
   (config: ComponentConfig<P>): ExtFunctionComponent<P>
@@ -19,12 +24,6 @@ function component<P extends Props = {}>(
 function component<P extends Props = {}>(
   arg1: any, arg2?: any, arg3?: any
 ): ExtFunctionComponent<P> {
-  const buildComponent = (component as any).__apply
-  
-  if (!buildComponent) {
-    throw new Error('[component] Adapter has not been initialized')
-  }
-
   let errorMsg: string
 
   if (process.env.NODE_ENV === 'development' as any) {
@@ -56,11 +55,13 @@ function component<P extends Props = {}>(
   }
 
   return typeof arg1 === 'string'
-    ? buildComponent(arg1, arg2, arg2.validate, arg2.memoize)
-    : buildComponent(arg1.displayName, arg1.render, arg1.validate, arg1.memoize)
+    ? adapter.defineComponent(arg1, arg2, arg2.validate, arg2.memoize) as any // TODO
+    : adapter.defineComponent(arg1.displayName, arg1.render, arg1.validate, arg1.memoize)
 }
 
 // --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
 
 type ExtProps<P extends Props> = Props & {
   ref?: any // TODO

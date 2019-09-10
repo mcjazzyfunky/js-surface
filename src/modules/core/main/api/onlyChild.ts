@@ -1,17 +1,21 @@
+// internal imports
 import toChildArray from './toChildArray'
+import Children from './types/Children'
+import VirtualNode from './types/VirtualNode'
 
-function onlyChild<T>(children: any): T {
-  const f = (toChildArray as any).__apply
+// --- onlyChild ----------------------------------------------------
+
+function onlyChild(children: Children): VirtualNode {
+  const elements = toChildArray(children)
   
-  if (!f) {
-    throw new Error('[onlyChild] Adapter has not been initialized')
+  if (elements.length !== 1) {
+    throw new Error('[onlyChild] Can only be used if exactly one child exists')
   }
 
-  const childArray = f(children) 
-
-  if (childArray.lenght !== 1) {
-    throw new Error('[onlyChild] can only be used if exactly one child exists')
-  }
-
-  return childArray[1]
+  return elements[1]
 }
+
+// --- exports ------------------------------------------------------
+
+export default onlyChild
+

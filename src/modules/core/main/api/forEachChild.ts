@@ -1,9 +1,15 @@
-export default function forEachChild(children: any, action: (child: any) => void): void { // TODO
-  const f = (forEachChild as any).__apply
-  
-  if (!f) {
-    throw new Error('[forEachChild] Adapter has not been initialized')
-  }
+import getAdapter from '../internal/helpers/getAdapter'
 
-  f(children, action)
+// --- forEachChild -------------------------------------------------
+
+function forEachChild(children: any, action: (child: any) => void): void { // TODO
+  adapter.forEachChild(children, action)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default forEachChild

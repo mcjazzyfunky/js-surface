@@ -1,9 +1,16 @@
-export default function useCallback<T = void>(callback: (...args: any[]) => T, inputs?: any[]): (...args: any[]) => any {
-  const f = (useCallback as any).__apply
-  
-  if (!f) {
-    throw new Error('[useCallback] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
-  return f(callback, inputs)
+// --- useCallback --------------------------------------------------
+
+function useCallback<T = void>(callback: (...args: any[]) => T, inputs?: any[]): (...args: any[]) => any {
+  return adapter.useCallback(callback, inputs)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default useCallback

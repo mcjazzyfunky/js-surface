@@ -1,6 +1,7 @@
 // internal imports
 import Boundary from './Boundary'
 import Fragment from './Fragment'
+import createDefaultAdapter from '../internal/helpers/createDefaultAdapter'
 import Props from './types/Props'
 import Component from './types/Component'
 import VirtualElement from './types/VirtualElement'
@@ -13,40 +14,34 @@ function createElement<P extends Props>(
 function createElement(/* arguments */): any {
   let ret: any
 
-  const f = (createElement as any).__apply
-
-  if (!f) {
-    throw new Error('[createElement] Adapter has not been initialized')
-  }
-
   if (arguments[0] === Fragment) {
     const
-      fragment = (createElement as any).__fragment,
+      fragment = adapter.Fragment,
       newArgs = [...arguments]
-
-    if (fragment === undefined) {
-      throw new Error('[createElement] Adapter has not been initialized')
-    }
 
     newArgs[0] = fragment
-    ret = f.apply(null, newArgs)
+    ret = adapter.createElement.apply(null, newArgs)
   } else if (arguments[0] === Boundary) {
     const
-      boundary = (createElement as any).__boundary,
+      boundary = adapter.Boundary,
       newArgs = [...arguments]
 
-    if (boundary === undefined) {
-      throw new Error('[createElement] Adapter has not been initialized')
-    }
-
     newArgs[0] = boundary
-    ret = f.apply(null, newArgs)
+    ret = adapter.createElement.apply(null, newArgs)
   } else {
-    ret = f.apply(null, arguments)
+    ret = adapter.createElement.apply(null, arguments)
   }
 
   return ret
 }
+
+Object.defineProperty(createElement, '__adapter', {
+  value: createDefaultAdapter()
+})
+
+// --- locals -------------------------------------------------------
+
+const adapter = (createElement as any).__adapter
 
 // --- exports ------------------------------------------------------
 

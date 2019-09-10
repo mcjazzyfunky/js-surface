@@ -1,9 +1,16 @@
-export default function useState<T>(init: (() => T) | T): [T, (updater: (T | ((value: T) => T))) => void] {
-  const f = (useState as any).__apply
-  
-  if (!f) {
-    throw new Error('[useState] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
-  return f(init)
+// --- useState -----------------------------------------------------
+
+function useState<T>(init: (() => T) | T): [T, (updater: (T | ((value: T) => T))) => void] {
+  return adapter.useState(init) 
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default useState

@@ -1,26 +1,58 @@
-type Adapter = {
-  createElement(type: any, props?: any, ...children: any[]): any,
+import Props from '../../api/types/Props'
+import Component from '../../api/types/Component'
+import Context from '../../api/types/Context'
+import Children from '../../api/types/Children'
+import VirtualElement from '../../api/types/VirtualElement'
+import VirtualNode from '../../api/types/VirtualNode'
 
-  defineComponent(displayName: string, renderer: Function, memoize: boolean, validate: Function): Function,
-  defineContext(displayName: string, defaultValue: any, validate: Function): any,
+type Adapter = {
+  createElement<P extends Props = {}>(
+    type: string | Component<P>,
+    props?: P,
+    ...children: VirtualNode[]
+  ): VirtualElement<P>,
+
+  defineComponent<P extends Props = {}>(
+    displayName: string,
+    renderer: Function,
+    memoize: boolean,
+    validate: Function
+  ): Component<P>,
+
+  defineContext<T>(
+    displayName: string,
+    defaultValue: T,
+    validate: Function
+  ): Context<T>,
 
   isElement(it: any): boolean,
-  childCount(it: any): number,
-  forEachChild(children: any, action: (child: any) => void): void,
-  toChildArray: Function
 
+  childCount(
+    children: Children
+  ): number,
+
+  forEachChild(
+    children: Children,
+    action: (child: VirtualNode) => void
+  ): void,
+
+  toChildArray(
+    children: Children
+  ): VirtualNode[],
+
+  // TODO
   useCallback: Function,
   useContext: Function,
   useEffect: Function,
-  useImperativeMethods: Function,
+  useImperativeHandle: Function,
   useState: Function,
   useRef: Function,
 
-  typeOf: Function,
-  propsOf: Function,
+  typeOf(elem: VirtualElement<string | Component<any>>): string | Component<any>,
+  propsOf(elem: VirtualElement<string | Component<any>>): Props,
 
-  mount: Function,
-  unmount: Function,
+  mount(content: VirtualElement<any>, container: Element): void,
+  unmount(container: Element): void,
 
   Fragment: any,
   Boundary: any

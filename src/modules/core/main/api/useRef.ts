@@ -1,9 +1,16 @@
-export default function useRef<T>(initialValue?: T): { current: T } {
-  const f = (useRef as any).__apply
-  
-  if (!f) {
-    throw new Error('[useRef] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
-  return f(initialValue) as any
+// --- useRef -------------------------------------------------------
+
+function useRef<T>(initialValue?: T): { current: T } {
+  return adapter.useRef(initialValue)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default useRef

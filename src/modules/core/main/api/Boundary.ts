@@ -1,10 +1,9 @@
-import { Spec } from 'js-spec'
+// --- Boundary -----------------------------------------------------
 
-import createElement from './createElement'
-import component from './component'
+// Just to make sure that the objects type name is 'Boundary'
+// even in production
+const Boundary = Object.create({ Boundary() {} }.Boundary.prototype)
 
-const Boundary = {} as any // TODO
-
-//--- exports -------------------------------------------------------
+// --- exports ------------------------------------------------------
 
 export default Boundary

@@ -1,5 +1,11 @@
+// internal imports
 import Props from './Props'
+import OpaqueType from '../../internal/types/OpaqueType'
 
-type Component<P extends Props> = unknown & { __opaqueType__: 'component' }
+// --- Component ----------------------------------------------------
+
+type Component<P extends Props> = OpaqueType<'Component'>
+
+// --- exports ------------------------------------------------------
 
 export default Component

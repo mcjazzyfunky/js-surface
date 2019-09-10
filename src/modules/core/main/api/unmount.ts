@@ -1,10 +1,9 @@
-export default function unmount(container: Element | string) {
-  const f = (unmount as any).__apply
-  
-  if (!f) {
-    throw new Error('[unmount] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
+// --- unmount ------------------------------------------------------
+
+function unmount(container: Element | string) {
   if (!container || (typeof container !== 'string' && !container.tagName)) {
     throw new TypeError(
       '[unmount] First argument "container" must be a DOM element or the id of the corresponding DOM element')
@@ -20,5 +19,13 @@ export default function unmount(container: Element | string) {
       `[unmount] Could not find container DOM element with id "${container}"`)
   }
 
-  f(target)
+  adapter.unmount(target)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default unmount

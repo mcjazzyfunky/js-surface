@@ -1,4 +1,4 @@
-import { createElement, component, useEffect, useImperativeMethods, useForceUpdate, useState }
+import { createElement, component, useEffect, useImperativeHandle, useForceUpdate, useState }
   from '../../modules/core/main/index'
 
 type Methods = {
@@ -13,7 +13,7 @@ const ComponentA: any = component<ABProps>({ // TODO
   displayName: 'ComponentA',
 
   render({ componentRef }) {
-    useImperativeMethods(componentRef, () => ({
+    useImperativeHandle(componentRef, () => ({
       sayHello() {
         console.log('>> ComponentA says "Hello"')
       }
@@ -33,7 +33,7 @@ const ComponentB: any = component<ABProps>({ // TODO
   displayName: 'ComponentB',
 
   render({ componentRef }) {
-    useImperativeMethods(componentRef, () => ({
+    useImperativeHandle(componentRef, () => ({
       sayHello() {
         console.log('ComponentB says "Hello"')
       }

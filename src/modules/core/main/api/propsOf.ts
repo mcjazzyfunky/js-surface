@@ -1,17 +1,25 @@
+// internal imports
 import isElement from './isElement'
+import getAdapter from '../internal/helpers/getAdapter'
+import Props from './types/Props'
+import VirtualElement from './types/VirtualElement'
 
-export default function propsOf(elem: any): any { // TODO
-  const f = (propsOf as any).__apply
-  
-  if (!f) {
-    throw new Error('[propsOf] Adapter has not been initialized')
-  }
+// --- propsOf ------------------------------------------------------
 
+function propsOf(elem: VirtualElement<any>): Props | null {
   let ret = null
 
-  if (isElement(it)) {
-    ret = f(it)
+  if (isElement(elem)) {
+    ret = adapter.propsOf(elem)
   }
 
   return ret
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default propsOf

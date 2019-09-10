@@ -1,5 +1,8 @@
-import Props from './Props'
+import Component from './Component'
+import OpaqueType from '../../internal/types/OpaqueType'
 
-type VirtualElement<P extends Props> = unknown & { __opaqueType__: 'element' }
+// TODO!!!!
+type VirtualElement<P> =
+  OpaqueType<'VirtualElement', { type: P, props?: any }>
 
 export default VirtualElement

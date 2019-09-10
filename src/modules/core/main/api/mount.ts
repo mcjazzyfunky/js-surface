@@ -1,12 +1,10 @@
+// internal imports
 import isElement from './isElement'
+import getAdapter from '../internal/helpers/getAdapter'
 
-export default function mount(element: any, container: Element | string) {
-  const f = (mount as any).__apply
-  
-  if (!f) {
-    throw new Error('[mount] Adapter has not been initialized')
-  }
+// --- mount --------------------------------------------------------
 
+function mount(element: any, container: Element | string) {
   if (!isElement(element)) {
     throw new TypeError(
       '[mount] First argument "element" must be a virtual element')
@@ -27,5 +25,13 @@ export default function mount(element: any, container: Element | string) {
       `[mount] Could not find container DOM element with id "${container}"`)
   }
 
-  f(element, target)
+  adapter.mount(element, target)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default mount

@@ -1,13 +1,17 @@
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 import Context from './types/Context'
 
-export default function useContext<T>(ctx: Context<T>): T {
-  const f = (useContext as any).__apply
+// --- useCallback --------------------------------------------------
 
-  if (!f) {
-    throw new Error('[useContext] Adapter has not been initialized')
-  }
-console.log(111, f)
-  const ret = f(ctx)
-  console.log(222)
-  return ret
+function useContext<T>(ctx: Context<T>): T {
+  return adapter.useContext(ctx)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default useContext

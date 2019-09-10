@@ -1,7 +1,7 @@
 import { createElement, component, mount, VirtualNode, useForceUpdate, useRef }
   from '../modules/core/main/index'
 
-import '../modules/adapt-react/main/index'
+import '../modules/adapt-dyo/main/index'
 import availableDemos from './available-demos'
 
 // --- Component DemoSelector ---------------------------------------

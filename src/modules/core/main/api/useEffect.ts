@@ -1,9 +1,16 @@
-export default function useEffect(effect: () => void, inputs?: any[]): void {
-  const f = (useEffect as any).__apply
-  
-  if (!f) {
-    throw new Error('[useEffect] Adapter has not been initialized')
-  }
+// internal imports
+import getAdapter from '../internal/helpers/getAdapter'
 
-  return f(effect, inputs)
+// --- useEffect ----------------------------------------------------
+
+function useEffect(effect: () => void, inputs?: any[]): void {
+  adapter.useEffect(effect, inputs)
 }
+
+// --- locals -------------------------------------------------------
+
+const adapter = getAdapter()
+
+// --- exports ------------------------------------------------------
+
+export default useEffect
