@@ -15,12 +15,14 @@ export default {
     globals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
+      'preact': 'preact',
+      'preact/hoooks': 'preactHooks',
       'dyo': 'dyo',
       'js-spec': 'jsSpec'
     }
   },
 
-  external: ['react', 'react-dom', 'dyo', 'js-spec'],
+  external: ['react', 'react-dom', 'preact', 'dyo', 'js-spec'],
   
   plugins: [
     resolve(),

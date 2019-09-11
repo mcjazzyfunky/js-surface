@@ -9,6 +9,7 @@ import Adapter from '../../core/main/internal/types/Adapter'
 const adapter: Adapter = (createElement as any).__adapter
 
 const adapt: Adapter = {
+  type: 'react',
   Boundary: ReactBoundary,
   Fragment: React.Fragment,
 

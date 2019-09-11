@@ -14,14 +14,43 @@ function createElement<P extends Props>(
 function createElement(/* arguments */): any {
   let ret: any
 
-  if (arguments[0] === Fragment) {
+  const type: any = arguments[0]
+
+  if (process.env.NODE_ENV === 'development' as any) {
+    if (type && typeof type !== 'string'
+      && adapter.type !== 'react'
+      && type.meta && type.meta.validate)
+    {
+      const
+        props: any = arguments[1] || {},
+        validate: any = type.meta.validate,
+        result = validate(props)
+
+
+      let errorMsg: string | null  = null
+
+      if (result === false) {
+        errorMsg = 'Illegal props values'
+      } else if (result instanceof Error) {
+        errorMsg = result.message
+      }
+
+      if (errorMsg) {
+        throw new Error(
+          `Props validation error for component "${type.meta.displayName}" => `
+            + errorMsg)
+      }
+    }
+  }
+
+  if (type === Fragment) {
     const
       fragment = adapter.Fragment,
       newArgs = [...arguments]
 
     newArgs[0] = fragment
     ret = adapter.createElement.apply(null, newArgs)
-  } else if (arguments[0] === Boundary) {
+  } else if (type === Boundary) {
     const
       boundary = adapter.Boundary,
       newArgs = [...arguments]
@@ -41,7 +70,8 @@ Object.defineProperty(createElement, '__adapter', {
 
 // --- locals -------------------------------------------------------
 
-const adapter = (createElement as any).__adapter
+const
+  adapter = (createElement as any).__adapter
 
 // --- exports ------------------------------------------------------
 

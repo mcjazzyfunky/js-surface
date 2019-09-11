@@ -4,6 +4,7 @@ import Boundary from '../../api/Boundary'
 
 function createDefaultAdapter(): Adapter {
   const ret: Adapter = {
+    type: undefined,
     createElement: throwAdapterError,
     defineComponent: throwAdapterError,
     defineContext: throwAdapterError, 

@@ -54,9 +54,36 @@ function component<P extends Props = {}>(
     }
   }
 
-  return typeof arg1 === 'string'
-    ? adapter.defineComponent(arg1, arg2, arg2.validate, arg2.memoize) as any // TODO
-    : adapter.defineComponent(arg1.displayName, arg1.render, arg1.validate, arg1.memoize)
+  let
+    displayName: string,
+    render: Function,
+    memoize: boolean,
+    validate: Function | null
+
+  if (typeof arg1 === 'string') {
+    displayName = arg1
+    render = arg2
+    memoize = arg3 && arg3.memoize || false,
+    validate = arg3 && arg3.validate || null
+  } else {
+    displayName = arg1.displayName
+    render = arg1.render,
+    memoize = arg1.memoize || false,
+    validate = arg1.validate || null
+  }
+
+  const ret: any = adapter.defineComponent(
+    displayName,
+    render,
+    memoize,
+    validate
+  )
+
+  Object.defineProperty(ret, 'meta', {
+    value: Object.freeze({ displayName, render, memoize, validate })
+  })
+
+  return ret
 }
 
 // --- locals -------------------------------------------------------

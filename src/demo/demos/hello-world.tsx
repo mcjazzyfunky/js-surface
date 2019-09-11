@@ -1,4 +1,5 @@
 import { createElement, component } from '../../modules/core/main/index'
+import { Spec } from 'js-spec'
 
 type HelloWorldProps = {
   name?: string
@@ -6,6 +7,12 @@ type HelloWorldProps = {
 
 const HelloWorld: any = component<HelloWorldProps>({ // TODO
   displayName: 'HelloWorld',
+
+  validate: Spec.checkProps({
+    optional: {
+      name: Spec.string
+    }
+  }),
 
   render({ name = 'world' }) {
     return `Hello, ${name}!`

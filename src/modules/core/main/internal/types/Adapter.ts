@@ -6,6 +6,8 @@ import VirtualElement from '../../api/types/VirtualElement'
 import VirtualNode from '../../api/types/VirtualNode'
 
 type Adapter = {
+  type: string,
+
   createElement<P extends Props = {}>(
     type: string | Component<P>,
     props?: P,
