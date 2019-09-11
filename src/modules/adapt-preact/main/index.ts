@@ -1,32 +1,39 @@
-/*
 import * as Preact from 'preact'
-import * as Hooks from 'preact/hooks'
+import { useEffect, useRef, useCallback, useImperativeHandle, useState, useContext } from 'preact/hooks'
 
-import {
-  childCount,
-  createElement, defineComponent, defineContext, isElement,
-  mount, unmount,
-  typeOf, propsOf, toChildArray, forEachChild,
-  useContext, useEffect, useMethods, useState,
-  Fragment, Boundary, Props, Context,
-} from '../../core/main/index'
+// internal imports
+import { createElement, Children, Props, VirtualNode } from '../../core/main/index'
 
-// TODO!!!
-function adjustedUseMethods(ref: any, getHandler: Function) {
-  const handler = getHandler() // TODO
+import Adapter from '../../core/main/internal/types/Adapter'
 
-  if (ref && typeof ref === 'object') {
-    ref.current = handler
-  } else if (typeof ref === 'function') {
-    ref(handler)
-  }
+const adapter: Adapter = (createElement as any).__adapter
+
+const adapt: Adapter = {
+  Boundary: PreactBoundary,
+  Fragment: Preact.Fragment,
+
+  childCount: (children: Children) => Preact.toChildArray(children).length,
+  createElement: adjustedCreateElement,
+  defineComponent: buildComponent,
+  defineContext: buildContext,
+  forEachChild: (children: Children, action: (child: VirtualNode, index: number) => void) => Preact.toChildArray(children).forEach(action as any), // TODO 
+  useEffect,
+  useImperativeHandle,
+  useState,
+  isElement: Preact.isValidElement,
+  mount: Preact.render,
+  unmount: Preact.render.bind(null, null),
+  propsOf: (it: any) => Preact.isValidElement(it) ? it.props as any : null, // TODO
+  typeOf: (it: any) => Preact.isValidElement(it) ? it.type as any : null, // TODO
+  toChildArray: Preact.toChildArray as any, // TODO
+  useCallback,
+  useContext,
+  useRef
 }
 
-function adapt(base: any, delegate: any) {
-  Object.defineProperty(base, '__apply', {
-    value: delegate
-  })
-}
+Object.assign(adapter, adapt)
+
+// --- locals -------------------------------------------------------
 
 function adjustedCreateElement(/* arguments */) {
   const args = arguments
@@ -44,82 +51,95 @@ function adjustedCreateElement(/* arguments */) {
   return Preact.createElement.apply(null, args)
 }
 
-adapt(createElement, adjustedCreateElement)
-adapt(isElement, (it: any) => !!it && it.type && it.props)
-adapt(childCount,  (children: any) => Preact.toChildArray(children).length)
+function buildComponent<P extends Props = {}>(
+  displayName: string,
+  renderer: (props: P) => any,
+  memoize?: boolean,
+  validate?: (props: P) => boolean | null | Error
+): any {
+  let ret: any = renderer.bind(null)
+  ret.displayName = displayName
 
-adapt(defineComponent, (factory: any) => {
-  const
-     defaultProps = factory.meta.defaultProps
+  if (validate) {
+    ret.propTypes = {
+      '*'(props: any) {
+        const
+          result = validate(props),
 
-  let ret: any = (props: Props, ref: any) => {
-    if (defaultProps) {
-      props = Object.assign({}, defaultProps, props) // TODO - performance
+          errorMsg =
+            result === false
+              ? 'Invalid value'
+              : result instanceof Error
+                ? result.message
+                : null
+
+        return !errorMsg
+          ? null
+          : new TypeError(
+            'Props validation error for component '
+            + `"${displayName}" => ${errorMsg}`)
+      }
     }
-
-    return factory.meta.render(props, ref)
   }
 
-  if (factory.meta.memoize) {
-    ret = (ret) // TODO: memo
+  if (memoize === true) {
+    // ret = Preact.memo(ret) // TODO!!!!!!!
   }
-
-  ret.displayName = factory.meta.displayName
 
   return ret
-})
+}
 
-adapt(defineContext, (ctx: Context<any>, meta: any) => {
-  const internalContext: any = Preact.createContext(meta.defaultValue)
+function buildContext<T>(
+  displayName: string,
+  defaultValue: T,
+  validate: (value: T) => boolean | null | Error
+) { 
+  const
+    ret = Preact.createContext(defaultValue),
+    provider: any = ret.Provider
 
-  internalContext.Provider._context = internalContext
+  provider.displayName = displayName
 
+  if (validate) {
+    provider.propTypes = {
+      value: (props: any) => {
+        const
+          result = validate(props.value),
 
-  return [internalContext, internalContext.Provider, internalContext.Consumer]
-})
+          errorMsg =
+            result === false
+              ? 'Invalid value'
+              : result instanceof Error
+                ? result.message
+                : null
 
-adapt(useContext, (ctx: any) => {
-  return Hooks.useContext(ctx.Provider.__internal_type._context)
-})
-
-adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.type)
-adapt(toChildArray, Preact.toChildArray) 
-adapt(forEachChild, (children: any, action: any) => Preact.toChildArray(children).forEach((it, idx) => action(it, idx)))
-
-adapt(useEffect, Hooks.useEffect)
-adapt(useMethods, adjustedUseMethods)
-adapt(useState, Hooks.useState)
-
-adapt(mount, Preact.render)
-adapt(unmount, (container: any) => Preact.render(null, container))
-
-adapt(Boundary, (props: any) => {
-  return (
-    Preact.createElement(
-      PreactBoundary as any,
-      { handle: props.handle },
-      props.children)
-  )
-})
-
-Object.defineProperty(Fragment, '__internal_type', {
-  value: Preact.Fragment
-})
-
-class PreactBoundary extends Preact.Component {
-  static displayName = 'Boundary (inner)'
-
-  componentDidCatch(error: any) {
-    const handle = (this.props as any).handle
-    
-    if (handle) {
-      handle(error, null)
+        return !errorMsg
+          ? null
+          : new TypeError(
+            'Validation error for provider of context '
+            + `"${displayName}" => ${errorMsg}`)
+      }
     }
   }
 
-  render() {
-    return this.props.children
+  return ret
+}
+
+function PreactBoundary() {
+}
+
+const proto = Object.create(Preact.Component.prototype)
+PreactBoundary.prototype = proto
+
+PreactBoundary.displayName = 'Boundary (inner)'
+PreactBoundary.getDerivedStateFromError = () => {}
+
+proto.componentDidCatch = function (error: any, info: any) {
+  if (this.props.handle) {
+    this.props.handle(error, info)
   }
 }
-*/
+
+proto.render = function () {
+ return this.props.children
+}

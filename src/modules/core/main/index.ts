@@ -22,6 +22,7 @@ export { default as Boundary } from './api/Boundary'
 export { default as Fragment } from './api/Fragment'
 
 // types
+export { default as Children } from './api/types/Children'
 export { default as ComonentConfig } from './api/types/ComponentConfig'
 export { default as ComponentOptions } from './api/types/ComponentOptions'
 export { default as Context } from './api/types/Context'

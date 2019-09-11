@@ -37,8 +37,8 @@ npm run dist
 
 jsSurface is a R&D project to find a pragmatic API that can be used
 as wrapper API for the actual React and Dyo APIs with the goal to 
-provide a general API that can be used to write both React and Dyo
-components (maybe support Preact will follow someday)
+provide a general API that can be used to write React, Preact and Dyo
+components.
 Be aware that jsSurface is actually only for research purposes, it's currently
 NOT meant to be used in real-world applications.
 

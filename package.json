@@ -69,6 +69,7 @@
     "dist": "npm run clean && npm run test && npm run build && npm run zipsource"
   },
   "dependencies": {
+    "preact": "^10.0.0-rc.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
