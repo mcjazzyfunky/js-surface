@@ -31,7 +31,7 @@ const adapt: Adapter = {
   useRef: Dyo.useRef
 }
 
-Object.assign((createElement as any).__adapter, adapt)
+Object.assign(adapter, adapt)
 
 // --- locals -------------------------------------------------------
 

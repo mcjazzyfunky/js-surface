@@ -1,42 +1,39 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {
-  childCount,
-  createElement, component, context, isElement,
-  mount, unmount,
-  typeOf, propsOf, toChildArray, forEachChild,
-  useCallback, useContext, useEffect, useImperativeMethods, useRef, useState,
-  Props
-} from '../../core/main/index'
+// internal imports
+import { createElement, Props } from '../../core/main/index'
 
-adapt(createElement, adjustedCreateElement)
-adapt(isElement, React.isValidElement)
-adapt(childCount, React.Children.count)
-adapt(component, buildComponent)
-adapt(context, buildContext) 
-adapt(useCallback, React.useCallback)
-adapt(useContext, React.useContext) 
-adapt(typeOf, (it: any) => it.type) 
-adapt(propsOf, (it: any) => it.props)
-adapt(toChildArray, React.Children.toArray) 
-// adapt(forEachChild, React.Children.forEach) // TODO
-adapt(useEffect, React.useEffect)
-adapt(useImperativeMethods, React.useImperativeHandle)
-adapt(useState, React.useState)
-adapt(useRef, React.useRef)
-adapt(mount, ReactDOM.render)
-adapt(unmount, ReactDOM.unmountComponentAtNode)
-adapt(createElement, ReactBoundary, '__boundary')
-adapt(createElement, React.Fragment, '__fragment')
+import Adapter from '../../core/main/internal/types/Adapter'
+
+const adapter: Adapter = (createElement as any).__adapter
+
+const adapt: Adapter = {
+  Boundary: ReactBoundary,
+  Fragment: React.Fragment,
+
+  childCount: React.Children.count,
+  createElement: adjustedCreateElement,
+  defineComponent: buildComponent,
+  defineContext: buildContext,
+  forEachChild: React.Children.forEach,
+  useEffect: React.useEffect,
+  useImperativeHandle: React.useImperativeHandle,
+  useState: React.useState,
+  isElement: React.isValidElement,
+  mount: ReactDOM.render,
+  unmount: ReactDOM.unmountComponentAtNode,
+  propsOf: (it: any) => React.isValidElement(it) ? it.props : null,
+  typeOf: (it: any) => React.isValidElement(it) ? it.type : null,
+  toChildArray: React.Children.toArray,
+  useCallback: React.useCallback,
+  useContext: React.useContext,
+  useRef: React.useRef
+}
+
+Object.assign(adapter, adapt)
 
 // --- locals -------------------------------------------------------
-
-function adapt(target: any, value: any, key = '__apply') {
-  Object.defineProperty(target, key, {
-    value: value
-  })
-}
 
 function adjustedCreateElement(/* arguments */) {
   const args = arguments
@@ -57,8 +54,8 @@ function adjustedCreateElement(/* arguments */) {
 function buildComponent<P extends Props = {}>(
   displayName: string,
   renderer: (props: P) => any,
-  validate?: (props: P) => boolean | null | Error, 
-  memoize?: boolean
+  memoize?: boolean,
+  validate?: (props: P) => boolean | null | Error
 ): any {
   let ret: any = renderer.bind(null)
   ret.displayName = displayName
