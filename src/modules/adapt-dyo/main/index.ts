@@ -44,8 +44,9 @@ function adjustedCreateElement(/* arguments */) {
 function buildComponent<P extends Props = {}>(
   displayName: string,
   renderer: (props: P) => any,
-  memoize?: boolean,
-  validate?: (props: P) => boolean | null | Error
+  forwardRef: boolean,
+  memoize: boolean,
+  validate: (props: P) => boolean | null | Error
 ): any {
   let ret: any = renderer.bind(null)
   ret.displayName = displayName
@@ -71,8 +72,17 @@ function buildContext<T>(
   const Provider = ({ value, children }: any) =>
     Dyo.createElement(DyoContext, { value }, children)
 
-  // TODO Consumer!!!
-  const Consumer: any = null
+  const Consumer: (x: any) => any = (props: any) => {
+    // There's a but in Dyo => filter children
+    const nodes = Dyo.Children.toArray(props.children).filter((it: any) => it !== null)
+    let value = Dyo.useContext(ret)
+
+    if (value === undefined) {
+      value = defaultValue
+    }
+
+    return nodes.length > 0 ? nodes[0](value) : null
+  }
   
   const constr: any = () => {}
 

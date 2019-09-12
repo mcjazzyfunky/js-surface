@@ -1,4 +1,5 @@
 import * as Preact from 'preact'
+import { forwardRef as preactForwardRef } from 'preact/compat'
 import { useEffect, useRef, useCallback, useImperativeHandle, useState, useContext } from 'preact/hooks'
 
 // internal imports
@@ -19,7 +20,7 @@ const adapt: Adapter = {
   defineContext: buildContext,
   forEachChild: (children: Children, action: (child: VirtualNode, index: number) => void) => Preact.toChildArray(children).forEach(action as any), // TODO 
   useEffect,
-  useImperativeHandle,
+  useImperativeHandle: useImperativeHandle,
   useState,
   isElement: Preact.isValidElement,
   mount: Preact.render,
@@ -55,10 +56,24 @@ function adjustedCreateElement(/* arguments */) {
 function buildComponent<P extends Props = {}>(
   displayName: string,
   renderer: (props: P) => any,
-  memoize?: boolean,
-  validate?: (props: P) => boolean | null | Error
+  forwardRef: boolean,
+  memoize: boolean,
+  validate: (props: P) => boolean | null | Error
 ): any {
-  let ret: any = renderer.bind(null)
+  let ret: any
+  
+  if (!forwardRef) {
+    ret = renderer.bind(null)
+  }  else {
+    ret = function (props: any, ref: any) {
+      if (ref !== undefined) {
+        props = { ...props, ref }
+      }
+
+      return renderer(props)
+    }
+  }
+
   ret.displayName = displayName
 
   if (validate) {
@@ -81,6 +96,10 @@ function buildComponent<P extends Props = {}>(
             + `"${displayName}" => ${errorMsg}`)
       }
     }
+  }
+
+  if (forwardRef) {
+    ret = preactForwardRef(ret)
   }
 
   if (memoize === true) {

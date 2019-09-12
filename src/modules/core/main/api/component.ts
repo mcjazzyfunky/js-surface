@@ -57,17 +57,20 @@ function component<P extends Props = {}>(
   let
     displayName: string,
     render: Function,
+    forwardRef: boolean,
     memoize: boolean,
     validate: Function | null
 
   if (typeof arg1 === 'string') {
     displayName = arg1
-    render = arg2
+    render = arg2,
+    forwardRef = arg3 && arg3.forwardRef || false,
     memoize = arg3 && arg3.memoize || false,
     validate = arg3 && arg3.validate || null
   } else {
     displayName = arg1.displayName
     render = arg1.render,
+    forwardRef = arg1.forwardRef,
     memoize = arg1.memoize || false,
     validate = arg1.validate || null
   }
@@ -75,6 +78,7 @@ function component<P extends Props = {}>(
   const ret: any = adapter.defineComponent(
     displayName,
     render,
+    forwardRef,
     memoize,
     validate
   )
@@ -106,8 +110,9 @@ if (process.env.NODE_ENV) {
 
   validateComponentConfig = Spec.exact({
     displayName: Spec.match(REGEX_DISPLAY_NAME),
-    validate: Spec.optional(Spec.function),
+    forwardRef: Spec.optional(Spec.boolean),
     memoize: Spec.optional(Spec.boolean),
+    validate: Spec.optional(Spec.function),
     render: Spec.function
   })
 

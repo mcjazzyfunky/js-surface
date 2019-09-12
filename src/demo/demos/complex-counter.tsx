@@ -11,7 +11,7 @@ import {
 type CounterProps = {
   label?: string,
   initialValue?: number,
-  componentRef?: Ref<CounterMethods>
+  ref?: Ref<CounterMethods>
 }
 
 type CounterMethods = {
@@ -20,14 +20,15 @@ type CounterMethods = {
 
 const Counter: any = component<CounterProps>({
   displayName: 'Counter',
+  forwardRef: true,
 
-  render({ initialValue = 0, label = 'Counter', componentRef }) {
+  render({ initialValue = 0, label = 'Counter', ref }) {
     const
       [count, setCount] = useState(() => initialValue),
       onIncrement = useCallback(() => setCount(count + 1)),
       onDecrement = useCallback(() => setCount(count - 1))
 
-    useImperativeHandle(componentRef, () => ({
+    useImperativeHandle(ref, () => ({
       reset(n: number) {
         setCount(n)
       }
@@ -55,7 +56,7 @@ const App: any = component({
 
     return (
       <div>
-        <Counter componentRef={counterRef}/>
+        <Counter ref={counterRef}/>
         <br/>
         <div>
           <button onClick={onResetTo0}>Set to 0</button>

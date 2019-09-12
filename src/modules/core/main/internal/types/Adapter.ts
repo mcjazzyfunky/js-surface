@@ -17,6 +17,7 @@ type Adapter = {
   defineComponent<P extends Props = {}>(
     displayName: string,
     renderer: Function,
+    forwardRef: boolean,
     memoize: boolean,
     validate: Function
   ): Component<P>,
