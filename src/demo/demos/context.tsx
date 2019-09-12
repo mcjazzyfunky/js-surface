@@ -1,6 +1,6 @@
 import {
   createElement, context, component, useEffect, useState
-} from '../../modules/core/main/index'
+} from '../../main/index'
 
 const CounterCtx = context<number>({
   displayName: 'CounterCtx',

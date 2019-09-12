@@ -1,4 +1,4 @@
-import { createElement, component } from '../../modules/core/main/index'
+import { createElement, component } from '../../main/index'
 
 const demoContent = {
   [Symbol.iterator]: function * () {

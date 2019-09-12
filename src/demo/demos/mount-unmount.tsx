@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useImperativeHandle, useForceUpdate, useState }
-  from '../../modules/core/main/index'
+  from '../../main/index'
 
 type Methods = {
   sayHello: () => void

@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
   Ref
-} from '../../modules/core/main/index'
+} from '../../main/index'
 
 type CounterProps = {
   label?: string,

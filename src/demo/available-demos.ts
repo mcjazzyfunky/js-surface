@@ -1,4 +1,4 @@
-import { VirtualNode } from '../modules/core/main/index'
+import { VirtualNode } from '../main/index'
 import helloWorld from './demos/hello-world'
 import simpleCounter from './demos/simple-counter'
 import complexCounter from './demos/complex-counter'

@@ -4,7 +4,7 @@ import {
   useCallback,
   useState,
   Boundary
-} from 'js-surface'; 
+} from 'src/main'; 
 
 const ErrorTrigger: any = component({ // TODO
   displayName: 'ErrorTrigger',
@@ -44,7 +44,7 @@ const ErrorBoundary: any = component({ // TODO
       })
 
     return (
-      <Boundary handle={handleError}>
+      <Boundary fallback={handleError}>
         {
           error
             ? <div>

@@ -1,5 +1,5 @@
 import { createElement, createElement as h, component, context, useState, useContext }
-  from '../../modules/core/main/index'
+  from '../../main/index'
 
 import { Spec } from 'js-spec'
 

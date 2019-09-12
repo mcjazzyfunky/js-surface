@@ -1,5 +1,5 @@
 import { createElement, component, useCallback, useEffect, useRef, useState } 
-  from '../../modules/core/main/index'
+  from '../../main/index'
 
 const StopWatch: any = component({ // TODO
   displayName: 'StopWatch',

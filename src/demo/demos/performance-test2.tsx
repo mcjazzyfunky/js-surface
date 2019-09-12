@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useRef, useForceUpdate }
-  from '../../modules/core/main/index'
+  from '../../main/index'
 
 const prefs = {
   framesPerSecond: 240,

@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useState }
-  from '../../modules/core/main/index'
+  from '../../main/index'
 
 const Clock: any = component({
   displayName: 'Clock',

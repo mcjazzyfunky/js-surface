@@ -1,4 +1,4 @@
-import { createElement, component, Fragment } from '../../modules/core/main/index'
+import { createElement, component, Fragment } from '../../main/index'
 
 const FragmentDemo: any = component({ // TODO
   displayName:  'FragmentDemo',
