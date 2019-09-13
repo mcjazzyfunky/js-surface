@@ -5,6 +5,8 @@ import replace from 'rollup-plugin-replace'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
+const ADAPTER = 'react'
+
 export default {
   input: 'src/demo/demo.tsx',
 
@@ -31,7 +33,8 @@ export default {
       exclude: 'node_modules/**',
       
       values: {
-        'process.env.NODE_ENV': "'development'"
+        'process.env.NODE_ENV': "'development'",
+        'adaption/dyo/': `adaption/${ADAPTER}/`
       }
     }),
     typescript(),

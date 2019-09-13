@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['core', 'adapt-react', 'adapt-dyo', /* 'adapt-preact' */]) {
+for (const pkg of ['js-surface']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -23,18 +23,18 @@ export default configs
 
 function createConfig(pkg, moduleFormat, productive) {
   return {
-    input: `src/modules/${pkg}/main/index.ts`, 
+    input: 'src/main/index.ts', 
 
     output: {
       file: productive
-        ? `dist/js-surface.${pkg}.${moduleFormat}.production.js`
-        : `dist/js-surface.${pkg}.${moduleFormat}.development.js`,
+        ? `dist/js-surface.${moduleFormat}.production.js`
+        : `dist/js-surface.${moduleFormat}.development.js`,
 
       format: moduleFormat,
       
       name: {
-        core: 'jsSurface',
-      }[pkg] || `jsSurface.${pkg}`,
+        'js-surface': 'jsSurface',
+      }[pkg] || 'jsSurface',
      
       sourcemap: productive ? false : 'inline',
 
@@ -47,7 +47,7 @@ function createConfig(pkg, moduleFormat, productive) {
       }
     },
 
-    external: ['js-surface', 'react', 'react-dom', 'preact', 'dyo'].concat(productive ? 'js-spec' : []), 
+    external: ['js-surface', 'react', 'react-dom', 'preact'].concat(productive ? 'js-spec' : []), 
 
     plugins: [
       resolve({
@@ -66,11 +66,11 @@ function createConfig(pkg, moduleFormat, productive) {
 
         values: {
           'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-          "'../core/main/index'": "'js-surface'",
-          "'../../core/main/index'": "'js-surface'",
-          "'../../../core/main/index'": "'js-surface'",
-          "'../../../../core/main/index'": "'js-surface'",
-          "'../../../../../core/main/index'": "'js-surface'",
+          "'../main/index'": "'js-surface'",
+          "'../../main/index'": "'js-surface'",
+          "'../../../main/index'": "'js-surface'",
+          "'../../../../main/index'": "'js-surface'",
+          "'../../../../../main/index'": "'js-surface'",
         }
       }),
       typescript({

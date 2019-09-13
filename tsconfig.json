@@ -14,7 +14,7 @@
     "baseUrl": ".",
     
     "paths": {
-      "js-surface": ["src/core/main/index.ts"],
+      "js-surface": ["src/index.ts"]
     },
     
     "typeRoots": [
@@ -26,8 +26,7 @@
     ]
   },
   "files": [
-    "src/core/main/index.ts",
-    "src/modules/adapt-react/main/index.ts",
+    "src/main/index.ts"
   ],
 
   "include": [

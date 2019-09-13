@@ -1,1 +1,1 @@
-export { useCallback } from 'dyo'
+export { useCallback as default } from 'dyo'

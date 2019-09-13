@@ -1,5 +1,5 @@
 // internal imports
-import { useCallback as _useCallback } from '../internal/adaption/dyo/useCallback'
+import _useCallback from '../internal/adaption/dyo/useCallback'
 
 // --- useCallback --------------------------------------------------
 

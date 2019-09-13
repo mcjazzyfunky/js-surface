@@ -48,8 +48,10 @@ are currently implemented with jsSurface:
 #### Hello world component
 
 ```jsx
+// import from 'js-surface/react' if you want to use React
+// under the hood (otherwise a completely wrapped verision of
+// Dyo will be used)
 import { createElement, component, mount } from 'js-surface'
-import 'js-surface/adapt-react' // to use React under the hood
 
 const HelloWorld = component({
   displayName: 'HelloWorld',
@@ -73,7 +75,6 @@ mount(<HelloWorld/>, 'app')
 
 ```jsx
 import { createElement, component, mount, useCallback, useState } from 'js-surface'
-import 'js-surface/adapt-react' // to use React under the hood
 
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 

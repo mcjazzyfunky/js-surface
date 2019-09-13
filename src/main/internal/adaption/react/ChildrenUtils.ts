@@ -1,12 +1,12 @@
 // external imports
-import { Children as _Children } from 'dyo'
+import React from 'react'
 
 // --- ChildrenUtils ------------------------------------------------
 
 const ChildrenUtils = {
-  forEach: _Children.forEach,
-  toArray: _Children.toArray,
-  count: _Children.count
+  forEach: React.Children.forEach,
+  toArray: React.Children.toArray,
+  count: React.Children.count
 }
 
 // --- exports ------------------------------------------------------
