@@ -9,7 +9,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['js-surface']) {
+for (const pkg of ['js-surface', 'js-surface/react']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -22,24 +22,28 @@ export default configs
 // --- locals -------------------------------------------------------
 
 function createConfig(pkg, moduleFormat, productive) {
+  const name = pkg.replace(/\//g, '.')
+
   return {
     input: 'src/main/index.ts', 
 
     output: {
       file: productive
-        ? `dist/js-surface.${moduleFormat}.production.js`
-        : `dist/js-surface.${moduleFormat}.development.js`,
+        ? `dist/${name}.production.js`
+        : `dist/${name}.development.js`,
 
       format: moduleFormat,
       
       name: {
         'js-surface': 'jsSurface',
-      }[pkg] || 'jsSurface',
-     
+        'js-surface/react': 'jsSurfaceReact'
+      }[pkg],
+
       sourcemap: productive ? false : 'inline',
 
       globals: {
         'js-surface': 'jsSurface',
+        'js-surface/react': 'jsSurfaceReact',
         'react': 'React',
         'react-dom': 'ReactDOM',
         'dyo': 'Dyo',
@@ -50,11 +54,7 @@ function createConfig(pkg, moduleFormat, productive) {
     external: ['js-surface', 'react', 'react-dom', 'preact'].concat(productive ? 'js-spec' : []), 
 
     plugins: [
-      resolve({
-        jsnext: true,
-        main: true,
-        browser: true,
-      }),
+      resolve(),
       commonjs(),
       // TODO: Configure "tslint.json" properly and fix all errors
       //tslint({

@@ -1,6 +1,6 @@
 {
   "name": "js-surface",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "license": "LGPL-3.0",
   "homepage": "https://github.com/js-works/js-surface",
   "repository": {
@@ -8,15 +8,13 @@
     "url": "https://github.com/js-works/js-surface.git"
   },
   "main": "index.js",
-  "module": "dist/js-surface.all.esm.production.js",
-  "unpkg": "dist/js-surface.all.umd.production.js",
-  "jsdelivr": "dist/js-surface.all.umd.production.js",
-  "types": "dist/types/modules/all/main/index.d.ts",
+  "module": "dist/js-surface.esm.production.js",
+  "unpkg": "dist/js-surface.umd.production.js",
+  "jsdelivr": "dist/js-surface.umd.production.js",
+  "types": "dist/types/main/index.d.ts",
   "files": [
     "index.js",
-    "core.js",
-    "html.js",
-    "svg.js",
+    "react",
     "dist"
   ],
   "devDependencies": {
