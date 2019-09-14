@@ -79,7 +79,7 @@ mount(<HelloWorld/>, 'app')
 import { h, component, mount, useCallback, useState } from 'js-surface/react'
 
 // A 3rd-party general purpose validation library.
-import { Spec } from 'js-spec'; 
+import { Spec } from 'js-spec' 
 
 const Counter = component({
   displayName: 'Counter',
