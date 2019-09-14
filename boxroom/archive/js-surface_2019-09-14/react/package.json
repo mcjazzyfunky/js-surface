@@ -1,0 +1,11 @@
+{
+  "name": "js-surface.react",
+  "version": "0.0.1",
+  "private": true,
+  "description": "js-surface adaption for React",
+  "main": "../dist/js-surface.react.cjs.production.js",
+  "module": "../dist/js-surface.react.esm.production.js",
+  "umd:main": "../dist/js-surface.react.umd.production.js",
+  "types": "../dist/types/js-surface.react.d.ts",
+  "license": "LGPL-3.0"
+}

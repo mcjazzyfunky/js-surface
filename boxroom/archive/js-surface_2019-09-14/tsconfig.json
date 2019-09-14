@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "lib": ["es5", "es6", "dom"],
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    
+    "paths": {
+      "js-surface": ["src/js-surface.ts"],
+      "js-surface/react": ["src/js-surface.react.ts"]
+    },
+
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+
+    "types": [
+      "node", "mocha", "chai"
+    ]
+  },
+
+  "include": [
+    "./src/main/*.ts*"
+  ]
+}
