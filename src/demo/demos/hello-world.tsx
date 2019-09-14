@@ -15,7 +15,7 @@ const HelloWorld: any = component<HelloWorldProps>({ // TODO
   }),
 
   render({ name = 'world' }) {
-    return `Hello, ${name}!`
+    return <div>Hello, {name}!</div>
   }
 })
 

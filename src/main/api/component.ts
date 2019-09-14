@@ -13,17 +13,17 @@ import defineComponent from '../internal/adaption/dyo/defineComponent'
 // --- component ----------------------------------------------------
 
 function component<P extends Props>
-  (config: ComponentConfig<P>): ExtFunctionComponent<P>
+  (config: ComponentConfig<P>): Component<P>
 
 function component<P extends Props = {}>(
   displayName: string,
   renderer?: ComponentConfig<P>['render'], // TODO
   options?: ComponentOptions
-): ExtFunctionComponent<P>
+): Component<P>
 
 function component<P extends Props = {}>(
   arg1: any, arg2?: any, arg3?: any
-): ExtFunctionComponent<P> {
+): Component<P> {
   let errorMsg: string
 
   if (process.env.NODE_ENV === 'development' as any) {
@@ -91,13 +91,6 @@ function component<P extends Props = {}>(
 }
 
 // --- locals -------------------------------------------------------
-
-type ExtProps<P extends Props> = Props & {
-  ref?: any // TODO
-}
-
-type ExtFunctionComponent<P extends Props> =
-  Component<ExtProps<P>> & { create(props?: P, ...children: VirtualNode[]): VirtualElement<P> }
 
 let
   validateComponentConfig: (config: any) => null | Error,

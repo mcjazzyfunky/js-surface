@@ -1,7 +1,7 @@
 import { createElement, component, useEffect, useState }
   from '../../main/js-surface'
 
-const Clock: any = component({
+const Clock: any = component({ // TODO
   displayName: 'Clock',
 
   render() {

@@ -188,8 +188,6 @@ Hooks:
 Helper functions for virtual elements and nodes
 * `isElement(it)`
 * `isNode(it)`
-* `propsOf(element)`
-* `typeOf(element)`
 
 Helper functions for children
 * `childCount(children)`
