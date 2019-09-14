@@ -44,8 +44,8 @@ function createConfig(pkg, moduleFormat, productive) {
 
     output: {
       file: productive
-        ? `dist/${name}.production.js`
-        : `dist/${name}.development.js`,
+        ? `dist/${name}.${moduleFormat}.production.js`
+        : `dist/${name}.${moduleFormat}.development.js`,
 
       format: moduleFormat,
       
