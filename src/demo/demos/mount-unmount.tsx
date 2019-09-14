@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useImperativeHandle, useForceUpdate, useState }
-  from '../../main/index'
+  from '../../main/js-surface'
 
 type Methods = {
   sayHello: () => void

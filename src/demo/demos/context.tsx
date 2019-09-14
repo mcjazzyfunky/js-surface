@@ -1,6 +1,6 @@
 import {
   createElement, context, component, useEffect, useState
-} from '../../main/index'
+} from '../../main/js-surface'
 
 const CounterCtx = context<number>({
   displayName: 'CounterCtx',

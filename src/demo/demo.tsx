@@ -1,5 +1,5 @@
 import { createElement, component, mount, VirtualNode, useForceUpdate, useRef }
-  from '../main/index'
+  from '../main/js-surface'
 
 import availableDemos from './available-demos'
 

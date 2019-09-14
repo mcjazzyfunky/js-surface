@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
   Ref
-} from '../../main/index'
+} from '../../main/js-surface'
 
 type CounterProps = {
   label?: string,

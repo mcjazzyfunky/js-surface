@@ -7,6 +7,15 @@ import livereload from 'rollup-plugin-livereload'
 
 const ADAPTER = 'react'
 
+let additionalReplacements = {}
+
+if (ADAPTER !== 'dyo') {
+  additionalReplacements = {
+    'adaption/dyo/': `adaption/${ADAPTER}/`,
+    'main/js-surface': `main/js-surface.${ADAPTER}`
+  }
+}
+
 export default {
   input: 'src/demo/demo.tsx',
 
@@ -18,7 +27,7 @@ export default {
       'react': 'React',
       'react-dom': 'ReactDOM',
       'preact': 'preact',
-      'preact/hoooks': 'preactHooks',
+      'preact/hooks': 'preactHooks',
       'dyo': 'dyo',
       'js-spec': 'jsSpec'
     }
@@ -32,10 +41,9 @@ export default {
     replace({
       exclude: 'node_modules/**',
       
-      values: {
-        'process.env.NODE_ENV': "'development'",
-        'adaption/dyo/': `adaption/${ADAPTER}/`
-      }
+      values: Object.assign({ 
+        'process.env.NODE_ENV': "'development'"
+      }, additionalReplacements),
     }),
     typescript(),
     serve({

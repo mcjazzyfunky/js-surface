@@ -22,10 +22,25 @@ export default configs
 // --- locals -------------------------------------------------------
 
 function createConfig(pkg, moduleFormat, productive) {
-  const name = pkg.replace(/\//g, '.')
+  const
+    name = pkg.replace(/\//g, '.'),
+
+    adapter =
+      pkg === 'js-surface'
+        ? 'dyo'
+        : pkg.replace('js-surface/', '')
+
+  let additionalReplacements = {}
+
+  if (pkg !== 'js-surface') {
+    additionalReplacements = {
+      'adaption/dyo/': `adaption/${adapter}/`,
+      'main/js-surface': `main/js-surface.${adapter}`
+    }
+  }
 
   return {
-    input: 'src/main/index.ts', 
+    input: 'src/main/js-surface.ts', 
 
     output: {
       file: productive
@@ -46,7 +61,6 @@ function createConfig(pkg, moduleFormat, productive) {
         'js-surface/react': 'jsSurfaceReact',
         'react': 'React',
         'react-dom': 'ReactDOM',
-        'dyo': 'Dyo',
         'js-spec': 'jsSpec'
       }
     },
@@ -64,15 +78,16 @@ function createConfig(pkg, moduleFormat, productive) {
         exclude: 'node_modules/**',
         delimiters: ['', ''],
 
-        values: {
+        values: Object.assign({
           'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-          "'../main/index'": "'js-surface'",
-          "'../../main/index'": "'js-surface'",
-          "'../../../main/index'": "'js-surface'",
-          "'../../../../main/index'": "'js-surface'",
-          "'../../../../../main/index'": "'js-surface'",
-        }
+          "'../main/js-surface'": "'${pkg}'",
+          "'../../main/js-surface'": "'${pkg}'",
+          "'../../../main/js-surface'": "'${pkg}'",
+          "'../../../../main/js-surface": "'${pkg}'",
+          "'../../../../../main/js-surface'": "'${pkg}'",
+        }, additionalReplacements)
       }),
+
       typescript({
         exclude: 'node_modules/**',
       }),

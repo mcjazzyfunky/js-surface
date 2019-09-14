@@ -3,25 +3,21 @@ import React from 'react'
 
 // --- Boundary -----------------------------------------------------
 
-function Boundary() {
-}
+class Boundary extends React.Component {
+  static displayName: string = 'Boundary (inner)'
 
-const proto = Object.create(React.Component.prototype)
-Boundary.prototype = proto
-
-Boundary.displayName = 'Boundary (inner)'
-
-Boundary.getDerivedStateFromError = function () {
-}
-
-proto.componentDidCatch = function (error: any, info: any) {
-  if (this.props.handle) {
-    this.props.handle(error, info)
+  static getDerivedStateFromError() {
   }
-}
 
-proto.render = function () {
- return this.props.children
+  componentDidCatch(error: any, info: any) { // TODO
+    if (this.props.fallback) {
+      this.props.fallback(error, info)
+    }
+  }
+
+  render() {
+    return this.props.children
+  }
 }
 
 // --- exports ------------------------------------------------------

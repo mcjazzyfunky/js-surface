@@ -1,9 +1,8 @@
-# jsSurface
+# js-surface
 
 Research project to evaluate and implement a working UI library abstraction API
-(on top of the original React and Dyo APIs).
-Can be used to implement standalone user interfaces (using Dyo under the hood) or
-to implement React components with the same API.
+**js-surface** aims to be itself a full-featured UI library (using Dyo under the hood)
+and also provides the possibility to implement real React components with the same API.
 
 [![Licence](https://img.shields.io/badge/licence-LGPLv3-blue.svg?style=flat)](https://github.com/js-works/js-spec/blob/master/LICENSE)
 [![npm version](https://img.shields.io/npm/v/js-surface.svg?style=flat)](https://www.npmjs.com/package/js-surface)
@@ -38,7 +37,7 @@ npm run dist
 
 ### Introduction
 
-jsSurface is a R&D project to find a pragmatic API that can be used
+js-surface is a R&D project to find a pragmatic API that can be used
 as wrapper API for the actual React and Dyo APIs with the goal to 
 provide a general API that can be used to write React and lightweight
 components

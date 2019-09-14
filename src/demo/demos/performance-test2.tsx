@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useRef, useForceUpdate }
-  from '../../main/index'
+  from '../../main/js-surface'
 
 const prefs = {
   framesPerSecond: 240,

@@ -1,5 +1,5 @@
 import { createElement, component, useEffect, useState }
-  from '../../main/index'
+  from '../../main/js-surface'
 
 const Demo: any = component({
   displayName: 'Demo',

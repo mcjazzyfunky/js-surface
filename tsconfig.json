@@ -14,9 +14,10 @@
     "baseUrl": ".",
     
     "paths": {
-      "js-surface": ["src/index.ts"]
+      "js-surface": ["src/js-surface.ts"],
+      "js-surface/react": ["src/js-surface.react.ts"]
     },
-    
+
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -25,11 +26,8 @@
       "node", "mocha", "chai"
     ]
   },
-  "files": [
-    "src/main/index.ts"
-  ],
 
   "include": [
-		"./src/**/*.ts*"
-  ],
+    "./src/main/*.ts*"
+  ]
 }

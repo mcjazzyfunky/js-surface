@@ -4,7 +4,7 @@ import {
   useCallback,
   useState,
   Boundary
-} from 'src/main'; 
+} from '../../main/js-surface'; 
 
 const ErrorTrigger: any = component({ // TODO
   displayName: 'ErrorTrigger',

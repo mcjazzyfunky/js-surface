@@ -1,5 +1,5 @@
 import { createElement, component, useCallback, useEffect, useState }
- from '../../main/index'
+ from '../../main/js-surface'
 
 type CounterProps = {
   label?: string,

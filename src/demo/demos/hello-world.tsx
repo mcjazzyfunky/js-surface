@@ -1,4 +1,4 @@
-import { createElement, component } from '../../main/index'
+import { createElement, component } from '../../main/js-surface'
 import { Spec } from 'js-spec'
 
 type HelloWorldProps = {
