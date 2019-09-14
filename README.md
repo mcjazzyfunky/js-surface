@@ -76,8 +76,7 @@ mount(<HelloWorld/>, 'app')
 #### Simple counter
 
 ```jsx
-import { h, component, mount, useCallback, useState }
-  from 'js-surface/react'
+import { h, component, mount, useCallback, useState } from 'js-surface/react'
 
 // A 3rd-party general purpose validation library.
 import { Spec } from 'js-spec'; 
