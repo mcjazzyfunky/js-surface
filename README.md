@@ -53,7 +53,7 @@ are currently implemented with jsSurface:
 // import from 'js-surface/react' if you want to use React
 // under the hood (otherwise a completely wrapped verision of
 // Dyo will be used)
-import { createElement, component, mount } from 'js-surface'
+import { h, component, mount } from 'js-surface'
 
 const HelloWorld = component({
   displayName: 'HelloWorld',
@@ -76,7 +76,7 @@ mount(<HelloWorld/>, 'app')
 #### Simple counter
 
 ```jsx
-import { createElement, component, mount, useCallback, useState }
+import { h, component, mount, useCallback, useState }
   from 'js-surface/react'
 
 // A 3rd-party general purpose validation library.
@@ -167,7 +167,7 @@ function CounterView({ initialValue = 0, label = 'Counter' }) {
 #### Module "_js-surface_"
 
 Basics:
-* `createElement(type, props?, ...children)`
+* `h(type, props?, ...children)`
 * `component(componentConfig)` or `component(dispayName, renderer, componentOptions?)`
 * `context(contextConfig)` or `context(displayName, defaultValue?, contextOptions?)`
 * `mount(content, container)`

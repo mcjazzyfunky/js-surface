@@ -1,4 +1,4 @@
-import { createElement, component, useEffect, useState }
+import { h, component, useEffect, useState }
   from '../../main/js-surface'
 
 const Demo: any = component({

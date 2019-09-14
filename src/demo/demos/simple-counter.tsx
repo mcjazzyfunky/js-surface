@@ -1,4 +1,4 @@
-import { createElement, component, useCallback, useEffect, useState }
+import { h, component, useCallback, useEffect, useState }
  from '../../main/js-surface'
 
 type CounterProps = {

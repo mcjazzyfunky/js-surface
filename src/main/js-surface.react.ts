@@ -1,6 +1,6 @@
 // functions
 export { default as childCount } from './api/childCount'
-export { default as createElement } from './api/createElement'
+export { default as h } from './api/h'
 export { default as component } from './api/component'
 export { default as context } from './api/context'
 export { default as forEachChild } from './api/forEachChild'

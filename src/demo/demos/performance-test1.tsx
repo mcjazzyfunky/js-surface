@@ -1,14 +1,13 @@
-import { createElement, component, useCallback, useEffect, useState }
+import { h, component, useCallback, useEffect, useState }
   from '../../main/js-surface'
 
 import React from 'react'
 import * as Dyo from 'dyo'
 
 const
-  s = createElement,
-  r = React.createElement,
-  d = Dyo.createElement,
-  div = createElement.bind(null, 'div')
+  r = React.h,
+  d = Dyo.h,
+  div = h.bind(null, 'div')
 
 function runTests() {
   const
@@ -18,7 +17,7 @@ function runTests() {
   let result = ''
 
   tests.push({
-    name: 'Using createElement from React',
+    name: 'Using h from React',
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
@@ -33,7 +32,7 @@ function runTests() {
   }),
   
   tests.push({
-    name: 'Using createElement from Dyo',
+    name: 'Using h from Dyo',
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
@@ -48,15 +47,15 @@ function runTests() {
   }),
   
   tests.push({
-    name: 'Using createElement from js-surface',
+    name: 'Using h from js-surface',
 
     run() {
       for (let i = 0; i < iterationCount; ++i) {
-        s('div',
+        h('div',
           { className: 'my-class', id: 'my-id', key: 1 },
-          s('div',
+          h('div',
             { className: 'my-class2', id: 'my-id2', key: 2 },
-            s('div', null, s('div', null, s('div', null, s('div')))),
+            h('div', null, h('div', null, h('div', null, h('div')))),
             'some text', [1, 2, 3, 4, 5]))  
       }
     }

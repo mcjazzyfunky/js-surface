@@ -1,4 +1,4 @@
-import { createElement, createElement as h, component, context, useState, useContext }
+import { h, component, context, useState, useContext }
   from '../../main/js-surface'
 
 import { Spec } from 'js-spec'

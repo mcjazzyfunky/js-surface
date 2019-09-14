@@ -1,5 +1,5 @@
 import {
-  createElement, context, component, useEffect, useState
+  h, context, component, useEffect, useState
 } from '../../main/js-surface'
 
 const CounterCtx = context<number>({

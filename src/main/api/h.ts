@@ -1,17 +1,15 @@
 // internal imports
-import _createElement from '../internal/adaption/dyo/createElement'
-import Boundary from './Boundary'
-import Fragment from './Fragment'
+import createElement from '../internal/adaption/dyo/createElement'
 import Props from './types/Props'
 import Component from './types/Component'
 import VirtualElement from './types/VirtualElement'
 
-// --- createElement ------------------------------------------------
+// --- h ------------------------------------------------------------
 
-function createElement<P extends Props>(
+function h<P extends Props>(
   type: string | Component<P>, ...children: any[]): VirtualElement<P>
 
-function createElement(/* arguments */): any {
+function h(/* arguments */): any {
   let ret: any
 
   const type: any = arguments[0]
@@ -43,11 +41,11 @@ function createElement(/* arguments */): any {
     }
   }
 
-  ret = _createElement.apply(null, arguments)
+  ret = createElement.apply(null, arguments)
 
   return ret
 }
 
 // --- exports ------------------------------------------------------
 
-export default createElement
+export default h

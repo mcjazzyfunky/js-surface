@@ -1,4 +1,4 @@
-import { createElement, component, useEffect, useImperativeHandle, useForceUpdate, useState }
+import { h, component, useEffect, useImperativeHandle, useForceUpdate, useState }
   from '../../main/js-surface'
 
 type Methods = {

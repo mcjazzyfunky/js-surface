@@ -1,4 +1,4 @@
-import { createElement, component, useEffect, useRef, useForceUpdate }
+import { h, component, useEffect, useRef, useForceUpdate }
   from '../../main/js-surface'
 
 const prefs = {

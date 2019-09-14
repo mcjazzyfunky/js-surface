@@ -1,4 +1,4 @@
-import { createElement, component, mount, VirtualNode, useForceUpdate, useRef }
+import { h, component, mount, VirtualNode, useForceUpdate, useRef }
   from '../main/js-surface'
 
 import availableDemos from './available-demos'

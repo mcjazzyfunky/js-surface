@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES5",
     "jsx": "react",
-    "jsxFactory": "createElement",
+    "jsxFactory": "h",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,

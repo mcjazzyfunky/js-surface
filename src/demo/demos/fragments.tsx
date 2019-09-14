@@ -1,4 +1,4 @@
-import { createElement, component, Fragment } from '../../main/js-surface'
+import { h, component, Fragment } from '../../main/js-surface'
 
 const FragmentDemo: any = component({ // TODO
   displayName:  'FragmentDemo',
