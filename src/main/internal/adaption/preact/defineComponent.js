@@ -1,5 +1,6 @@
 // external imports
 import Preact from 'preact'
+import PreactCompat from 'preact/compat'
 
 // --- defineComponent ----------------------------------------------
 
@@ -50,6 +51,9 @@ function defineComponent(
   }
 
   if (forwardRef) {
+    ret = PreactCompat.forwardRef(ret)
+    
+    /*
     const oldRet = ret
 
     ret = function (props) {
@@ -63,6 +67,7 @@ function defineComponent(
 
       return oldRet(newProps)
     }
+    */
   }
 
   if (memoize === true) {
