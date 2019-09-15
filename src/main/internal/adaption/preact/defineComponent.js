@@ -106,8 +106,6 @@ function shallowDiffers(a, b) {
   return false
 }
 
-
-
 // --- exports ------------------------------------------------------
 
 export default defineComponent
