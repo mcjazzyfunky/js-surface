@@ -8,7 +8,7 @@ import gzip from 'rollup-plugin-gzip'
 
 const configs = []
 
-for (const pkg of ['js-surface', 'js-surface/react']) {
+for (const pkg of ['js-surface', 'js-surface/react', 'js-surface/preact']) {
   for (const format of ['umd', 'cjs', 'amd', 'esm']) {
     for (const productive of [false, true]) {
       configs.push(createConfig(pkg, format, productive))
@@ -49,7 +49,8 @@ function createConfig(pkg, moduleFormat, productive) {
       
       name: {
         'js-surface': 'jsSurface',
-        'js-surface/react': 'jsSurfaceReact'
+        'js-surface/react': 'jsSurfaceReact',
+        'js-surface/preact': 'jsSurfacePreact'
       }[pkg],
 
       sourcemap: productive ? false : 'inline',
@@ -59,6 +60,7 @@ function createConfig(pkg, moduleFormat, productive) {
         'js-surface/react': 'jsSurfaceReact',
         'react': 'React',
         'react-dom': 'ReactDOM',
+        'preact': 'preact',
         'js-spec': 'jsSpec'
       }
     },
