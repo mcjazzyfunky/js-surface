@@ -5,7 +5,7 @@ import replace from 'rollup-plugin-replace'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
-const ADAPTER = 'react'
+const ADAPTER = 'preact'
 
 let additionalReplacements = {}
 
@@ -33,7 +33,7 @@ export default {
     }
   },
 
-  external: ['react', 'react-dom', 'preact', 'dyo', 'js-spec'],
+  external: ['react', 'react-dom', 'preact', 'preact/hooks', 'dyo', 'js-spec'],
   
   plugins: [
     resolve({
