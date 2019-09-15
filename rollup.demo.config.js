@@ -1,11 +1,11 @@
 import commonjs from 'rollup-plugin-commonjs'
-import typescript from 'rollup-plugin-typescript2'
+import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import replace from 'rollup-plugin-replace'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
-const ADAPTER = 'react'
+const ADAPTER = 'dyo'
 
 let additionalReplacements = {}
 
@@ -17,7 +17,7 @@ if (ADAPTER !== 'dyo') {
 }
 
 export default {
-  input: 'src/demo/demo.tsx',
+  input: 'src/demo/demo.jsx',
 
   output: {
     file: './build/demo.js',
@@ -36,7 +36,9 @@ export default {
   external: ['react', 'react-dom', 'preact', 'dyo', 'js-spec'],
   
   plugins: [
-    resolve(),
+    resolve({
+      extensions: ['.js', '.jsx']
+    }),
     commonjs(),
     replace({
       exclude: 'node_modules/**',
@@ -45,14 +47,26 @@ export default {
         'process.env.NODE_ENV': "'development'"
       }, additionalReplacements),
     }),
-    typescript(),
+    babel({
+      presets: [
+        '@babel/preset-env',
+        [
+          '@babel/preset-react',
+          {
+            pragma: 'h',
+            pragmaFrag: 'Fragment'
+          }
+        ]
+      ],
+      exclude: 'node_modules/**',
+    }),
     serve({
       open: true,
       contentBase: '.',
       openPage: '/src/demo/index.html'
     }),
     livereload({
-      watch: ['src/demo', 'build']
+      watch: ['src']
     })
   ]
 }

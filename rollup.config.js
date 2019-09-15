@@ -1,8 +1,7 @@
-//import tslint from 'rollup-plugin-tslint'
 import resolve from 'rollup-plugin-node-resolve'
 import replace from 'rollup-plugin-replace'
 import commonjs from 'rollup-plugin-commonjs'
-import typescript from 'rollup-plugin-typescript2'
+import babel from 'rollup-plugin-babel'
 import { uglify as uglify } from 'rollup-plugin-uglify'
 import { terser } from 'rollup-plugin-terser'
 import gzip from 'rollup-plugin-gzip'
@@ -35,12 +34,11 @@ function createConfig(pkg, moduleFormat, productive) {
   if (pkg !== 'js-surface') {
     additionalReplacements = {
       'adaption/dyo/': `adaption/${adapter}/`,
-      'main/js-surface': `main/js-surface.${adapter}`
     }
   }
 
   return {
-    input: 'src/main/js-surface.ts', 
+    input: 'src/main/index.js', 
 
     output: {
       file: productive
@@ -70,25 +68,16 @@ function createConfig(pkg, moduleFormat, productive) {
     plugins: [
       resolve(),
       commonjs(),
-      // TODO: Configure "tslint.json" properly and fix all errors
-      //tslint({
-      //  throwOnError: true
-      //}),
       replace({
         exclude: 'node_modules/**',
         delimiters: ['', ''],
 
         values: Object.assign({
           'process.env.NODE_ENV': productive ? "'production'" : "'development'",
-          "'../main/js-surface'": "'${pkg}'",
-          "'../../main/js-surface'": "'${pkg}'",
-          "'../../../main/js-surface'": "'${pkg}'",
-          "'../../../../main/js-surface": "'${pkg}'",
-          "'../../../../../main/js-surface'": "'${pkg}'",
         }, additionalReplacements)
       }),
-
-      typescript({
+      babel({
+        presets: ['@babel/preset-env'],
         exclude: 'node_modules/**',
       }),
       productive && (moduleFormat === 'esm' ? terser() : uglify()),

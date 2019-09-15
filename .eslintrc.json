@@ -21,12 +21,23 @@
     "alert": false
   },
 
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
 
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "single", { "avoidEscape": true }],
     "semi": ["error", "never"],
-    "no-console": ["off"]
+    "no-console": ["off"],
+    "react/jsx-uses-vars": ["error"],
+    "react/prop-types": ["off"]
+  },
+
+  "settings": {
+    "react": {
+      "pragma": "h"
+    }
   }
 }
