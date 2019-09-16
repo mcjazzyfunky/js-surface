@@ -1,0 +1,11 @@
+{
+  "name": "js-surface.preact",
+  "version": "0.0.1",
+  "private": true,
+  "description": "js-surface adaption for Preact",
+  "main": "../dist/js-surface.preact.cjs.production.js",
+  "module": "../dist/js-surface.preact.esm.production.js",
+  "umd:main": "../dist/js-surface.preact.umd.production.js",
+  "types": "../src/types/js-surface.preact.d.ts",
+  "license": "LGPL-3.0"
+}
