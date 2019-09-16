@@ -188,16 +188,16 @@ Hooks:
 Helper functions for virtual elements and nodes
 * `isElement(it)`
 * `isNode(it)`
-* `cloneElement(node, props, ...children)`
-* `setInnerHtml(node, html)`
+* `cloneElement(element, props, ...children)`
+* `setInnerHtml(element, html)`
 
 Helper functions for children
 * `childCount(children)`
-* `forEachChild(children, callback)`
+* `forEachChild(children, action)`
 * `mapChildren(children, mapper)`
 * `onlyChild(children)`
-* `toChildArray(element)`
-* `withChildren(f)`
+* `toChildArray(children)`
+* `withChildren(func)`
 
 ### Project status
 
