@@ -144,7 +144,7 @@ function CounterView({ initialValue = 0, label = 'Counter' }) {
 
 ### Motivation
 
-* Use the exact same code to implement both React and Dyo component.
+* Use the exact same code to implement React, Preact and js-surface components.
   Write a component and decide at build time what UI library shall be
   used
 
