@@ -1,7 +1,7 @@
 # js-surface
 
 Research project to evaluate and implement a working UI library abstraction API
-**js-surface** aims to be itself a full-featured UI library (using Dyo under the hood)
+*js-surface* aims to be itself a full-featured UI library (using Dyo under the hood)
 and also provides the possibility to implement real React and also real Preact
 components with the same API.
 
@@ -180,7 +180,7 @@ Hooks:
 * `useContext(ctx)`
 * `useEffect(action, dependencies?)`
 * `useForceUpdate()`
-* `useMethods(ref, getter, inputs)`
+* `useImperativeHandle(ref, getter, inputs)`
 * `usePrevious(value)`
 * `useRef(initialValue)`
 * `useState(initialValue | initialValueProvider)`
