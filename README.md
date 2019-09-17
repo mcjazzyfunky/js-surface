@@ -188,6 +188,8 @@ Hooks:
 Helper functions for virtual elements and nodes
 * `isElement(it)`
 * `isNode(it)`
+* `typeOf(element)`
+* `propsOf(element)`
 * `cloneElement(element, props, ...children)`
 * `setInnerHtml(element, html)`
 

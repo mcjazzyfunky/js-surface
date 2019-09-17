@@ -58,6 +58,17 @@ export type Fragment = OpaqueType<'Fragment'>
 
 export declare function childCount(children: Children): number
 
+export declare function cloneElement<P extends Props>(
+  elem: VirtualElement<P>,
+  props?: Partial<P>
+): VirtualElement<P>
+
+export declare function cloneElement<P extends Props>(
+  elem: VirtualElement<P>,
+  props: Partial<P>,
+  ...children: VirtualNode[]
+): VirtualElement<P>
+
 export declare function component<P extends Props>(config: ComponentConfig<P>): Component<P>
 export declare function component<P extends Props = {}>(displayName: string, renderer?: ComponentConfig<P>['render'], options?: ComponentOptions): Component<P>
 
@@ -72,7 +83,11 @@ export declare function isElement(it: any): boolean
 
 export declare function mount(element: any, container: Element | string): void
 
+export declare function propsOf<P extends Props>(element: VirtualElement<P>): P | undefined
+
 export declare function toChildArray(children: Children): VirtualNode[]
+
+export declare function typeOf(element: VirtualElement<any>): Component<any> | string | undefined
 
 export declare function unmount(container: Element | string): void
 
