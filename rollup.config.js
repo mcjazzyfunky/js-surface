@@ -61,11 +61,13 @@ function createConfig(pkg, moduleFormat, productive) {
         'react': 'React',
         'react-dom': 'ReactDOM',
         'preact': 'preact',
+        'preact/compat': 'preactCompat',
         'js-spec': 'jsSpec'
       }
     },
 
-    external: ['js-surface', 'react', 'react-dom', 'preact'].concat(productive ? 'js-spec' : []), 
+    external: ['js-surface', 'react', 'react-dom', 'preact', 'preact/compat']
+      .concat(productive ? 'js-spec' : []), 
 
     plugins: [
       resolve(),

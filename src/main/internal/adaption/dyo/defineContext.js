@@ -13,16 +13,14 @@ function defineContext(
   const Provider = ({ value, children }) =>
     Dyo.h(Dyo.Context, { value }, children)
 
-  const Consumer = props => {
-    // There's a but in Dyo => filter children // TODO
-    const nodes = Dyo.Children.toArray(props.children).filter(it => it !== null)
-    let value = Dyo.useContext(ret)
+  const Consumer = ({ children }) => {
+    let value = Dyo.useContext(Provider)
 
     if (value === undefined) {
       value = defaultValue
     }
 
-    return nodes.length > 0 ? nodes[0](value) : null
+    return Dyo.Children.toArray(children)[0](value) 
   }
   
   const constr = () => {}
