@@ -4,7 +4,7 @@ import Preact from 'preact'
 // --- Boundary -----------------------------------------------------
 
 class Boundary extends Preact.Component {
-  componentDidCatch(error, info) {
+  componentDidCatch(error, info) {console.log(111111)
     if (this.props.fallback) {
       this.props.fallback(error, info)
     }
@@ -16,10 +16,6 @@ class Boundary extends Preact.Component {
 }
 
 Boundary.displayName = 'Boundary (inner)'
-
-Boundary.getDerivedStateFromError = () => {
-}
-
 
 // --- exports ------------------------------------------------------
 
