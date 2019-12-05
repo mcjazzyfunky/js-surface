@@ -1,5 +1,5 @@
 // external imports
-import { Spec } from 'js-spec'
+import * as Spec from 'js-spec/validators'
 
 // internal imports
 import defineComponent from '../internal/adaption/dyo/defineComponent'
@@ -86,12 +86,12 @@ if (process.env.NODE_ENV) {
     displayName: Spec.match(REGEX_DISPLAY_NAME),
     forwardRef: Spec.optional(Spec.boolean),
     memoize: Spec.optional(Spec.boolean),
-    validate: Spec.optional(Spec.function),
-    render: Spec.function
+    validate: Spec.optional(Spec.func),
+    render: Spec.func
   })
 
   validateComponentOptions = Spec.exact({
-    validate: Spec.optional(Spec.function),
+    validate: Spec.optional(Spec.func),
     memoize: Spec.optional(Spec.boolean),
   })
 }

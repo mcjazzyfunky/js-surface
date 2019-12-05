@@ -1,7 +1,7 @@
 import { h, component, context, useState, useContext }
   from '../../main/index'
 
-import { Spec } from 'js-spec'
+import * as Spec from 'js-spec/validators'
 
 const translations = {
   en: {

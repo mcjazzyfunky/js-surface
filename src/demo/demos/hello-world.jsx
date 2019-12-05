@@ -1,5 +1,5 @@
 import { h, component } from '../../main/index'
-import { Spec } from 'js-spec'
+import * as Spec from 'js-spec/validators'
 
 const HelloWorld = component({
   displayName: 'HelloWorld',

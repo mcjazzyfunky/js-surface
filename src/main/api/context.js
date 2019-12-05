@@ -1,5 +1,5 @@
 // external imports
-import { Spec } from 'js-spec'
+import * as Spec from 'js-spec/validators'
 
 // internal imports
 import defineContext from '../internal/adaption/dyo/defineContext'
@@ -55,12 +55,12 @@ if (process.env.NODE_ENV === 'development') {
     Spec.exact({
       displayName: Spec.match(REGEX_DISPLAY_NAME),
       defaultValue: Spec.optional(Spec.any),
-      validate: Spec.optional(Spec.function)
+      validate: Spec.optional(Spec.func)
     })
 
   validateContextOptions =
     Spec.exact({
-      validate: Spec.optional(Spec.function)
+      validate: Spec.optional(Spec.func)
     })
 }
 
