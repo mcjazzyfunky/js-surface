@@ -107,7 +107,7 @@ const PerformanceTest = component({
     const
       [result, setResult] = useState(null),
       [isRunning, setRunning] = useState(false),
-      onStart = useCallback(() => startTest())
+      onStart = useCallback(() => startTest(), [startTest])
 
     function startTest() {
       setRunning(true)

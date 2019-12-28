@@ -7,7 +7,7 @@ const Counter = component({
   render({ initialValue = 0, label = 'Counter' }) {
     const
       [count, setCount] = useState(() => initialValue),
-      onIncrement = useCallback(() => setCount(count + 1))
+      onIncrement = useCallback(() => setCount(count + 1), [count])
 
     useEffect(() => {
       console.log('Component has been mounted')

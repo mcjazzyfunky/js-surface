@@ -14,8 +14,8 @@ const Counter = component({
   render({ initialValue = 0, label = 'Counter', ref }) {
     const
       [count, setCount] = useState(() => initialValue),
-      onIncrement = useCallback(() => setCount(count + 1)),
-      onDecrement = useCallback(() => setCount(count - 1))
+      onIncrement = useCallback(() => setCount(count + 1), [count]),
+      onDecrement = useCallback(() => setCount(count - 1), [count])
 
     useImperativeHandle(ref, () => ({
       reset(n) {

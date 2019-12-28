@@ -12,7 +12,7 @@ const ErrorTrigger = component({
   render() {
     const
       [errorMsg, setErrorMsg] = useState(null),
-      onButtonClick = useCallback(() => setErrorMsg('Simulated error!'))
+      onButtonClick = useCallback(() => setErrorMsg('Simulated error!'), [])
 
     if (errorMsg) {
       throw new Error(errorMsg);
@@ -35,13 +35,13 @@ const ErrorBoundary = component({
       
       handleReset = useCallback(() => {
         setError(null)
-      }),
+      }, []),
 
       handleError = useCallback((error, info) => {
         console.log(error)
         console.log('Error info: ', info)
         setError(error)
-      })
+      }, [])
 
     return (
       <Boundary fallback={handleError}>

@@ -16,9 +16,9 @@ const StopWatch = component({
         } else {
           startTimer()
         }
-      }),
+      }, [startTimer, stopTimer]),
 
-      onReset = useCallback(resetTimer)
+      onReset = useCallback(resetTimer, [stopTimer])
 
     useEffect(() => {
       return () => stopTimer()
