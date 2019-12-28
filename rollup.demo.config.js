@@ -5,7 +5,7 @@ import replace from 'rollup-plugin-replace'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
-const ADAPTER = 'preact'
+const ADAPTER = 'dyo'
 
 let additionalReplacements = {}
 

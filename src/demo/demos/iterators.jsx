@@ -41,7 +41,7 @@ const App = component({
       <div>
         <div>
             If everything works fine then the following line shall be:
-            "<i>Iterators seem to work properly!</i>"
+            &quot;<i>Iterators seem to work properly!</i>&quot;
         </div>
         <br/>
         <div>&gt;&gt; {demoContent}</div>
