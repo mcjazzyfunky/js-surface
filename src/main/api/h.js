@@ -29,7 +29,7 @@ function h(/* arguments */) {
 
       if (errorMsg) {
         throw new Error(
-          `Props validation error for component "${type.meta.displayName}" => `
+          `Props validation error for component "${type.meta.name}" => `
             + errorMsg)
       }
     }

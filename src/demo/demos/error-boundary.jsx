@@ -7,9 +7,9 @@ import {
 } from '../../main/index'; 
 
 const ErrorTrigger = component({
-  displayName: 'ErrorTrigger',
+  name: 'ErrorTrigger',
 
-  render() {
+  main() {
     const
       [errorMsg, setErrorMsg] = useState(null),
       onButtonClick = useCallback(() => setErrorMsg('Simulated error!'), [])
@@ -27,9 +27,9 @@ const ErrorTrigger = component({
 })
 
 const ErrorBoundary = component({
-  displayName: 'ErrorBoundary',
+  name: 'ErrorBoundary',
 
-  render(props) {
+  main(props) {
     const
       [error, setError] = useState(null),
       

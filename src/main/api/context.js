@@ -39,7 +39,7 @@ function context(arg1, arg2, arg3) {
 
   return typeof arg1 === 'string'
     ? defineContext(arg1, arg2, arg3.validate)
-    : defineContext(arg1.displayName, arg1.defaultValue, arg1.validate)
+    : defineContext(arg1.name, arg1.defaultValue, arg1.validate)
 }
 
 // --- locals -------------------------------------------------------
@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === 'development') {
 
   validateContextConfig =
     Spec.exact({
-      displayName: Spec.match(REGEX_DISPLAY_NAME),
+      name: Spec.match(REGEX_DISPLAY_NAME),
       defaultValue: Spec.optional(Spec.any),
       validate: Spec.optional(Spec.func)
     })

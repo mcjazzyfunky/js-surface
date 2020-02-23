@@ -2,9 +2,9 @@ import { h, component, useCallback, useEffect, useRef, useState }
   from '../../main/index'
 
 const StopWatch = component({
-  displayName: 'StopWatch',
+  name: 'StopWatch',
 
-  render() {
+  main() {
     const
       timerIdRef = useRef(null),
       [time, setTime] = useState(() => 0),

@@ -8,10 +8,10 @@ import {
 } from '../../main/index'
 
 const Counter = component({
-  displayName: 'Counter',
+  name: 'Counter',
   forwardRef: true,
 
-  render({ initialValue = 0, label = 'Counter', ref }) {
+  main({ initialValue = 0, label = 'Counter', ref }) {
     const
       [count, setCount] = useState(() => initialValue),
       onIncrement = useCallback(() => setCount(count + 1), [count]),
@@ -35,9 +35,9 @@ const Counter = component({
 })
 
 const App = component({
-  displayName: 'App',
+  name: 'App',
 
-  render() {
+  main() {
     const
       counterRef = useRef(),
       onResetTo0 = useCallback(() => counterRef.current.reset(0)),

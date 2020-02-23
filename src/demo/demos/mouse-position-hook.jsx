@@ -2,9 +2,9 @@ import { h, component, useEffect, useState }
   from '../../main/index'
 
 const Demo = component({
-  displayName: 'Demo',
+  name: 'Demo',
 
-  render() {
+  main() {
     const mousePosition = useMousePosition()
 
     return (

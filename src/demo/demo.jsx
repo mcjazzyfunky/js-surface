@@ -1,4 +1,4 @@
-import { h, component, mount, useForceUpdate, useRef }
+import { h, component, render, useForceUpdate, useRef }
   from '../main/index'
 
 import availableDemos from './available-demos'
@@ -6,9 +6,9 @@ import availableDemos from './available-demos'
 // --- Component DemoSelector ---------------------------------------
 
 const DemoSelector = component({
-  displayName: 'DemoSelector',
+  name: 'DemoSelector',
 
-  render(props) {
+  main(props) {
     const
       forceUpdate = useForceUpdate(),
       demoIdx = useRef(getCurrentDemoIndex())
@@ -54,9 +54,9 @@ const DemoSelector = component({
 // --- Component Demo -----------------------------------------------
 
 const DemoApp = component({
-  displayName: 'DemoApp',
+  name: 'DemoApp',
 
-  render(props) {
+  main(props) {
     return (
       <div>
         <DemoSelector demos={props.demos}/>
@@ -71,4 +71,4 @@ function getCurrentDemoIndex() {
 
 // --- main ---------------------------------------------------------
 
-mount(<DemoApp demos={availableDemos}/>, 'main-content')
+render(<DemoApp demos={availableDemos}/>, 'main-content')

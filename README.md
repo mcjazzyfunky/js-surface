@@ -54,12 +54,12 @@ are currently implemented with jsSurface:
 // import from 'js-surface/react' if you want to use React
 // under the hood (otherwise a completely wrapped verision of
 // Dyo will be used)
-import { h, component, mount } from 'js-surface'
+import { h, component, render } from 'js-surface'
 
 const HelloWorld = component({
-  displayName: 'HelloWorld',
+  name: 'HelloWorld',
 
-  render({ name = 'World' }) {
+  main({ name = 'World' }) {
     return div(`Hello, ${name}!`)
   }
 })
@@ -70,20 +70,19 @@ const HelloWorld2 = component('HelloWorld', props =>
   <div>Hello ${props.name}</div>
 )
 
-
-mount(<HelloWorld/>, 'app')
+render(<HelloWorld/>, 'app')
 ```
 
 #### Simple counter
 
 ```jsx
-import { h, component, mount, useCallback, useState } from 'js-surface/react'
+import { h, component, render, useCallback, useState } from 'js-surface/react'
 
-// A 3rd-party general purpose validation library.
-import { Spec } from 'js-spec' 
+// 3rd-party general purpose validation library
+import * as Spec from 'js-spec/validators' 
 
 const Counter = component({
-  displayName: 'Counter',
+  name: 'Counter',
 
   validate: Spec.checkProps({
     optional: {
@@ -92,10 +91,10 @@ const Counter = component({
     }
   }),
 
-  render({ initialValue = 0, label = 'Counter' }) {
+  main({ initialValue = 0, label = 'Counter' }) {
     const
       [count, setCount] = useState(initialValue),
-      onIncrement = useCallback(() => setCount(it => it + 1))
+      onIncrement = useCallback(() => setCount(it => it + 1), [])
 
     return (
       <div>
@@ -106,17 +105,17 @@ const Counter = component({
   }
 })
 
-mount(<Counter/>, 'app')
+render(<Counter/>, 'app')
 ```
 
 In case you are using *ESLint* with *eslint-plugin-react-hooks*, the linter
 will not like the usage above (due to the lowercase first letter of function
-`render`). That's why the preferred way to define components is the
+`main`). That's why the preferred way to define components is the
 following:
 
 ```javascript
 const Counter = component({
-  displayName: 'Counter',
+  name: 'Counter',
 
   validate: Spec.checkProps({
     optional: {
@@ -125,7 +124,7 @@ const Counter = component({
     }
   }),
 
-  render: CounterView
+  main: CounterView
 })
 
 function CounterView({ initialValue = 0, label = 'Counter' }) {
@@ -144,9 +143,10 @@ function CounterView({ initialValue = 0, label = 'Counter' }) {
 
 ### Motivation
 
-* Use the exact same code to implement React, Preact and js-surface components.
+* Use the same code to implement React, Preact and js-surface components.
   Write a component and decide at build time what UI library shall be
-  used
+  used (depending on the complexity of your components, it's possible that
+  conditional compilation/inclues/excludes will be necessary)
 
 * Reacts provides the possibility for a sophisticated validation of the
   components' properties, which is great.
@@ -168,10 +168,9 @@ function CounterView({ initialValue = 0, label = 'Counter' }) {
 
 Basics:
 * `h(type, props?, ...children)`
-* `component(componentConfig)` or `component(dispayName, renderer, componentOptions?)`
-* `context(contextConfig)` or `context(displayName, defaultValue?, contextOptions?)`
-* `mount(content, container)`
-* `unmount(container)`
+* `component(componentConfig)` or `component(name, main)`
+* `context(contextConfig)`
+* `render(content, container)` - if content is null then unmount
 * `Fragment`
 * `Boundary`
 
@@ -183,7 +182,7 @@ Hooks:
 * `useImperativeHandle(ref, getter, inputs)`
 * `usePrevious(value)`
 * `useRef(initialValue)`
-* `useState(initialValue | initialValueProvider)`
+* `useState(initialValue or getInitialValue)`
 
 Helper functions for virtual elements and nodes
 * `isElement(it)`

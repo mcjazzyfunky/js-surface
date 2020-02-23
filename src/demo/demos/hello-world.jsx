@@ -2,7 +2,7 @@ import { h, component } from '../../main/index'
 import * as Spec from 'js-spec/validators'
 
 const HelloWorld = component({
-  displayName: 'HelloWorld',
+  name: 'HelloWorld',
 
   validate: Spec.checkProps({
     optional: {
@@ -10,7 +10,7 @@ const HelloWorld = component({
     }
   }),
 
-  render({ name = 'world' }) {
+  main({ name = 'world' }) {
     return <div>Hello, {name}!</div>
   }
 })

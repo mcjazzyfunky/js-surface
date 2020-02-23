@@ -3,14 +3,14 @@ import {
 } from '../../main/index'
 
 const CounterCtx = context({
-  displayName: 'CounterCtx',
+  name: 'CounterCtx',
   defaultValue: 0
 })
 
 const ContextDemo = component({
-  displayName: 'ContextDemo',
+  name: 'ContextDemo',
 
-  render() {
+  main() {
     const [count, setCount] = useState(0)
 
     useEffect(() => {
@@ -30,10 +30,10 @@ const ContextDemo = component({
 })
 
 const Output = component({
-  displayName: 'Output',
+  name: 'Output',
   memoize: true,
 
-  render() {
+  main() {
     return (
       <div>
         <div>

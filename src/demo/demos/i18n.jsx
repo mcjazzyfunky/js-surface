@@ -16,12 +16,12 @@ const translations = {
 }
 
 const LocaleCtx = context({
-  displayName: 'LocaleCtx',
+  name: 'LocaleCtx',
   defaultValue: 'en'
 })
 
 const App = component({
-  displayName: 'App',
+  name: 'App',
 
   validate: Spec.checkProps({
     optional: {
@@ -29,7 +29,7 @@ const App = component({
     }
   }),
 
-  render({ defaultLocale = 'en' }) {
+  main({ defaultLocale = 'en' }) {
     const [locale, setLocale] = useState(() => defaultLocale)
 
     return (
@@ -49,7 +49,7 @@ const App = component({
 })
 
 const LocaleText = component({
-  displayName: 'LocaleText',
+  name: 'LocaleText',
 
   validate: Spec.checkProps({
     optional: {
@@ -57,7 +57,7 @@ const LocaleText = component({
     }
   }),
 
-  render(props) {
+  main(props) {
     const locale = useContext(LocaleCtx)
 
     return (

@@ -1,9 +1,9 @@
 import { h, component, setInnerHtml } from '../../main/index'
 
 const Demo = component({
-  displayName:  'Demo',
+  name:  'Demo',
 
-  render() {
+  main() {
     const
       html = '&gt;&gt; <i>Hope</i> <b>you</b> can read <i>this</i> test <b>line</b>.',
       content = setInnerHtml(<div/>, html)

@@ -1,9 +1,9 @@
 import { h, component, Fragment } from '../../main/index'
 
 const FragmentDemo = component({
-  displayName:  'FragmentDemo',
+  name:  'FragmentDemo',
 
-  render() {
+  main() {
     return (
       <Fragment>
         <div>
@@ -23,9 +23,9 @@ const FragmentDemo = component({
 })
 
 const Options = component({
-  displayName: 'Options',
+  name: 'Options',
 
-  render() {
+  main() {
     return (
       <Fragment>
         <option>Option #1</option>

@@ -5,7 +5,7 @@ import React from 'react'
 import * as Dyo from 'dyo'
 
 const
-  r = React.h,
+  r = React.createElement,
   d = Dyo.h,
   div = h.bind(null, 'div')
 
@@ -101,9 +101,9 @@ function runTests() {
 }
 
 const PerformanceTest = component({
-  displayName: 'PerformanceTest',
+  name: 'PerformanceTest',
 
-  render() {
+  main() {
     const
       [result, setResult] = useState(null),
       [isRunning, setRunning] = useState(false),
@@ -141,9 +141,9 @@ const PerformanceTest = component({
 })
 
 const Report = component({
-  displayName: 'Report',
+  name: 'Report',
 
-  render({ result }) {
+  main({ result }) {
     let ret = null
     
     if (result && result.trim().length > 0) {

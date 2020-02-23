@@ -2,9 +2,9 @@ import { h, component, useEffect, useImperativeHandle, useForceUpdate, useState 
   from '../../main/index'
 
 const ComponentA = component({
-  displayName: 'ComponentA',
+  name: 'ComponentA',
 
-  render({ componentRef }) {
+  main({ componentRef }) {
     useImperativeHandle(componentRef, () => ({
       sayHello() {
         console.log('>> ComponentA says "Hello"')
@@ -22,9 +22,9 @@ const ComponentA = component({
 })
 
 const ComponentB = component({
-  displayName: 'ComponentB',
+  name: 'ComponentB',
 
-  render({ componentRef }) {
+  main({ componentRef }) {
     useImperativeHandle(componentRef, () => ({
       sayHello() {
         console.log('ComponentB says "Hello"')
@@ -42,9 +42,9 @@ const ComponentB = component({
 })
 
 const Demo = component({
-  displayName: 'Demo',
+  name: 'Demo',
 
-  render() {
+  main() {
     const
       [state] = useState(() => ({ showComponentA: true })),
       forceUpdate = useForceUpdate()

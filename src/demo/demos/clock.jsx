@@ -1,9 +1,9 @@
 import { h, component, useEffect, useState } from '../../main/index'
 
 const Clock = component({
-  displayName: 'Clock',
+  name: 'Clock',
 
-  render() {
+  main() {
     const
       [time, setTime] = useState(() => new Date().toLocaleTimeString())
   

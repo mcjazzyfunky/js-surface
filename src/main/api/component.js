@@ -38,36 +38,36 @@ function component(arg1, arg2, arg3) {
   }
 
   let
-    displayName,
-    render,
+    name,
+    main,
     forwardRef,
     memoize,
     validate
 
   if (typeof arg1 === 'string') {
-    displayName = arg1
-    render = arg2,
+    name = arg1
+    main = arg2,
     forwardRef = arg3 && arg3.forwardRef || false,
     memoize = arg3 && arg3.memoize || false,
     validate = arg3 && arg3.validate || null
   } else {
-    displayName = arg1.displayName
-    render = arg1.render,
+    name = arg1.name
+    main = arg1.main,
     forwardRef = arg1.forwardRef,
     memoize = arg1.memoize || false,
     validate = arg1.validate || null
   }
 
   const ret = defineComponent(
-    displayName,
-    render,
+    name,
+    main,
     forwardRef,
     memoize,
     validate
   )
 
   Object.defineProperty(ret, 'meta', {
-    value: Object.freeze({ displayName, render, memoize, validate })
+    value: Object.freeze({ name, main, memoize, validate })
   })
 
   return ret
@@ -83,11 +83,11 @@ if (process.env.NODE_ENV) {
   const REGEX_DISPLAY_NAME = /^([a-z]+:)*[A-Z][a-zA-Z0-9.]*$/
 
   validateComponentConfig = Spec.exact({
-    displayName: Spec.match(REGEX_DISPLAY_NAME),
+    name: Spec.match(REGEX_DISPLAY_NAME),
     forwardRef: Spec.optional(Spec.boolean),
     memoize: Spec.optional(Spec.boolean),
     validate: Spec.optional(Spec.func),
-    render: Spec.func
+    main: Spec.func
   })
 
   validateComponentOptions = Spec.exact({
