@@ -10,7 +10,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.20.7",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "bestzip": "^1.1.6",
